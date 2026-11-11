@@ -1,0 +1,13 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gcf-joint4\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 1 item
+
+tests/test_joint_c_golden.py::test_generated_c_log_exact_decoder_replay_and_mechanization PASSED [100%]
+
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\flp\joint4-1.xml -
+============================= 1 passed in 47.47s ==============================

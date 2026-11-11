@@ -1,0 +1,389 @@
+{
+  "candidate": {
+    "code_commit": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+    "archive": "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar_0_1_3_gui-convergence-20261111-fit_Windows_x64.zip",
+    "sha256": "4cf2382e6b22f367def0c0273a96ae426b2289fe56cbf16518948b423e956014",
+    "bytes": 241516558,
+    "bundle": "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar",
+    "runtime_input_count": 7579,
+    "verified_first_party_resources": 2301,
+    "executable_sha256": {
+      "SCG.exe": "4a47e2dbc070156de7fc5cf703954950f96803e92ef6faad35b46cb154a9bcc0",
+      "GSHC.exe": "30083f337de0c4e1cd364ba0e0b3c16feba008e25d9213cece7057e05261283d",
+      "FLP.exe": "f74de6d705711b851f0420e71719e2a508eb90353bbffe143de952959a9f34c1"
+    },
+    "unmatched_site_inputs": 1
+  },
+  "readback": {
+    "candidate": {
+      "code_commit": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+      "archive": "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar_0_1_3_gui-convergence-20261111-fit_Windows_x64.zip",
+      "sha256": "4cf2382e6b22f367def0c0273a96ae426b2289fe56cbf16518948b423e956014",
+      "bytes": 241516558,
+      "bundle": "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar",
+      "runtime_input_count": 7579,
+      "verified_first_party_resources": 2301,
+      "executable_sha256": {
+        "SCG.exe": "4a47e2dbc070156de7fc5cf703954950f96803e92ef6faad35b46cb154a9bcc0",
+        "GSHC.exe": "30083f337de0c4e1cd364ba0e0b3c16feba008e25d9213cece7057e05261283d",
+        "FLP.exe": "f74de6d705711b851f0420e71719e2a508eb90353bbffe143de952959a9f34c1"
+      },
+      "unmatched_site_inputs": 1
+    },
+    "zip_members_read_and_sha256_checked": 3449,
+    "installed_files_sha256_checked": 3449,
+    "logical_bytes": 532397020,
+    "resolved_runtime_input_count": 7579,
+    "retired_checkout_inputs": [],
+    "commands": [
+      {
+        "command": [
+          "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar\\SCG.exe",
+          "--version"
+        ],
+        "exit_code": 0,
+        "seconds": 2.0282333000004655,
+        "stdout": "0.1.3\r\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar\\FLP.exe",
+          "--version"
+        ],
+        "exit_code": 0,
+        "seconds": 3.697271400000318,
+        "stdout": "0.1.3\r\n",
+        "stderr": ""
+      }
+    ],
+    "scope": "ZIP and collected runtime readback plus two actual windowed EXE --version exits; native interactive launch is recorded separately; no hardware validation"
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.0",
+    "PyInstaller": "6.16.0",
+    "PySide6": "6.10.1",
+    "numpy": "2.4.1",
+    "scipy": "1.16.3",
+    "pyqtgraph": "0.14.0"
+  },
+  "command": [
+    "tools/packaging/build_candidate.ps1",
+    "-BuildTag",
+    "gui-convergence-20261111-fit",
+    "-Destination",
+    "D:/python_software/SilverStar/dist/gcf1111",
+    "-Evidence",
+    "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence",
+    "-BuildWork",
+    "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\build",
+    "-NoticeWitness",
+    "D:/SilverStar_Archive/retained_inputs/SilverStar_0_1_2_Windows_Portable.zip"
+  ],
+  "pyinstaller_exit": 0,
+  "stage_exit": 0,
+  "files": [
+    {
+      "phase": "aborted-lifecycle",
+      "scope": "e4bdd76e interrupted after a real FLP lifetime defect; not deliverable",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package\\evidence\\code-commit.txt",
+      "file": "aborted-lifecycle/code-commit.txt.gz",
+      "source_bytes": 42,
+      "source_sha256": "0427b5e6977c116a6182f0c2b2a6b76acf777e40d345c03433cb4ac9d16285e1",
+      "gzip_bytes": 61,
+      "gzip_sha256": "116a028af2ad0ee869320cc524f8a33d6571d0bf1e0aeaf4c1a7a61343d588ec"
+    },
+    {
+      "phase": "aborted-lifecycle",
+      "scope": "e4bdd76e interrupted after a real FLP lifetime defect; not deliverable",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package\\evidence\\pyinstaller.log",
+      "file": "aborted-lifecycle/pyinstaller.log.gz",
+      "source_bytes": 259319,
+      "source_sha256": "35ae9797ca896416bdb29489d286d4d1e2805350a1b54adfbbc1f5a7f6dff1e3",
+      "gzip_bytes": 36280,
+      "gzip_sha256": "fc8ee3e113b8b7dbf4fb505f2116cb5ee97eedb5fc8cbb52caa5a4ae866622af"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\candidate.json",
+      "file": "intermediate-lifecycle/candidate.json.gz",
+      "source_bytes": 793,
+      "source_sha256": "719e9ba4349c5a5ede1e71f3d62cc97a1bb41a3f35fe4b32646dbbef90dd88f0",
+      "gzip_bytes": 478,
+      "gzip_sha256": "d0f3615df2d220ce7ed0ba151d52f13946e50fe31d4a6d1122959b1acfe5307b"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\code-commit.txt",
+      "file": "intermediate-lifecycle/code-commit.txt.gz",
+      "source_bytes": 42,
+      "source_sha256": "acaf30864984f5ae1c7df8e1c63c73f4e4cfa94c7d5d0a0fed9eef8aa5113380",
+      "gzip_bytes": 62,
+      "gzip_sha256": "1f48326197279e27f5ae16e508e0e62940300a43e94a138e903d8c3b6d9f6dde"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\first-party-pyz-removal.json",
+      "file": "intermediate-lifecycle/first-party-pyz-removal.json.gz",
+      "source_bytes": 17828,
+      "source_sha256": "e2fd10b6de362c6ad6c3c907b87faa8d324c55c31eb8f8e54780a365224e6a66",
+      "gzip_bytes": 2924,
+      "gzip_sha256": "7db925360657b7ba68ecb52a33078ee58e4bade289786bda4fce8e49d0945894"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\first-party-resources.json",
+      "file": "intermediate-lifecycle/first-party-resources.json.gz",
+      "source_bytes": 223765,
+      "source_sha256": "ef3438402c3b065fa756ac22de2e39a6a157a632189b2eafff76f899c5b07524",
+      "gzip_bytes": 16784,
+      "gzip_sha256": "069b5ec7ece40d540c0a3f10f904431638a768148f516b94edffc8b0fab8ae4d"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\pyinstaller.exit",
+      "file": "intermediate-lifecycle/pyinstaller.exit.gz",
+      "source_bytes": 3,
+      "source_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "gzip_bytes": 23,
+      "gzip_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\pyinstaller.log",
+      "file": "intermediate-lifecycle/pyinstaller.log.gz",
+      "source_bytes": 365032,
+      "source_sha256": "e257f27e3c64bf49c74ea9e24f35ba606375e539da56c8f3501100e8a93813ba",
+      "gzip_bytes": 51217,
+      "gzip_sha256": "01bde7bcc324891ff4805b17d5ca6484482dbd16e0699d95157097ce602c142e"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\resolved-runtime-inputs.json",
+      "file": "intermediate-lifecycle/resolved-runtime-inputs.json.gz",
+      "source_bytes": 1457459,
+      "source_sha256": "911fb7bd92052ac189729c22ef7c1cb21174178b5bddc59e1d662269b834c898",
+      "gzip_bytes": 84462,
+      "gzip_sha256": "484cb2a4115eb9022d03a2ad455d0f45269b5ae55b9d4b77fd4c5b9ad8c21060"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\stage.exit",
+      "file": "intermediate-lifecycle/stage.exit.gz",
+      "source_bytes": 3,
+      "source_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "gzip_bytes": 23,
+      "gzip_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\stage.log",
+      "file": "intermediate-lifecycle/stage.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "phase": "intermediate-lifecycle",
+      "scope": "ea0f587d complete normal package; superseded by startup fit",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-final\\evidence\\wheel-attribution.json",
+      "file": "intermediate-lifecycle/wheel-attribution.json.gz",
+      "source_bytes": 1146,
+      "source_sha256": "1aa96108cc00dfc39f653521952e019a55190aaddc91f8b4bff4986806f4e85e",
+      "gzip_bytes": 554,
+      "gzip_sha256": "4fa372b80d9048e189c2f299b6d5c6555b205fdfb14e3cab5cccbacb45e12d4e"
+    },
+    {
+      "phase": "interrupted-license",
+      "scope": "4f357317 interrupted early to include the real public license link repair; no collected payload",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit\\evidence\\code-commit.txt",
+      "file": "interrupted-license/code-commit.txt.gz",
+      "source_bytes": 42,
+      "source_sha256": "44a8af22320eaee9b2621e5b0fa940d050a244835ad4ae6ba21787584b266aed",
+      "gzip_bytes": 61,
+      "gzip_sha256": "e76f8bc30e56b69957c1b02f828df6a971256a26da63a751f5b4cfe728f67078"
+    },
+    {
+      "phase": "interrupted-license",
+      "scope": "4f357317 interrupted early to include the real public license link repair; no collected payload",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit\\evidence\\pyinstaller.exit",
+      "file": "interrupted-license/pyinstaller.exit.gz",
+      "source_bytes": 4,
+      "source_sha256": "186a919b8c7cb84aebf4e53c70cd1cc028a93a1d183ee29dd6e10cd18a714577",
+      "gzip_bytes": 24,
+      "gzip_sha256": "a15bdccd101b39f7ef8603828b2e944c0861772fa9c6aa3955f4c4ef55cb6f72"
+    },
+    {
+      "phase": "interrupted-license",
+      "scope": "4f357317 interrupted early to include the real public license link repair; no collected payload",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit\\evidence\\pyinstaller.log",
+      "file": "interrupted-license/pyinstaller.log.gz",
+      "source_bytes": 8744,
+      "source_sha256": "d9c1d988f0f51341a77b253a5e43547313f77ea9b4874e7be3afff0b70bf1e3f",
+      "gzip_bytes": 1796,
+      "gzip_sha256": "15d58ec9da052d1a8332519bcbce8abc809fa40b9d918fef52a9b364f6825728"
+    },
+    {
+      "phase": "failed-long-path",
+      "scope": "c8ec254a completed three analyses but COLLECT failed on 263-unit Windows destination",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit-final\\evidence\\code-commit.txt",
+      "file": "failed-long-path/code-commit.txt.gz",
+      "source_bytes": 42,
+      "source_sha256": "e9211c26887e901e01bf7561635d83cfd703bc45aaf722e02341ab64671fae65",
+      "gzip_bytes": 61,
+      "gzip_sha256": "26d0cf1a92fbad9484ec24d3cb39654a8d258fd6b15fc54017077dc5cca573c5"
+    },
+    {
+      "phase": "failed-long-path",
+      "scope": "c8ec254a completed three analyses but COLLECT failed on 263-unit Windows destination",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit-final\\evidence\\pyinstaller.exit",
+      "file": "failed-long-path/pyinstaller.exit.gz",
+      "source_bytes": 3,
+      "source_sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "gzip_bytes": 23,
+      "gzip_sha256": "887ca0e03cc141d53e636c68bab887bc584f1549132343b716c5d00c8cef52c2"
+    },
+    {
+      "phase": "failed-long-path",
+      "scope": "c8ec254a completed three analyses but COLLECT failed on 263-unit Windows destination",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit-final\\evidence\\pyinstaller.log",
+      "file": "failed-long-path/pyinstaller.log.gz",
+      "source_bytes": 365993,
+      "source_sha256": "8f4dc868038504b35407c56b184c8cecfaeb8f7353c5b084f064ed89911eb76f",
+      "gzip_bytes": 50704,
+      "gzip_sha256": "cf5fd3b7c1e756af7262ce805fc5fd5b4fbbbf6b60f6770c23d3e6aacdd452e0"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\candidate.json",
+      "file": "final/candidate.json.gz",
+      "source_bytes": 763,
+      "source_sha256": "f0c03cd92ea864e1cbfb53180c56289527a3d684ac0c0314972293c16701ec87",
+      "gzip_bytes": 478,
+      "gzip_sha256": "0d713548497d611dcee4674d7a211829afbe862bf915d36fdd5a8b416910e140"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\code-commit.txt",
+      "file": "final/code-commit.txt.gz",
+      "source_bytes": 42,
+      "source_sha256": "175805bfcaa822641670c5114797c59563609db80b0c1cfb86a9041acf559c24",
+      "gzip_bytes": 61,
+      "gzip_sha256": "41b5e2ccbefe9c063ff8619c443a254a7743845eeeab8db11c723bfb1b1f011e"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\first-party-pyz-removal.json",
+      "file": "final/first-party-pyz-removal.json.gz",
+      "source_bytes": 17828,
+      "source_sha256": "e2fd10b6de362c6ad6c3c907b87faa8d324c55c31eb8f8e54780a365224e6a66",
+      "gzip_bytes": 2924,
+      "gzip_sha256": "7db925360657b7ba68ecb52a33078ee58e4bade289786bda4fce8e49d0945894"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\first-party-resources.json",
+      "file": "final/first-party-resources.json.gz",
+      "source_bytes": 223765,
+      "source_sha256": "e236e4546e841f8464db72dc8abfec129752de406a518f3e007d5c7575d24bd1",
+      "gzip_bytes": 16785,
+      "gzip_sha256": "64dad4882a53f2e4815c1b5ea5565eaa8cde8ce890bee34372d249e8b64b6c6c"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\post-native-readback.json",
+      "file": "final/post-native-readback.json.gz",
+      "source_bytes": 1768,
+      "source_sha256": "1977da95602b51a54565707dc739ca67903869511948d0df8ab89629f29c5bb4",
+      "gzip_bytes": 831,
+      "gzip_sha256": "2d9f44ac85fad503c71aa2d53c1c50b4c89b1c69554f10ca3c1ea32703d731fa"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\pyinstaller.exit",
+      "file": "final/pyinstaller.exit.gz",
+      "source_bytes": 3,
+      "source_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "gzip_bytes": 23,
+      "gzip_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\pyinstaller.log",
+      "file": "final/pyinstaller.log.gz",
+      "source_bytes": 363535,
+      "source_sha256": "1b7471c5e3265a06a0d7a6bdb573d8b30a3decbb656b7b81a526ff16217b1752",
+      "gzip_bytes": 50052,
+      "gzip_sha256": "bba59ad47f315cc399d04e9183a0fdd9db97b9e5683547f21995e3806ffe3ffa"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\readback.json",
+      "file": "final/readback.json.gz",
+      "source_bytes": 1713,
+      "source_sha256": "b5493cdc9ea81b224a6874004f33c5e35af9357094f27c0e801d82e75ac77762",
+      "gzip_bytes": 797,
+      "gzip_sha256": "67a47c50c02a1dee74f380e40620e684ec5a3306fe62eaeba15d322b912c3f94"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\resolved-runtime-inputs.json",
+      "file": "final/resolved-runtime-inputs.json.gz",
+      "source_bytes": 1457459,
+      "source_sha256": "acd0d99e15cbfd09bce50b3ada9fc9254fcd6e0030196a22822499056a882517",
+      "gzip_bytes": 84464,
+      "gzip_sha256": "602de0701731ff50dc90f6f24deae00468e0b0b5ac0f0957b7f63d076a2590c9"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\stage.exit",
+      "file": "final/stage.exit.gz",
+      "source_bytes": 3,
+      "source_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "gzip_bytes": 23,
+      "gzip_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\stage.log",
+      "file": "final/stage.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "phase": "final",
+      "scope": "45ba8701 normal three analyses and complete staging/readback; native FLP/GSHC white-client observations block GUI acceptance; root cause NOT PROVEN",
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-short\\evidence\\wheel-attribution.json",
+      "file": "final/wheel-attribution.json.gz",
+      "source_bytes": 1146,
+      "source_sha256": "1aa96108cc00dfc39f653521952e019a55190aaddc91f8b4bff4986806f4e85e",
+      "gzip_bytes": 554,
+      "gzip_sha256": "4fa372b80d9048e189c2f299b6d5c6555b205fdfb14e3cab5cccbacb45e12d4e"
+    }
+  ],
+  "scope": "Every included gzip physically written, read back and decompressed to exact complete original bytes. Runtime ZIP and cold archives are external, not copied into Git. GUI acceptance is recorded separately."
+}

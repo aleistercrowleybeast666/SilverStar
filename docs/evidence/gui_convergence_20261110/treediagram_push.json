@@ -1,0 +1,37 @@
+{
+  "repository": "https://github.com/aleistercrowleybeast666/TreeDiagram",
+  "branch": "codex/gui-convergence-20261110",
+  "remote_head": "38a6ccf23ca24b2ca60956b7365780ec1eb5fe39",
+  "normal_push": true,
+  "verified_by": "git ls-remote origin refs/heads/codex/gui-convergence-20261110",
+  "ci": {
+    "run_id": 43022738410,
+    "url": "https://github.com/aleistercrowleybeast666/TreeDiagram/actions/runs/43022738410",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "Ubuntu bounded host core/contracts plus new-artifact guard; not native Linux GUI or hardware acceptance"
+  },
+  "main_merged": false,
+  "release_created": false,
+  "historical": [
+    {
+      "repository": "https://github.com/aleistercrowleybeast666/TreeDiagram",
+      "branch": "codex/gui-convergence-20261110",
+      "remote_head": "768c0a52bdc154e023582a12db56dc23e303ca76",
+      "normal_push": true,
+      "verified_by": "git ls-remote origin refs/heads/codex/gui-convergence-20261110",
+      "ci": {
+        "run_id": 42686270209,
+        "url": "https://github.com/aleistercrowleybeast666/TreeDiagram/actions/runs/42686270209",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "scope": "Ubuntu bounded host core/contracts plus new-artifact guard; not native Linux GUI or hardware acceptance"
+      },
+      "main_merged": false,
+      "release_created": false
+    }
+  ],
+  "verified_utc": "2026-11-11T16:51:25.528090+00:00"
+}

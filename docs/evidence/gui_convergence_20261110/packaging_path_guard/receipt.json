@@ -1,0 +1,96 @@
+{
+  "head": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "recorded_utc": "2026-11-11T12:46:46.119582+00:00",
+  "scope": "Predictable Windows MAX_PATH early rejection and targeted regression only; full ordinary build remains separate.",
+  "commands": [
+    {
+      "name": "preflight",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "PyInstaller",
+        "--noconfirm",
+        "--workpath",
+        "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\packaging-path-proof\\build",
+        "--distpath",
+        "D:\\python_software\\SilverStar\\dist\\gui-convergence-20261111-fit-final",
+        "tools/packaging/SilverStar_shared.spec"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "exit": 1,
+      "expected_exit": 1,
+      "seconds": 4.021,
+      "log": "preflight.log",
+      "log_sha256": "a6531858014bf255fb3cda82289c6b0dc67fe81e34829da3f7e04f4ebfd60036"
+    },
+    {
+      "name": "tests",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_packaging_paths.py",
+        "-q",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\packaging-path-proof\\pytest",
+        "-o",
+        "cache_dir=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\packaging-path-proof\\pytest-cache"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 3.809,
+      "log": "tests.log",
+      "log_sha256": "ae3144defe7bfb4483cbc490a89dc60f773ffd38f5168ae6a61b4784ae51e88d"
+    },
+    {
+      "name": "ruff",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "ruff",
+        "check",
+        "tools/packaging/path_limits.py",
+        "tests/integration/test_packaging_paths.py"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 0.476,
+      "log": "ruff.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  ],
+  "sources": [
+    {
+      "path": "tools/packaging/SilverStar_shared.spec",
+      "sha256": "d6736dd9e8ec54bfb23b17eb4b17e8cc8a06ebd3546714a5889490ea77b40a9e"
+    },
+    {
+      "path": "tools/packaging/path_limits.py",
+      "sha256": "e6e5ef36f528ca8ca7df8e01c7aa06c02e372169eb8b16ee6f43f17f16b00d66"
+    },
+    {
+      "path": "tools/packaging/README.md",
+      "sha256": "3fa6712f12b2e87724f7219cced0fcbaa6b0bc26ad9ca7fc9d10b06a2ed8eca2"
+    },
+    {
+      "path": "tests/integration/test_packaging_paths.py",
+      "sha256": "c95aec5cf7282ead8ca1d5e11c3df2951182eb4337721a1bbbf52c4450731fdd"
+    }
+  ],
+  "preflight": {
+    "expected_rejection": true,
+    "analysis_started": false,
+    "analysis_toc_count": 0,
+    "long_path_units": 263,
+    "short_equivalent_path_units": 236,
+    "terminator_reserved": true
+  },
+  "full_package_build_pass": false,
+  "original_failed_build_log": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\package-fit-final\\evidence\\pyinstaller.log",
+  "original_failed_build_log_sha256": "8f4dc868038504b35407c56b184c8cecfaeb8f7353c5b084f064ed89911eb76f",
+  "note": "The previous three-Analysis COLLECT failure is preserved. This real PyInstaller invocation exits 1 intentionally before Analysis; no cached Analysis is used or presented as a successful rebuild."
+}

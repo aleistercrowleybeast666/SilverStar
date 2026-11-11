@@ -1,0 +1,39 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gcf-inputs3\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 19 items
+
+tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[existing-silverstar.algorithm.kf6] PASSED [  5%]
+tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[imported-silverstar.algorithm.kf6] PASSED [ 10%]
+tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[pure-silverstar.algorithm.pure_ins] PASSED [ 15%]
+tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[eskf-silverstar.algorithm.estimator.eskf15] PASSED [ 21%]
+tests/test_generated_aggregation_pair.py::test_real_generated_package_rejects_wrong_identity_and_recorded_configuration[identity] PASSED [ 26%]
+tests/test_generated_aggregation_pair.py::test_real_generated_package_rejects_wrong_identity_and_recorded_configuration[recorded_aggregation] PASSED [ 31%]
+tests/test_joint_c_golden.py::test_generated_c_log_exact_decoder_replay_and_mechanization FAILED [ 36%]
+tests/test_ss_test_0_manual.py::test_ss_test_0_real_package_discovery_manual_import_and_cache PASSED [ 42%]
+tests/test_ss_test_0_manual.py::test_ss_test_0_real_golden_matches_expected_exactly PASSED [ 47%]
+tests/test_ss_test_0_manual.py::test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke PASSED [ 52%]
+tests/test_silverstar_project_root.py::test_project_root_scans_only_canonical_decoder_and_log_tree PASSED [ 57%]
+tests/test_silverstar_project_root.py::test_project_root_default_export_stays_beside_selected_log PASSED [ 63%]
+tests/test_mission_folder_import.py::test_project_root_recurses_missions_and_keeps_old_bin PASSED [ 68%]
+tests/test_mission_folder_import.py::test_project_recursion_obeys_depth_file_and_byte_limits PASSED [ 73%]
+tests/test_mission_folder_import.py::test_root_folder_and_single_mission_find_exact_pairs_without_mutating_sources PASSED [ 78%]
+tests/test_mission_folder_import.py::test_same_name_candidates_show_mission_paths_and_require_selection PASSED [ 84%]
+tests/test_mission_folder_import.py::test_single_mission_candidate_can_be_opened_directly PASSED [ 89%]
+tests/test_mission_folder_import.py::test_actual_import_file_filters_and_directory_picker PASSED [ 94%]
+tests/test_mission_folder_import.py::test_directory_open_and_drop_share_pair_discovery PASSED [100%]
+
+================================== FAILURES ===================================
+_________ test_generated_c_log_exact_decoder_replay_and_mechanization _________
+tests\test_joint_c_golden.py:131: in test_generated_c_log_exact_decoder_replay_and_mechanization
+    assert any(kind in name for name in names)
+E   assert False
+E    +  where False = any(<generator object test_generated_c_log_exact_decoder_replay_and_mechanization.<locals>.<genexpr> at 0x0000013CB5BE19A0>)
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\flp\inputs3-1.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_joint_c_golden.py::test_generated_c_log_exact_decoder_replay_and_mechanization
+=================== 1 failed, 18 passed in 71.12s (0:01:11) ===================

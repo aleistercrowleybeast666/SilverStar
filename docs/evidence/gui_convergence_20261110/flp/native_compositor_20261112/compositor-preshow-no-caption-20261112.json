@@ -1,0 +1,277 @@
+{
+  "head": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "qt": "6.10.1",
+  "pid": 16936,
+  "arguments": {
+    "output": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-no-caption-20261112",
+    "no_fit": false,
+    "deferred_fit": false,
+    "before_show_fit": true,
+    "fit_part": null,
+    "no_caption": true,
+    "no_gl": false,
+    "visit_gl": true,
+    "wait_trigger": false,
+    "auto_own_foreground": true
+  },
+  "env": {
+    "QT_LOGGING_RULES": "qt.qpa.gl=true;qt.qpa.backingstore=true",
+    "QT_QPA_PLATFORM": "windows",
+    "QT_SCALE_FACTOR": "1"
+  },
+  "scope": "Private settings; synthetic empty project only. QWidget.grab and QScreen.grabWindow are diagnostic and not WGC acceptance.",
+  "snapshots": [
+    {
+      "tag": "initial",
+      "surface": "SurfaceType.OpenGLSurface",
+      "dpr": 1.25,
+      "updates_enabled": true,
+      "frame_contained": false,
+      "frame": [
+        0,
+        0,
+        1480,
+        846
+      ],
+      "paint_counts_before_grab": {
+        "MainWindow": 4,
+        "QWidget": 4
+      },
+      "gl": [
+        {
+          "visible": false,
+          "valid": false,
+          "context": false,
+          "context_valid": null,
+          "context_version": null
+        },
+        {
+          "visible": false,
+          "valid": false,
+          "context": false,
+          "context_valid": null,
+          "context_version": null
+        }
+      ],
+      "own_hwnd": 3017096,
+      "foreground_hwnd": 3017096,
+      "foreground_pid": 16936,
+      "native_grab_unoccluded_candidate": true,
+      "native_before_qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.9630164281928988,
+        "nonwhite_pixels": 69788,
+        "rgb_std": 40.206839431910666,
+        "file": "initial-native-before.png"
+      },
+      "qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.4807027027027027,
+        "nonwhite_pixels": 979914,
+        "rgb_std": 77.17347590418946,
+        "file": "initial-qt.png"
+      },
+      "native_after_qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.9630164281928988,
+        "nonwhite_pixels": 69788,
+        "rgb_std": 40.206839431910666,
+        "file": "initial-native-after.png"
+      },
+      "foreground_unchanged_after_grabs": true
+    },
+    {
+      "tag": "visible-gl",
+      "surface": "SurfaceType.OpenGLSurface",
+      "dpr": 1.25,
+      "updates_enabled": true,
+      "frame_contained": false,
+      "frame": [
+        0,
+        0,
+        1480,
+        846
+      ],
+      "paint_counts_before_grab": {
+        "MainWindow": 7,
+        "QWidget": 7
+      },
+      "gl": [
+        {
+          "visible": true,
+          "valid": true,
+          "context": true,
+          "context_valid": true,
+          "context_version": [
+            4,
+            6
+          ],
+          "pyopengl_vendor": "b'Intel'",
+          "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+          "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+        },
+        {
+          "visible": true,
+          "valid": true,
+          "context": true,
+          "context_valid": true,
+          "context_version": [
+            4,
+            6
+          ],
+          "pyopengl_vendor": "b'Intel'",
+          "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+          "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+        }
+      ],
+      "own_hwnd": 3017096,
+      "foreground_hwnd": 3017096,
+      "foreground_pid": 16936,
+      "native_grab_unoccluded_candidate": true,
+      "native_before_qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.9630164281928988,
+        "nonwhite_pixels": 69788,
+        "rgb_std": 40.206839431910666,
+        "file": "visible-gl-native-before.png"
+      },
+      "qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.47219554848966616,
+        "nonwhite_pixels": 995967,
+        "rgb_std": 81.12978939494661,
+        "file": "visible-gl-qt.png"
+      },
+      "native_after_qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.9630164281928988,
+        "nonwhite_pixels": 69788,
+        "rgb_std": 40.206839431910666,
+        "file": "visible-gl-native-after.png"
+      },
+      "foreground_unchanged_after_grabs": true
+    },
+    {
+      "tag": "overview-after-gl",
+      "surface": "SurfaceType.OpenGLSurface",
+      "dpr": 1.25,
+      "updates_enabled": true,
+      "frame_contained": false,
+      "frame": [
+        0,
+        0,
+        1480,
+        846
+      ],
+      "paint_counts_before_grab": {
+        "MainWindow": 10,
+        "QWidget": 10
+      },
+      "gl": [
+        {
+          "visible": false,
+          "valid": true,
+          "context": true,
+          "context_valid": true,
+          "context_version": [
+            4,
+            6
+          ],
+          "pyopengl_vendor": "b'Intel'",
+          "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+          "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+        },
+        {
+          "visible": false,
+          "valid": true,
+          "context": true,
+          "context_valid": true,
+          "context_version": [
+            4,
+            6
+          ],
+          "pyopengl_vendor": "b'Intel'",
+          "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+          "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+        }
+      ],
+      "own_hwnd": 3017096,
+      "foreground_hwnd": 3017096,
+      "foreground_pid": 16936,
+      "native_grab_unoccluded_candidate": true,
+      "native_before_qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.9630164281928988,
+        "nonwhite_pixels": 69788,
+        "rgb_std": 40.206839431910666,
+        "file": "overview-after-gl-native-before.png"
+      },
+      "qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.4807027027027027,
+        "nonwhite_pixels": 979914,
+        "rgb_std": 77.17347590418946,
+        "file": "overview-after-gl-qt.png"
+      },
+      "native_after_qwidget_grab": {
+        "width": 1850,
+        "height": 1020,
+        "white_fraction": 0.9630164281928988,
+        "nonwhite_pixels": 69788,
+        "rgb_std": 40.206839431910666,
+        "file": "overview-after-gl-native-after.png"
+      },
+      "foreground_unchanged_after_grabs": true
+    }
+  ],
+  "errors": [],
+  "source_files": {
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\app\\application.py": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\main_window.py": "b94e4452a14395be4fa98aa4da30d68ecd8372fa0f8c30dea8e68006f71c3371",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\pages\\charts.py": "f8b650be4a05e36e61add5c9e2bd54f77643e0c07cdf1ad0ee85ac949cc6be1d"
+  },
+  "before_show": {
+    "frame": [
+      0,
+      0,
+      1480,
+      920
+    ],
+    "geometry": [
+      0,
+      0,
+      1480,
+      920
+    ],
+    "available": [
+      0,
+      0,
+      1536,
+      816
+    ],
+    "window_handle_exists": false
+  },
+  "before_show_after_fit": {
+    "frame": [
+      0,
+      0,
+      1480,
+      816
+    ],
+    "geometry": [
+      0,
+      0,
+      1480,
+      816
+    ]
+  },
+  "exit": 0
+}

@@ -1,0 +1,9 @@
+{
+  "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\final-delivery-checks.json",
+  "file": "final-delivery-checks.json.gz",
+  "original_bytes": 2260,
+  "original_sha256": "b13c1daf5521176097db84756e122c5fb56f234ab915fc855ef5b7b95c72f988",
+  "gzip_bytes": 900,
+  "gzip_sha256": "c3c83657e5cd3eb8c46c5b22d751d04a8ca9b6e603ad3f5e0a326db56b87bef8",
+  "scope": "Exact four-command run against recorded staged tree before this receipt and last evidence supplements; final committed diff checked separately, no combined suite claim."
+}

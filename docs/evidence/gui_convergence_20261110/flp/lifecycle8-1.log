@@ -1,0 +1,294 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gcf-lifecycle8\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 73 items
+
+tests/test_main_window_disposal.py::test_repeated_accepted_close_releases_entire_native_tree PASSED [  1%]
+tests/test_main_window_disposal.py::test_unsaved_cancel_keeps_window_and_discard_destroys PASSED [  2%]
+tests/test_main_window_disposal.py::test_busy_close_keeps_window_until_real_worker_retires FAILED [  4%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[success] PASSED [  5%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[success] ERROR [  5%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[error] PASSED [  6%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[error] ERROR [  6%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[cancel] PASSED [  8%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[cancel] ERROR [  8%]
+tests/test_cloud_lifecycle_20261005.py::test_repeat_start_preserves_active_worker PASSED [  9%]
+tests/test_cloud_lifecycle_20261005.py::test_repeat_start_preserves_active_worker ERROR [  9%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[task_cancel] PASSED [ 10%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[task_cancel] ERROR [ 10%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[dialog_reject] PASSED [ 12%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[dialog_reject] ERROR [ 12%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[replace_request] PASSED [ 13%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[replace_request] ERROR [ 13%]
+tests/test_cloud_lifecycle_20261005.py::test_cancel_after_result_emit_before_gui_publication PASSED [ 15%]
+tests/test_cloud_lifecycle_20261005.py::test_cancel_after_result_emit_before_gui_publication ERROR [ 15%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay] PASSED [ 16%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay] ERROR [ 16%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export] PASSED [ 17%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export] ERROR [ 17%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay] PASSED [ 19%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay] ERROR [ 19%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export] PASSED [ 20%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export] ERROR [ 20%]
+tests/test_cloud_lifecycle_20261005.py::test_declining_close_keeps_worker_running PASSED [ 21%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] PASSED [ 23%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] ERROR [ 23%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed] ERROR [ 24%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] PASSED [ 26%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] ERROR [ 26%]
+tests/test_task_cancellation_20261005.py::test_cancelled_discovery_result_is_not_published ERROR [ 27%]
+tests/test_task_cancellation_20261005.py::test_declining_close_does_not_cancel_active_task PASSED [ 28%]
+tests/test_task_cancellation_20261005.py::test_cancellation_updates_local_and_global_status PASSED [ 30%]
+tests/test_task_cancellation_20261005.py::test_mechanization_observes_cancellation_between_intervals PASSED [ 31%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close] FAILED [ 32%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close] ERROR [ 32%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option] ERROR [ 34%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] PASSED [ 35%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] ERROR [ 35%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed] ERROR [ 36%]
+tests/test_joint_gui_state.py::test_header_project_has_readable_pixels_and_elides_long_names PASSED [ 38%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-zh_CN] PASSED [ 39%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-en_US] PASSED [ 41%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-zh_CN] PASSED [ 42%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-en_US] PASSED [ 43%]
+tests/test_joint_gui_state.py::test_project_reopens_selected_what_if_identity_and_exact_time_range PASSED [ 45%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-zh_CN] PASSED [ 46%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-en_US] PASSED [ 47%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-zh_CN] PASSED [ 49%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-en_US] PASSED [ 50%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-1-kf] PASSED [ 52%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-2-eskf] PASSED [ 53%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-1-kf] PASSED [ 54%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-2-eskf] PASSED [ 56%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-1-kf] PASSED [ 57%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-2-eskf] PASSED [ 58%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-1-kf] PASSED [ 60%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-2-eskf] PASSED [ 61%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-1-kf] PASSED [ 63%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-2-eskf] PASSED [ 64%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-1-kf] PASSED [ 65%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-2-eskf] PASSED [ 67%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual0] PASSED [ 68%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual1] PASSED [ 69%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual2] PASSED [ 71%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual3] PASSED [ 72%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual4] PASSED [ 73%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual5] PASSED [ 75%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual6] PASSED [ 76%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual7] PASSED [ 78%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual8] PASSED [ 79%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual9] PASSED [ 80%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual10] PASSED [ 82%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual11] PASSED [ 83%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual0] PASSED [ 84%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual1] PASSED [ 86%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual2] PASSED [ 87%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual3] PASSED [ 89%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual4] PASSED [ 90%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual5] PASSED [ 91%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual6] PASSED [ 93%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual7] PASSED [ 94%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual8] PASSED [ 95%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual9] PASSED [ 97%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual10] PASSED [ 98%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual11] PASSED [100%]
+
+=================================== ERRORS ====================================
+____ ERROR at teardown of test_terminal_controls_and_error_status[success] ____
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+_____ ERROR at teardown of test_terminal_controls_and_error_status[error] _____
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1320 Background task failed: audit_failure
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 66, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\tests\test_cloud_lifecycle_20261005.py", line 43, in work
+    raise ValueError("audit_failure")
+ValueError: audit_failure
+____ ERROR at teardown of test_terminal_controls_and_error_status[cancel] _____
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+_______ ERROR at teardown of test_repeat_start_preserves_active_worker ________
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+_ ERROR at teardown of test_discovery_discards_cancelled_or_obsolete_result[task_cancel] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+---------------------------- Captured stdout call -----------------------------
+task_cancel: published=[], visible=False, folder=D:\python_software\SilverStar\.work\gcf-lifecycle8\0\test_discovery_discards_cancel0\A, errors=[]
+_ ERROR at teardown of test_discovery_discards_cancelled_or_obsolete_result[dialog_reject] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+---------------------------- Captured stdout call -----------------------------
+dialog_reject: published=[], visible=False, folder=D:\python_software\SilverStar\.work\gcf-lifecycle8\0\test_discovery_discards_cancel1\A, errors=[]
+_ ERROR at teardown of test_discovery_discards_cancelled_or_obsolete_result[replace_request] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+---------------------------- Captured stdout call -----------------------------
+replace_request: published=[], visible=True, folder=D:\python_software\SilverStar\.work\gcf-lifecycle8\0\test_discovery_discards_cancel2\B, errors=['another_background_task_is_running']
+__ ERROR at teardown of test_cancel_after_result_emit_before_gui_publication __
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+---------------------------- Captured stdout call -----------------------------
+post-emit cancellation: event=True, published=[], visible=False, status=任务已取消
+_ ERROR at teardown of test_real_start_updates_local_global_terminal[cancel-replay] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+_ ERROR at teardown of test_real_start_updates_local_global_terminal[cancel-export] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+_ ERROR at teardown of test_real_start_updates_local_global_terminal[error-replay] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1320 Background task failed: audit_terminal_error
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 66, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 1102, in <lambda>
+    worker = FunctionWorker(lambda context: Replay_Execute(plugin, dataset, request, context))
+                                            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\replay_execution.py", line 13, in Replay_Execute
+    result = plugin.run(dataset, request, context)
+  File "D:\python_software\SilverStar\apps\FLP\tests\test_cloud_lifecycle_20261005.py", line 173, in <lambda>
+    monkeypatch.setattr(plugin, "run", lambda dataset, request, context: work(context))
+                                                                         ~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\tests\test_cloud_lifecycle_20261005.py", line 163, in work
+    raise ValueError("audit_terminal_error")
+ValueError: audit_terminal_error
+_ ERROR at teardown of test_real_start_updates_local_global_terminal[error-export] _
+tests\test_cloud_lifecycle_20261005.py:27: in window
+    w.import_dialog.reject()
+E   RuntimeError: Internal C++ object (ImportDialog) already deleted.
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1320 Background task failed: audit_terminal_error
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 66, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 1189, in <lambda>
+    lambda context: exporter.export(
+                    ~~~~~~~~~~~~~~~^
+        dataset,
+        ^^^^^^^^
+    ...<3 lines>...
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\FLP\tests\test_cloud_lifecycle_20261005.py", line 176, in <lambda>
+    monkeypatch.setattr(FlightExporter, "export", lambda self, *args, context, **kw: work(context))
+                                                                                     ~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\tests\test_cloud_lifecycle_20261005.py", line 163, in work
+    raise ValueError("audit_terminal_error")
+ValueError: audit_terminal_error
+_ ERROR at teardown of test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_ ERROR at setup of test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+_ ERROR at teardown of test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_____ ERROR at setup of test_cancelled_discovery_result_is_not_published ______
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+_ ERROR at teardown of test_save_lifecycle_respects_request_cancel_and_commit[clean_close] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_ ERROR at setup of test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+_ ERROR at teardown of test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_ ERROR at setup of test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+================================== FAILURES ===================================
+___________ test_busy_close_keeps_window_until_real_worker_retires ____________
+tests\test_main_window_disposal.py:68: in test_busy_close_keeps_window_until_real_worker_retires
+    window._Task_Start(worker, published.append)
+E   TypeError: MainWindow._Task_Start() missing 1 required positional argument: 'error_callback'
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+_____ test_save_lifecycle_respects_request_cancel_and_commit[clean_close] _____
+tests\test_project_save_lifecycle.py:51: in test_save_lifecycle_respects_request_cancel_and_commit
+    window._Project_SetDirty(False)
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\flp\lifecycle8-1.xml -
+=========================== short test summary info ===========================
+ERROR tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[success]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[error]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[cancel]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_repeat_start_preserves_active_worker
+ERROR tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[task_cancel]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[dialog_reject]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[replace_request]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_cancel_after_result_emit_before_gui_publication
+ERROR tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay]
+ERROR tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export]
+ERROR tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected]
+ERROR tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed]
+ERROR tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled]
+ERROR tests/test_task_cancellation_20261005.py::test_cancelled_discovery_result_is_not_published
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close]
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option]
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit]
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed]
+FAILED tests/test_main_window_disposal.py::test_busy_close_keeps_window_until_real_worker_retires
+FAILED tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close]
+============= 2 failed, 67 passed, 20 errors in 156.04s (0:02:36) =============

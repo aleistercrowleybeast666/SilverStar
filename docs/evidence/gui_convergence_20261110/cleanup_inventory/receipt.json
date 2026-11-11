@@ -1,0 +1,54 @@
+{
+  "collected_utc": "2026-11-11T16:57:47.479079+00:00",
+  "files": [
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\inventory-before.json",
+      "file": "cleanup_inventory/inventory-before.json.gz",
+      "source_bytes": 350761,
+      "source_sha256": "9c5bb6ba509f71dbb9c815b36412710f22abb66d4c0646600b2716ef8262efa0",
+      "gzip_bytes": 33712,
+      "gzip_sha256": "310c95decc6065bc21d1aac07d56d5a40d0012fc180f8267763468890b000747"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\inventory-after.json",
+      "file": "cleanup_inventory/inventory-after.json.gz",
+      "source_bytes": 234857,
+      "source_sha256": "6272f960db1fd38459e8eedda62519b5088e02b321719c1b1806995ebf6ebee7",
+      "gzip_bytes": 22842,
+      "gzip_sha256": "ef3b9af532ca48fbbdbe0fef123cd44a1503b65315b4b8e2b3873249f4be0bea"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\tracked-before.json",
+      "file": "cleanup_inventory/tracked-before.json.gz",
+      "source_bytes": 2781138,
+      "source_sha256": "17eee33179353367d984dbbe52775bde502bf160580d46a38763f1fae75fc3bf",
+      "gzip_bytes": 187396,
+      "gzip_sha256": "dfcec42c230ed717ea43a70311a01dded61e4aa1250edcefd7ed7dd7c0dcc13a"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\resume-disks.json",
+      "file": "cleanup_inventory/resume-disks.json.gz",
+      "source_bytes": 481,
+      "source_sha256": "d5c9804125352fca573d8badf435910163292efdb97872e33398b4d14ed0246e",
+      "gzip_bytes": 304,
+      "gzip_sha256": "7da6142f7b09e798589e8d349e8bd923f550d926e4c1ac3d9ab5d481708b51a7"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\inventory_after.py",
+      "file": "cleanup_inventory/inventory_after.py.gz",
+      "source_bytes": 3146,
+      "source_sha256": "82a21fd38fb57852693254e83a839c8584d5a3e7a52feafedea6a8b03830d7bc",
+      "gzip_bytes": 1232,
+      "gzip_sha256": "44dafffd37f6c88aada71f020dbee6924c9e3faad38f4c11838e1827d7185c75"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\collect_cleanup_summary.py",
+      "file": "cleanup_inventory/collect_cleanup_summary.py.gz",
+      "source_bytes": 20567,
+      "source_sha256": "7d09282807b290a91cfac98ee22fe15ce4d00e1f9a8c0ba51ef75fc6d3384ac6",
+      "gzip_bytes": 6403,
+      "gzip_sha256": "3c2da84c00f5ffb2bbb731a7a06b727c02a05c4146fd91f2a627ac67d7ed308c"
+    }
+  ],
+  "scope": "Exact complete original inventory snapshots and collector scripts. Before/after directory scans have their own timestamps and retain errors/links; not an exclusive physical disk reclamation measurement."
+}

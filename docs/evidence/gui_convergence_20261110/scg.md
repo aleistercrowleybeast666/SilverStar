@@ -6,6 +6,8 @@
 较大的原始构建日志以 `.log.gz` 保留，其余测试日志原文保留；解压后字节 SHA-256 见
 [`scg/receipt.json`](scg/receipt.json)。生成工程与编译产物位于
 `.work/gui-convergence-20261110/scg`，不是用户最终工程，也不是硬件证据。
+2026-11-11 已归档清理部分过期 A/旧 H7/测试副本；当前有效工程完整保留，
+原始 receipt 的历史命令路径不改写。恢复位置与精确范围见本报告末尾。
 
 ## GUI 已完成
 
@@ -198,3 +200,62 @@ Power of Ten 的文本计数不证明全部关键合同，也不代表原始规�
 最大单文件小于 440 KB。所有压缩文件已实际解压比对原始字节 SHA，完整 A/B 输入和
 产物摘要仍在各案例封印与 receipt 中。新增产物治理仍使用原 2 MiB 上限，没有为本轮
 证据增加例外。
+
+## 任务副本清理（2026-11-11）
+
+仅处理本任务创建并已封印的 16 个过期生成/测试目录，不扩展到历史 `.work` 或其他 owner。
+原 v1 清单保留，v2 补齐 `.bak`、`.tdproj`、`.tdrun`、`.sstuning`、`.tdmotor` 等保护。
+所选目录内项目、CubeMX 输入、decoder、日志、Tests、HardwareGenerated 和 fixture 留原处。
+`b/f4`、`b/capture`、`current-b/h7`、`current-b/research`、`final-generation`
+五棵树完整保留，包含上述当前八个 Release/Debug 配置及正常生成/Host 输入。
+
+两阶段各自实际 exit 0：先逐文件验证祖先路径、非 reparse、size、mtime、file ID、device、SHA，
+归档 15,944 条路径；3,892 个去重内容对象逐个写入磁盘、重新打开读回校验大小/SHA，
+再复核全部来源及保留树。取得 `archive-verified.json` 后，删除阶段重新检查清单、归档和来源，
+只移除清单中的精确叶子及空目录，没有递归删除或修改 ACL。
+
+实际移除 **13,759 文件 / 1,081,518,924 逻辑字节**、5,524 个空目录，错误为零。
+**13,786 个保留文件**最终再次核验身份及 SHA；删除日志与清单一一对上，所有已记录删除路径
+均已确认不存在。脚本统计时点任务树剩 14,114 文件 / 1,245,375,174 B；此后增加了小型证据
+整理脚本和末尾日志，不以这个时点数冒充全工作区最终盘点。
+
+持久归档：`D:/SilverStar_Archive/20261110/task/scg/generated-copies.zip`，267,900,415 B，
+SHA-256 `398eb4066b8e504fe311e19904a4de68b279cccd9b39771850557527913822ca`。
+同目录保留原清单、`manifest-v2.json`、执行脚本、恢复说明、实际删除 journal 和结果收据。
+ZIP 使用 `objects/<SHA-256>`，原路径映射在清单中；实际恢复采用有界单文件 scratch，
+没有声称同时重建完整目录树。v2 清单 SHA：
+`d9624f463027bd9c943e532407dd4590797ad80d072672da83c66cf8485f5f51`。
+
+D 盘删除阶段 free 从 39,426,809,856 到 43,731,083,264 B，区间变化 +4,304,273,408 B。
+当时还在并行清理旧 FCCG 等任务，且归档和来源位于同盘；此数**不能归因于本批物理回收**，
+也不能与逻辑删除量或 ZIP 大小互换。完整阶段记录、命令对应日志散列、保留与限制见
+[`scg-cleanup.json`](scg-cleanup.json)。本次未修改产品或重跑无关固件测试。
+
+## 清理后正常入口复核（2026-11-11）
+
+清理完成后另建一个 research / STM32F407 / Release 工程，复用本轮实际已应用的
+`integration/research.ssproject`，不修改此前封印的 `current-b`，不重复八配置矩阵。
+输入 SHA-256 `35da63b60ae0d5722d37f22defd7791d182e7afc7bdcf7768eb544beba111297`
+在生成前后及收据整理时一致。执行记录 HEAD 为
+`ea0f587dd3364b850e5ad07e7544d0bd934dcb12`；这次验证没有修改产品或门禁。
+
+实际依次运行正常 `generate_stack_review_cases.py --case research --research-model …`、
+生成 Makefile 的 `all`、`artifact-check`、`stack-report`，四步均 **exit 0**，
+合计 288.092 s。完整 argv、cwd、配置、工具版本、每步耗时和日志散列见
+[`scg-postcleanup/receipt.json`](scg-postcleanup/receipt.json)。严格栈检查实际输出
+**SOFTWARE BOUND PASS**，绑定已有审查案例 `convergence-current-20261110-research-Release`；
+任务最小预算余量 256 B，MSP/main/ISR 预算 2,304 B、估计 1,932 B、余量 372 B。
+实际 FLASH/main SRAM/CCMRAM 使用量分别为 361,468 / 101,676 / 62,712 B，
+heap 保留量及运行时分配符号均为零。
+
+新 ELF SHA-256 `1d589c00f14c47b57f1e17155d532582b1cd3968536518802a0b54ec540fd8b1`。
+新工程保留在 `.work/gui-convergence-20261110/scg/post-cleanup-research/`，
+运行后共 42,964,284 B；这是清理收据统计之后新增的一次验证输出，不混入原删除量。
+独立正式证据共 15 文件 / 183,072 B，含完整日志、执行脚本、输入、生成记录、
+实际 `memory-report.json`、`stack-budget.json` 与审查案例；每个压缩文件都实际解压
+比对原始字节。它们不计入上方原 `scg/` 185 个 payload 的历史数目。
+
+收据整理时 SCG 相对记录 HEAD 的唯一已跟踪源码差异是 GUI application 入口的
+窗口边界修正；该入口不被本生成命令导入，本次不声称验证这个 GUI 修改。
+本次也未重跑 Power of Ten、architecture、static-analysis 或 Host 全套，
+不改写既有证据范围、全固件手工 critical-contract NOT PROVEN 或硬件待测状态。

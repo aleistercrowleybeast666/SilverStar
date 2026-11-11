@@ -1,0 +1,882 @@
+{
+  "schema": "silverstar.gui-convergence-cleanup-summary/1",
+  "generated_utc": "2026-11-11T16:59:13.618095+00:00",
+  "script": {
+    "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\collect_cleanup_summary.py",
+    "bytes": 20567,
+    "sha256": "7d09282807b290a91cfac98ee22fe15ce4d00e1f9a8c0ba51ef75fc6d3384ac6"
+  },
+  "source_head_at_summary": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "state": "final_receipts_collected",
+  "pending_batches": [],
+  "final_requested": true,
+  "logical_deletion": {
+    "bytes": 33149579354,
+    "file_or_path_count": 575128,
+    "nonoverlap": {
+      "exact_manifest_paths_checked": 20574,
+      "disjoint_checkout_or_worktree_prefixes": [
+        {
+          "path": "d:/python_software/silverstar_gshc",
+          "batch": "old_checkout/SilverStar_GSHC"
+        },
+        {
+          "path": "d:/python_software/silverstar_flp",
+          "batch": "old_checkout/SilverStar_FLP"
+        },
+        {
+          "path": "d:/python_software/silverstar_fccg",
+          "batch": "old_checkout/SilverStar_FCCG"
+        },
+        {
+          "path": "d:/python_software/silverstar_gshc_android",
+          "batch": "old_checkout/SilverStar_GSHC_Android"
+        },
+        {
+          "path": "d:/codex_work/2026-10-09/task-5/flp-quality-wt",
+          "batch": "merged_worktree"
+        }
+      ],
+      "duplicates_or_overlapping_prefixes": 0
+    },
+    "scope": "Actual producer-receipted logical removals only; no planned bytes, restored temporary copies, empty directories or physical free deltas added."
+  },
+  "batches": [
+    {
+      "id": "old_checkout/SilverStar_GSHC",
+      "status": "completed",
+      "logical_deleted_bytes": 1226406516,
+      "removed_file_or_path_count": 16532,
+      "retained_or_limited": {
+        "original_skipped_count": 0,
+        "changed_or_denied_count": 0,
+        "root_absent": true,
+        "reason": "Unreadable paths and reparse points were retained without ACL changes or traversal; exact paths remain in retirement.json."
+      },
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\retirement.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\checkout-files.zip",
+      "detailed_receipt": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\deletion-receipt.json",
+        "size": 1322833,
+        "sha256": "ffea3828813ac05b4e7869a0897ddeced44c42d1334707bf6a45bb6d3bd07ca7"
+      }
+    },
+    {
+      "id": "old_checkout/SilverStar_FLP",
+      "status": "completed",
+      "logical_deleted_bytes": 2737349713,
+      "removed_file_or_path_count": 55924,
+      "retained_or_limited": {
+        "original_skipped_count": 107,
+        "changed_or_denied_count": 0,
+        "root_absent": false,
+        "reason": "Unreadable paths and reparse points were retained without ACL changes or traversal; exact paths remain in retirement.json."
+      },
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\retirement.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\checkout-files.zip",
+      "detailed_receipt": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\deletion-receipt.json",
+        "size": 5656545,
+        "sha256": "adcf84a3bd86b36c40d591ac5b86d92b0f328eb17ff06e1cb9b949628d73991e"
+      }
+    },
+    {
+      "id": "old_checkout/SilverStar_FCCG",
+      "status": "completed",
+      "logical_deleted_bytes": 23298183556,
+      "removed_file_or_path_count": 463684,
+      "retained_or_limited": {
+        "original_skipped_count": 86,
+        "changed_or_denied_count": 0,
+        "root_absent": false,
+        "reason": "Unreadable paths and reparse points were retained without ACL changes or traversal; exact paths remain in retirement.json."
+      },
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\retirement.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\checkout-files.zip",
+      "detailed_receipt": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\deletion-receipt.json",
+        "size": 61657125,
+        "sha256": "078d78c9c66a3b24cde7f54c149f06704a30e5246e187e715a182cf1b6721a66"
+      }
+    },
+    {
+      "id": "old_checkout/SilverStar_GSHC_Android",
+      "status": "completed",
+      "logical_deleted_bytes": 1923551302,
+      "removed_file_or_path_count": 18051,
+      "retained_or_limited": {
+        "original_skipped_count": 0,
+        "changed_or_denied_count": 0,
+        "root_absent": true,
+        "reason": "Unreadable paths and reparse points were retained without ACL changes or traversal; exact paths remain in retirement.json."
+      },
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\retirement.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\shell-remainder.zip",
+      "detailed_receipt": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\deletion-receipt.json",
+        "size": 1979202,
+        "sha256": "4c7bb9268590952f4887b4c09847244d4cf5288684acf442c5a309e5478e5ae7"
+      }
+    },
+    {
+      "id": "cold_evidence",
+      "status": "completed",
+      "logical_deleted_bytes": 389657470,
+      "removed_file_or_path_count": 44,
+      "retained_or_limited": "Cold historical evidence only; exact original reports and failures remain unchanged. Public fixed-commit references retain original access.",
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\cold_archive_manifest.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\historical-evidence.zip"
+    },
+    {
+      "id": "scg_generated_copies",
+      "status": "completed",
+      "logical_deleted_bytes": 1081518924,
+      "removed_file_or_path_count": 13759,
+      "retained_or_limited": {
+        "complete_trees": [
+          "b/f4",
+          "b/capture",
+          "current-b/h7",
+          "current-b/research",
+          "final-generation"
+        ],
+        "retained_files_sha_verified": 13786,
+        "reason": "Required current builds, raw logs, decoders, archives, source fixtures and input directories retained."
+      },
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\scg-cleanup.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\task\\scg\\generated-copies.zip"
+    },
+    {
+      "id": "flp_duplicate_outputs",
+      "status": "completed",
+      "logical_deleted_bytes": 37486196,
+      "removed_file_or_path_count": 940,
+      "retained_or_limited": "Only identical old PNG/CSV outputs removed; full2, unique results, raw logs, decoders, archives, fixtures and necessary failure reproductions remain.",
+      "receipt": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\cleanup-result.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\exact-duplicate-objects.zip"
+    },
+    {
+      "id": "underline_caches",
+      "status": "completed",
+      "logical_deleted_bytes": 4498105,
+      "removed_file_or_path_count": 358,
+      "retained_or_limited": "845 protected input hashes unchanged; caches reproduced by normal tools; no payload archive claimed.",
+      "receipt": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\applied.json"
+    },
+    {
+      "id": "treediagram_caches",
+      "status": "completed",
+      "logical_deleted_bytes": 2425121,
+      "removed_file_or_path_count": 180,
+      "retained_or_limited": "Protected source/input hashes verified; no cache payload archive claimed.",
+      "receipt": "D:\\python_software\\TreeDiagram\\docs\\evidence\\gui_convergence_20261110\\cleanup\\receipt.json"
+    },
+    {
+      "id": "gshc_caches",
+      "status": "completed",
+      "logical_deleted_bytes": 6868274,
+      "removed_file_or_path_count": 234,
+      "retained_or_limited": "apps/GSHC/.work/inspect_width.pyc",
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\cache_cleanup.json"
+    },
+    {
+      "id": "underline_old_package",
+      "status": "completed",
+      "logical_deleted_bytes": 387115321,
+      "removed_file_or_path_count": 905,
+      "retained_or_limited": {
+        "final_candidate": "dist/gui-convergence-20261110-fit",
+        "protected_input_count": 472
+      },
+      "receipt": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\prefit-retirement.json"
+    },
+    {
+      "id": "treediagram_old_wheel",
+      "status": "completed",
+      "logical_deleted_bytes": 192473,
+      "removed_file_or_path_count": 1,
+      "retained_or_limited": "Final wheel, source and formal test evidence retained; archive keeps original wheel bytes.",
+      "receipt": "D:\\python_software\\TreeDiagram\\docs\\evidence\\gui_initial_frame_20261111\\old-wheel-archive.json"
+    },
+    {
+      "id": "merged_worktree",
+      "status": "completed",
+      "logical_deleted_bytes": 4033055,
+      "removed_file_or_path_count": 363,
+      "retained_or_limited": "Clean including ignored files, merged into current history; Git history retained, no standalone payload archive claimed.",
+      "receipt": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\worktree_cleanup.json",
+      "worktree": "D:\\Codex_Work\\2026-10-09\\task-5\\flp-quality-wt",
+      "head": "4c0b5cb629c85a4949c1e848e33160f51aab55f7",
+      "inventory_sha256": "C917AE32E6240CA844D728B73922B30A214D92B03AB72CFE9DFAA4FD68107014"
+    },
+    {
+      "id": "silverstar-packages",
+      "status": "completed",
+      "logical_deleted_bytes": 1160784281,
+      "removed_file_or_path_count": 3502,
+      "retained_or_limited": "Current final runtime/ZIP, source, licenses, raw evidence and input inventories retained.",
+      "receipt": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages\\cleanup-result.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages\\superseded-packages.zip",
+      "errors": []
+    },
+    {
+      "id": "silverstar-packages-long-path",
+      "status": "completed",
+      "logical_deleted_bytes": 659265444,
+      "removed_file_or_path_count": 621,
+      "retained_or_limited": "Current final runtime/ZIP, source, licenses, raw evidence and input inventories retained.",
+      "receipt": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages-long-path\\cleanup-result.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages-long-path\\superseded-packages.zip",
+      "errors": []
+    },
+    {
+      "id": "silverstar-final-build",
+      "status": "completed",
+      "logical_deleted_bytes": 230243603,
+      "removed_file_or_path_count": 30,
+      "retained_or_limited": "Current final runtime/ZIP, source, licenses, raw evidence and input inventories retained.",
+      "receipt": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-final-build\\cleanup-result.json",
+      "archive": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-final-build\\superseded-packages.zip",
+      "errors": []
+    }
+  ],
+  "archive_storage": {
+    "named_archive_bytes": 6990525756,
+    "named_archive_count": 19,
+    "archives": [
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\checkout-files.zip",
+        "bytes": 807660795,
+        "sha256": "d1c976a2889bc0cba00542c763e5253eac139a1d2065892d0d3a387f7b026108",
+        "category": "payload",
+        "restoration_scope": "Every unique object physically restored, reread, size/SHA verified; paths in manifest.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "distinct_contents_restored": 15568,
+        "external_verified_files": 0,
+        "manifest": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\checkout-files-manifest.json",
+          "size": 5456272,
+          "sha256": "bfb12cfaf33fbf3f82922891617634632aae01557bb744d226754d6943b47ca2"
+        },
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\SilverStar_GSHC.bundle",
+        "bytes": 4241962,
+        "sha256": "f416661805ff0abcc117ce69e32a8a94cde44c225108c32f9c43dfbe82bd1710",
+        "category": "git_bundle",
+        "restoration_scope": "Git refs and tree restored from bundle; retained mirror is additional unmeasured storage.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "mirror": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\history.git",
+        "all_refs_restored": true,
+        "tree_restored": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\migration-tip.bundle",
+        "bytes": 4042646,
+        "sha256": "0634718b4f862b569eedb42fb424d34ff6461fcb5dc6d904cc024745befad7f2",
+        "category": "retirement_tip_bundle",
+        "restoration_scope": "Final archived remote main/README tip restored from its separate migration-tip bundle; original refs remain in the original bundle.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "retirement_main": "f299fbc1e9b32ed09148e3cfd19a0db33be1f355",
+        "readme_sha256": "4eeab275337209b972750788b0ddc873b3e90ce0e7b959ec62f5c22300bd06aa",
+        "restore_verified": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\checkout-files.zip",
+        "bytes": 1046698589,
+        "sha256": "e64fc07d51d9d120fb60eeb326902724e539f9906f886e5caad09b8dfda3f186",
+        "category": "payload",
+        "restoration_scope": "Every unique object physically restored, reread, size/SHA verified; paths in manifest.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "distinct_contents_restored": 27609,
+        "external_verified_files": 0,
+        "manifest": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\checkout-files-manifest.json",
+          "size": 21515623,
+          "sha256": "e1bfbeefedd8dbad20d8827cdc587196ec890265c6cb513edb9e6f76f16965aa"
+        },
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\SilverStar_FLP.bundle",
+        "bytes": 23759674,
+        "sha256": "d867989dad184909f22ee7144239eca813d8db1ef10654df0fbbaff47044dd0e",
+        "category": "git_bundle",
+        "restoration_scope": "Git refs and tree restored from bundle; retained mirror is additional unmeasured storage.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "mirror": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\history.git",
+        "all_refs_restored": true,
+        "tree_restored": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\migration-tip.bundle",
+        "bytes": 23759655,
+        "sha256": "1952e9c4376c102f3d0bbf312effcd094517527dad4a65794a6fb4ab993b20c6",
+        "category": "retirement_tip_bundle",
+        "restoration_scope": "Final archived remote main/README tip restored from its separate migration-tip bundle; original refs remain in the original bundle.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "retirement_main": "f698cb055bcca269aa3995fa6e411c177583423b",
+        "readme_sha256": "798d55cbe079078853e7ddead3bc11e3f839f6262d440099e1a932d4541a0f8d",
+        "restore_verified": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\checkout-files.zip",
+        "bytes": 2685870878,
+        "sha256": "853d8e610464a0e2a969e49d252b313ae1b94d854e25c9bd85532a1bfde9d05e",
+        "category": "payload",
+        "restoration_scope": "Every unique object physically restored, reread, size/SHA verified; paths in manifest.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "distinct_contents_restored": 28168,
+        "external_verified_files": 0,
+        "manifest": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\checkout-files-manifest.json",
+          "size": 193040491,
+          "sha256": "440fa96cb1d781b2c3faf512a0924ed72f4c2cfab41f3dbad811c747809e152c"
+        },
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\SilverStar_FCCG.bundle",
+        "bytes": 131281937,
+        "sha256": "12847224e6faa7eb8a2dcaa65a68e2ae477c4aab4b2118f996c4394b88503457",
+        "category": "git_bundle",
+        "restoration_scope": "Git refs and tree restored from bundle; retained mirror is additional unmeasured storage.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "mirror": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\history.git",
+        "all_refs_restored": true,
+        "tree_restored": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\migration-tip.bundle",
+        "bytes": 131281487,
+        "sha256": "ccc4f278b9f44b2aff587ecdd5bf8077f09d14c9e5f37107e1a61749b6d0b342",
+        "category": "retirement_tip_bundle",
+        "restoration_scope": "Final archived remote main/README tip restored from its separate migration-tip bundle; original refs remain in the original bundle.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "retirement_main": "7ef764ceb082f63ad06b0959bf3061a2b6cdde66",
+        "readme_sha256": "28f539bf90fc25b3322d41197d5cf915c10078047f2bf6aa8ebabc135ca2241f",
+        "restore_verified": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\shell-remainder.zip",
+        "bytes": 34890486,
+        "sha256": "b471a998853268830598c509938cd36f2ea5aa3defc20193e963ae391779bb10",
+        "category": "payload",
+        "restoration_scope": "Exact external tool/key copies checked again; every remainder object physically restored and reread.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "distinct_contents_restored": 876,
+        "external_verified_files": 16802,
+        "manifest": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\checkout-files-manifest.json",
+          "size": 10231470,
+          "sha256": "2f96693b8fd4d30a51ca6507e311725a5921be976678b924a3e1ba86022d4513"
+        },
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\historical-evidence.zip",
+        "bytes": 382210525,
+        "sha256": "258a3d0e1c2caa36d477b173c2f32514a801caec1682b3fc3e38652903f5db61",
+        "category": "payload",
+        "restoration_scope": "All 44 historical evidence files physically restored and SHA verified; fixed-commit original references retained.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\generated-copies.zip",
+        "bytes": 267900415,
+        "sha256": "398eb4066b8e504fe311e19904a4de68b279cccd9b39771850557527913822ca",
+        "category": "payload",
+        "restoration_scope": "Every unique content physically reconstructed on disk, reopened and SHA/size verified; every path strictly validated by manifest.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "distinct_contents_restored": 3892,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\exact-duplicate-objects.zip",
+        "bytes": 15894996,
+        "sha256": "3c4c235f90a1d754ccd0a0ca200689abe00126b3283b8ea165dbb17ce9509db4",
+        "category": "payload",
+        "restoration_scope": "614 unique contents physically restored to disk and reread; 940 retained full2 copies rechecked after deletion.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "unique_contents_restored": 614,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\underline\\Underline_RETLDC_GUI_20261110_PreFit_Windows_Portable.zip",
+        "bytes": 98650426,
+        "sha256": "aa47c148ed9eaf81948f9f1b0b316cd41d19761d4194401ea927025027a367d6",
+        "category": "payload",
+        "restoration_scope": {
+          "every_path_size_sha256_verified": true,
+          "root": "D:\\SilverStar_Archive\\20261110\\task\\underline\\verified-physical-restore",
+          "portable_files": 891,
+          "restored_copies_removed_after_verification": true,
+          "package_files": 13
+        },
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\underline\\Underline_RETLDC_GUI_20261110_PreFit_Build.zip",
+        "bytes": 46482985,
+        "sha256": "600d39bb1084580d6e23baf642987611d510f419f3b661cc0754e22d7ac48f3f",
+        "category": "payload",
+        "restoration_scope": {
+          "every_path_size_sha256_verified": true,
+          "root": "D:\\SilverStar_Archive\\20261110\\task\\underline\\verified-physical-restore",
+          "portable_files": 891,
+          "restored_copies_removed_after_verification": true,
+          "package_files": 13
+        },
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261111\\task\\treediagram\\TreeDiagram_GUI_20261110_PreFit.whl",
+        "bytes": 192473,
+        "sha256": "e85b75d15c3f6805e0937fe9a8b05ab4b03976783f0d8fba458cb0c18a3c666c",
+        "category": "payload",
+        "restoration_scope": "Actual wheel extraction verified 75 files; restored temporary copies subsequently removed.",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages\\superseded-packages.zip",
+        "bytes": 717482055,
+        "sha256": "1899108a4a4bed239f552b6e27c460b37c3ada6ff917bca9e9b6b78ceff34905",
+        "category": "payload",
+        "restoration_scope": "Every unique byte object written to a regular file and SHA-256 read back; original full paths preserved in manifest; not all paths restored simultaneously",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "unique_contents_restored": 3178,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages-long-path\\superseded-packages.zip",
+        "bytes": 369167710,
+        "sha256": "31b29a743608e1235b9fde1d5a64b6d7a8de0197b2132923f5f56981a4edf3fb",
+        "category": "payload",
+        "restoration_scope": "Every unique byte object written to a regular file and SHA-256 read back; original full paths preserved in manifest; not all paths restored simultaneously",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "unique_contents_restored": 608,
+        "size_matches_at_summary": true
+      },
+      {
+        "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-final-build\\superseded-packages.zip",
+        "bytes": 199056062,
+        "sha256": "0a3dca94246016c6f06f97be930b638c1e9f790b335bcd72b5ae1313c92d9b26",
+        "category": "payload",
+        "restoration_scope": "Every unique byte object written to a regular file and SHA-256 read back; original full paths preserved in manifest; not all paths restored simultaneously",
+        "hash_basis": "completed producer receipt; aggregator does not rehash large archives",
+        "exists_at_summary": true,
+        "unique_contents_restored": 29,
+        "size_matches_at_summary": true
+      }
+    ],
+    "limits": "Unique archive paths counted once. Retained mirrors, external Android toolchains/keys, manifests and auxiliary files are not included in this named-archive subtotal. No claim of net disk space reclaimed."
+  },
+  "working_tree_inventory": {
+    "before": {
+      "status": "completed",
+      "started": "2026-11-10T01:43:51.948998+08:00",
+      "finished": "2026-11-10T01:47:01.624178+08:00",
+      "roots": [
+        {
+          "path": "D:\\python_software\\SilverStar",
+          "logical_bytes": 30712586284,
+          "git_database_logical_bytes": 763806802,
+          "links_not_followed_count": 20,
+          "error_count": 732,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\Underline_RETLDC",
+          "logical_bytes": 1904599421,
+          "git_database_logical_bytes": 17430816,
+          "links_not_followed_count": 0,
+          "error_count": 1,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\TreeDiagram",
+          "logical_bytes": 155523979,
+          "git_database_logical_bytes": 9849279,
+          "links_not_followed_count": 0,
+          "error_count": 0,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_FCCG",
+          "logical_bytes": 23298183167,
+          "git_database_logical_bytes": 131705373,
+          "links_not_followed_count": 0,
+          "error_count": 89,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_GSHC",
+          "logical_bytes": 1226406481,
+          "git_database_logical_bytes": 378479937,
+          "links_not_followed_count": 0,
+          "error_count": 0,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_FLP",
+          "logical_bytes": 2737349678,
+          "git_database_logical_bytes": 35619173,
+          "links_not_followed_count": 106,
+          "error_count": 1,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_GSHC_Android",
+          "logical_bytes": 1923551302,
+          "git_database_logical_bytes": 0,
+          "links_not_followed_count": 0,
+          "error_count": 0,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        }
+      ]
+    },
+    "after": {
+      "status": "completed",
+      "started": "2026-11-12T00:40:25.531108+08:00",
+      "finished": "2026-11-12T00:42:55.933759+08:00",
+      "roots": [
+        {
+          "path": "D:\\python_software\\SilverStar",
+          "logical_bytes": 32813452896,
+          "git_database_logical_bytes": 769624971,
+          "links_not_followed_count": 30,
+          "error_count": 732,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\Underline_RETLDC",
+          "logical_bytes": 2318924499,
+          "git_database_logical_bytes": 18346721,
+          "links_not_followed_count": 0,
+          "error_count": 1,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\TreeDiagram",
+          "logical_bytes": 162668507,
+          "git_database_logical_bytes": 10090904,
+          "links_not_followed_count": 0,
+          "error_count": 0,
+          "missing_root_only": false,
+          "no_readable_groups": false
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_FCCG",
+          "logical_bytes": 0,
+          "git_database_logical_bytes": 0,
+          "links_not_followed_count": 0,
+          "error_count": 86,
+          "missing_root_only": false,
+          "no_readable_groups": true
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_GSHC",
+          "logical_bytes": 0,
+          "git_database_logical_bytes": 0,
+          "links_not_followed_count": 0,
+          "error_count": 1,
+          "missing_root_only": true,
+          "no_readable_groups": true
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_FLP",
+          "logical_bytes": 0,
+          "git_database_logical_bytes": 0,
+          "links_not_followed_count": 106,
+          "error_count": 1,
+          "missing_root_only": false,
+          "no_readable_groups": true
+        },
+        {
+          "path": "D:\\python_software\\SilverStar_GSHC_Android",
+          "logical_bytes": 0,
+          "git_database_logical_bytes": 0,
+          "links_not_followed_count": 0,
+          "error_count": 1,
+          "missing_root_only": true,
+          "no_readable_groups": true
+        }
+      ]
+    },
+    "limits": "Read-only directory snapshots include concurrent builds, generated output and Git data; differences are not attributed exclusively to cleanup. Error/link scopes remain explicit."
+  },
+  "tracked_working_files": {
+    "baseline": {
+      "bytes": 1103283581,
+      "files": 18511
+    },
+    "current": {
+      "bytes": 726928975,
+      "readable_files": 18994,
+      "missing_tracked_paths": []
+    },
+    "limits": "Git-index-listed working files, not Git history or object database. No history rewrite, pack-size reduction or remote repository shrinking is claimed."
+  },
+  "physical_free_space": {
+    "resume_observation": {
+      "client_resume_date": "2026-11-11",
+      "measured_at_host": "2026-11-11T19:18:15.597795+08:00",
+      "drives": {
+        "C:/": {
+          "total": 214749409280,
+          "used": 188585402368,
+          "free": 26164006912
+        },
+        "D:/": {
+          "total": 294972813312,
+          "used": 261142290432,
+          "free": 33830522880
+        }
+      },
+      "note": "Measured during resumed work, not original task-start free space; concurrent activity prevents per-deletion physical attribution."
+    },
+    "current_observed_utc": "2026-11-11T16:59:13.618095+00:00",
+    "current_observation_is_final": true,
+    "current_drives": {
+      "C:/": {
+        "total": 214749409280,
+        "used": 189981147136,
+        "free": 24768262144,
+        "single_interval_free_delta_since_resume": -1395744768
+      },
+      "D:/": {
+        "total": 294972813312,
+        "used": 238347509760,
+        "free": 56625303552,
+        "single_interval_free_delta_since_resume": 22794780672
+      }
+    },
+    "limits": "Resume at 2026-11-11 19:18:15 +08 is not original task start. Only this one resume-to-current interval is shown per volume; concurrent builds/archives/cleanup and other writes prevent exclusive attribution. Per-batch free-space intervals are never added."
+  },
+  "source_receipts": [
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\retirement.json",
+      "bytes": 59845,
+      "sha256": "6d83f2ce5222472d1310dba8847a00e34140414acf9e974f8a46b052058bdc7d"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\retired\\retirement-history.json",
+      "bytes": 1372,
+      "sha256": "d2e51200e0a13e85e3d6678c7392dabca67af6a2e2d366261df859da396f9baa"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\cold_archive_manifest.json",
+      "bytes": 34046,
+      "sha256": "95c67d5f209b635e4871e21cf3ddada17652a2839e9e30298e5c4941f949a827"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\scg-cleanup.json",
+      "bytes": 6513,
+      "sha256": "f403e98473ac23ffe4b37f2596afd33d5f6ed44b5ee9c6c80a4658cd1c048fbc"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\deleted-files.jsonl",
+      "bytes": 2701554,
+      "sha256": "e4ea3a8d7d9df017dc9f52ad73111576823f79fd42c8c591ca1655cc7fea6ab3"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\cleanup-result.json",
+      "bytes": 804,
+      "sha256": "3a7fd40eb875583fab0b849f4d1f1091b76704fc7d5788448d46c135fef2db7b"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\deleted-files.jsonl",
+      "bytes": 214967,
+      "sha256": "7e80450debfbcfadfc1a11725ed309937dd329782e8f8dafd92a84a7a491b43c"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\applied.json",
+      "bytes": 38617,
+      "sha256": "419cf6a003fe08e0083724e902a50be9686950fc87d70c873c8c4d6c2c49fba4"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-0.json",
+      "bytes": 41382,
+      "sha256": "af2c30e12f65e78a0174da63393657d1aa2d52747d061b3409d9f359b45d158e"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-1.json",
+      "bytes": 17691,
+      "sha256": "166e8e32c92345ac484856f9d1894d222ed363d5af7990dd69a918e29037d14b"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-2.json",
+      "bytes": 21337,
+      "sha256": "b90b5c06750716e39933b580534d3a981164a3a07f8f35f01f55c756f3675c38"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-3.json",
+      "bytes": 1018,
+      "sha256": "f47ae413b756f4d295baf91eaac8501605fcd4d69e3e61c0150431b290ac48a7"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-4.json",
+      "bytes": 930,
+      "sha256": "5fca2a3a09a1becdb18ab671eafbf43793b1f8d7ac9afe36344ac6919d6659d3"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-5.json",
+      "bytes": 506,
+      "sha256": "0101a1f3f8a6c61a03aae5a100af850ea541284b1ee88d5833c068729a3f85c4"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\plan-6.json",
+      "bytes": 254029,
+      "sha256": "98073dc49b3a2a250cb4b6b3a29bbd4f650fcaa23e08b24d3aca2c927ca39d5d"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\docs\\evidence\\gui_convergence_20261110\\cleanup\\receipt.json",
+      "bytes": 542,
+      "sha256": "804ec5667f72fc0839d14a384cdcbf5b1dc261b5dd836f3d37b9d83b9b1972c7"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\docs\\evidence\\gui_convergence_20261110\\cleanup\\reviewed-plan.json",
+      "bytes": 167666,
+      "sha256": "de56f3e9f99518b27ecc7b66927e88b2a50e2d9be4d43895a6dcad4f25240a20"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\cache_cleanup.json",
+      "bytes": 488,
+      "sha256": "262d728345c83c475cd0f8eeee6c416503aea1b153674babe43c988fd609102c"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\gshc-cache-reviewed.json",
+      "bytes": 187496,
+      "sha256": "58626ddabce52cd23cedc3b7363c9fc3d9533efa9e15f3470d7da5daaa316d96"
+    },
+    {
+      "path": "D:\\python_software\\Underline_RETLDC\\docs\\evidence\\gui_convergence_20261110\\cleanup\\prefit-retirement.json",
+      "bytes": 4749,
+      "sha256": "09f34e6ce0c3481cac5dae22a406f76edadcf06115295dd2127b60fdaff87816"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\underline\\RETIREMENT_RECEIPT.json",
+      "bytes": 262751,
+      "sha256": "2e2d042dde0d0e8b3c78ce15b3eaec692f873112122262db35fea3b3ea05eb44"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\docs\\evidence\\gui_initial_frame_20261111\\old-wheel-archive.json",
+      "bytes": 1257,
+      "sha256": "e708dbbdff7267cbb2090415333993c2c82418a8159e08471d5faa174432cc13"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\gui_convergence_20261110\\worktree_cleanup.json",
+      "bytes": 594,
+      "sha256": "604f1453fdf76af72344d80592ecf1bf3501216622ca668f7aa3b9996cb3b25f"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages\\archive-verified.json",
+      "bytes": 552,
+      "sha256": "ba227e7de61557d99b0cfafc1683b5151a3162ba771c1f9cd8ce8d6f55b8f594"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages\\cleanup-result.json",
+      "bytes": 1243,
+      "sha256": "a06eceff6a79141d7b5fe1b598f1d0a7be64b7968b00ade04c168f6a4b7faf29"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages\\delete-journal.jsonl",
+      "bytes": 545753,
+      "sha256": "79e585f748f227e761bf569ff3762021223e03361fd7e84f175681dd704ce77c"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages-long-path\\archive-verified.json",
+      "bytes": 549,
+      "sha256": "80bec3a190586a9b6c104d7a9b0dd1238c82e6f64889494c1842311380bdd7e4"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages-long-path\\cleanup-result.json",
+      "bytes": 1240,
+      "sha256": "1786016856662fdae28da0a669d2c997b881adb9f5079267f363e72e08cc3be5"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-packages-long-path\\delete-journal.jsonl",
+      "bytes": 86087,
+      "sha256": "d7174ba7ae85c03fcb2ba41bef526c8b6283a33fe657bbfc8dad6f4c70a673c9"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-final-build\\archive-verified.json",
+      "bytes": 547,
+      "sha256": "a08100103f4c2c83ffe4182edde723167ef8523d19b6068ca4792f386be642cf"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-final-build\\cleanup-result.json",
+      "bytes": 1237,
+      "sha256": "0d545c5f46723f1deb50c31c58372ad04915171fd08790c2117f1ff264de8cb9"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\task\\silverstar-final-build\\delete-journal.jsonl",
+      "bytes": 3433,
+      "sha256": "7f31c5f5936f64760360c0e364742d88eedb4f0dcca9c99011a885e92598338f"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\inventory-before.json",
+      "bytes": 350761,
+      "sha256": "9c5bb6ba509f71dbb9c815b36412710f22abb66d4c0646600b2716ef8262efa0"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\inventory-after.json",
+      "bytes": 234857,
+      "sha256": "6272f960db1fd38459e8eedda62519b5088e02b321719c1b1806995ebf6ebee7"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\tracked-before.json",
+      "bytes": 2781138,
+      "sha256": "17eee33179353367d984dbbe52775bde502bf160580d46a38763f1fae75fc3bf"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\resume-disks.json",
+      "bytes": 481,
+      "sha256": "d5c9804125352fca573d8badf435910163292efdb97872e33398b4d14ed0246e"
+    }
+  ],
+  "unmeasured_or_retained": [
+    "Old FLP reparse points and old FCCG denied paths remain; exact counts/reasons in batch receipts.",
+    "Android shell backup also relies on 16802 exact externally retained tool/key files referenced by its original manifest; shell ZIP alone is not a full restore set.",
+    "Empty abandoned silverstar-packages-interrupted-fit archive directory has no completed receipt and contributes no archived/deleted bytes.",
+    "Final runtime candidates, raw logs, decoder packages, source fixtures, immutable evidence and historical Git data remain protected."
+  ]
+}

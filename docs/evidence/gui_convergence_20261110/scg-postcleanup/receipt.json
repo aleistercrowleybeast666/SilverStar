@@ -1,0 +1,296 @@
+{
+  "task": "Post-cleanup one-case normal generation and ARM artifact/strict-stack validation",
+  "recorded_utc": "2026-11-11T12:15:33.862488+00:00",
+  "execution": {
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "configuration": "research / STM32F407 / Release; one normal generated project",
+    "model": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research.ssproject",
+    "model_sha256": "35da63b60ae0d5722d37f22defd7791d182e7afc7bdcf7768eb544beba111297",
+    "hardware_tested": false,
+    "source_or_gate_modified": false,
+    "commands": [
+      {
+        "name": "generate",
+        "argv": [
+          "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+          "-B",
+          "D:\\python_software\\SilverStar\\apps\\SCG\\tools\\validation\\generate_stack_review_cases.py",
+          "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research",
+          "--case",
+          "research",
+          "--research-model",
+          "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research.ssproject"
+        ],
+        "cwd": "D:\\python_software\\SilverStar",
+        "exit": 0,
+        "seconds": 39.218,
+        "log": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\generate.log",
+        "log_sha256": "6609ee4aed325e84998540df07a3ba911a3e6adbadeb8008c4da752dfa5799a4"
+      },
+      {
+        "name": "all",
+        "argv": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+          "-C",
+          "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller",
+          "-j2",
+          "CONFIG=Release",
+          "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+          "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+          "all"
+        ],
+        "cwd": "D:\\python_software\\SilverStar",
+        "exit": 0,
+        "seconds": 190.879,
+        "log": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\all.log",
+        "log_sha256": "2c3bb6979f83e7dfa7b923be050c598ddf549621400d027c9feca51a91f89dc6"
+      },
+      {
+        "name": "artifact-check",
+        "argv": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+          "-C",
+          "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller",
+          "-j2",
+          "CONFIG=Release",
+          "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+          "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+          "artifact-check"
+        ],
+        "cwd": "D:\\python_software\\SilverStar",
+        "exit": 0,
+        "seconds": 12.261,
+        "log": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\artifact-check.log",
+        "log_sha256": "f104cfb3edae86edb2d7e48bfb6ed430a73a5ae19e923d2265982aaf6d2dd8e1"
+      },
+      {
+        "name": "stack-report",
+        "argv": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+          "-C",
+          "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller",
+          "-j2",
+          "CONFIG=Release",
+          "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+          "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+          "stack-report"
+        ],
+        "cwd": "D:\\python_software\\SilverStar",
+        "exit": 0,
+        "seconds": 45.734,
+        "log": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\stack-report.log",
+        "log_sha256": "cd3c53765c0cd207eee75d4a7ace3971d8aafd349c0f7cb4faaece819688148a"
+      }
+    ],
+    "tools": {
+      "arm_gcc": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "make": "GNU Make 4.4.1",
+      "python": "Python 3.14.0"
+    },
+    "model_unchanged": true,
+    "output_bytes": 42964284,
+    "artifacts": [
+      {
+        "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+        "size": 5414,
+        "sha256": "0e5dc30abcb8577996f4475ac8d3a59481a13a610f91c5e8ebed5ad9a2e6c0ee"
+      },
+      {
+        "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+        "size": 3629620,
+        "sha256": "1d589c00f14c47b57f1e17155d532582b1cd3968536518802a0b54ec540fd8b1"
+      },
+      {
+        "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+        "size": 1619642,
+        "sha256": "b8cf25b64b655564fbbf00c46622c25adab8ea5a78cac572824dc946c20210e9"
+      }
+    ]
+  },
+  "wrapper_exit": 0,
+  "source_identity_note": "Execution records HEAD; the generated stack report binds actual ELF, checker, review case and generated source hashes. No product or gate edit was made by this verification task. At receipt time the only changed tracked SCG source relative to that HEAD is the GUI application entry, which this command does not import; this run does not validate that GUI edit.",
+  "scg_tracked_changes_observed_after_run": [
+    "apps/SCG/src/silverstar_fccg/app/application.py"
+  ],
+  "output_retained": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research",
+  "artifacts": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "size": 5414,
+      "sha256": "0e5dc30abcb8577996f4475ac8d3a59481a13a610f91c5e8ebed5ad9a2e6c0ee"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.bin",
+      "size": 361476,
+      "sha256": "20774e844315ae4b3aa6e3b291d177492a04b47435151dd5228b2ffcb221f44d"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+      "size": 3629620,
+      "sha256": "1d589c00f14c47b57f1e17155d532582b1cd3968536518802a0b54ec540fd8b1"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.hex",
+      "size": 1016820,
+      "sha256": "4e843eb4fbb5d343bcb4a64cfbcbdef77b5263a415beb95e4d175b70e0567aef"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+      "size": 1619642,
+      "sha256": "b8cf25b64b655564fbbf00c46622c25adab8ea5a78cac572824dc946c20210e9"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "size": 271906,
+      "sha256": "d858f342f6960cefc862eb2144264a1dae47e071cc44e534db8b2efc63f7dbb6"
+    }
+  ],
+  "evidence": [
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\generate.log",
+      "raw_size": 21,
+      "raw_sha256": "6609ee4aed325e84998540df07a3ba911a3e6adbadeb8008c4da752dfa5799a4",
+      "evidence": "generate.log.gz",
+      "size": 41,
+      "sha256": "be3eb03b76708129d20117314276a8bd6c1908ab55aee7dbc7796d9b0ebfd11e",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\all.log",
+      "raw_size": 544555,
+      "raw_sha256": "2c3bb6979f83e7dfa7b923be050c598ddf549621400d027c9feca51a91f89dc6",
+      "evidence": "all.log.gz",
+      "size": 11718,
+      "sha256": "cd5db9fa3e2d30205d8f4b4cecf68e454df8358e52d1bff1788d0891b46082b6",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\artifact-check.log",
+      "raw_size": 2726,
+      "raw_sha256": "f104cfb3edae86edb2d7e48bfb6ed430a73a5ae19e923d2265982aaf6d2dd8e1",
+      "evidence": "artifact-check.log.gz",
+      "size": 962,
+      "sha256": "6f4bec971919c6fe037a74148c0bcec9bd4dcb4c8ef29611068912d4c6141323",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\stack-report.log",
+      "raw_size": 1711,
+      "raw_sha256": "cd3c53765c0cd207eee75d4a7ace3971d8aafd349c0f7cb4faaece819688148a",
+      "evidence": "stack-report.log.gz",
+      "size": 815,
+      "sha256": "ef4e7adfea2c91992a830717237c2aa07829d32e2ba419d2f2218e8800d18f0b",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research-validation\\receipt.json",
+      "raw_size": 4918,
+      "raw_sha256": "cb5bc27ae6099bc6aea60c353aba3520948d391d6dda1f56cff8db3c73aab422",
+      "evidence": "execution-receipt.json.gz",
+      "size": 1254,
+      "sha256": "0582de90e3760f89387e3b2f137c8f3065c5044bdc7eba1b367875ce14a83ed0",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\verify_postcleanup.py",
+      "raw_size": 3690,
+      "raw_sha256": "1b849f865ecc796a8dbe8b148782649e14928b85d4076ad5de095c830dce5c55",
+      "evidence": "verify_postcleanup.py.gz",
+      "size": 1544,
+      "sha256": "f999f430078cb4f38cff7dbd8e48d21b1adfeaf190b04389f6b907cccbeb4530",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\apps\\SCG\\tools\\validation\\generate_stack_review_cases.py",
+      "raw_size": 5473,
+      "raw_sha256": "57d9e4517824546db496c1ad59dcf3c8d04b3436d91c21da632c8bbef753a368",
+      "evidence": "generate_stack_review_cases.py.gz",
+      "size": 1922,
+      "sha256": "d60dd3f5fdd98f77dee331283a3806e90983263a7799cd90ad90c9b2a6fe9bc5",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\generation.json",
+      "raw_size": 61308,
+      "raw_sha256": "2bdfc78e4da1f0224e7366df84403856cadac4dbe9c04f9ba48208e9f60b143a",
+      "evidence": "generation.json.gz",
+      "size": 7766,
+      "sha256": "ca3a3b7bab3227bc567960d4ca07a6a7026fae7613aa43679d7a03215e10ca78",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research.ssproject",
+      "raw_size": 48189,
+      "raw_sha256": "35da63b60ae0d5722d37f22defd7791d182e7afc7bdcf7768eb544beba111297",
+      "evidence": "research.ssproject.gz",
+      "size": 7073,
+      "sha256": "6f5ad632d684611ddd7178872999e79cb6bd42a90c32f8282f5d76e3acb12701",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "raw_size": 5414,
+      "raw_sha256": "0e5dc30abcb8577996f4475ac8d3a59481a13a610f91c5e8ebed5ad9a2e6c0ee",
+      "evidence": "memory-report.json.gz",
+      "size": 1504,
+      "sha256": "06b7dd5119459c8c4b015ebddb6aaf02dbec64ff2dba91c352d842e25a87d3af",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "raw_size": 271906,
+      "raw_sha256": "d858f342f6960cefc862eb2144264a1dae47e071cc44e534db8b2efc63f7dbb6",
+      "evidence": "stack-budget.json.gz",
+      "size": 19099,
+      "sha256": "3bb4145c69c616dbe624b1330f848c763e0c9c9f89cc76bbe14b0197e724ac28",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\Makefile",
+      "raw_size": 9940,
+      "raw_sha256": "5e152a552fbb93aec373a9807ef9887eba476899addf1d5edbae6d93efb51279",
+      "evidence": "generated-Makefile.gz",
+      "size": 2963,
+      "sha256": "c3dcbe67d94edb1e9ed5582ff30a3f9c0588cf5949b13ec46c383628a7819e2d",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\Tools\\software_stack_cases\\convergence-current-20261110-research-Release.json",
+      "raw_size": 470668,
+      "raw_sha256": "56302022015568c28fc3618bae900c91e58ac4b22fe2060d8294c99db60fae92",
+      "evidence": "review-case.json.gz",
+      "size": 107629,
+      "sha256": "68130bc94f9d0e0fd014b943818ff1d12eb8e9df88931718726dfe2840bc8279",
+      "decompression_verified": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\post-cleanup-research\\research\\Flight_Controller\\Tools\\software_stack_review_20261110_current.md",
+      "raw_size": 6096,
+      "raw_sha256": "46ef720651ad9b52190074fd31970ad7bbb9b24ef63822395ff7bddd4153ce9d",
+      "evidence": "review-document.md.gz",
+      "size": 2985,
+      "sha256": "54410eda7360a057947435d955b8235360c92e29f4ba29eee7850b72d9ddddf0",
+      "decompression_verified": true
+    }
+  ],
+  "software_review": {
+    "case": "convergence-current-20261110-research-Release",
+    "revision": "gui_convergence_current_20261110_A_reviewed",
+    "document": "software_stack_review_20261110_current.md",
+    "document_sha256": "46ef720651ad9b52190074fd31970ad7bbb9b24ef63822395ff7bddd4153ce9d",
+    "case_file": {
+      "path": "Tools/software_stack_cases/convergence-current-20261110-research-Release.json",
+      "sha256": "56302022015568c28fc3618bae900c91e58ac4b22fe2060d8294c99db60fae92"
+    }
+  },
+  "stack_passes": true,
+  "whole_program_stack_acceptance": "SOFTWARE BOUND PASS",
+  "hardware_high_water_marks": "not measured; collect target task high-water marks before hardware acceptance",
+  "limits": [
+    "Single research / STM32F407 / Release only; no new eight-case matrix claim.",
+    "No power10-check, architecture-check, static-analysis or host-tests rerun in this follow-up.",
+    "Software bounds only; no target high-water, WCET, physical device or flight validation.",
+    "Global manual critical-contract NOT PROVEN remains unchanged.",
+    "The original execution receipt omitted stack-budget.json from its name-based artifact scan; this evidence inventory records and preserves that actual emitted stack report without changing the original receipt."
+  ]
+}

@@ -40,3 +40,7 @@ The direct `test_navigation_v1.py` collection exposes an import-order cycle in F
 The monorepo integration suite covers release identity, canonical contract, root GUI startup, absence of old absolute Python paths, current documentation links, ignored `.work`, and no nested `.git`/`.venv`.
 
 Future work: hardware bench verification, firmware targets and broader shared-code refactoring remain separate tasks. No Ground Station firmware, new sensor, persistent storage, alignment, calibration, estimator behavior or Simulator work was implemented in this migration.
+
+## Dated retirement follow-up — 2026-11-11
+
+The paragraphs above describe the original 0.1.0 migration and retain their historical scope. The later GUI/integration task saved all refs and restorable Git history for the former GSHC, FLP and FCCG repositories, preserved readable unique checkout content in external archives, and retired all three remotes as read-only. It did not rewrite active history or permanently delete those remotes. Local verified-file removal, retained inaccessible/link entries, Android toolchain migration, archive recovery hashes and current build evidence are recorded in the [2026-11-10/11 delivery report](../evidence/gui_convergence_20261110/REPORT_ZH.md) and its retirement receipt.

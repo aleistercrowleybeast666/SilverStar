@@ -1,0 +1,58 @@
+[
+  {
+    "source": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\manifest.json",
+    "stored": "manifest.json.gz",
+    "raw_sha256": "49c0e32f92bc4847cbf31ae6245239867e5ce5200e7f0345a97d56808a31f4f6",
+    "stored_sha256": "396a1b405bf236396984d3e601b0c7b9af0a756119703fc223c8d0a5c3b654b9",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\archive-verified.json",
+    "stored": "archive-verified.json",
+    "raw_sha256": "ef6b9000776535a24e3b40ad2877932af6099d7f57729c7a714eeae81a8eaa9c",
+    "stored_sha256": "ef6b9000776535a24e3b40ad2877932af6099d7f57729c7a714eeae81a8eaa9c",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\deleted-files.jsonl",
+    "stored": "deleted-files.jsonl.gz",
+    "raw_sha256": "7e80450debfbcfadfc1a11725ed309937dd329782e8f8dafd92a84a7a491b43c",
+    "stored_sha256": "6be40fd1c49c47037d4d28a63d68c63768d3a40fde7cca990c019cb26b628c60",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\cleanup-result.json",
+    "stored": "cleanup-result.json",
+    "raw_sha256": "3a7fd40eb875583fab0b849f4d1f1091b76704fc7d5788448d46c135fef2db7b",
+    "stored_sha256": "3a7fd40eb875583fab0b849f4d1f1091b76704fc7d5788448d46c135fef2db7b",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\retire_duplicates.py",
+    "stored": "retire_duplicates.py",
+    "raw_sha256": "36b1ad51789a9b6e6cb9395f57f4965b72645844a17b45df0acc0ba294c031e1",
+    "stored_sha256": "36b1ad51789a9b6e6cb9395f57f4965b72645844a17b45df0acc0ba294c031e1",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\inventory_owned.py",
+    "stored": "inventory_owned.py",
+    "raw_sha256": "3dee1f04065fe580ab9c8b8040eaaa1e340ac7076b03c324dded252a14eb981f",
+    "stored_sha256": "3dee1f04065fe580ab9c8b8040eaaa1e340ac7076b03c324dded252a14eb981f",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\ownership.json",
+    "stored": "ownership.json",
+    "raw_sha256": "dd5c3767d4181c92f30fdc9d0a3006991f22d8b195320a57fd422b865a7c725e",
+    "stored_sha256": "dd5c3767d4181c92f30fdc9d0a3006991f22d8b195320a57fd422b865a7c725e",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\owned-scratch-inventory.json",
+    "stored": "owned-scratch-inventory-before.json.gz",
+    "raw_sha256": "3db11acd9636f01326bebfd8c213d3ab16b65a39101a2dcf9145a1f25b9339f7",
+    "stored_sha256": "0a06016db66bb3bec7b228808ca647bf6fde0be287a482608236126d74b7de16",
+    "readback_exact": true
+  }
+]

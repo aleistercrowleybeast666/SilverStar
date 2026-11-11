@@ -1,0 +1,43 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle11-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gcf-lifecycle11\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gcf-lifecycle11\\0",
+      "tests/test_project_stage_progress_gui.py",
+      "tests/test_worker_retirement.py",
+      "tests/test_replay_lifecycle_boundaries.py",
+      "tests/test_main_window_disposal.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "b5f9d645313db7dbf39e0737012fe31db11353d5; FLP traced snapshot in lifecycle11-environment.json",
+    "elapsed": 220.57,
+    "exit": 0,
+    "case_seconds": 150,
+    "collected": 33,
+    "started": 33,
+    "finished": 33,
+    "interrupted": [],
+    "untouched": 0,
+    "phases": {
+      "passed": 99,
+      "failed": 0,
+      "skipped": 0
+    },
+    "junit_written": true,
+    "log_sha256": "5b7c3ecbfafe4ead9796516b65a860415b337ffc4ac7980416b61ee69f06d18d",
+    "journal": "lifecycle11-1.jsonl"
+  }
+]

@@ -1,0 +1,254 @@
+[
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle10-source.patch",
+    "stored": "lifecycle10-source.patch",
+    "raw_bytes": 27276,
+    "raw_sha256": "eb7a6fad601b2af40dd604225c970b427f29b92ce670897b61a54bd50e0650dc",
+    "stored_bytes": 27276,
+    "stored_sha256": "eb7a6fad601b2af40dd604225c970b427f29b92ce670897b61a54bd50e0650dc",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle10-inputs.json",
+    "stored": "lifecycle10-inputs.json",
+    "raw_bytes": 98883,
+    "raw_sha256": "62a167895539972c81d2060329de4eca0209b14e282756f1040e361673ca87fd",
+    "stored_bytes": 98883,
+    "stored_sha256": "62a167895539972c81d2060329de4eca0209b14e282756f1040e361673ca87fd",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle-registration-files.json",
+    "stored": "lifecycle-registration-files.json",
+    "raw_bytes": 871,
+    "raw_sha256": "876c8e54aae7904184d2f83705955ac5c390770ced3ddaf841477c2bb4e198bf",
+    "stored_bytes": 871,
+    "stored_sha256": "876c8e54aae7904184d2f83705955ac5c390770ced3ddaf841477c2bb4e198bf",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\run_regression.ps1",
+    "stored": "run_regression.ps1",
+    "raw_bytes": 2472,
+    "raw_sha256": "54a642074e147f5dd9de5fafb20fca6046944bf7570eee4576572b409b502c36",
+    "stored_bytes": 2472,
+    "stored_sha256": "54a642074e147f5dd9de5fafb20fca6046944bf7570eee4576572b409b502c36",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\capture_inputs.py",
+    "stored": "capture_inputs.py",
+    "raw_bytes": 2431,
+    "raw_sha256": "c3835e7b7ddeffc2555edeca0718170f4052b9c79e324bbe5cf258508ca45bd1",
+    "stored_bytes": 2431,
+    "stored_sha256": "c3835e7b7ddeffc2555edeca0718170f4052b9c79e324bbe5cf258508ca45bd1",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\summarize_full.py",
+    "stored": "summarize_full.py",
+    "raw_bytes": 3247,
+    "raw_sha256": "be0f9193e9dfce74dc6397accc012a8f73c55e66b78529dc19343f1dfa084094",
+    "stored_bytes": 3247,
+    "stored_sha256": "be0f9193e9dfce74dc6397accc012a8f73c55e66b78529dc19343f1dfa084094",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle8-1.log",
+    "stored": "lifecycle8-1.log",
+    "raw_bytes": 25168,
+    "raw_sha256": "a02f4b95107805653c6749a46044b3ce136d57a61b530f28346b5228be0467bc",
+    "stored_bytes": 25168,
+    "stored_sha256": "a02f4b95107805653c6749a46044b3ce136d57a61b530f28346b5228be0467bc",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle8-1.jsonl",
+    "stored": "lifecycle8-1.jsonl.gz",
+    "raw_bytes": 96468,
+    "raw_sha256": "6c15dde81b6fca89d28d11e81277d7f9bf4ed102abd8def598e22e8ea8f604b1",
+    "stored_bytes": 4646,
+    "stored_sha256": "3271a2cc160a8aef3c651bd20fb20159fbf569ff12fabd94dea4b1344171eb30",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle8-environment.json",
+    "stored": "lifecycle8-environment.json",
+    "raw_bytes": 2837,
+    "raw_sha256": "b4e4773e6a2ec4a932e077419dee17398c1db3b477ecf150420ef8648ee363fe",
+    "stored_bytes": 2837,
+    "stored_sha256": "b4e4773e6a2ec4a932e077419dee17398c1db3b477ecf150420ef8648ee363fe",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle8-receipts.json",
+    "stored": "lifecycle8-receipts.json",
+    "raw_bytes": 1610,
+    "raw_sha256": "88378233edaf9e2c97a8b9b236d716f04258e2754481a8654a6af63a7a085766",
+    "stored_bytes": 1610,
+    "stored_sha256": "88378233edaf9e2c97a8b9b236d716f04258e2754481a8654a6af63a7a085766",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle9-1.log",
+    "stored": "lifecycle9-1.log",
+    "raw_bytes": 15176,
+    "raw_sha256": "ac4b952eb446427a983ea62724599e0dab868acc54308bf0c1ac44f6236e184f",
+    "stored_bytes": 15176,
+    "stored_sha256": "ac4b952eb446427a983ea62724599e0dab868acc54308bf0c1ac44f6236e184f",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle9-1.jsonl",
+    "stored": "lifecycle9-1.jsonl.gz",
+    "raw_bytes": 104516,
+    "raw_sha256": "124816be608e4638f090d60ff4f54aa8ca70d2be09a00bd9b532b1901de647b3",
+    "stored_bytes": 5057,
+    "stored_sha256": "55bf605984181349d5abd00b1a044f8b17e1b388c2db2cf3e0594645f33dc9a9",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle9-environment.json",
+    "stored": "lifecycle9-environment.json",
+    "raw_bytes": 2837,
+    "raw_sha256": "3f0ee7fbc99e2f9ce4e15de5aa368affb48efd0e06b0c651cc9c828d71ebc75c",
+    "stored_bytes": 2837,
+    "stored_sha256": "3f0ee7fbc99e2f9ce4e15de5aa368affb48efd0e06b0c651cc9c828d71ebc75c",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle9-receipts.json",
+    "stored": "lifecycle9-receipts.json",
+    "raw_bytes": 1655,
+    "raw_sha256": "853d5fb87d3c4d9cf49dab0e5a40a836e8c479db0ed7ad72483a679cfeb42e2b",
+    "stored_bytes": 1655,
+    "stored_sha256": "853d5fb87d3c4d9cf49dab0e5a40a836e8c479db0ed7ad72483a679cfeb42e2b",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle10-1.log",
+    "stored": "lifecycle10-1.log",
+    "raw_bytes": 43378,
+    "raw_sha256": "22f62bdbc3e934c07a6afa57d4863a78eebf5308d741c7d114a86b4c62f41bff",
+    "stored_bytes": 43378,
+    "stored_sha256": "22f62bdbc3e934c07a6afa57d4863a78eebf5308d741c7d114a86b4c62f41bff",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle10-1.jsonl",
+    "stored": "lifecycle10-1.jsonl.gz",
+    "raw_bytes": 231474,
+    "raw_sha256": "35ce0f9504941f83b0dda68162d408cfcf683b018689d7ae90530a4d4659c17c",
+    "stored_bytes": 13446,
+    "stored_sha256": "d20a461531e5168d3d39abb8a7022598d13649c331e6f5b7bc0f21f2f245cd06",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle10-environment.json",
+    "stored": "lifecycle10-environment.json",
+    "raw_bytes": 2839,
+    "raw_sha256": "8f2f90ddb02afcff07b0fd42e12069f1731794c56a4b6d663678f27dab16066c",
+    "stored_bytes": 2839,
+    "stored_sha256": "8f2f90ddb02afcff07b0fd42e12069f1731794c56a4b6d663678f27dab16066c",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle10-receipts.json",
+    "stored": "lifecycle10-receipts.json",
+    "raw_bytes": 2126,
+    "raw_sha256": "b1b87e11b21283a92cf32ce2ca091c2be86311eb373f3d32b44f24b6eb39fc8f",
+    "stored_bytes": 2126,
+    "stored_sha256": "b1b87e11b21283a92cf32ce2ca091c2be86311eb373f3d32b44f24b6eb39fc8f",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle11-1.log",
+    "stored": "lifecycle11-1.log",
+    "raw_bytes": 4618,
+    "raw_sha256": "5b7c3ecbfafe4ead9796516b65a860415b337ffc4ac7980416b61ee69f06d18d",
+    "stored_bytes": 4618,
+    "stored_sha256": "5b7c3ecbfafe4ead9796516b65a860415b337ffc4ac7980416b61ee69f06d18d",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle11-1.jsonl",
+    "stored": "lifecycle11-1.jsonl.gz",
+    "raw_bytes": 40753,
+    "raw_sha256": "518568ea075a3c39a0dbaf65f6b3e7959d0e107bc374088fc852d5beac3ffa33",
+    "stored_bytes": 2319,
+    "stored_sha256": "41029f88d8bb07057a6f13820fd0ab6c78f17d1d770e0d46bef17b306d193566",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle11-environment.json",
+    "stored": "lifecycle11-environment.json",
+    "raw_bytes": 3120,
+    "raw_sha256": "4b754a42f3a44d6f734b519424630ba5e3ba28b11d0754328167093d5d1f04b4",
+    "stored_bytes": 3120,
+    "stored_sha256": "4b754a42f3a44d6f734b519424630ba5e3ba28b11d0754328167093d5d1f04b4",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\lifecycle11-receipts.json",
+    "stored": "lifecycle11-receipts.json",
+    "raw_bytes": 1428,
+    "raw_sha256": "cd85aceb5db2521cee695c537f1197cb22a7170056a8f67f33424565a38213bd",
+    "stored_bytes": 1428,
+    "stored_sha256": "cd85aceb5db2521cee695c537f1197cb22a7170056a8f67f33424565a38213bd",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-1.log",
+    "stored": "full2-1.log",
+    "raw_bytes": 242971,
+    "raw_sha256": "19c55394bf1f22951951e96086bd4d7506e9ed748ac13aedccb297ff1fcb3c33",
+    "stored_bytes": 242971,
+    "stored_sha256": "19c55394bf1f22951951e96086bd4d7506e9ed748ac13aedccb297ff1fcb3c33",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-1.jsonl",
+    "stored": "full2-1.jsonl.gz",
+    "raw_bytes": 2456011,
+    "raw_sha256": "58eb55d2a607a961e40590d3dfb84dec81a8fb9a8b40223cbfbf5776f181f4c5",
+    "stored_bytes": 113762,
+    "stored_sha256": "7b73dedb7eb72d887ef0b154c964ce032e9b54656dd8c672cafc7129e035dc15",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-environment.json",
+    "stored": "full2-environment.json",
+    "raw_bytes": 3108,
+    "raw_sha256": "d380c859f2b24bf601a88e2572f3a6fb1b1eaa0f1481f2db5eba12cb708d2f96",
+    "stored_bytes": 3108,
+    "stored_sha256": "d380c859f2b24bf601a88e2572f3a6fb1b1eaa0f1481f2db5eba12cb708d2f96",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-receipts.json",
+    "stored": "full2-receipts.json",
+    "raw_bytes": 1233,
+    "raw_sha256": "386f11e98e1590dd3a0b75398864367250d88819ae7ad9a8b893a22764e8c0d5",
+    "stored_bytes": 1233,
+    "stored_sha256": "386f11e98e1590dd3a0b75398864367250d88819ae7ad9a8b893a22764e8c0d5",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-inputs.json",
+    "stored": "full2-inputs.json",
+    "raw_bytes": 98883,
+    "raw_sha256": "55124cf194815c0cf2715b8b4e62624a21cc42082c698bd4da30c2621afe0cc2",
+    "stored_bytes": 98883,
+    "stored_sha256": "55124cf194815c0cf2715b8b4e62624a21cc42082c698bd4da30c2621afe0cc2",
+    "readback_exact": true
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-summary.json",
+    "stored": "full2-summary.json",
+    "raw_bytes": 84663,
+    "raw_sha256": "2f3eaf110f680d843cc682aac3050b2138604c921334c8bdcd98aefadb01ed84",
+    "stored_bytes": 84663,
+    "stored_sha256": "2f3eaf110f680d843cc682aac3050b2138604c921334c8bdcd98aefadb01ed84",
+    "readback_exact": true
+  }
+]

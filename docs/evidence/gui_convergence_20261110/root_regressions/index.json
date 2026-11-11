@@ -1,0 +1,112 @@
+{
+  "files": [
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\eskf-before.log",
+      "file": "eskf-before.log.gz",
+      "source_bytes": 1232,
+      "source_sha256": "bf9bc6dbad38d0add604c1a7a2a94013e785213d0a1cda78cd35aeccefa98c05",
+      "gzip_bytes": 577,
+      "gzip_sha256": "66e6ca723d2f3c46abaf8972f79526cf761d354ca9d4a87420c0347f262e2e7e",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\eskf-after.log",
+      "file": "eskf-after.log.gz",
+      "source_bytes": 126,
+      "source_sha256": "f59fa1396b1f9d865343705d0505cdb4256b0459055fc7bd8876c19b707a4604",
+      "gzip_bytes": 77,
+      "gzip_sha256": "9d142b5b81fdd8df854cc14fcb4cbd79e77b9ff49aef1747ed1afbcf71e05c59",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\horizon-traces-final.log",
+      "file": "horizon-traces-final.log.gz",
+      "source_bytes": 113,
+      "source_sha256": "80fb1828d92fbbaa191121838871d6e4900323356c1b28f7b4081b3aa9cbfa08",
+      "gzip_bytes": 66,
+      "gzip_sha256": "46f67e4f9d31bf9bc9e75b5b03f676d7662293da002e0da9cbb0316a4f13557b",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\native-horizon-traces.log",
+      "file": "native-horizon-traces.log.gz",
+      "source_bytes": 116,
+      "source_sha256": "2f9689ee7c7541156b4381d364158aaceb1d500d74788373c59d9a1988691698",
+      "gzip_bytes": 68,
+      "gzip_sha256": "6516d637bcdb04050d75e8a88e1e92eb994495c606371ccfe9815ab7d3f30c4c",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\gshc-regression.log",
+      "file": "gshc-regression.log.gz",
+      "source_bytes": 183,
+      "source_sha256": "3869009f8b9d0af4493b43ce04467f946de76cc3240d18c3007ff5dac5b5313c",
+      "gzip_bytes": 63,
+      "gzip_sha256": "da483cfdff98c06b4b4dddebfc55c1b4cffffa478494427864f35e970ab6ae6f",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\monorepo-final.log",
+      "file": "monorepo-final.log.gz",
+      "source_bytes": 2877,
+      "source_sha256": "422c2a6e69cbfc9572808a18e07ca895e627d953593c0c5075b70d81b59842f6",
+      "gzip_bytes": 947,
+      "gzip_sha256": "695d557d7392bf6b527904b61857408a7cf854354e94e2f271500eccf3fc8572",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\monorepo-final.exit",
+      "file": "monorepo-final.exit.gz",
+      "source_bytes": 3,
+      "source_sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "gzip_bytes": 23,
+      "gzip_sha256": "887ca0e03cc141d53e636c68bab887bc584f1549132343b716c5d00c8cef52c2",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\gshc-final.log",
+      "file": "gshc-final.log.gz",
+      "source_bytes": 6493,
+      "source_sha256": "65cb803f952348499e0340f4fb00fe8f3baf95322ec65b5ecfdfd0a01ae313d6",
+      "gzip_bytes": 943,
+      "gzip_sha256": "690270125d991518e617e969a90846bd27dcf74714bd7a485101e36d3f46db72",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\gshc-final-receipt.json",
+      "file": "gshc-final-receipt.json.gz",
+      "source_bytes": 23596,
+      "source_sha256": "e3203a632592f6c837efb92dafc9407c2ad62f411c473dbc081d75f84182bb35",
+      "gzip_bytes": 10201,
+      "gzip_sha256": "092d806381fcf5dee5ab44e693dd00e12dbeecaa95d1b6a426ca9a4d65d0e091",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\gshc-final-v2.log",
+      "file": "gshc-final-v2.log.gz",
+      "source_bytes": 183,
+      "source_sha256": "664c1864d05af834f44f3698a3b53e04e4153f320a21c801c615d46ced36e1d7",
+      "gzip_bytes": 63,
+      "gzip_sha256": "0bfbd9cd3249603ba50b5d5a19f44179d191e753bdf001cd36c54620d31a32a9",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\gshc-final-v2-receipt.json",
+      "file": "gshc-final-v2-receipt.json.gz",
+      "source_bytes": 23669,
+      "source_sha256": "1e115ff638669d016c7e2061b3b063b83e59be330ff0b6e5f27ac5d03071f825",
+      "gzip_bytes": 10224,
+      "gzip_sha256": "daf666cffaf854c1563aa908a96cf0f96d011dc48c6bf486d982df97ee07fd87",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    },
+    {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\run_final_gshc.py",
+      "file": "run_final_gshc.py.gz",
+      "source_bytes": 2509,
+      "source_sha256": "4c1d96f9fc8c3a41dd02810e4a9bfc59188f9cb2a9a6e82e460ba6320409dd68",
+      "gzip_bytes": 1263,
+      "gzip_sha256": "024ee5d7d94853c163b0901950d95b69cb34cc3a2d883d5bfc90a3f97f85a83d",
+      "restore": "gzip.decompress restores original complete bytes; readback verified"
+    }
+  ]
+}

@@ -1,0 +1,507 @@
+diff --git a/apps/FLP/src/silverstar_flp/ui/main_window.py b/apps/FLP/src/silverstar_flp/ui/main_window.py
+index b0c4a3e8..77801ea4 100644
+--- a/apps/FLP/src/silverstar_flp/ui/main_window.py
++++ b/apps/FLP/src/silverstar_flp/ui/main_window.py
+@@ -120,6 +120,9 @@ class MainWindow(QMainWindow):
+         path_preferences: PathPreferences | None = None,
+     ) -> None:
+         super().__init__()
++        # Accepted close owns the native widget tree's lifetime. Cancelled or
++        # worker-deferred closes remain ignored by closeEvent and stay alive.
++        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+         self._registry = registry
+         self._path_preferences = path_preferences or PathPreferences.Product_Open()
+         self._last_import_directory: Path | None = None
+diff --git a/apps/FLP/tests/test_cloud_lifecycle_20261005.py b/apps/FLP/tests/test_cloud_lifecycle_20261005.py
+index 5b1cb08c..f71bef04 100644
+--- a/apps/FLP/tests/test_cloud_lifecycle_20261005.py
++++ b/apps/FLP/tests/test_cloud_lifecycle_20261005.py
+@@ -6,6 +6,7 @@ import pytest
+ from PySide6.QtCore import Qt
+ from PySide6.QtGui import QCloseEvent
+ from PySide6.QtWidgets import QMessageBox
++from shiboken6 import isValid
+ 
+ from silverstar_flp.decoder_profiles.discovery import TaskDirectoryDiscovery
+ from silverstar_flp.export.service import FlightExporter, ExportOptions
+@@ -13,21 +14,24 @@ from silverstar_flp.plugins.api.algorithm import ReplayRequest
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.workers import FunctionWorker
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.fixture
+ def window(qtbot, monkeypatch):
+     w = MainWindow(builtin_registry())
+-    qtbot.addWidget(w)
++    MainWindow_Register(qtbot, w)
+     # Keep unexpected errors observable without a blocking modal dialog.
+     w.audit_errors = []
+     monkeypatch.setattr(w, "_Error_Show", w.audit_errors.append)
+     yield w
+-    w._project_dirty = False
+-    w.import_dialog.reject()
+-    w.export_dialog.reject()
+-    w._dataset = None
+-    w.close()
++    # pytest-qt may already have accepted close and destroyed the native tree.
++    if isValid(w):
++        w._project_dirty = False
++        w.import_dialog.reject()
++        w.export_dialog.reject()
++        w._dataset = None
++        w.close()
+ 
+ 
+ def finish(qtbot, w):
+diff --git a/apps/FLP/tests/test_decoder_directory_gui.py b/apps/FLP/tests/test_decoder_directory_gui.py
+index 036e1f5a..cdf44604 100644
+--- a/apps/FLP/tests/test_decoder_directory_gui.py
++++ b/apps/FLP/tests/test_decoder_directory_gui.py
+@@ -3,6 +3,7 @@ from pathlib import Path
+ 
+ import pytest
+ from PySide6.QtCore import QSettings
++from shiboken6 import isValid
+ 
+ from silverstar_flp.core.context import TaskContext
+ from silverstar_flp.core.i18n import Translator
+@@ -15,6 +16,7 @@ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.pages.export_settings import ImportDialog
+ from tests.sslog_synthetic import START_TIMESTAMP_US, Event_Payload, SyntheticSslogBuilder
+ from tests.test_decoder_profiles import _Package_Write, _DescriptorPayload_Build, _CalibrationNonePayload_Build
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def pair(tmp_path):
+@@ -64,9 +66,11 @@ def window(qtbot, monkeypatch, tmp_path):
+     monkeypatch.setattr(module, 'QSettings', lambda *args: QSettings(str(tmp_path / 'private.ini'), QSettings.Format.IniFormat))
+     result = MainWindow(builtin_registry(), path_preferences=PathPreferences(tmp_path / 'preferences.json'))
+     result._log_open_coordinator.cache = DecoderProfileCache(tmp_path / 'cache')
+-    qtbot.addWidget(result)
++    MainWindow_Register(qtbot, result)
+     yield result
+-    result._Project_SetDirty(False); result.close()
++    if isValid(result):
++        result._Project_SetDirty(False)
++        result.close()
+ 
+ 
+ def test_normal_gui_routes_directories_to_actual_exact_coordinator(window, tmp_path, monkeypatch):
+diff --git a/apps/FLP/tests/test_gui_smoke.py b/apps/FLP/tests/test_gui_smoke.py
+index 52e18fb0..e59d0441 100644
+--- a/apps/FLP/tests/test_gui_smoke.py
++++ b/apps/FLP/tests/test_gui_smoke.py
+@@ -28,6 +28,7 @@ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.widgets import StandardComboBox
+ from tests.sslog_synthetic import AnalysisFlight_Build
+ from tests.test_project_export import _DisplayDataset_Parse
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def _ProjectIdentity_Set(window: MainWindow, source_path: Path, root: Path) -> None:
+@@ -76,7 +77,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
+         AnalysisFlight_Build(tmp_path / "SYNTHETIC_gui_source.BIN")
+     )
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
++    MainWindow_Register(qtbot, window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+     errors = []
+     monkeypatch.setattr(window, "_Error_Show", errors.append)
+     window._Dataset_Set(dataset)
+diff --git a/apps/FLP/tests/test_horizon_backend_numerics.py b/apps/FLP/tests/test_horizon_backend_numerics.py
+index 1ddbd37c..4535edf3 100644
+--- a/apps/FLP/tests/test_horizon_backend_numerics.py
++++ b/apps/FLP/tests/test_horizon_backend_numerics.py
+@@ -96,9 +96,29 @@ def _Engine_Build(dataset, algorithm):
+     statuses = dataset.Records_Get('FUSION_HORIZON_STATUS')
+     first = statuses[0].payload
+     if algorithm == 1:
+-        assert dataset.Records_Get('ESTIMATOR')[0].timestamp_us == 1005000
+         p0 = [parameters['p0_' + group + '_' + axis]
+               for group in ('position', 'velocity') for axis in ('e', 'n', 'u')]
++        snapshots = dataset.Records_Get('ESTIMATOR')
++        initial = snapshots[0]
++        # The owning fixture now exercises the mission's actual initialization
++        # writer before the first prediction. Validate that exact bootstrap;
++        # never silently filter timestamp-zero or seed from a later output.
++        assert initial.timestamp_us == 0
++        assert initial.payload['operation_sequence'] == 0
++        assert initial.payload['replay_epoch'] == first['epoch']
++        assert initial.payload['initialized'] == initial.payload['mission_running'] == 1
++        np.testing.assert_array_equal(initial.payload['position_enu_m'], np.zeros(3))
++        np.testing.assert_array_equal(initial.payload['velocity_enu_mps'], np.zeros(3))
++        np.testing.assert_array_equal(initial.payload['q_nb'], [1., 0., 0., 0.])
++        np.testing.assert_array_equal(initial.payload['covariance_diagonal'], np.float32(p0))
++        initial_p = dataset.Records_Get('KF6_FULL_P')[0]
++        assert initial_p.timestamp_us == 0
++        np.testing.assert_array_equal(initial_p.payload['covariance_upper_triangle'],
++                                      np.diag(np.float32(p0))[np.triu_indices(6)])
++        first_step = dataset.Records_Get('ESTIMATOR_STEP')[0]
++        assert snapshots[1].timestamp_us == first_step.payload['interval_end_timestamp_us'] == 1005000
++        assert first_step.payload['operation_sequence'] == 1
++        assert first_step.payload['replay_epoch'] == first['epoch']
+         state = Kf6Filter.Kf6_Create(algorithm_revision=2,
+             process_accel_std_mps2=np.array([parameters['process_accel_std_' + axis] for axis in ('e', 'n', 'u')]),
+             p0_diagonal=np.array(p0), initial_velocity_enu_mps=np.zeros(3),
+diff --git a/apps/FLP/tests/test_joint_gui_state.py b/apps/FLP/tests/test_joint_gui_state.py
+index d3f21e7c..ed0b1392 100644
+--- a/apps/FLP/tests/test_joint_gui_state.py
++++ b/apps/FLP/tests/test_joint_gui_state.py
+@@ -11,12 +11,13 @@ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.theme import Theme_Apply
+ from tests.synthetic_parameter_navigation import NavigationPair_Open
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def test_header_project_has_readable_pixels_and_elides_long_names(qtbot, tmp_path):
+     app = QApplication.instance()
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     window.resize(1000, 700)
+     window.show()
+     for theme in ("light", "dark"):
+@@ -58,7 +59,7 @@ def test_range_shell_1000_700_language_theme_and_pointer(qtbot, tmp_path, langua
+     window = MainWindow(builtin_registry())
+     # This test owns an unsaved synthetic project. Dispose of the draft on
+     # teardown even when a layout or pointer assertion fails before close().
+-    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
++    MainWindow_Register(qtbot, window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+     opened = NavigationPair_Open(tmp_path/'pair', flight_samples=101)
+     window._LogOpenResult_Set(opened, ProjectDocument())
+     window.Language_Apply(language)
+@@ -91,7 +92,7 @@ def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, t
+     registry = builtin_registry()
+     opened = NavigationPair_Open(tmp_path/'pair', flight_samples=101)
+     first = MainWindow(registry)
+-    qtbot.addWidget(first)
++    MainWindow_Register(qtbot, first)
+     first._LogOpenResult_Set(opened, ProjectDocument())
+     plugin = registry.Algorithm_Get('silverstar.algorithm.kf6')
+     # A separately incomplete semantic context must still refuse numerical
+@@ -117,7 +118,7 @@ def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, t
+     assert saved.replay_configurations[entry.result_id]['process_model_revision'] == 2
+     first.close()
+     second = MainWindow(registry)
+-    qtbot.addWidget(second)
++    MainWindow_Register(qtbot, second)
+     errors=[]
+     second._Error_Show = errors.append
+     saved.restored_results = ProjectResults_Load(saved).Entries_Get()
+diff --git a/apps/FLP/tests/test_offline_diagnostics.py b/apps/FLP/tests/test_offline_diagnostics.py
+index 43bb4f39..58924166 100644
+--- a/apps/FLP/tests/test_offline_diagnostics.py
++++ b/apps/FLP/tests/test_offline_diagnostics.py
+@@ -28,6 +28,7 @@ from silverstar_flp.ui.pages.replay import ReplayPage
+ from tests.synthetic_parameter_navigation import NavigationPair_Open, SyntheticOperations_Attach
+ from tests.test_gui_smoke import _ProjectIdentity_Set
+ from tests.test_kf6_field_analysis import Measurement_Create
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.fixture
+@@ -195,7 +196,7 @@ def test_project_excludes_analysis_only_diagnostics(
+     monkeypatch.setattr(window, "_ProjectChanges_Confirm", lambda: True)
+     save_errors = []
+     monkeypatch.setattr(window, "_Error_Show", save_errors.append)
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     # Project/cache persistence consumes the original exact source pair.
+     # Extra measurements in the independent fixture are diagnostic inputs.
+     window._LogOpenResult_Set(diagnostic_pair, ProjectDocument())
+@@ -233,7 +234,7 @@ def test_project_excludes_analysis_only_diagnostics(
+ 
+ def test_project_save_rejects_fabricated_parse_identity(qtbot, monkeypatch, tmp_path, diagnostic_pair):
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
++    MainWindow_Register(qtbot, window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+     save_errors = []
+     monkeypatch.setattr(window, "_Error_Show", save_errors.append)
+     window._Dataset_Set(diagnostic_pair.dataset)
+diff --git a/apps/FLP/tests/test_project_artifact_boundaries.py b/apps/FLP/tests/test_project_artifact_boundaries.py
+index dad292fd..c5890d90 100644
+--- a/apps/FLP/tests/test_project_artifact_boundaries.py
++++ b/apps/FLP/tests/test_project_artifact_boundaries.py
+@@ -19,6 +19,7 @@ from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
+ from silverstar_flp.plugins.registry import builtin_registry
+ from tests.synthetic_parameter_navigation import NavigationPair_Open
+ from tests.test_project_artifacts import _Document_Build
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def _SmallRun(tmp_path, algorithm='silverstar.algorithm.pure_ins'):
+@@ -178,7 +179,7 @@ def test_configuration_only_missing_primary_stays_unavailable(qtbot,tmp_path,mon
+     document.ui_state={'analysis_source':entry.source_id}
+     document.save_data_and_results=False
+     Project_Save(document,document.project_path,dataset=opened.dataset,replay_store=store)
+-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
++    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
+     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
+     monkeypatch.setattr(window,'_ProjectChanges_Confirm',lambda:True)
+     monkeypatch.setattr(window,'_Replay_Start',lambda *_:pytest.fail('No automatic replay'))
+@@ -237,7 +238,7 @@ def test_background_save_captures_option_and_keeps_gui_responsive(qtbot,tmp_path
+     from silverstar_flp.core.project import ProjectDocument
+     from silverstar_flp.ui.main_window import MainWindow
+     opened,document,store=_SmallRun(tmp_path)
+-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
++    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
+     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
+     monkeypatch.setattr(window,'_ProjectChanges_Confirm',lambda:True)
+     window._LogOpenResult_Set(opened,ProjectDocument())
+@@ -259,7 +260,7 @@ def test_unsaved_close_save_waits_for_background_transaction(qtbot,tmp_path,monk
+     from PySide6.QtWidgets import QMessageBox
+     from silverstar_flp.ui.main_window import MainWindow
+     opened,document,_=_SmallRun(tmp_path)
+-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
++    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
+     window._LogOpenResult_Set(opened,document)
+     window._Project_SetDirty(True)
+     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
+diff --git a/apps/FLP/tests/test_project_artifacts.py b/apps/FLP/tests/test_project_artifacts.py
+index 761b8e78..9068daf2 100644
+--- a/apps/FLP/tests/test_project_artifacts.py
++++ b/apps/FLP/tests/test_project_artifacts.py
+@@ -17,6 +17,7 @@ from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
+ from silverstar_flp.plugins.registry import builtin_registry
+ from tests.synthetic_parameter_navigation import NavigationPair_Open
+ from tests.test_project_export import _ProjectDocument_Build
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def _Document_Build(opened, path):
+@@ -176,7 +177,7 @@ def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp
+     from silverstar_flp.ui.main_window import MainWindow
+     opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
+     registry = builtin_registry()
+-    first = MainWindow(registry); qtbot.addWidget(first)
++    first = MainWindow(registry); MainWindow_Register(qtbot, first)
+     # Assertion failures must not block pytest-qt teardown on a save dialog.
+     first._ProjectChanges_Confirm = lambda: True
+     errors = []; monkeypatch.setattr(first, '_Error_Show', errors.append)
+@@ -200,7 +201,7 @@ def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp
+     first._project_dirty = False; first.close()
+     for cls in {type(plugin) for plugin in registry.algorithms}:
+         monkeypatch.setattr(cls, 'run', lambda *args: pytest.fail('GUI reopen must not replay'))
+-    second = MainWindow(registry); qtbot.addWidget(second)
++    second = MainWindow(registry); MainWindow_Register(qtbot, second)
+     second._ProjectChanges_Confirm = lambda: True
+     monkeypatch.setattr(second, '_Error_Show', errors.append)
+     second._Project_Open(path)
+diff --git a/apps/FLP/tests/test_project_save_lifecycle.py b/apps/FLP/tests/test_project_save_lifecycle.py
+index 0e8ffdf5..34ab6c45 100644
+--- a/apps/FLP/tests/test_project_save_lifecycle.py
++++ b/apps/FLP/tests/test_project_save_lifecycle.py
+@@ -4,16 +4,18 @@ import pytest
+ from PySide6.QtCore import QTimer
+ from PySide6.QtGui import QCloseEvent
+ from PySide6.QtWidgets import QMessageBox
++from shiboken6 import isValid
+ from silverstar_flp.core.project import Project_Load
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from tests.test_project_artifact_boundaries import _SmallRun
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ @pytest.mark.parametrize('case',['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
+ def test_save_lifecycle_respects_request_cancel_and_commit(qtbot,tmp_path,monkeypatch,case):
+     import silverstar_flp.ui.main_window as module
+     opened,document,store=_SmallRun(tmp_path)
+-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
++    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
+     window._LogOpenResult_Set(opened,document)
+     window._replay_store.Result_Add(store.Entries_Get()[0].result)
+     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
+@@ -48,8 +50,13 @@ def test_save_lifecycle_respects_request_cancel_and_commit(qtbot,tmp_path,monkey
+     finally:
+         release.set()
+         qtbot.waitUntil(lambda:window._active_worker is None,timeout=15000)
+-        window._Project_SetDirty(False)
++        if isValid(window):
++            window._Project_SetDirty(False)
+     assert not errors and target.is_file()
++    if case == 'clean_close':
++        qtbot.waitUntil(lambda: not isValid(window), timeout=5000)
++    else:
++        assert isValid(window)
+     if case=='cancel_after_commit':
+         assert window._project.project_path==target.resolve()
+         assert not window._project.save_data_and_results
+@@ -59,4 +66,5 @@ def test_save_lifecycle_respects_request_cancel_and_commit(qtbot,tmp_path,monkey
+         saved=Project_Load(target)
+         assert saved.parse_artifact is not None
+         assert len(ProjectResults_Load(saved).Entries_Get())==1
+-    window.close()
++    if isValid(window):
++        window.close()
+diff --git a/apps/FLP/tests/test_project_save_path_boundary.py b/apps/FLP/tests/test_project_save_path_boundary.py
+index 0f9a329f..a6a180e9 100644
+--- a/apps/FLP/tests/test_project_save_path_boundary.py
++++ b/apps/FLP/tests/test_project_save_path_boundary.py
+@@ -9,6 +9,7 @@ from silverstar_flp.core.project import Project_Load, ProjectResults_Load
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from tests.test_project_artifact_boundaries import _SmallRun
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.mark.skipif(os.name != 'nt', reason='Windows filesystem access boundary')
+@@ -17,7 +18,7 @@ def test_long_artifact_path_failure_is_actionable_and_preserves_old_project(
+         qtbot, tmp_path, monkeypatch, background):
+     opened, document, store = _SmallRun(tmp_path)
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     window.Language_Apply('zh_CN')
+     window._LogOpenResult_Set(opened, document)
+     entry = window._replay_store.Result_Add(store.Entries_Get()[0].result)
+diff --git a/apps/FLP/tests/test_project_stage_progress_gui.py b/apps/FLP/tests/test_project_stage_progress_gui.py
+index 9c953562..42dbbfc7 100644
+--- a/apps/FLP/tests/test_project_stage_progress_gui.py
++++ b/apps/FLP/tests/test_project_stage_progress_gui.py
+@@ -14,6 +14,7 @@ from silverstar_flp.decoder_profiles.parser import DecoderProfileParserPlugin
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from tests.test_project_artifact_boundaries import _SmallRun
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.fixture(scope='module')
+@@ -30,7 +31,7 @@ def private_settings(monkeypatch, tmp_path):
+ 
+ @pytest.fixture
+ def window(qtbot, monkeypatch, tmp_path, private_settings):
+-    result = MainWindow(builtin_registry()); qtbot.addWidget(result)
++    result = MainWindow(builtin_registry()); MainWindow_Register(qtbot, result)
+     result._log_open_coordinator.cache = DecoderProfileCache(tmp_path/'decoder')
+     result.test_errors = []; monkeypatch.setattr(result, '_Error_Show', result.test_errors.append)
+     result.test_values = []; result.test_reports = []; result.test_threads = []
+diff --git a/apps/FLP/tests/test_replay_lifecycle_boundaries.py b/apps/FLP/tests/test_replay_lifecycle_boundaries.py
+index 65fa5038..d1dcb226 100644
+--- a/apps/FLP/tests/test_replay_lifecycle_boundaries.py
++++ b/apps/FLP/tests/test_replay_lifecycle_boundaries.py
+@@ -18,6 +18,7 @@ from silverstar_flp.plugins.api.algorithm import AlgorithmResult, ReplayFidelity
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.pages.replay import ReplayPage
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def tiny_dataset(name):
+@@ -160,7 +161,7 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
+ ):
+     registry = builtin_registry()
+     window = MainWindow(registry)
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     from silverstar_flp.core.project import ProjectDocument
+     from tests.synthetic_parameter_navigation import NavigationPair_Open
+     window._LogOpenResult_Set(
+@@ -234,7 +235,7 @@ def test_queued_replay_result_is_not_published_after_cancellation(
+     """Desired behavior; exercises only the result-emitted / GUI-not-yet-serviced race."""
+     registry = builtin_registry()
+     window = MainWindow(registry)
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     from silverstar_flp.core.project import ProjectDocument
+     from tests.synthetic_parameter_navigation import NavigationPair_Open
+     window._LogOpenResult_Set(
+diff --git a/apps/FLP/tests/test_run_deletion.py b/apps/FLP/tests/test_run_deletion.py
+index 5a66afbe..1d6d11bf 100644
+--- a/apps/FLP/tests/test_run_deletion.py
++++ b/apps/FLP/tests/test_run_deletion.py
+@@ -17,6 +17,7 @@ from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
+ from silverstar_flp.plugins.registry import builtin_registry
+ from tests.synthetic_parameter_navigation import NavigationPair_Open
+ from tests.test_project_artifacts import _Document_Build, _Assert_Result
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.fixture(scope='module')
+@@ -169,7 +170,7 @@ def test_gui_cancel_delete_primary_secondary_busy_and_undo(qtbot, tmp_path, smal
+     from silverstar_flp.ui.main_window import MainWindow
+     from silverstar_flp.core.project import ProjectDocument
+     opened, results = small_runs
+-    window = MainWindow(builtin_registry()); qtbot.addWidget(window)
++    window = MainWindow(builtin_registry()); MainWindow_Register(qtbot, window)
+     errors = []; monkeypatch.setattr(window, '_Error_Show', errors.append)
+     window._LogOpenResult_Set(opened, ProjectDocument())
+     entries = [window._replay_store.Result_Add(result) for result in results]
+@@ -210,7 +211,7 @@ def test_gui_saved_recovery_runs_off_gui_thread_and_reopen_retains_missing_prima
+     Project_Save(document, document.project_path, replay_store=store, dataset=opened.dataset)
+     loaded = Project_Load(document.project_path)
+     loaded.restored_results = ProjectResults_Load(loaded).Entries_Get()
+-    window = module.MainWindow(builtin_registry()); qtbot.addWidget(window)
++    window = module.MainWindow(builtin_registry()); MainWindow_Register(qtbot, window)
+     errors = []; monkeypatch.setattr(window, '_Error_Show', errors.append)
+     window._LogOpenResult_Set(opened, loaded)
+     assert window._replay_store.ActiveSource_Get().source_id == entries[1].source_id
+diff --git a/apps/FLP/tests/test_task_cancellation_20261005.py b/apps/FLP/tests/test_task_cancellation_20261005.py
+index 7825a18b..be5e187a 100644
+--- a/apps/FLP/tests/test_task_cancellation_20261005.py
++++ b/apps/FLP/tests/test_task_cancellation_20261005.py
+@@ -14,12 +14,13 @@ from silverstar_flp.plugins.algorithms.pure_ins.mechanization import (
+ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.workers import FunctionWorker
+ from silverstar_flp.plugins.registry import builtin_registry
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.mark.parametrize("scenario", ["dialog_rejected", "directory_changed", "queued_result_cancelled"])
+ def test_folder_discovery_publication_respects_gui_request_lifetime(qtbot, tmp_path, monkeypatch, scenario):
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     path_a, path_b = tmp_path / "a", tmp_path / "b"
+     path_a.mkdir()
+     path_b.mkdir()
+diff --git a/apps/FLP/tests/test_task_publication_thread_affinity.py b/apps/FLP/tests/test_task_publication_thread_affinity.py
+index f5cc994c..2e0b8aa9 100644
+--- a/apps/FLP/tests/test_task_publication_thread_affinity.py
++++ b/apps/FLP/tests/test_task_publication_thread_affinity.py
+@@ -8,11 +8,12 @@ from PySide6.QtWidgets import QApplication
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.workers import FunctionWorker
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ def test_real_qthreadpool_result_publication_runs_on_gui_thread(qtbot, monkeypatch):
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     gui_thread = QApplication.instance().thread()
+     gui_python_thread = threading.get_ident()
+     observations = {}
+@@ -66,7 +67,7 @@ def test_completed_worker_releases_its_payload_after_gc(qtbot):
+         pass
+ 
+     window = MainWindow(builtin_registry())
+-    qtbot.addWidget(window)
++    MainWindow_Register(qtbot, window)
+     payload = Payload()
+     reference = weakref.ref(payload)
+     worker = FunctionWorker(lambda context, captured=payload: "tiny-done")
+diff --git a/apps/FLP/tests/test_worker_retirement.py b/apps/FLP/tests/test_worker_retirement.py
+index a2cf2025..545fe732 100644
+--- a/apps/FLP/tests/test_worker_retirement.py
++++ b/apps/FLP/tests/test_worker_retirement.py
+@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QApplication
+ from silverstar_flp.plugins.registry import builtin_registry
+ from silverstar_flp.ui.main_window import MainWindow
+ from silverstar_flp.ui.workers import FunctionWorker, WorkerRetireResult
++from tests.gui_lifecycle import MainWindow_Register
+ 
+ 
+ @pytest.fixture
+@@ -16,7 +17,7 @@ def window(qtbot, monkeypatch, tmp_path):
+     import silverstar_flp.ui.main_window as module
+     monkeypatch.setattr(module, 'QSettings', lambda *args:
+                         QSettings(str(tmp_path/'private.ini'), QSettings.Format.IniFormat))
+-    result = MainWindow(builtin_registry()); qtbot.addWidget(result)
++    result = MainWindow(builtin_registry()); MainWindow_Register(qtbot, result)
+     yield result
+     result._Project_SetDirty(False)
+     result.close()

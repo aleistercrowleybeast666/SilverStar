@@ -1,0 +1,124 @@
+{
+  "recorded_utc": "2026-11-11T16:57:47.479079+00:00",
+  "code_commit": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "bundle": "D:\\python_software\\SilverStar\\dist\\gcf1111\\SilverStar",
+  "archive_sha256": "4cf2382e6b22f367def0c0273a96ae426b2289fe56cbf16518948b423e956014",
+  "native_visual_acceptance": "BLOCKED",
+  "scg": {
+    "scale_percent": 150,
+    "result": "PASS for default first display and actual check/generation page",
+    "observations": [
+      "Two missing-target reasons visible",
+      "Shared link below target summaries",
+      "3 of 3 toolchains detected",
+      "Both target generation/build/ELF actions disabled without targets"
+    ],
+    "normal_close_observed": true
+  },
+  "gshc": {
+    "scale_percent": 150,
+    "result": "NOT PROVEN: native capture white",
+    "uia": "Disconnected with start disabled; inventory only, no port opened",
+    "normal_close_observed": true
+  },
+  "flp": {
+    "scale_percent": 125,
+    "result": "NOT PROVEN: final default-renderer EXE remains white in native capture",
+    "log": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\inputs\\codec-golden\\Logs\\Golden\\SS_TEST_0_golden.sslog",
+    "decoder": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\inputs\\codec-golden\\SS_TEST_0.ssdecoder",
+    "records_observed_by_uia": 14,
+    "decoder_exact_match_observed": true,
+    "crc_length_resync_unknown_decode_errors_observed": 0,
+    "input_provenance": "Synthetic owning-C Golden, not hardware logs",
+    "close": "Alt+F4; Discard only this temporary import; window absent and process exited; original log/decoder not saved or modified"
+  },
+  "limits": [
+    "UIA, empty stderr, successful close and QWidget.grab do not establish native visual acceptance",
+    "No software OpenGL workaround, dependency or system display change",
+    "Root cause NOT PROVEN; see flp/native_compositor_20261112",
+    "CU transient modal AX index failed; main screenshot-region coordinate Discard succeeded; no application failure inferred from tool lookup",
+    "No process exit code was retained for CU-closed windows; closure observation is not a fabricated exit-code record"
+  ],
+  "computer_use_exited": true,
+  "files": [
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-scg150.out.log",
+      "file": "gui_native/final_package_logs/package-scg150.out.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-scg150.err.log",
+      "file": "gui_native/final_package_logs/package-scg150.err.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-gshc150.out.log",
+      "file": "gui_native/final_package_logs/package-gshc150.out.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-gshc150.err.log",
+      "file": "gui_native/final_package_logs/package-gshc150.err.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-flp125.out.log",
+      "file": "gui_native/final_package_logs/package-flp125.out.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-flp125.err.log",
+      "file": "gui_native/final_package_logs/package-flp125.err.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-flp125-resume.out.log",
+      "file": "gui_native/final_package_logs/package-flp125-resume.out.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\package-flp125-resume.err.log",
+      "file": "gui_native/final_package_logs/package-flp125-resume.err.log.gz",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_bytes": 20,
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "file": "gui_native/scg-final-first-150.png",
+      "bytes": 119151,
+      "sha256": "d546b30f320017af385e6b3d8fb832aa16cb2e3b0583c51cd323bb9d85ef9c25"
+    },
+    {
+      "file": "gui_native/scg-final-targets-150.png",
+      "bytes": 129571,
+      "sha256": "3c525ae54a71bb3ad1a73c136726ea5d575645f05f9e988cc6d8ad6545f80b46"
+    },
+    {
+      "file": "gui_native/flp-final-unverified-125.jpg",
+      "bytes": 29187,
+      "sha256": "817144989e60e787ee489d3e307b6ce48cbda3d9bdde03591b864d2498c06cd1"
+    }
+  ]
+}

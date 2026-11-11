@@ -1,0 +1,44 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\inputs3-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gcf-inputs3\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gcf-inputs3\\0",
+      "tests/test_generated_aggregation_pair.py",
+      "tests/test_joint_c_golden.py",
+      "tests/test_ss_test_0_manual.py",
+      "tests/test_silverstar_project_root.py",
+      "tests/test_mission_folder_import.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "531f46ce728d2cf375e48ce030f927fff4801579; FLP traced snapshot in inputs3-environment.json",
+    "elapsed": 76.1,
+    "exit": 1,
+    "case_seconds": 150,
+    "collected": 19,
+    "started": 19,
+    "finished": 19,
+    "interrupted": [],
+    "untouched": 0,
+    "phases": {
+      "passed": 56,
+      "failed": 1,
+      "skipped": 0
+    },
+    "junit_written": true,
+    "log_sha256": "066c2b6185768197e9da025c29cd94774ebef83a57677bc237609c658bab62f5",
+    "journal": "inputs3-1.jsonl"
+  }
+]

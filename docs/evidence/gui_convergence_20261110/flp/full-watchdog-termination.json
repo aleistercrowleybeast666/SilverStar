@@ -1,0 +1,9 @@
+{
+  "purpose": "Complete termination after the existing 150 second faulthandler watchdog fired",
+  "watchdog": ".work/gui-convergence-20261110/flp/full-1.watchdog.log",
+  "process_id": 25072,
+  "parent_id": 26876,
+  "command": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe -B -u -m pytest -p flp_case_watch -v --tb=short --disable-warnings --junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full-1.xml -o cache_dir=D:\\python_software\\SilverStar\\.work\\gcf-full\\c0 --basetemp=D:\\python_software\\SilverStar\\.work\\gcf-full\\0 tests",
+  "utc": "2026-11-09T19:52:55.7762408Z",
+  "terminate_return": 0
+}

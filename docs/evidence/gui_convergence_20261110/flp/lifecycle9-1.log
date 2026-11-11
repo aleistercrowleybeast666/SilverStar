@@ -1,0 +1,152 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gcf-lifecycle9\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 82 items
+
+tests/test_main_window_disposal.py::test_repeated_accepted_close_releases_entire_native_tree PASSED [  1%]
+tests/test_main_window_disposal.py::test_unsaved_cancel_keeps_window_and_discard_destroys PASSED [  2%]
+tests/test_main_window_disposal.py::test_busy_close_keeps_window_until_real_worker_retires PASSED [  3%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[success] PASSED [  4%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[error] PASSED [  6%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[cancel] PASSED [  7%]
+tests/test_cloud_lifecycle_20261005.py::test_repeat_start_preserves_active_worker PASSED [  8%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[task_cancel] PASSED [  9%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[dialog_reject] PASSED [ 10%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[replace_request] PASSED [ 12%]
+tests/test_cloud_lifecycle_20261005.py::test_cancel_after_result_emit_before_gui_publication PASSED [ 13%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay] PASSED [ 14%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export] PASSED [ 15%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay] PASSED [ 17%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export] PASSED [ 18%]
+tests/test_cloud_lifecycle_20261005.py::test_declining_close_keeps_worker_running PASSED [ 19%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] PASSED [ 20%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] ERROR [ 20%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed] ERROR [ 21%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] PASSED [ 23%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] ERROR [ 23%]
+tests/test_task_cancellation_20261005.py::test_cancelled_discovery_result_is_not_published ERROR [ 24%]
+tests/test_task_cancellation_20261005.py::test_declining_close_does_not_cancel_active_task PASSED [ 25%]
+tests/test_task_cancellation_20261005.py::test_cancellation_updates_local_and_global_status PASSED [ 26%]
+tests/test_task_cancellation_20261005.py::test_mechanization_observes_cancellation_between_intervals PASSED [ 28%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close] PASSED [ 29%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close] ERROR [ 29%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option] ERROR [ 30%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] PASSED [ 31%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] ERROR [ 31%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed] ERROR [ 32%]
+tests/test_joint_gui_state.py::test_header_project_has_readable_pixels_and_elides_long_names PASSED [ 34%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-zh_CN] PASSED [ 35%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-en_US] PASSED [ 36%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-zh_CN] PASSED [ 37%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-en_US] PASSED [ 39%]
+tests/test_joint_gui_state.py::test_project_reopens_selected_what_if_identity_and_exact_time_range PASSED [ 40%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-zh_CN] PASSED [ 41%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-en_US] PASSED [ 42%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-zh_CN] PASSED [ 43%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-en_US] PASSED [ 45%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-1-kf] PASSED [ 46%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-2-eskf] PASSED [ 47%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-1-kf] PASSED [ 48%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-2-eskf] PASSED [ 50%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-1-kf] PASSED [ 51%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-2-eskf] PASSED [ 52%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-1-kf] PASSED [ 53%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-2-eskf] PASSED [ 54%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-1-kf] PASSED [ 56%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-2-eskf] PASSED [ 57%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-1-kf] PASSED [ 58%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-2-eskf] PASSED [ 59%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual0] PASSED [ 60%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual1] PASSED [ 62%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual2] PASSED [ 63%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual3] PASSED [ 64%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual4] PASSED [ 65%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual5] PASSED [ 67%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual6] PASSED [ 68%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual7] PASSED [ 69%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual8] PASSED [ 70%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual9] PASSED [ 71%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual10] PASSED [ 73%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual11] PASSED [ 74%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual0] PASSED [ 75%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual1] PASSED [ 76%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual2] PASSED [ 78%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual3] PASSED [ 79%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual4] PASSED [ 80%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual5] PASSED [ 81%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual6] PASSED [ 82%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual7] PASSED [ 84%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual8] PASSED [ 85%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual9] PASSED [ 86%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual10] PASSED [ 87%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual11] PASSED [ 89%]
+tests/test_decoder_directory_gui.py::test_preferences_preserve_other_settings_and_bound_search PASSED [ 90%]
+tests/test_decoder_directory_gui.py::test_manual_blank_decoder_requests_exact_discovery_and_custom_still_requires_package PASSED [ 91%]
+tests/test_decoder_directory_gui.py::test_normal_gui_routes_directories_to_actual_exact_coordinator PASSED [ 92%]
+tests/test_decoder_directory_gui.py::test_missing_explicit_manual_package_cannot_silently_use_good_cache PASSED [ 93%]
+tests/test_decoder_directory_gui.py::test_project_gui_recovers_missing_source_by_exact_cache_and_configured_directory PASSED [ 95%]
+tests/test_decoder_directory_gui.py::test_failed_exact_open_keeps_log_in_manual_chooser PASSED [ 96%]
+tests/test_decoder_directory_gui.py::test_open_single_log_automatically_finds_exact_package PASSED [ 97%]
+tests/test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch] PASSED [ 98%]
+tests/test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid] PASSED [100%]
+
+=================================== ERRORS ====================================
+_ ERROR at teardown of test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_ ERROR at setup of test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+_ ERROR at teardown of test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_____ ERROR at setup of test_cancelled_discovery_result_is_not_published ______
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+_ ERROR at teardown of test_save_lifecycle_respects_request_cancel_and_commit[clean_close] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_ ERROR at setup of test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+_ ERROR at teardown of test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:203: in pytest_runtest_teardown
+    _close_widgets(item)
+..\..\.venv\Lib\site-packages\pytestqt\qtbot.py:808: in _close_widgets
+    w.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+_ ERROR at setup of test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed] _
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+E   AssertionError: previous item was not torn down properly
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\flp\lifecycle9-1.xml -
+=========================== short test summary info ===========================
+ERROR tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected]
+ERROR tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed]
+ERROR tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled]
+ERROR tests/test_task_cancellation_20261005.py::test_cancelled_discovery_result_is_not_published
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close]
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option]
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit]
+ERROR tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed]
+================== 78 passed, 8 errors in 169.10s (0:02:49) ===================

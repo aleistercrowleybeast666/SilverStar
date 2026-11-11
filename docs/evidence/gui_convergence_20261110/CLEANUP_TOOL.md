@@ -22,8 +22,9 @@ $env:PYTHONPATH = 'apps/FLP'
 .venv/Scripts/python.exe apps/FLP/tools/clean_workspace.py --dry-run
 ```
 
-完整前后日志保留于本任务 `root/cleanup-compound-before-v2.log` 与
-`root/cleanup-compound-after.log`；任务冷归档收录原文件与散列。
+完整[修复前失败日志](cleanup_tool/before.log)和[修复后全文件日志](cleanup_tool/after.log)
+已从本任务原文件逐字节复制到正式证据。原文件继续保留在任务 root 目录；
+本次补齐收录没有重跑测试，也不把历史批次当作最终 HEAD 的新执行。
 实际执行范围、计划与删除结果见本目录的 `cache_cleanup.json`、`worktree_cleanup.json`
 和其他两仓的 cleanup 证据。旧 checkout 的归档后删除采用另外的逐文件恢复核验清单，
 不借缓存工具绕过原始输入保护。

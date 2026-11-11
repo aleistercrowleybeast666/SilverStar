@@ -1,0 +1,27 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_compound_exchange_and_project_inputs_survive_generated_scopes ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/root/cleanup-compound-before-v2/test_compound_exchange_and_pro0')
+
+    def test_compound_exchange_and_project_inputs_survive_generated_scopes(tmp_path):
+        root = _Repository_Create(tmp_path)
+        protected = [
+            _File_Write(root, f"{folder}/actual_{index}{suffix}")
+            for folder in ("build", "src/pkg/__pycache__")
+            for index, suffix in enumerate((
+                ".tdmotor.json", ".sstuning.json", ".tdrun.json", ".retldc.json",
+                ".TDMOTOR.JSON", ".SSTUNING.JSON", ".TDRUN.JSON", ".RETLDC.JSON",
+            ))
+        ]
+        generated = _File_Write(root, "build/diagnostic.json")
+        plan = WorkspaceClean_Plan(root)
+        assert generated in plan
+>       assert all(path not in plan for path in protected)
+E       assert False
+E        +  where False = all(<generator object test_compound_exchange_and_project_inputs_survive_generated_scopes.<locals>.<genexpr> at 0x0000021463E43CA0>)
+
+apps\FLP\tests\test_clean_workspace.py:84: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_clean_workspace.py::test_compound_exchange_and_project_inputs_survive_generated_scopes
+1 failed in 2.04s

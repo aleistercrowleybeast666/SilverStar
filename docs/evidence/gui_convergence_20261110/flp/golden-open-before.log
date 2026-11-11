@@ -1,0 +1,16 @@
+ContainerError unsupported_profile: 1
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 325, in Open
+    return self._OpenWithSourcePackage(log_path, self._PackagePath_Validate(request.decoder_package_path),
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                       task_context, cache_request=request)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 417, in _OpenWithSourcePackage
+    descriptor = DecoderProfileMatcher.Descriptor_Read(log_path, container)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\decoder_profiles\discovery.py", line 284, in Descriptor_Read
+    container.header_read(source, options)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\plugins\log_containers\sslog0\plugin.py", line 83, in header_read
+    raise ContainerError("unsupported_profile", str(header["profile_id"]))
+silverstar_flp.plugins.api.log_container.ContainerError: unsupported_profile: 1

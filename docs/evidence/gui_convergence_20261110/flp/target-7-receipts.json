@@ -1,0 +1,50 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\target-7-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gc10flp-t7\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gc10flp-t7\\0",
+      "tests/test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset",
+      "tests/test_header_field_blockers.py",
+      "tests/test_joint_gui_state.py",
+      "tests/test_estimator_visualization.py::test_fake_eskf_and_magnetometer_need_no_state_page_code_change",
+      "tests/test_estimator_visualization.py::test_configured_without_valid_updates_keeps_blank_plots_and_nis_thresholds",
+      "tests/test_comparison_contracts.py",
+      "tests/test_sf6_current_state.py::test_gui_and_saved_project_preserve_revision_specific_parameter_contract",
+      "tests/test_replay_lifecycle_boundaries.py",
+      "tests/test_cloud_lifecycle_20261005.py",
+      "tests/test_task_cancellation_20261005.py",
+      "tests/test_replay_page.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "284c6634 + FLP convergence target-7; real Windows fonts",
+    "elapsed": 766.16,
+    "exit": 0,
+    "case_seconds": 150,
+    "collected": 69,
+    "started": 69,
+    "finished": 69,
+    "interrupted": [],
+    "untouched": 0,
+    "phases": {
+      "passed": 207,
+      "failed": 0,
+      "skipped": 0
+    },
+    "junit_written": true,
+    "log_sha256": "e12470c5b82d922aa7e87ba775ae8cff1560313981b45ca6e6db423bff19aece",
+    "journal": "target-7-1.jsonl"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "schema": "silverstar.flp-preserved-raw-journal/1",
+  "scope": "Complete original bytes of the historical failed full-1 invocation; no outcomes or old summary changed. This is not a complete passing suite.",
+  "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full-1.jsonl",
+  "original_name": "full-1.jsonl",
+  "raw_bytes": 1281066,
+  "raw_sha256": "78ec1d010d815b9fe0efc7c8870a0097a62b406d310fba6e8501330373b10064",
+  "stored": "full-1.jsonl.gz",
+  "stored_bytes": 69324,
+  "stored_sha256": "5c1672f623a2a0b868c0c37ccdd1dc24f3869285adc6348efe6df7851483ec62",
+  "compression": {
+    "format": "gzip",
+    "level": 9,
+    "mtime": 0
+  },
+  "verification": {
+    "read_stored_file_from_disk": true,
+    "decompressed_bytes_equal_complete_original": true,
+    "raw_sha256_matches_existing_summary": true
+  },
+  "existing_summary": {
+    "path": "full-summary.json",
+    "sha256": "69dcc5759154348f031d047afb7a7e59a85e2397fe090e787bbe085b92fb14ab",
+    "unchanged": true,
+    "raw_hash_key": "files.full-1.jsonl"
+  },
+  "restore": "Decompress full-1.jsonl.gz and verify raw_sha256; preserve the original failed/partial outcomes."
+}

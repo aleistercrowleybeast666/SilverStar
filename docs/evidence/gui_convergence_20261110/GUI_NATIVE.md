@@ -17,7 +17,7 @@
 | Underline 最终 fit 便携包，英文深色，150%，未手动最大化 | 普通 EXE 首次启动，标题栏、工具栏、状态栏完整可见；真实 Open Project 载入本轮工程→Thrust，顶部 Update results 固定可见，225 N·s 结果与图可读，保持 Saved。正常关闭未改工程，stderr 为空；已退出 computer use。 | [首次启动](gui_native/underline-fit-first-show-150.png)、[结果区域](gui_native/underline-fit-result-150.png) |
 | Underline 同一最终 fit EXE，中文浅色，125%，未手动最大化 | `--locale zh_CN --theme light`，OS125% 与 factor=1；普通首次启动的主导航、导入/保存/打开工具栏与状态栏完整可见，CU 采集1281×818。正常关闭并退出 computer use。 | [中文首次启动](gui_native/underline-fit-first-show-125.png) |
 
-Underline 上述便携包 EXE SHA-256：
+Underline 首个410项测试批次便携包 EXE SHA-256：
 `c524f271a643dd29e4f561881a1b3fc58fec1c7678848fde5d9c4be713ffc9c8`。
 原生测试发现默认1280×820在150%可用逻辑1280×680屏幕上溢出；这是实际缺陷，不能以最大化
 后的截图冒充首次启动通过。修复04ac660e按availableGeometry和窗口边框收敛首次显示；
@@ -59,7 +59,8 @@ Underline 上述便携包 EXE SHA-256：
 GSHC 使用真实 Controller，但主机探针/端口库存注入为空且硬件打开边界拒绝调用；没有连接设备。
 
 相关回归分别为 SCG **4 passed / 21.42 s**、FLP 两完整文件 **11 passed / 39.90 s**、
-GSHC 两完整文件 **8 passed / 39.73 s**，各自为独立批次。FLP 先前完整套件属于其修复前封印身份，
+GSHC 两完整文件 **8 passed / 39.73 s**，各自为独立批次。FLP 完整套件属于生命周期修复后、
+首屏适配前的 `ea0f587d` 封印身份，
 不把这些小批次拼成新全套；本节是源码原生 Qt 脚本验证，便携 EXE 验证另行记录。
 
 命令、精确源码散列、前后几何和日志见[首屏修复收据](gui_native/initial_frame/receipt.json)、
@@ -67,3 +68,31 @@ GSHC 两完整文件 **8 passed / 39.73 s**，各自为独立批次。FLP 先前
 [可复用启动探针](../../../tools/validation/gui_initial_frame_probe.py)。
 最初 FLP 探针误用了原生 QSettings，写入 `zh_CN/light` 偏好；原值未知，未猜测恢复。
 该次已从私有设置验收中排除并用显式 INI 重测，全程未打开用户工程。
+
+TreeDiagram 后续正常 `run.py` 在125%桌面实测首屏、文件菜单→原生打开对话框→持久工程→结果，
+全程未缩放/移动/最大化。图表、导出按钮、历史配置说明和状态栏可达；Alt+F4关闭未保存，
+工程散列与原交付清单一致，stderr为空，随后退出computer use。
+截图与工具定位限制保存在TreeDiagram唯一owner：
+[125%首屏与结果操作收据](https://github.com/aleistercrowleybeast666/TreeDiagram/blob/38a6ccf23ca24b2ca60956b7365780ec1eb5fe39/docs/evidence/gui_convergence_20261110/native-fit-125.json)。
+其默认150%溢出也已由生产入口修复，并在新wheel隔离安装中原生复验。
+
+## 最终 SilverStar 便携包与原生显示阻塞（2026-11-12）
+
+代码身份为 `45ba8701af5f4baf83692fb15b5fbac2d9dfcc21`，实际运行
+`dist/gcf1111/SilverStar/` 的正常打包 EXE。没有手动缩窗或最大化，也未替换渲染默认值。
+
+- SCG 150%：首次硬件与通信页的两端摘要、共享链路、底部状态完整可见。真实点击检查与生成，
+  检出3/3工具链；双端均缺少目标时生成、构建和ELF操作均禁用，显示各自原因。
+  [首次显示](gui_native/scg-final-first-150.png)、[生成目标状态](gui_native/scg-final-targets-150.png)。
+- GSHC 150%：UIA能读取未连接状态及禁用的启动操作，但原生画面采样白屏，视觉验收未通过。
+  仅枚举端口库存，没有打开串口或连接设备。正常关闭，stderr为空。
+- FLP 125%：11月12日computer use连接恢复后再次运行最终EXE，实际载入owning C生成的
+  `SS_TEST_0_golden.sslog` 及精确 `SS_TEST_0.ssdecoder`，UIA读取14条记录、各解码错误计数0、
+  精确匹配状态；[原生采样仍白屏](gui_native/flp-final-unverified-125.jpg)。正常关闭时仅丢弃
+  本次导入形成的未保存临时工程，随后确认窗口和进程退出。原输入不保存或覆盖，stderr为空。
+
+上节几何检查通过不代表像素验收通过。19项对照包含Qt6.10.1/6.11.1纯Qt最小程序，
+均保留原始失败；控件自身grab正常不能替代原生采样，software导致实际3D GL1282错误也不能
+作为方案。采集链路、Qt、驱动或桌面合成的唯一根因尚未证明。
+[完整诊断](flp/native_compositor_20261112/README.md)与[最终EXE原生收据](gui_native/final-package.json)
+分别记录范围。所有自有测试窗口已关闭，computer use已退出；未改变系统显示设置或依赖版本。

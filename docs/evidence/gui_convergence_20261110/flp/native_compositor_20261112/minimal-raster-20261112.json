@@ -1,0 +1,30 @@
+{
+  "pid": 19952,
+  "qt": "6.10.1",
+  "scope": "Minimal Qt only; no FLP, pyqtgraph or PyOpenGL imports",
+  "env": {
+    "QT_QPA_PLATFORM": "windows",
+    "QT_SCALE_FACTOR": "1"
+  },
+  "raster": true,
+  "paints": 0,
+  "errors": [],
+  "own_hwnd": 8587838,
+  "foreground_hwnd": 8587838,
+  "foreground_is_self": true,
+  "surface": "SurfaceType.RasterSurface",
+  "dpr": 1.25,
+  "native_before_qwidget_grab": {
+    "white_fraction": 0.0,
+    "rgb_std": 62.12703325566482
+  },
+  "qwidget_grab": {
+    "white_fraction": 0.0,
+    "rgb_std": 62.12703325566482
+  },
+  "native_after_qwidget_grab": {
+    "white_fraction": 0.0,
+    "rgb_std": 62.12703325566482
+  },
+  "exit": 0
+}

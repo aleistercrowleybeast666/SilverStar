@@ -1,0 +1,118 @@
+{
+  "head": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "qt": "6.10.1",
+  "pid": 1284,
+  "arguments": {
+    "output": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-software-3d-20261112",
+    "no_fit": false,
+    "deferred_fit": false,
+    "before_show_fit": false,
+    "fit_part": null,
+    "no_caption": false,
+    "no_gl": false,
+    "visit_gl": true,
+    "wait_trigger": false,
+    "auto_own_foreground": true,
+    "share_contexts": false
+  },
+  "env": {
+    "QT_OPENGL": "software",
+    "QT_QPA_PLATFORM": "windows",
+    "QT_SCALE_FACTOR": "1"
+  },
+  "scope": "Private settings; synthetic empty project only. QWidget.grab and QScreen.grabWindow are diagnostic and not WGC acceptance.",
+  "snapshots": [
+    {
+      "tag": "initial",
+      "surface": "SurfaceType.OpenGLSurface",
+      "dpr": 1.25,
+      "updates_enabled": true,
+      "frame_contained": true,
+      "frame": [
+        7,
+        0,
+        1480,
+        816
+      ],
+      "paint_counts_before_grab": {
+        "MainWindow": 5,
+        "QWidget": 5
+      },
+      "gl": [
+        {
+          "visible": false,
+          "valid": false,
+          "context": false,
+          "context_valid": null,
+          "context_version": null
+        },
+        {
+          "visible": false,
+          "valid": false,
+          "context": false,
+          "context_valid": null,
+          "context_version": null
+        }
+      ],
+      "own_hwnd": 4262506,
+      "foreground_hwnd": 4262506,
+      "foreground_pid": 1284,
+      "native_grab_unoccluded_candidate": true,
+      "native_before_qwidget_grab": {
+        "width": 1850,
+        "height": 983,
+        "white_fraction": 0.47286244535481564,
+        "nonwhite_pixels": 958626,
+        "rgb_std": 77.52627902004572,
+        "file": "initial-native-before.png"
+      },
+      "qwidget_grab": {
+        "width": 1850,
+        "height": 983,
+        "white_fraction": 0.47286244535481564,
+        "nonwhite_pixels": 958626,
+        "rgb_std": 77.52627902004572,
+        "file": "initial-qt.png"
+      },
+      "native_after_qwidget_grab": {
+        "width": 1850,
+        "height": 983,
+        "white_fraction": 0.47286244535481564,
+        "nonwhite_pixels": 958626,
+        "rgb_std": 77.52627902004572,
+        "file": "initial-native-after.png"
+      },
+      "foreground_unchanged_after_grabs": true
+    }
+  ],
+  "errors": [
+    "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\native_compositor_probe.py\", line 162, in snapshot\n    detail[\"pyopengl_vendor\"] = str(GL.glGetString(GL.GL_VENDOR))\n                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\OpenGL\\platform\\baseplatform.py\", line 487, in __call__\n    return self(*args, **named)\n  File \"src/errorchecker.pyx\", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError\nOpenGL.error.GLError: GLError(\n\terr = 1282,\n\tdescription = b'\\xce\\xde\\xd0\\xa7\\xb2\\xd9\\xd7\\xf7',\n\tbaseOperation = glGetString,\n\tcArguments = (GL_VENDOR,)\n)\n"
+  ],
+  "source_files": {
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\app\\application.py": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\main_window.py": "b94e4452a14395be4fa98aa4da30d68ecd8372fa0f8c30dea8e68006f71c3371",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\pages\\charts.py": "f8b650be4a05e36e61add5c9e2bd54f77643e0c07cdf1ad0ee85ac949cc6be1d"
+  },
+  "before_show": {
+    "frame": [
+      7,
+      0,
+      1480,
+      874
+    ],
+    "geometry": [
+      7,
+      30,
+      1480,
+      844
+    ],
+    "available": [
+      0,
+      0,
+      1536,
+      816
+    ],
+    "window_handle_exists": true
+  },
+  "exit": 90
+}

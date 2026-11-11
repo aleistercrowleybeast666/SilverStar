@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full2-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gcf-full2\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gcf-full2\\0",
+      "tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12; FLP traced snapshot in full2-environment.json",
+    "elapsed": 2832.64,
+    "exit": 0,
+    "case_seconds": 150,
+    "collected": 1968,
+    "started": 1968,
+    "finished": 1968,
+    "interrupted": [],
+    "untouched": 0,
+    "phases": {
+      "passed": 5897,
+      "failed": 0,
+      "skipped": 5
+    },
+    "junit_written": true,
+    "log_sha256": "19c55394bf1f22951951e96086bd4d7506e9ed748ac13aedccb297ff1fcb3c33",
+    "journal": "full2-1.jsonl"
+  }
+]

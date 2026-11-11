@@ -1,0 +1,15 @@
+{
+  "path": "D:\\Codex_Work\\2026-10-09\\task-5\\flp-quality-wt",
+  "head": "4c0b5cb629c85a4949c1e848e33160f51aab55f7",
+  "owner": "completed merged historical worktree",
+  "clean_with_ignored_checked": true,
+  "contained_in_current_history": true,
+  "file_count": 363,
+  "logical_bytes": 4033055.0,
+  "exit_code": 0,
+  "path_absent": true,
+  "d_drive_free_before": 31658459136,
+  "d_drive_free_after": 31665635328,
+  "free_delta_is_interval_measurement_not_exclusive_attribution": true,
+  "inventory_sha256": "C917AE32E6240CA844D728B73922B30A214D92B03AB72CFE9DFAA4FD68107014"
+}

@@ -1,0 +1,1756 @@
+{
+  "source_head": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "product_source_modified": false,
+  "new_dependency_installed": false,
+  "default_renderer_changed": false,
+  "cause": "NOT PROVEN",
+  "native_gui_acceptance": "Not established by these diagnostic captures; root owns final portable interaction acceptance.",
+  "single_positive_no_fit_reproduced": false,
+  "software_opengl_recommendation": "DO NOT recommend as a workaround: actual existing PyOpenGL 3D raised GL_INVALID_OPERATION(1282).",
+  "harness_provenance": "Archived scripts are final additive diagnostic revisions. Earlier receipts precede some diagnostic flags/foreground guards. Each FLP receipt records exact production source hashes; no claim that every earlier run used the final harness byte-for-byte.",
+  "scope": "Owned native windows, private settings, empty synthetic project only; no user input or device opened. Native desktop-region captures are limited to the fully contained own foreground client and taken before QWidget.grab.",
+  "excluded_or_limited": [
+    "Initial compositor-baseline native capture was occluded by another test window; excluded from display conclusions.",
+    "compositor-exclusive-* captures did not own foreground; excluded from display conclusions.",
+    "compositor-focused-default visit-gl originally selected 2D attitude; not a real 3D view proof. Later deferred/software probes select replay_3d_widget.",
+    "November 11 compositor-focused-deferred was closed on explicit pause with no trigger/snapshots; exit 0 was closure, not a passing test.",
+    "A normally exited probe can demonstrate failed presentation; process exit 0 does not mean GUI acceptance.",
+    "Native capture/Qt/driver/compositor causality is not uniquely proven; pure Qt reproduction alone does not establish a driver defect.",
+    "All diagnostics closed; no product fix or speculative dependency change made."
+  ],
+  "cases": [
+    {
+      "name": "compositor-focused-default",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9898166121360424,
+            "nonwhite_pixels": 18519,
+            "rgb_std": 3.185028077937752,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.31342449343084,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        },
+        {
+          "tag": "visible-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9898166121360424,
+            "nonwhite_pixels": 18519,
+            "rgb_std": 3.185028077937752,
+            "file": "visible-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.49006846113661984,
+            "nonwhite_pixels": 927336,
+            "rgb_std": 80.97304131994208,
+            "file": "visible-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        },
+        {
+          "tag": "overview-after-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9898166121360424,
+            "nonwhite_pixels": 18519,
+            "rgb_std": 3.185028077937752,
+            "file": "overview-after-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.31342449343084,
+            "file": "overview-after-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-focused-no-fit",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.4804293582682208,
+            "nonwhite_pixels": 1014072,
+            "rgb_std": 76.6385711701188,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.4804185986934802,
+            "nonwhite_pixels": 1014093,
+            "rgb_std": 76.63866557731781,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-resume-deferred-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9924753237469413,
+            "nonwhite_pixels": 13684,
+            "rgb_std": 3.135696317431975,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        },
+        {
+          "tag": "visible-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9924753237469413,
+            "nonwhite_pixels": 13684,
+            "rgb_std": 3.135696317431975,
+            "file": "visible-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.46040361826730086,
+            "nonwhite_pixels": 981283,
+            "rgb_std": 81.5966119233129,
+            "file": "visible-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        },
+        {
+          "tag": "overview-after-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9924753237469413,
+            "nonwhite_pixels": 13684,
+            "rgb_std": 3.135696317431975,
+            "file": "overview-after-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "overview-after-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-preshow-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        },
+        {
+          "tag": "visible-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "visible-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.46040361826730086,
+            "nonwhite_pixels": 981283,
+            "rgb_std": 81.5966119233129,
+            "file": "visible-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        },
+        {
+          "tag": "overview-after-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "overview-after-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "overview-after-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-preshow-no-caption-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": false,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1020,
+            "white_fraction": 0.9630164281928988,
+            "nonwhite_pixels": 69788,
+            "rgb_std": 40.206839431910666,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1020,
+            "white_fraction": 0.4807027027027027,
+            "nonwhite_pixels": 979914,
+            "rgb_std": 77.17347590418946,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        },
+        {
+          "tag": "visible-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": false,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1020,
+            "white_fraction": 0.9630164281928988,
+            "nonwhite_pixels": 69788,
+            "rgb_std": 40.206839431910666,
+            "file": "visible-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1020,
+            "white_fraction": 0.47219554848966616,
+            "nonwhite_pixels": 995967,
+            "rgb_std": 81.12978939494661,
+            "file": "visible-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        },
+        {
+          "tag": "overview-after-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": false,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1020,
+            "white_fraction": 0.9630164281928988,
+            "nonwhite_pixels": 69788,
+            "rgb_std": 40.206839431910666,
+            "file": "overview-after-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1020,
+            "white_fraction": 0.4807027027027027,
+            "nonwhite_pixels": 979914,
+            "rgb_std": 77.17347590418946,
+            "file": "overview-after-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-part-resize-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-part-minimum-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": false,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.9434973741514026,
+            "nonwhite_pixels": 110279,
+            "rgb_std": 49.83690566073761,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.4804185986934802,
+            "nonwhite_pixels": 1014093,
+            "rgb_std": 76.8400693752142,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-part-move-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": false,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.9434973741514026,
+            "nonwhite_pixels": 110279,
+            "rgb_std": 49.83690566073761,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.4804185986934802,
+            "nonwhite_pixels": 1014093,
+            "rgb_std": 76.8400693752142,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-repeat-no-fit-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": false,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.9434973741514026,
+            "nonwhite_pixels": 110279,
+            "rgb_std": 49.83690566073761,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 1055,
+            "white_fraction": 0.4804185986934802,
+            "nonwhite_pixels": 1014093,
+            "rgb_std": 76.8400693752142,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-repeat-no-gl-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.RasterSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-qt.png"
+          },
+          "gl": []
+        }
+      ]
+    },
+    {
+      "name": "compositor-share-contexts-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        },
+        {
+          "tag": "visible-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "visible-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.46040361826730086,
+            "nonwhite_pixels": 981283,
+            "rgb_std": 81.5966119233129,
+            "file": "visible-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": true,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        },
+        {
+          "tag": "overview-after-gl",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.9989629100107228,
+            "nonwhite_pixels": 1886,
+            "rgb_std": 6.131194936293976,
+            "file": "overview-after-gl-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "overview-after-gl-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            },
+            {
+              "visible": false,
+              "valid": true,
+              "context": true,
+              "context_valid": true,
+              "context_version": [
+                4,
+                6
+              ],
+              "pyopengl_vendor": "b'Intel'",
+              "pyopengl_renderer": "b'Intel(R) UHD Graphics'",
+              "pyopengl_version": "b'4.6.0 - Build 31.0.101.1999'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compositor-software-3d-20261112",
+      "qt": "6.10.1",
+      "process_exit": 90,
+      "errors": [
+        "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\native_compositor_probe.py\", line 162, in snapshot\n    detail[\"pyopengl_vendor\"] = str(GL.glGetString(GL.GL_VENDOR))\n                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\OpenGL\\platform\\baseplatform.py\", line 487, in __call__\n    return self(*args, **named)\n  File \"src/errorchecker.pyx\", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError\nOpenGL.error.GLError: GLError(\n\terr = 1282,\n\tdescription = b'\\xce\\xde\\xd0\\xa7\\xb2\\xd9\\xd7\\xf7',\n\tbaseOperation = glGetString,\n\tcArguments = (GL_VENDOR,)\n)\n"
+      ],
+      "snapshots": [
+        {
+          "tag": "initial",
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "frame_contained": true,
+          "native_grab_unoccluded_candidate": true,
+          "foreground_unchanged_after_grabs": true,
+          "native_before_qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-native-before.png"
+          },
+          "qwidget_grab": {
+            "width": 1850,
+            "height": 983,
+            "white_fraction": 0.47286244535481564,
+            "nonwhite_pixels": 958626,
+            "rgb_std": 77.52627902004572,
+            "file": "initial-qt.png"
+          },
+          "gl": [
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            },
+            {
+              "visible": false,
+              "valid": false,
+              "context": false,
+              "context_valid": null,
+              "context_version": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "minimal-gl-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.2167634478758285
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.51355165923238
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-raster-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.RasterSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.12703325566482
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.12703325566482
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-gl-alpha-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.2167634478758285
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.51355165923238
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-gl-single-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.2167634478758285
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.51355165923238
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-gl-nosync-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.2167634478758285
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.51355165923238
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-gl-own-client-20261112",
+      "qt": "6.10.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.2167634478758285
+          },
+          "own_client_desktop_pregrab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.297171326853358
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.51355165923238
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-gl-qt611-own-client-20261112",
+      "qt": "6.11.1",
+      "process_exit": 0,
+      "errors": [],
+      "snapshots": [
+        {
+          "surface": "SurfaceType.OpenGLSurface",
+          "dpr": 1.25,
+          "foreground_is_self": true,
+          "native_before_qwidget_grab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.2167634478758285
+          },
+          "own_client_desktop_pregrab": {
+            "white_fraction": 0.9999506285714286,
+            "rgb_std": 1.297171326853358
+          },
+          "qwidget_grab": {
+            "white_fraction": 0.0,
+            "rgb_std": 62.51355165923238
+          }
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-default\\receipt.json",
+      "stored": "compositor-focused-default.json",
+      "bytes": 6790,
+      "sha256": "67c54fa16b274ad62dec09dd5809030db5fda36c7f07ea249f7c71ebee15429e",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-default.log",
+      "stored": "compositor-focused-default.log",
+      "bytes": 379,
+      "sha256": "8ee5f1068dd4c2d98edd4ef09104dd5072310c93d1cc22778ed2bb96285a0eb5",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-default.err.log",
+      "stored": "compositor-focused-default.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-no-fit\\receipt.json",
+      "stored": "compositor-focused-no-fit.json",
+      "bytes": 2776,
+      "sha256": "5b24ed3975d1561da15cd6beace4a79bc049a662c452de1d84f278b13fc3e3e7",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-no-fit.log",
+      "stored": "compositor-focused-no-fit.log",
+      "bytes": 376,
+      "sha256": "7be8b52d605f2f8a34aa446edcd859809f8b95816e9cc8d656961068ee99cb37",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-no-fit.err.log",
+      "stored": "compositor-focused-no-fit.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-resume-deferred-20261112\\receipt.json",
+      "stored": "compositor-resume-deferred-20261112.json",
+      "bytes": 7194,
+      "sha256": "16fa01a383828acd584ea56005cc245b54ec5c5d8f413b37f90f6b47c2522f55",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-resume-deferred-20261112.log",
+      "stored": "compositor-resume-deferred-20261112.log",
+      "bytes": 406,
+      "sha256": "f7e9c88d6ebb00706112e4e08957476ba83b3f793f52655bc1d5157bc18aab5d",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-resume-deferred-20261112.err.log",
+      "stored": "compositor-resume-deferred-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-20261112\\receipt.json",
+      "stored": "compositor-preshow-20261112.json",
+      "bytes": 7609,
+      "sha256": "057d111bcdb38114a58b7246bedffec96d8f8c8f72d8cb99e84013860ad9f158",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-20261112.log",
+      "stored": "compositor-preshow-20261112.log",
+      "bytes": 380,
+      "sha256": "13fcc1b08a9400c4a32be3a5bf4da750a43fcf8eeba15e9e844f710a01047369",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-20261112.err.log",
+      "stored": "compositor-preshow-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-no-caption-20261112\\receipt.json",
+      "stored": "compositor-preshow-no-caption-20261112.json",
+      "bytes": 7709,
+      "sha256": "aaeb9eff47166aff8dda0bceeebcfa871c313e3cd6c45de2ae600b77b1626196",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-no-caption-20261112.log",
+      "stored": "compositor-preshow-no-caption-20261112.log",
+      "bytes": 415,
+      "sha256": "2b40f52546548275073015dba44b75ccead121b3d8f95ef8df9669d7e3fd9fd6",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-preshow-no-caption-20261112.err.log",
+      "stored": "compositor-preshow-no-caption-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-resize-20261112\\receipt.json",
+      "stored": "compositor-part-resize-20261112.json",
+      "bytes": 3211,
+      "sha256": "a28c9340b20fa5fc0397002028bf05259f5ffc409151bf8cf0e6f171a0ed1f6d",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-resize-20261112.log",
+      "stored": "compositor-part-resize-20261112.log",
+      "bytes": 393,
+      "sha256": "d7010c9f2dd028e7e9f3b5ea37a4a0d4a8ca380e64aeebb1ca1652496889b2b9",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-resize-20261112.err.log",
+      "stored": "compositor-part-resize-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-minimum-20261112\\receipt.json",
+      "stored": "compositor-part-minimum-20261112.json",
+      "bytes": 3222,
+      "sha256": "9af2496572adaf82f883a5c9eb115af3c4ad8cc84e6d23487282611c42e557e2",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-minimum-20261112.log",
+      "stored": "compositor-part-minimum-20261112.log",
+      "bytes": 397,
+      "sha256": "9fe2251dd5f22bfb793267142647d5c371d5e88f95a6f751955026a0bce2f17e",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-minimum-20261112.err.log",
+      "stored": "compositor-part-minimum-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-move-20261112\\receipt.json",
+      "stored": "compositor-part-move-20261112.json",
+      "bytes": 3214,
+      "sha256": "6c5e4b39830c18fa286a68740ea67ec471f5a5449ad1b8f1bc1503ac189a36fa",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-move-20261112.log",
+      "stored": "compositor-part-move-20261112.log",
+      "bytes": 387,
+      "sha256": "f9c5f6baf8e6d51b4448b018e4c5f5d28e42e77ad72d2cbcfa298e27addf7d65",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-part-move-20261112.err.log",
+      "stored": "compositor-part-move-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-fit-20261112\\receipt.json",
+      "stored": "compositor-repeat-no-fit-20261112.json",
+      "bytes": 3219,
+      "sha256": "b52286232a6e0aa784527fe418a0aa56810a23ebae4c69fd25664fc8c45729eb",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-fit-20261112.log",
+      "stored": "compositor-repeat-no-fit-20261112.log",
+      "bytes": 401,
+      "sha256": "a29336608eefd066ea3b1153465329af0dc718539dfc69258ea18f0c6a5ec75f",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-fit-20261112.err.log",
+      "stored": "compositor-repeat-no-fit-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-gl-20261112\\receipt.json",
+      "stored": "compositor-repeat-no-gl-20261112.json",
+      "bytes": 2854,
+      "sha256": "cdd64c3667613bb71320589f5f767876116ccf312292efdc7695291fe21c4c47",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-gl-20261112.log",
+      "stored": "compositor-repeat-no-gl-20261112.log",
+      "bytes": 397,
+      "sha256": "1bf6fd1fd828dbc3ae1959893b13db87c802183be41205e5ac5e51c34e2129ab",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-gl-20261112.err.log",
+      "stored": "compositor-repeat-no-gl-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-share-contexts-20261112\\receipt.json",
+      "stored": "compositor-share-contexts-20261112.json",
+      "bytes": 7467,
+      "sha256": "b6cbe1bb920507c2b8a3b59ee9e3fc70556e3869f345ffae58efae5a304cee14",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-share-contexts-20261112.log",
+      "stored": "compositor-share-contexts-20261112.log",
+      "bytes": 402,
+      "sha256": "d434f89680bf75a527011b722a6e625a07ed830792665e4a51e85a08ab62bff5",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-share-contexts-20261112.err.log",
+      "stored": "compositor-share-contexts-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-software-3d-20261112\\receipt.json",
+      "stored": "compositor-software-3d-20261112.json",
+      "bytes": 4051,
+      "sha256": "613eafb29b2759cd3c3af1fd64182b2d706a59df4ba1071b844648bb314f6482",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-software-3d-20261112.log",
+      "stored": "compositor-software-3d-20261112.log",
+      "bytes": 394,
+      "sha256": "6c5e9330355b02319c5953d4a728c6fdeb999ba89a11b5e977edff6775e20443",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-software-3d-20261112.err.log",
+      "stored": "compositor-software-3d-20261112.err.log",
+      "bytes": 1769,
+      "sha256": "721784e0acecaf20ff2eb9c5d05d78a1169ad410d8cb5501e6d44d0cec51bf17",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-20261112\\receipt.json",
+      "stored": "minimal-gl-20261112.json",
+      "bytes": 800,
+      "sha256": "8a2b1334571a01c0d34b1fef2ca16c08c3b8e2ab029eaa1b083269d4279158fe",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-20261112.log",
+      "stored": "minimal-gl-20261112.log",
+      "bytes": 668,
+      "sha256": "4cccb8a776d0593263aa4b7e545fa0a2a9e8bcd0150fde703c19a1de53218ce7",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-20261112.err.log",
+      "stored": "minimal-gl-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-raster-20261112\\receipt.json",
+      "stored": "minimal-raster-20261112.json",
+      "bytes": 697,
+      "sha256": "ced0e4153bc2d00b45c38c418c712c577a2ca0e50d61c9bc3cdecf23c0d4310b",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-raster-20261112.log",
+      "stored": "minimal-raster-20261112.log",
+      "bytes": 586,
+      "sha256": "5392bacee5ceb39acb66b1896283890916d24b695860e154d4f3ff40ce7632ef",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-raster-20261112.err.log",
+      "stored": "minimal-raster-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-alpha-20261112\\receipt.json",
+      "stored": "minimal-gl-alpha-20261112.json",
+      "bytes": 1303,
+      "sha256": "47dd815b42e75b1e0299a9b442a217f3026405409ae4fe74e419270ea65d3725",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-alpha-20261112.log",
+      "stored": "minimal-gl-alpha-20261112.log",
+      "bytes": 1145,
+      "sha256": "6b2b1c201faf667c808844b941f3d716b6ff874294167b8e6a84727d80fe956c",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-alpha-20261112.err.log",
+      "stored": "minimal-gl-alpha-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-single-20261112\\receipt.json",
+      "stored": "minimal-gl-single-20261112.json",
+      "bytes": 1310,
+      "sha256": "c6d19146b0ed8318f4324ddc78cf3cc301e92b68121ef4e120f826c599ebaa21",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-single-20261112.log",
+      "stored": "minimal-gl-single-20261112.log",
+      "bytes": 1152,
+      "sha256": "5c94530e404edc5ba95f6d51bc824de79a95e5913b60ff84debbe740581be229",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-single-20261112.err.log",
+      "stored": "minimal-gl-single-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-nosync-20261112\\receipt.json",
+      "stored": "minimal-gl-nosync-20261112.json",
+      "bytes": 1303,
+      "sha256": "97e3e7a5dfbc91f024677f51d3f44118605c75fb0c86761c6c29b994f8b1a0f4",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-nosync-20261112.log",
+      "stored": "minimal-gl-nosync-20261112.log",
+      "bytes": 1145,
+      "sha256": "24d060d50172d4d0da3db5653d3fa68e801ea357bdbc7c26964892ce8229c66e",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-nosync-20261112.err.log",
+      "stored": "minimal-gl-nosync-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-own-client-20261112\\receipt.json",
+      "stored": "minimal-gl-own-client-20261112.json",
+      "bytes": 1557,
+      "sha256": "4f9ca9dd68dd3d902dd285db61460c60a336804a464a171b22db50f450414bb4",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-own-client-20261112.log",
+      "stored": "minimal-gl-own-client-20261112.log",
+      "bytes": 1325,
+      "sha256": "9d6ea7a689de04887ae5e1f5fc350afaaa678a645982f01fadd97208bbefb22b",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-own-client-20261112.err.log",
+      "stored": "minimal-gl-own-client-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-qt611-own-client-20261112\\receipt.json",
+      "stored": "minimal-gl-qt611-own-client-20261112.json",
+      "bytes": 1557,
+      "sha256": "bb311cf900e44f029e0aeca55f10bbdaf6bbe790d3a3f58fa339ac43f131b2cc",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-qt611-own-client-20261112.log",
+      "stored": "minimal-gl-qt611-own-client-20261112.log",
+      "bytes": 1325,
+      "sha256": "b73ccf065f2ada015b44f3e4581317000e1af065c57f8743f567bf9e160fa27c",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-qt611-own-client-20261112.err.log",
+      "stored": "minimal-gl-qt611-own-client-20261112.err.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-default\\initial-native-before.png",
+      "stored": "compositor-focused-default-initial-native-before.png",
+      "bytes": 21478,
+      "sha256": "0f83d3788aa2537e5a1dfc6c1e363406de204dd142789c10d393596c77032637",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-focused-no-fit\\initial-native-before.png",
+      "stored": "compositor-focused-no-fit-initial-native-before.png",
+      "bytes": 72321,
+      "sha256": "dc2c3a25712e31b4b9e14824206ee7114e5ba90d59285cb6caa9bb7e0030c0b4",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-fit-20261112\\initial-native-before.png",
+      "stored": "compositor-repeat-no-fit-20261112-initial-native-before.png",
+      "bytes": 38251,
+      "sha256": "d9697e704ccee260847b4d9b561ad22f69b3ced008710936379a841afd4318c1",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-gl-20261112\\initial-native-before.png",
+      "stored": "compositor-repeat-no-gl-20261112-initial-native-before.png",
+      "bytes": 65253,
+      "sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-resume-deferred-20261112\\visible-gl-native-before.png",
+      "stored": "compositor-resume-deferred-20261112-visible-gl-native-before.png",
+      "bytes": 18991,
+      "sha256": "fff9e23360418e96d99606bdae5a1740770b66647da4bb3ceb5bc0522d924a61",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-software-3d-20261112\\initial-native-before.png",
+      "stored": "compositor-software-3d-20261112-initial-native-before.png",
+      "bytes": 65253,
+      "sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-own-client-20261112\\native-before.png",
+      "stored": "minimal-gl-own-client-20261112-native-before.png",
+      "bytes": 6583,
+      "sha256": "44734a19617f21d017a5b59bd6027aeb0c7babe329a0d1d13bd6daa9bc66f5b8",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-own-client-20261112\\own-client-desktop-before.png",
+      "stored": "minimal-gl-own-client-20261112-own-client-desktop-before.png",
+      "bytes": 6591,
+      "sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-own-client-20261112\\qt.png",
+      "stored": "minimal-gl-own-client-20261112-qt.png",
+      "bytes": 19497,
+      "sha256": "982fe5119c8b5c7e8b57453ade4113739c21d802f62d1031b8512fa9ee5eca1d",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-raster-20261112\\native-before.png",
+      "stored": "minimal-raster-20261112-native-before.png",
+      "bytes": 19496,
+      "sha256": "bbd9452a450d4a7903fab1d82971518b0ea0a210f208b144907292a729c5b5ce",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal-gl-qt611-own-client-20261112\\own-client-desktop-before.png",
+      "stored": "minimal-gl-qt611-own-client-20261112-own-client-desktop-before.png",
+      "bytes": 6591,
+      "sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\native_compositor_probe.py",
+      "stored": "native_compositor_probe.py",
+      "bytes": 11191,
+      "sha256": "e02acf10b9428f85b1658ad3cd4afb5b3078ed728b32bfadb26d50330e510b09",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\minimal_native_gl.py",
+      "stored": "minimal_native_gl.py",
+      "bytes": 5162,
+      "sha256": "10f6f2c638c05c8c5b6b76f53ba672b337be51edfc26d19ff081a567425c62d1",
+      "readback_exact": true
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-paused.json",
+      "stored": "compositor-paused.json",
+      "bytes": 2130,
+      "sha256": "93c0cd7598160a1b1f60e38735d3328ab3b9c170b609e91665bb3fe4b69a0cee",
+      "readback_exact": true
+    }
+  ]
+}

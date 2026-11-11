@@ -1,0 +1,19 @@
+# Raw execution evidence must retain the bytes whose SHA-256 is in its receipt.
+# This affects only this task's evidence, not product source or validation gates.
+flp/** -text
+cleanup_tool/** -text
+packaging_path_guard/** -text
+# These newly added receipt files also carry cross-referenced original byte hashes.
+cache_cleanup.json -text
+cleanup_summary.json -text
+cleanup_inventory/receipt.json -text
+gui_native/final-package.json -text
+old_repo_issues.json -text
+package/receipt.json -text
+preserved_inputs.json -text
+retirement.json -text
+root_regressions/index.json -text
+scg-cleanup.json -text
+scg-postcleanup/receipt.json -text
+treediagram_push.json -text
+worktree_cleanup.json -text

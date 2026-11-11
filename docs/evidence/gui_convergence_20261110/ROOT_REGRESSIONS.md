@@ -28,4 +28,40 @@
 首次整批horizon运行曾为便携版启动门禁协调资源而主动中止；记录为中止，不与后续片段拼接。
 上面56与2均为各自从新basetemp执行到结束的独立批次。完整日志保留在本任务
 `root/horizon-traces-final.log`、`root/native-horizon-traces.log`、`root/gshc-regression.log`，
-将在任务收尾归档索引记录散列和恢复位置。
+并已无损压缩纳入 [正式原日志索引](root_regressions/index.json)。每份 gzip 均已读回解压、
+按原始完整字节比对；索引记录原路径、原文件与压缩文件 SHA-256。
+
+## 清理后的当前入口与明确命令
+
+在 `c8ec254a8d2ce57db23832dc176c80a2da2a9b95` 上补执行以下明确的 GSHC 八文件批次：
+
+```powershell
+$env:PYTHONPATH = "$PWD/apps/GSHC"
+$env:QT_QPA_PLATFORM = 'offscreen'
+$env:QT_QPA_FONTDIR = 'C:/Windows/Fonts'
+$env:PYTHONUTF8 = '1'
+$env:PYTHONDONTWRITEBYTECODE = '1'
+$env:SILVERSTAR_GSHC_DATA_ROOT = "$PWD/.work/gui-convergence-20261110/gshc-final-v2-data"
+.venv/Scripts/python.exe -B -m pytest -q apps/GSHC/tests/test_release_telemetry_direction.py apps/GSHC/tests/test_reconnect_recovery.py apps/GSHC/tests/test_sensor_snapshot.py apps/GSHC/tests/test_navigation_readiness.py apps/GSHC/tests/test_magnetometer_calibration.py apps/GSHC/tests/test_magnetometer_workflow.py apps/GSHC/tests/test_maintenance_serial_profile.py apps/GSHC/tests/test_gui_maintenance_workflow.py --basetemp=.work/gui-convergence-20261110/gshc-final-v2
+```
+
+单次 **79 passed / 32.81 s**，runner exit 0、36.80 s，190 个 Python 源输入前后散列一致。
+早先80项批次没有独立留存完整参数收据，因此只保留其真实日志，不从数量反推八文件命令，
+也不把79与80写成同一批次。当前精确 argv、环境、源码散列与原日志均在上述索引。
+这次入口第一次遗漏 GSHC 的 PYTHONPATH，8个模块在 collection 阶段报 import error；
+完整失败日志及命令保留。补正确应用路径后从新 basetemp 完整执行，没有改源码或测试门禁。
+
+根目录 `test_monorepo_baseline.py`、`test_desktop_version_inventory.py`、
+`test_product_version_metadata.py` 三完整文件单次 **32 passed / 1 failed / 115.79 s**。
+失败为历史许可文档本地图片缺失；按同一门禁扫描的全部3处断链已修复，许可正文未变，
+该完整文档链接测试再执行 **1 passed / 3.05 s**。原32项未重复执行、不拼成一次33项通过。
+具体资源与固定提交来源见 [许可引用修复收据](document-link-repair.json)。
+
+## 交付文档与证据检查（2026-11-12）
+
+文档/收据暂存树的差异格式检查通过，原有产物门禁审查245个变化blob通过；
+当前文档链接测试单独执行1 passed / 1.28 s。禁用pytest缓存插件以避免生成缓存，
+同时出现既有cache_dir配置的1条warning，完整输出保留；不称零warning或新全套通过。
+精确命令、源码HEAD和该次暂存tree见[完整命令收据](root_regressions/final-delivery-checks.json.gz)，
+[字节索引](root_regressions/final-delivery-index.json)。随后补充原始失败日志及本收据，
+最终提交的产物门禁和远端CI另行核对，不把后续文件冒称包含在这次245项检查中。

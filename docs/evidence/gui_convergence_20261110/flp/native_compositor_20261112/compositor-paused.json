@@ -1,0 +1,29 @@
+{
+  "state": "paused_at_explicit_user_request",
+  "source_head": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "product_source_modified": false,
+  "diagnostic_script": ".work/gui-convergence-20261110/flp/native_compositor_probe.py",
+  "confirmed": {
+    "focused_default": "Self foreground confirmed. Native pre-QWidget-grab 98.98% white; QWidget.grab normal. Intel UHD Graphics OpenGL 4.6, driver 31.0.101.1999.",
+    "focused_no_fit": "Self foreground confirmed. Disabling startup geometry fit only gave normal native pregrab (48.04% white, ordinary UI content), matched QWidget.grab and root WGC.",
+    "scope": "Source production application.main with private persistence; source-byte hashes in receipts. No hardware or user project opened."
+  },
+  "excluded": [
+    "compositor-baseline native pixels were occluded by another Chinese window; CPU QWidget.grab remains diagnostic only.",
+    "compositor-exclusive-* did not own OS foreground; native grabs not acceptance evidence.",
+    "compositor-focused-default visit-gl stage accidentally selected 2D attitude tab; not a real 3D acceptance. Script corrected for future runs."
+  ],
+  "interrupted_probe": {
+    "directory": ".work/gui-convergence-20261110/flp/compositor-focused-deferred",
+    "command": ".venv/Scripts/python.exe -X utf8 .work/gui-convergence-20261110/flp/native_compositor_probe.py .work/gui-convergence-20261110/flp/compositor-focused-deferred --deferred-fit --visit-gl --wait-trigger",
+    "launcher_pid": 25192,
+    "actual_pid": 21636,
+    "close": "Validated own command and requested CloseMainWindow; normal exit 0; capture request never created.",
+    "outcome": "NOT TESTED: no capture-triggered snapshots, exit 0 only means normal closure."
+  },
+  "resume_next": [
+    "Validate deferred-only geometry fitting with one foreground-owned native process and pre-QWidget-grab screenshot.",
+    "If successful, discuss minimal FLP/GSHC entry fix, actual 3D/context consistency, required regression and fresh normal package with root.",
+    "Do not change software OpenGL defaults or report candidate package GUI accepted from present evidence."
+  ]
+}

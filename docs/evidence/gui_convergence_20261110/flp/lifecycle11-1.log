@@ -1,0 +1,45 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gcf-lifecycle11\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 33 items
+
+tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False] PASSED [  3%]
+tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True] PASSED [  6%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] PASSED [  9%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] PASSED [ 12%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] PASSED [ 15%]
+tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel] PASSED [ 18%]
+tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close] PASSED [ 21%]
+tests/test_project_stage_progress_gui.py::test_failed_open_never_reports_complete PASSED [ 24%]
+tests/test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction PASSED [ 27%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close] PASSED [ 30%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option] PASSED [ 33%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit] PASSED [ 36%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed] PASSED [ 39%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish] PASSED [ 42%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] PASSED [ 45%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close] PASSED [ 48%]
+tests/test_worker_retirement.py::test_finished_does_not_retire_or_allow_close_until_actual_return PASSED [ 51%]
+tests/test_worker_retirement.py::test_old_sender_cannot_finish_cancel_or_publish_into_active_task PASSED [ 54%]
+tests/test_worker_retirement.py::test_nested_result_event_loop_keeps_callbacks_until_publication_returns PASSED [ 57%]
+tests/test_replay_lifecycle_boundaries.py::test_store_clear_releases_arrays_when_no_other_owners PASSED [ 60%]
+tests/test_replay_lifecycle_boundaries.py::test_successive_completed_runs_are_retained_without_copying_arrays PASSED [ 63%]
+tests/test_replay_lifecycle_boundaries.py::test_switching_dataset_releases_previous_replay_page_result PASSED [ 66%]
+tests/test_replay_lifecycle_boundaries.py::test_same_dataset_refresh_preserves_completed_history_and_last_result PASSED [ 69%]
+tests/test_replay_lifecycle_boundaries.py::test_task_result_publication_requires_current_uncancelled_worker[active] PASSED [ 72%]
+tests/test_replay_lifecycle_boundaries.py::test_task_result_publication_requires_current_uncancelled_worker[cancelled] PASSED [ 75%]
+tests/test_replay_lifecycle_boundaries.py::test_task_result_publication_requires_current_uncancelled_worker[superseded] PASSED [ 78%]
+tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[False] PASSED [ 81%]
+tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[True] PASSED [ 84%]
+tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[cancel] PASSED [ 87%]
+tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[accepted_close] PASSED [ 90%]
+tests/test_main_window_disposal.py::test_repeated_accepted_close_releases_entire_native_tree PASSED [ 93%]
+tests/test_main_window_disposal.py::test_unsaved_cancel_keeps_window_and_discard_destroys PASSED [ 96%]
+tests/test_main_window_disposal.py::test_busy_close_keeps_window_until_real_worker_retires PASSED [100%]
+
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\flp\lifecycle11-1.xml -
+======================= 33 passed in 212.90s (0:03:32) ========================

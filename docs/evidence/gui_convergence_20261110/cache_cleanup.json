@@ -1,0 +1,14 @@
+{
+  "scope": "apps/GSHC",
+  "owner": "Reproducible GSHC bytecode/cache after 80 current regressions",
+  "result": "applied",
+  "removed_paths": 234,
+  "logical_bytes": 6868274,
+  "d_free_before": 30532505600,
+  "d_free_after": 30537220096,
+  "interval_free_delta": 4714496,
+  "physical_note": "Concurrent build/archive interval; not exclusively attributable.",
+  "repeat_result": "applied",
+  "repeat_removed": 0,
+  "retained_unowned": "apps/GSHC/.work/inspect_width.pyc"
+}

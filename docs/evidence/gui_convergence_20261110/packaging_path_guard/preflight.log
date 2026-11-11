@@ -1,0 +1,30 @@
+2835 INFO: PyInstaller: 6.16.0, contrib hooks: 2025.9
+2836 INFO: Python: 3.14.0
+2906 INFO: Platform: Windows-11-10.0.26200-SP0
+2906 INFO: Python environment: D:\python_software\SilverStar\.venv
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyInstaller\__main__.py", line 321, in <module>
+    run()
+    ~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyInstaller\__main__.py", line 215, in run
+    run_build(pyi_config, spec_file, **vars(args))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyInstaller\__main__.py", line 70, in run_build
+    PyInstaller.building.build_main.main(pyi_config, spec_file, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyInstaller\building\build_main.py", line 1272, in main
+    build(specfile, distpath, workpath, clean_build)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyInstaller\building\build_main.py", line 1210, in build
+    exec(code, spec_namespace)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "tools/packaging/SilverStar_shared.spec", line 28, in <module>
+    DestinationPaths_Validate(collection_contents, resource_files)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\tools\packaging\path_limits.py", line 22, in DestinationPaths_Validate
+    raise RuntimeError(
+    ...<5 lines>...
+    )
+RuntimeError: Windows portable destination needs 263 UTF-16 code units (maximum 259 before the terminating NUL): D:\python_software\SilverStar\dist\gui-convergence-20261111-fit-final\SilverStar\_internal\apps\SCG\plugins\builtin\silverstar_algorithm_alignment_hardware_quat_6axis_known_yaw\payload\Algorithm\Alignment\HardwareQuat6AxisKnownYaw\Inc\alignment_strategy_binding.h. Use a shorter --distpath (build_candidate.ps1 -Destination), for example D:/python_software/SilverStar/dist/gcf1111; also extract the delivered ZIP below a short directory.

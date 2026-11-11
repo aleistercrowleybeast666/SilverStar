@@ -1,0 +1,14 @@
+{
+  "current_kf_backend_trace.c": {
+    "origin": ".work\\dev013_horizon01\\kf6_current_export_a1_kf6_trace04_fixture.c",
+    "origin_sha256": "bd605604d76da822ac97691e62f88b4ff1aafcf4f4560cd2f25a450b484916e1",
+    "sha256": "100fc85b7fa1035082a271a710e8446effe1ee106144bcefd726b84f2b10e204",
+    "changes": "Portable generated-project include paths and static trace-state names only"
+  },
+  "current_eskf_backend_trace.c": {
+    "origin": ".work\\dev013_horizon01\\eskf15_current_export_a1_eskf_trace03_fixture.c",
+    "origin_sha256": "7082339f7c53e91a529425006ebdb728e1842193332bcc5065a3a84b32403751",
+    "sha256": "aba662ddf3522295f61097bd3c7a4b887cb292e997d2ee7bfe2b6af1dc845b1e",
+    "changes": "Portable generated-project include paths and static trace-state names only"
+  }
+}

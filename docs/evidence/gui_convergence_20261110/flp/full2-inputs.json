@@ -1,0 +1,2465 @@
+{
+  "source_commit": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+  "scope": "Fresh synthetic CPU inputs only; raw captured hardware inputs remain unavailable.",
+  "source_files": [
+    {
+      "path": "apps/FLP/SF6_REVISION2.md",
+      "bytes": 3411,
+      "sha256": "05acdcaf33ed5662d52a37b31a71dab1625000229dc30a212e18f3b6f422c9af"
+    },
+    {
+      "path": "apps/FLP/SilverStar_FLP.code-workspace",
+      "bytes": 60,
+      "sha256": "69e7b37e2ebdaf8fc313bf6cb74882fed65895e5f853736e65759bafb333bc6b"
+    },
+    {
+      "path": "apps/FLP/SilverStar_FLP.spec",
+      "bytes": 2475,
+      "sha256": "e0e907927955ff8017df3f5fb7fcf27138a7587448edcb2899b78eed075034c2"
+    },
+    {
+      "path": "apps/FLP/main.py",
+      "bytes": 857,
+      "sha256": "07cd63f938d72f36d9aa918ae2521a9379aebc306ce75d7453b497d3deab32db"
+    },
+    {
+      "path": "apps/FLP/pyproject.toml",
+      "bytes": 1335,
+      "sha256": "548784f505eb29880999c04c8d36c8ee53293f1d71d967c36961b8d0bded9358"
+    },
+    {
+      "path": "apps/FLP/scripts/build_windows.ps1",
+      "bytes": 266,
+      "sha256": "d19495e144e0db0f896d4a987f29931144d78b8e51cf0b6877c75c48212cbebf"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/__init__.py",
+      "bytes": 114,
+      "sha256": "9e8231309018cd48b2b02a886fb05038396ee919c6cc89420c2758b68d54ef27"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/__init__.py",
+      "bytes": 283,
+      "sha256": "06a94a60ced6f869b701797fb8cce87e3e718582a680cbc6d40e272bd2060eed"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/geodesy.py",
+      "bytes": 1833,
+      "sha256": "f5e2c0cfd81bb625accd5315b4637066e316fcd812b64310b94effa7171dd36b"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/gnss_integrity_display.py",
+      "bytes": 4467,
+      "sha256": "6e7cfcfe6389e57e94c09fbfd07eeed4e928205eee2a86ab7a43c819da54afe5"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/gnss_integrity_stream.py",
+      "bytes": 13026,
+      "sha256": "3dd74d1cfebda2aff9f5b3a17f9c1d98d174cb0d7123a3dd4464ed6f6ad60c21"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/gnss_replay_availability.py",
+      "bytes": 2854,
+      "sha256": "9352ba0a437f547302d39a69a9491f96ffc5022847af5e5f96e6ab232dc23e7d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/gnss_vertical_consistency.py",
+      "bytes": 5019,
+      "sha256": "ba3e4663fce8427625afe1973d3235fc50e57f23d35a8aabfa962278bb124c32"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/landing_window.py",
+      "bytes": 9590,
+      "sha256": "e358da32bd75caafc798b1ec06e35afacb5e7877b170354b6da43c701038982a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/measurement_diagnostics.py",
+      "bytes": 10240,
+      "sha256": "d7927cc5c2f2cdc04fe169af874c443d20e4aeffe13604e3c693b6458b1e8a81"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/navigation_policy.py",
+      "bytes": 12462,
+      "sha256": "73908046d8344e7fac2b86477f7794dedcb4df885025d48de06833d123f36254"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/navigation_revision3.py",
+      "bytes": 9458,
+      "sha256": "8bd21dcfed94f9c52a7983b154359330cc2408e921066bb87e5264e3497c7f72"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/overview.py",
+      "bytes": 22707,
+      "sha256": "58e31ab143f078775d630fafdc0ab3e8191c1c2b07ffda6c6ab775087f3a8cee"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/analysis/recovery.py",
+      "bytes": 12133,
+      "sha256": "345aa4a9078ffef87b94a46f9412b3bb5e4f2abadc350fa02011e71c8284b4d2"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/app/__init__.py",
+      "bytes": 40,
+      "sha256": "ee70691967ef646de514effcf0dde35b1f599320eccc276fdb5b2617cdf97c68"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/app/application.py",
+      "bytes": 5167,
+      "sha256": "cc392fbb68ef2df64d01a858bd4ab421be87a74202520e14689dbef08cf91cc7"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/app/startup_error.py",
+      "bytes": 2059,
+      "sha256": "0e8fd8b6d5f8b115f8e1a7d8c48b5b01614dfc6eb089bdb89b03ce324eb1324f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/app/version.py",
+      "bytes": 529,
+      "sha256": "7d9ed6e2cfbbfb05ea19cd92289fbaaf570e692bcf4e2a6223851e85115981a6"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/cli.py",
+      "bytes": 15127,
+      "sha256": "7ecde85a9d8557cde2838ba94ab36ceeebae2bb5829ba684a38c463652867f5c"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/__init__.py",
+      "bytes": 691,
+      "sha256": "3ac9fb0f6b9e30a83c9d72dd899b54a5089b09edc910419256fb8ce053fd3419"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/analysis_source.py",
+      "bytes": 30616,
+      "sha256": "6a025beaf36c833e7ee8e4753fb432ada13ab7ca34ab6f057cd44fbde2cf6126"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/artifacts.py",
+      "bytes": 56145,
+      "sha256": "4b252cc6819adbe7e6d10cb04a9f85a84279988eef64faa65aa97fe300c34f8d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/audit_blocks.py",
+      "bytes": 7576,
+      "sha256": "752417781ca74f7c9870d69e01001980d49adc63b35664d264f14ec5e3c3e849"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/comparison.py",
+      "bytes": 8907,
+      "sha256": "abae64c1f6dcb38f50a8ba3fe62198cdd824f1be3819d4f61e7ed2b2eee0ac87"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/context.py",
+      "bytes": 821,
+      "sha256": "4970464ea577ea7de4127fd29059b9ac28927c0ef567a1830b72a9a2c0e662db"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/dataset.py",
+      "bytes": 12762,
+      "sha256": "b18b22b3935f260b07bf9a6f0bf0f4a3635b5ab7749b444ff097557a8934ce09"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/diagnostics.py",
+      "bytes": 14266,
+      "sha256": "c689165b42ba726cd575ec580a7f24181a71820c5bab77331a73af6cf063928f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/horizontal_trajectory.py",
+      "bytes": 8716,
+      "sha256": "e7e3dd81fe70a63fc0a75dbe80dabc29e5938735c74bdd1044a16615c700c52d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/i18n.py",
+      "bytes": 1410,
+      "sha256": "ddc896dd6d9f46623b02fc20721529a423d7b5f6c652b6dc2348303392be6355"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/math.py",
+      "bytes": 4134,
+      "sha256": "d380aefbfc80176fe006f7a46ba9b2dbe4345b5606422081a7c79307428a8ffc"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/mission.py",
+      "bytes": 4080,
+      "sha256": "85af8b1500a346118b8496c00c01374e2732cc0888992b12bf9100f09f70bf98"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/nis_probability.py",
+      "bytes": 5650,
+      "sha256": "b85c8037309dc4a6eaabc21c2c30b357883d02612a7889404af5761cc5234e40"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/parse_cache.py",
+      "bytes": 4067,
+      "sha256": "674c0d1b5db8bb47a97aefe34284d520206e4437bd2bd0f6afd4902f521a6bbb"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/path_preferences.py",
+      "bytes": 5699,
+      "sha256": "d0b076198063a8e118b3d6d190085720a22d542e176a762d9acdf38c20643338"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/project.py",
+      "bytes": 31464,
+      "sha256": "73f147d00566e3eba6bcad050b7d846842d791acbb65d47af3c35049f2943b84"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/project_cache.py",
+      "bytes": 3386,
+      "sha256": "8aed018fd5ded661aabe66ce9ad8082d7c8ca13e4c7473d74b98e2b1f502e815"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/record_blocks.py",
+      "bytes": 19150,
+      "sha256": "573330daeb306eae3d97d601fbb0f3bc5a806a5221c6a09bebf9aaedf60656d7"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/replay_execution.py",
+      "bytes": 1067,
+      "sha256": "51e2bec47c943be8dc98d280eafe87bddee6e2e521a76f9ff913f300ee9bdb7d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/run_history.py",
+      "bytes": 9514,
+      "sha256": "33c51d2aa4771014761191a38994a70821ff53385c6de4d67f35c0ea50e2242b"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/runtime.py",
+      "bytes": 680,
+      "sha256": "322ec1eb78aaafa4603c33dd13bddf5bcd1802a0a04db5f8c329673aa50bc2ad"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/semantic_columns.py",
+      "bytes": 2009,
+      "sha256": "a9c56454a5b26f03fca2072f33c9dac42e06174befc55961521c4e3c4ed26297"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/semantic_context.py",
+      "bytes": 9804,
+      "sha256": "b5fe7187dde8d0258e9435f7a05afb11788e83e790eb628fb2f77e5086b02ad4"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/task_progress.py",
+      "bytes": 1069,
+      "sha256": "1312f7252ede77450b1ac587b494d8c6ae0700b6e5564bdb3053ded1bc9a38c0"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/time_range.py",
+      "bytes": 6194,
+      "sha256": "a3771a627127e44174de0cc2af53ea4061aecf668bd79b52ea2ac96b20b0e5d0"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/trajectory.py",
+      "bytes": 12280,
+      "sha256": "8c1e7869f9c6e41ec3ad8bc28b03920be392f52e98036249f4d0ac4fa78bbf49"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/core/visual_semantics.py",
+      "bytes": 3435,
+      "sha256": "d5da9551005a101fd124cfe0b0b9860b3b0b9b070d58a9a72d3dc391312f8be1"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/__init__.py",
+      "bytes": 2022,
+      "sha256": "f0067f4f9fea2ef15552b63e880b6e8ed1e0864d5622d865e4c694400691357f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/algorithm_parameters.py",
+      "bytes": 8264,
+      "sha256": "87e3f1fa6f30370399ea6c61afe7164b59a40d8616d916857b5c451171239acf"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/catalog.py",
+      "bytes": 17204,
+      "sha256": "304332994ca321681722f6be705f710a33e6d94e74c4dd84a49401b0099fa6a8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/contract_data.py",
+      "bytes": 740,
+      "sha256": "856052f85f4e56fb4bb7556ec70a81eee3e5f05fc282d0eb93237351e6e7402a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/contracts/navigation_fusion_horizon_records_v1.json",
+      "bytes": 9264,
+      "sha256": "4401b85b195bf0b2d6bb1c7f14a5fa64fbc78493ee94daa6e3501689c9b7557c"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/contracts/navigation_fusion_timing_records_v2.json",
+      "bytes": 17759,
+      "sha256": "257f574479bd3fea5cc4564c7afd00504c39f1f66dda6ad793c34e9b7834f5fd"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/contracts/navigation_gnss_reacquisition_v1.json",
+      "bytes": 11560,
+      "sha256": "5e974dd19bee8317b276a02a7f324e3675f05a50a6d34800a6224d28c7eb633b"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/contracts/navigation_v1.json",
+      "bytes": 14820,
+      "sha256": "71f7a8ff7486f2ff7c500d9b82dcacb3dda4735fe9e54ab94aa3ad79165b7485"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/descriptor.py",
+      "bytes": 7583,
+      "sha256": "479b94c16ee22cc372cc08458d06f0da3d67396ad5a4014209efbb890d9f8589"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/discovery.py",
+      "bytes": 16939,
+      "sha256": "f5b6b97a89fc2ee5fa85d94b1d778c6acbefbfb1c58dfe0770ca9289317be2f2"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/errors.py",
+      "bytes": 321,
+      "sha256": "f172ef668b70baff19715e883ca75c5898fc01ae3f27689786dfb78e713bd763"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/eskf15_records.py",
+      "bytes": 11003,
+      "sha256": "5f804d8931cf2658ff55e5c23b62bf2276bffc56dbe0e342deac54ecac6fbb49"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/fusion_horizon_identity.py",
+      "bytes": 3604,
+      "sha256": "6a0edad340649e2de851a2d08d909ad06fe26334e77532104145da29f3f2065c"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/fusion_horizon_records.py",
+      "bytes": 13933,
+      "sha256": "45b41921b541903ffbce32d02cbf06f7dae7a7d685768f6ec0ade266d3feefb8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/fusion_timing.py",
+      "bytes": 14437,
+      "sha256": "79e3355df90d4ecd5f94cc45aaac0c911d43267866484e2647d7c391f0166b42"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/fusion_timing_records.py",
+      "bytes": 13052,
+      "sha256": "37a504cb659a037daa7309b191ae79fd6e539bc62e3ba598d1a7873545ea32ff"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/gnss_reacquisition.py",
+      "bytes": 5924,
+      "sha256": "128943384e4047fd9820222181bf6877f7be362c7bdc04cf8886361b927f6d46"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/kf6_revision.py",
+      "bytes": 3413,
+      "sha256": "b58071cf2165f19a89a5fded5a6cb7e49cea62ade7d76f5927be0c4d5b731c3d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/mag_rotation.py",
+      "bytes": 2992,
+      "sha256": "5db0d5b92c203f27d714b79a520e34c9e21f78ad6e64ddb8c41e2638e9243f89"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/mission_profile.py",
+      "bytes": 1448,
+      "sha256": "f6b8a9e82e191f25185b18aac90164b2417c21e4f7a22693aaf853a5ce3a3096"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/mission_snapshot.py",
+      "bytes": 7723,
+      "sha256": "098c7906dd56a1a9644be6dac8c188288124d5437aef1cb4ad84a0832e4a2baa"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/object_catalog.py",
+      "bytes": 517,
+      "sha256": "a45767b014706c6b07d7e748a7b7362c59a898e71b5d6a0cfe2ed47ac94814f8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/package.py",
+      "bytes": 33637,
+      "sha256": "26bd667517f4ae14b02e5c18917f93a16becefd897d1a6ae745929c39ec33be8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/parser.py",
+      "bytes": 13016,
+      "sha256": "14178f0c355f6da8ca76e71f0212f919f37bf6972f8d140e4221602bce7e88f6"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/semantic_adapter.py",
+      "bytes": 46268,
+      "sha256": "e4110805dc3fba7a3a9f33b02cb0fa6e311d149023e6455b241173a0656f876f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/semantics.py",
+      "bytes": 34200,
+      "sha256": "a7ad6f2f5165c2d38c85c631e2268ed63128424659f73396d65c6ed9d1e86ad7"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/decoder_profiles/sf6_revision.py",
+      "bytes": 3075,
+      "sha256": "764ceca538823fcc5873dc19cde2c269203e716c3d823e9fc6ecff2dfd287c6c"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/export/__init__.py",
+      "bytes": 387,
+      "sha256": "e2206f9b5d8e8d400f5f8d671c08c64220cd14a91bf8de5393e2aa32ae894f8a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/export/plot_metadata.py",
+      "bytes": 5618,
+      "sha256": "eb198812ed52820ebc2af2ada9637b5f0f89bcd9be593114f06bbf579cb16eb6"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/export/ranges.py",
+      "bytes": 2065,
+      "sha256": "0df3835e84f813aa46dcd61d53f7b5f75f525cae5df3624f87f8b31681e1685a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/export/service.py",
+      "bytes": 166216,
+      "sha256": "4d19b650bfe47559f4dbb23ca30b44cf3270d3cf69b26dacada5a466d59ee7c5"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/i18n/en_US.json",
+      "bytes": 72709,
+      "sha256": "36abb7d867b1cc8c662aefc16dd8caca2ca989fe5773001a871bbe680d6ff901"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/i18n/zh_CN.json",
+      "bytes": 69194,
+      "sha256": "b5f980b5019cf350c02a8c237b62fe6858ee2abc86e61d9c2eadba0933f63b02"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/log_open.py",
+      "bytes": 24590,
+      "sha256": "57eb9fd6ac1543249c4b910b5a346d07ed9ac15315731b822b3183104c414168"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/__init__.py",
+      "bytes": 404,
+      "sha256": "d4d7509f1b9ddd1cac569df161e6696278ec0a101f13a1dd004ad5976512048a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/__init__.py",
+      "bytes": 55,
+      "sha256": "a680beafe421c6559011323b13c352dffa08b3be69189e6006cab64e83c1352e"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/__init__.py",
+      "bytes": 62,
+      "sha256": "d2108293149405327b139979b896fea8eb05c8fff5b29549167f9a5eee1774d8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/current_state.py",
+      "bytes": 6979,
+      "sha256": "b8709406d396ad769f9f44a831961412bf6ba7609ec564f1a32bd5608b760f3e"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/filter.py",
+      "bytes": 13688,
+      "sha256": "ef87c29760bbf713cd81eefbc42654ef855e9dabe901cd4c540228ae4a73286a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/horizon.py",
+      "bytes": 19663,
+      "sha256": "58421afe97bb0700358b981b1a831cf5211eb3dced77127ca39f57bab49cbe76"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/inputs.py",
+      "bytes": 3343,
+      "sha256": "a4eac6478539b83c61deae11d01ad0cdad07f1aa987695e112cf8b69d7765f63"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/plugin.py",
+      "bytes": 45820,
+      "sha256": "af40e528225197b9ec72a277628fff7e0badbf493108261f1eb4793e42544db3"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/replay.py",
+      "bytes": 10983,
+      "sha256": "8c106ac58f1df410290e037e95a8004caed764f21cf443adcb9099d549a4c1e9"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/verification.py",
+      "bytes": 5613,
+      "sha256": "b8488611e999deda53175c4b1f6cb5a560f10ced13711e75a285f8f6e921dd13"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/horizon_bodies.py",
+      "bytes": 8165,
+      "sha256": "ff6ebdd3f55cb71366c50d0d21194448699e90e1ddcb769dcff6762e944a7d44"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/horizon_execution.py",
+      "bytes": 9466,
+      "sha256": "9b5851cf878c3965c819ea345bf81889987b4f3423b782cef01b811d1428bd09"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/horizon_inputs.py",
+      "bytes": 3880,
+      "sha256": "541e37355545a08f0a66e91cd982740efafab6d590ae086dc5e6b4adc85fb16e"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/horizon_result.py",
+      "bytes": 10572,
+      "sha256": "017458f6e5b248b9d7d0df8eccaa630fb71539da3b69e76fd6c17668a0c2dfba"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/horizon_timeline.py",
+      "bytes": 8517,
+      "sha256": "79d73e6e8aa755649a4ed0468675eece9715992fcd9286a7c7152c418ccf0a40"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/__init__.py",
+      "bytes": 110,
+      "sha256": "767c1ec3df1d0725d3244c304487b6e770b9530bfa2529ca154cebefc85fb4a9"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/current_state.py",
+      "bytes": 7074,
+      "sha256": "4a2491d888cf8b26d4b23e94bc271007931a3a0528e607c8269776e5bfdbf59b"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/diagnostics.py",
+      "bytes": 7964,
+      "sha256": "846508582e9af5d466c97d50aa5222d3059c3006522ba829b2dac99a14d0444d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/field_analysis.py",
+      "bytes": 11555,
+      "sha256": "6348386d055a6edc7c80e5badc9fb5a1c390cfc3aab9528206b0044222acf51c"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/filter.py",
+      "bytes": 35379,
+      "sha256": "0db3840efc63c4ad5fcf5eb75949bc725a5304555f9398773b075bfa6620810d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/fixed_lag.py",
+      "bytes": 43432,
+      "sha256": "74018375cbb4d959fb5fc82dd0a5c70666054ad2543ef448167472dad717f9ac"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/horizon.py",
+      "bytes": 21971,
+      "sha256": "d7c9e27d38691ac956b1da33a8e965e8b2dbbc4cc3076bed822fbc77a894c048"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/measurement_time.py",
+      "bytes": 3683,
+      "sha256": "bb48b402486b623316e1bb31e4e7b8618be25cf523df30f5bcb88d9878082334"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/mechanization_verification.py",
+      "bytes": 3091,
+      "sha256": "7cb03f309328d44400fe44acf8eabf6b6103cc67a11dd9a1c8f1e1fee791b783"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/plugin.py",
+      "bytes": 114656,
+      "sha256": "e6df28906dfe15fd8f316fd6a7a2d2cfb928d7b185acb81913377f89788374cb"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/ESKF20_MODEL.md",
+      "bytes": 11822,
+      "sha256": "1c0ae13e2ccd33ef1fd2e67ebce46136317cd8aa174b5b21e36dabb17ba08691"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/GAMMA_BOOK_AUDIT_20261018.md",
+      "bytes": 10841,
+      "sha256": "30af225097f91772c133df6b880a29d6723582c91cd5b9993f5e36a88fe882c3"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/INEKF_AUGMENTED_MODEL.md",
+      "bytes": 12124,
+      "sha256": "0f680de5e3a42e62d8f6801f1d54d3800698cf96abb3191979518cdbe99d0927"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/README.md",
+      "bytes": 12642,
+      "sha256": "5b5d014e05bc2c15c084d15209e927c3f825017201cafc688b8f9f64ce38eab3"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/SOURCE_MANIFEST.json",
+      "bytes": 1732,
+      "sha256": "d126695147e043f555aacc400654b6373872f66540c44ebb83feceeebcd278ba"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/__init__.py",
+      "bytes": 78,
+      "sha256": "5350355a407229f884da671cedb643cc53a8bb09857226cb03d9b0da5a89ec83"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/body_inputs.py",
+      "bytes": 7264,
+      "sha256": "55ebd58a10b446a884b327253818458113c0e76f41cccd6c3add671a4a44d20a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/buffered_replay.py",
+      "bytes": 10805,
+      "sha256": "08e0d6d6a66a863b1189283410b0cc107841bbef7652a551eba980730c48caa8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/cli.py",
+      "bytes": 5494,
+      "sha256": "fe69649613e544f15b88422539031cd0077922f4ca339e239fb60d31e014d12f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/eskf20_reference.py",
+      "bytes": 14381,
+      "sha256": "f1b1298af4de9d615a361f07ac8c97a57917c00ee153782eddd5bb09e2b53585"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/firmware_configuration.py",
+      "bytes": 14930,
+      "sha256": "e2d35078a2ae525597577b1742fd12750f22ba60e154d01af8b4ee77bf547ee2"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/firmware_contract_v1.json",
+      "bytes": 32803,
+      "sha256": "fe4ccfa87c236234bf1f75d822b12ac01f3d2dbb8f83b54f4f4fe6945fd340b1"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/firmware_contract_v2.json",
+      "bytes": 39937,
+      "sha256": "e786bac370d38584aa4471f020538bd10fce088ed8f5c7cd01a1c674c9085075"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/inekf15_reference.py",
+      "bytes": 9235,
+      "sha256": "8f35bd703064f76bd2316c26ec845401803f3f89297358d3b4b3107d9b04b799"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/inekf20_reference.py",
+      "bytes": 9361,
+      "sha256": "efb6b1e6ca77bb25ba51a7bfc5cc036cd6e8137451ba219aecf30104564aba62"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/input_reference.py",
+      "bytes": 13653,
+      "sha256": "064528faeec5cea3f946f7a6448cd50b54a0a231e532978801f32bfbd64119cf"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/lie_group.py",
+      "bytes": 5116,
+      "sha256": "1db0146a2bdbf9fe09ca02b886193b07c3e816fb4626f2fe37aaecd5e66b8b04"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/magnetic_quality.py",
+      "bytes": 11871,
+      "sha256": "e7ff57efa2113273662c349361c07bbe9add2b33b2fc2cee766bec3662790928"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/navigation_flow.py",
+      "bytes": 1500,
+      "sha256": "add59ad5d9053672906dbcd09fa7c6e99b30a1165d1652105ba210192e6b9105"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/plugin.py",
+      "bytes": 28671,
+      "sha256": "577dda931148ecb30a8510f58ae8b8c3cc02a8fce4c269fc4e7a04dc9adf84c2"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1/recorded_journal.py",
+      "bytes": 21190,
+      "sha256": "9baf31b140c20a11611ca4a66e6f5c28b8968ceca04c2145e955143b8ebfa276"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/pure_ins/__init__.py",
+      "bytes": 123,
+      "sha256": "c1d28e9c00546994c4edd7988cecab219fc48d3b6d99c809a25d33f1fb00f2a5"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/pure_ins/mechanization.py",
+      "bytes": 12904,
+      "sha256": "15890f2dceaf5f192c982b8947580da136a1b3b66cd239fa8e2152873700c928"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/pure_ins/plugin.py",
+      "bytes": 14682,
+      "sha256": "c15d36ceb76ab676c72a3665347e35bfcd6f65eee8a2473cca87046a2766aac5"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/sf6/__init__.py",
+      "bytes": 71,
+      "sha256": "25d816a37c92960d0a5a4966df94e11629d339791c37028fcac8e7047352045c"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/sf6/current_state.py",
+      "bytes": 3386,
+      "sha256": "cf87d1745052f5f71f80fdb7f43f16fdfe1b69651e9a62825e7f77581d101031"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/sf6/filter.py",
+      "bytes": 6866,
+      "sha256": "e4468f24880248f9583fa4f2c9d96c38a3d7cdfb768f2053462f4d29541db048"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/sf6/legacy_plugin.py",
+      "bytes": 19410,
+      "sha256": "cde009a57f9063eb257b8efbecc583b57e60aa9f896dad510839256d47066672"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/algorithms/sf6/plugin.py",
+      "bytes": 5653,
+      "sha256": "fc6a312f40d7c022ff5df392edd7e7ec77b4cd5c7cb54285be7c464563f89bff"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/api/__init__.py",
+      "bytes": 1144,
+      "sha256": "4cc5e4dfe437864eaa4bc3ba5cf02e02facd9cc04a4bc88cd9b3736a484aad05"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/api/algorithm.py",
+      "bytes": 22705,
+      "sha256": "b6594289e7df7b515fd50480bbe1d444712dfb454f0a40b554345b89db1e0589"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/api/log_container.py",
+      "bytes": 2084,
+      "sha256": "a5591be6f3c6a6291756e9e37a251f469187e12b37f52cf863e0fd55246781b5"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/api/log_parser.py",
+      "bytes": 941,
+      "sha256": "7479a5533b45fa13098c5176a581c81924d19636d0ebfad2abed4a088aab7d58"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/container_packages.py",
+      "bytes": 12548,
+      "sha256": "43b929ded244ffb57dc3b723bfd116a14983d6f29fa5c572471fa044b693fbce"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_containers/__init__.py",
+      "bytes": 123,
+      "sha256": "a179f7e1b6aea85ee04545e4b00d18562584263f7035520cd49b2f2f90a7fb6a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_containers/sslog0/__init__.py",
+      "bytes": 123,
+      "sha256": "a179f7e1b6aea85ee04545e4b00d18562584263f7035520cd49b2f2f90a7fb6a"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_containers/sslog0/plugin.py",
+      "bytes": 22296,
+      "sha256": "b76b5f40bfdf7aa0f4bc9da1a50d44aedfa60498bd99390e13cd76876f79256e"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_parsers/__init__.py",
+      "bytes": 35,
+      "sha256": "dfff072640a8731713c99ff6411fe1d54a3c94e058aee3e9ce78e968abfe1b62"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_parsers/sslog0/__init__.py",
+      "bytes": 114,
+      "sha256": "0bcb045bd592efac323e3bedb893dd8f6e6c8807439e681e0f589ad05c6c5cdc"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_parsers/sslog0/plugin.py",
+      "bytes": 7024,
+      "sha256": "52ad3fadeb18ff70c6fba18797346d248db8b9ce3979320f3a10509ce60d0726"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/log_parsers/sslog0/records.py",
+      "bytes": 44593,
+      "sha256": "e5a809ed7aad11c07a82bb4953967b4a0d063448491bb84357b3a3ee61c84160"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/plugins/registry.py",
+      "bytes": 3292,
+      "sha256": "0535a7f12893796f9158d422f80fd594a808982655365b5207a16018a518253f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/__init__.py",
+      "bytes": 30,
+      "sha256": "ec392dd5b7495bb95f2b8a5be8807f3c108946885eb41bfd51dc5355ce68f9eb"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/algorithm_labels.py",
+      "bytes": 199,
+      "sha256": "db90c72574a698acfa6347694f26f73e4ac9fef7f0bc30fec343d09d4d6836d7"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/decoder_directories.py",
+      "bytes": 2522,
+      "sha256": "b974f469944eab570c1c10243dc82a149852bc5c258b647e1317fbca94726687"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/fusion_timing_editor.py",
+      "bytes": 2149,
+      "sha256": "70416147db0247e45fae34af90443b8bd3758fc5dbf17a8851620dd420d825bf"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/gnss_integrity.py",
+      "bytes": 14494,
+      "sha256": "c54b16eae4943d9542ed3cbce47620149524560cb2f14a4967d6370c16503bd8"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/horizontal_trajectory.py",
+      "bytes": 1399,
+      "sha256": "ef2f41abe335c45d845c9e7e0ad658f67ef5ce4aa5538bfcd24b4f954b4a66a5"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/main_window.py",
+      "bytes": 93220,
+      "sha256": "b94e4452a14395be4fa98aa4da30d68ecd8372fa0f8c30dea8e68006f71c3371"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/mission_snapshot.py",
+      "bytes": 8008,
+      "sha256": "6b0994f9d74e6b450001d37eb5b67b5fbee4ef2a1755f1a5331aff7b784a8d8f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/navigation_diagnostics.py",
+      "bytes": 16664,
+      "sha256": "4a3c1181ba695a11ee84f25a288e047f27f56b8082fa28b30df9758f7c1279bf"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/new_project.py",
+      "bytes": 4885,
+      "sha256": "49386954c6f336ee63e9ae8b66f876d5736a46143737083ae8eeb6ef99d0c83d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/nis_editor.py",
+      "bytes": 6374,
+      "sha256": "8b74d85e479acc61a8e03394a64fb80fde51e4d214f5b28bf2809c7c5f53a6b6"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/__init__.py",
+      "bytes": 547,
+      "sha256": "c08e0cac860797656dd6bda25d6549485f7d2de73459097eed3a4d3b015b2489"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/charts.py",
+      "bytes": 52971,
+      "sha256": "f8b650be4a05e36e61add5c9e2bd54f77643e0c07cdf1ad0ee85ac949cc6be1d"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/data_explorer.py",
+      "bytes": 23555,
+      "sha256": "f2f4363be56f02aec585df7ec98b887f1f1e129d5b372903ad9ed71b643bd4bf"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/export_settings.py",
+      "bytes": 31653,
+      "sha256": "5bd9f3b8d3866a51d0da37f6fa2f522f1e3f53e04aea3e874ce6fa2f028ba382"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/overview.py",
+      "bytes": 32491,
+      "sha256": "95b026341e75154cf9509e42c01f2a2882c88462f5246c60192609b1700f24ac"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/replay.py",
+      "bytes": 70760,
+      "sha256": "db8955bcb70832a8f610f2971ce0d479ab63a8ed0aa2ed0b3a5c9c8199860e2b"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/pages/state_estimation.py",
+      "bytes": 51789,
+      "sha256": "179e83c0793884b4ba0e6421eda0a26f192bc7a35a9b7e686a245656782c3f05"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/plot_helpers.py",
+      "bytes": 1647,
+      "sha256": "87773051ffa41b10e93a064559e978b76e559865fae5e7c527a222a37d52700b"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/plugin_manager.py",
+      "bytes": 8830,
+      "sha256": "3cbe1782d0ae13da94f098f9c9f87e6eef8f9a35d3633692e3c82ae5231edd81"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/source_comparison.py",
+      "bytes": 5111,
+      "sha256": "40194ee0fc67ad6a18dd306a768fae670b2e8f0cd4564666797fc55c8d82d4a4"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/text_parameter_editor.py",
+      "bytes": 710,
+      "sha256": "034f50bdeff7545e60fce7610eee1d734762b4772fd16863968d7c9593d5beac"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/theme.py",
+      "bytes": 17845,
+      "sha256": "1eb6cb5cd667095c7614cb5e806ac06ad7b200bea8f947c54324aeff5506cd5f"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/time_range.py",
+      "bytes": 9178,
+      "sha256": "76bcd62eecc739be9e97ded7201883c83236e86a8743db4950489944d336d5da"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/touch_scroll.py",
+      "bytes": 599,
+      "sha256": "7e5bf2e03f05b810e0921f217765c1d25c0e1336beb4e588e06b96c7c58b93a3"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/widgets.py",
+      "bytes": 4535,
+      "sha256": "e3427d97658ed5582df0a872edb56a02dc6b36482ddc73fb78aca6bd7a761edc"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/ui/workers.py",
+      "bytes": 3174,
+      "sha256": "90cd39004fb697526dbacf5ecee96d970188d3d5756e29ec033c428a17c02f0e"
+    },
+    {
+      "path": "apps/FLP/src/silverstar_flp/version.py",
+      "bytes": 184,
+      "sha256": "b533109f1115cafc78189198dd99c8c481eff858869b77b98423035a46cd4d03"
+    },
+    {
+      "path": "apps/FLP/tests/__init__.py",
+      "bytes": 54,
+      "sha256": "0dee23d5966b684d4019e02252b046520fd5f5db4e074d9d0d98b66a44d2ead8"
+    },
+    {
+      "path": "apps/FLP/tests/eskf15_c_bridge.py",
+      "bytes": 4773,
+      "sha256": "84b6aa3a12bb5418afad7d2f5eb1ec40be81fb082ba88b1c093e2eba27c5f9f2"
+    },
+    {
+      "path": "apps/FLP/tests/fccg_source_fixture.py",
+      "bytes": 798,
+      "sha256": "7fb1dd58ac636f2797884d5bacc90e64814a91be622bcfc2aafb850ca2cf3a50"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/current_eskf_backend_trace.c",
+      "bytes": 17579,
+      "sha256": "aba662ddf3522295f61097bd3c7a4b887cb292e997d2ee7bfe2b6af1dc845b1e"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/current_kf_backend_trace.c",
+      "bytes": 20954,
+      "sha256": "100fc85b7fa1035082a271a710e8446effe1ee106144bcefd726b84f2b10e204"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/eskf15_horizon_producer.c",
+      "bytes": 1696,
+      "sha256": "31f7b5131ea2e7c86726786d494fc70a29f58352a81cc4d15cd86631df9f795e"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/eskf15_producer.c",
+      "bytes": 10493,
+      "sha256": "af5189ee7f8dda88b222503fac046cb837bc8924acfd412bb1bd050e67a895d0"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/gnss_quality_mission000062.json.gz",
+      "bytes": 14622,
+      "sha256": "814f6472cd3db5d2e3cd7a71e7825c5ec95e2bd3d456c79a1597f3d7aa425545"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/horizon_log_bootstrap.h",
+      "bytes": 4408,
+      "sha256": "970c188708e3f42ef0b3d7511cf2912e92493b32b9ce74b7df6d80e721f74416"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/kf6_filter_shape_45778d3.json",
+      "bytes": 1618,
+      "sha256": "143a6de4a36da5947c5661d9b1d21ab0c63604d5d1752e4005de750536659037"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/kf6_horizon_producer.c",
+      "bytes": 2145,
+      "sha256": "2cc85ccd751e571dc4a2782d2be704391993b235638992cc43e77a899f6534eb"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/kf6_outage_vectors.json",
+      "bytes": 185458,
+      "sha256": "40664fd2560f4a67d0dee88d84c71d066a353b3982fb0707cdc3bcf99c10dc2c"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/navigation_augmented_actual_parameters_v1.json",
+      "bytes": 51747,
+      "sha256": "6fc50dff2b8b7d747468f92a4f11d84f41d82ffd93fd3ca4812f831fdb2b3afb"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/navigation_legacy_body_catalog_v1.json",
+      "bytes": 4559,
+      "sha256": "78a9f42ae0ba5a1747cb39eaabd4e940bc22d93a4b01ce57cd78f6acc2dca5ef"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/eskf15_fccg_1_2.json",
+      "bytes": 10323,
+      "sha256": "9b9f6a78f096577bcf641a6d1315b3d1c529767f044c645b44c451735f5eb64e"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/kf6_fccg_1_2.json",
+      "bytes": 27816,
+      "sha256": "28d169158a6c854b2a8da06bbde931ce510debab69ffef24c17a61db73d225eb"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/legacy_default_outputs.npz",
+      "bytes": 30786,
+      "sha256": "e63621dc76a05d54f4c61b7bd005d2c9aee4e860adc58a5684c9a1d08e6d6640"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/legacy_dynamic_outputs.npz",
+      "bytes": 100436,
+      "sha256": "23c8c27c05e0119350e9763440116f81bc7df974b7947f0601d5991c8eceb250"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/pure_ins_fccg_1_2.json",
+      "bytes": 812,
+      "sha256": "b7c4c7c4070e445520d71d21c44906862df002c06b13be6a909ffa45fa5581ac"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/sf6_fccg_1_2.json",
+      "bytes": 4794,
+      "sha256": "909f16d9ea76c0f2ea92cbf567893a3092620a8fcdf0cc06b6e733b614569823"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/sf6_revision1_fccg_1_2.json",
+      "bytes": 7439,
+      "sha256": "4dee6cdf2785d3ff056a8b3b4a6cedd2053af69cda36f51de13a4f936dc39bc2"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/synthetic_navigation_catalog.json",
+      "bytes": 55415,
+      "sha256": "2df606ca7d195a1e9b5e03a02193599724a1246bdebc42ce090ce965e43d4b94"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/parameter_contracts/synthetic_navigation_semantics.json",
+      "bytes": 110625,
+      "sha256": "e06046fde47095b9a4856795f18c6156623ab944d5a05759fb3c0f45ea0017ee"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/sf6_revision1/PROVENANCE.json",
+      "bytes": 417,
+      "sha256": "13b12c00b0fa579bdacc543cd848a2a4c3dda5fbe7b414498b67a494a23b4e8c"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/sf6_revision1/navigation_sf6.c",
+      "bytes": 17970,
+      "sha256": "b9611849d5f4d7b971bf4678a122a8d3196f3ec72802b3846013737d971b1eaf"
+    },
+    {
+      "path": "apps/FLP/tests/fixtures/sf6_revision1/navigation_sf6.h",
+      "bytes": 2351,
+      "sha256": "7f2ee682feff03eb3cc52fe8c047c7640bcfdfde4086b20e9037caf2d9ce723f"
+    },
+    {
+      "path": "apps/FLP/tests/generated_decoder_pair.py",
+      "bytes": 7093,
+      "sha256": "cd426a2237d8020140c9fb3a37c2efafab4d5b310b05769ca5fbb5b2413366dd"
+    },
+    {
+      "path": "apps/FLP/tests/gl_lifecycle_probe.py",
+      "bytes": 6796,
+      "sha256": "ccd0a420ded6575eb1db60660f50aa3715211959091e96a84ec34d587182ab42"
+    },
+    {
+      "path": "apps/FLP/tests/gui_lifecycle.py",
+      "bytes": 1245,
+      "sha256": "36c55d0efddea7ddc54f4792087ef3ed90aab36de998f853ad25f8fa06bcabf5"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/README.md",
+      "bytes": 2240,
+      "sha256": "f9e8d581e964933fa5ec31328773d65ef5953d307ce07c9178c05dc6762da9f0"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/actual_backend_logger.json",
+      "bytes": 51827,
+      "sha256": "4bea6cc7e87a79f1f975819ffc62244409d41406dbde87b03fdb26166a0265c5"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/c_python_parity.json",
+      "bytes": 438,
+      "sha256": "fefb5a7a68a507a47fc5ea21b0e85c9f86274312546068dcfdf977423be5030c"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/delayed_100hz.json",
+      "bytes": 144,
+      "sha256": "3d429e6f8cd62c5d525b912f39ba76d1d2ac64a465a482f51259ebaf38731ed2"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/delayed_250hz.json",
+      "bytes": 143,
+      "sha256": "9929f6a14b35e670debb0f76e7452d82d41e9101350c36e931edcd3a8e206957"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/final_policy_equivalence.json",
+      "bytes": 2565,
+      "sha256": "2217458fb4efb66a8b0239a73223df034643375e8c841a73dd5138e441270b9d"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/golden_interleaved.json",
+      "bytes": 679,
+      "sha256": "d98003ef5bdb6965f27923a07597fdb11ca98fa0331a4008ba854361ab3f3206"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/golden_ordered.json",
+      "bytes": 679,
+      "sha256": "0ddc089831a8e81d8edfcbb851255894d410a23d689b2c8024381f9c341664ff"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/large_artifact_hashes.json",
+      "bytes": 6837,
+      "sha256": "73edde635a455ce67fbfda0c58cdb8caaae4670552d13096618adeee0ac21f73"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/logger_storage_import.json",
+      "bytes": 1537,
+      "sha256": "12a9bc4528caf1cfeb450a9a6a57a4ad95d547efd2f16e0da29a13cb4d79a53a"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/package_smoke.json",
+      "bytes": 524,
+      "sha256": "a83022ae7f1d686353b01e9b569473fd5a3e9a3d55dd91c229926807308e107b"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/position_drift.json",
+      "bytes": 351,
+      "sha256": "2681b926152c060702bc7dedf08b0c0fd31a3579c956357efe654470a89cd162"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/transaction_boundaries.json",
+      "bytes": 273,
+      "sha256": "2f330a173f59a32279dbddbe940e6242d56c5719f11273913115459ed2a2e710"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/velocity_bias.json",
+      "bytes": 333,
+      "sha256": "5bf3725a252895e2835a776810487ad80674f121adda2f8a8ed55bcdaa68a61a"
+    },
+    {
+      "path": "apps/FLP/tests/joint_rework_20260927/evidence_final/window_parity.json",
+      "bytes": 109,
+      "sha256": "0f48d13537014c175b246042656f50e41a4a26efe42c9b5275ad680687472af7"
+    },
+    {
+      "path": "apps/FLP/tests/parameter_fixtures.py",
+      "bytes": 5326,
+      "sha256": "81bfe8c1e1971b199a769e3d1d12aed46b81ebdf842ae9cad5aa7af24f4e7376"
+    },
+    {
+      "path": "apps/FLP/tests/qt_exception_probe.py",
+      "bytes": 1955,
+      "sha256": "d7067ca28fe686086257861b03d0bea9dc2a640309d5b1f74da2058adb5fa5d5"
+    },
+    {
+      "path": "apps/FLP/tests/recorded_age_reference.py",
+      "bytes": 2024,
+      "sha256": "27fcb08a4921b73b0a6d75fbb81cc98ded17d19be035fa9caca11756a00e23f1"
+    },
+    {
+      "path": "apps/FLP/tests/sf6_c_bridge.py",
+      "bytes": 6539,
+      "sha256": "6d4eb74a80f2eb12eaa33340b4883206563834c57530f91e74bcfa20e740ea6d"
+    },
+    {
+      "path": "apps/FLP/tests/sslog_synthetic.py",
+      "bytes": 18577,
+      "sha256": "2c0072192e24015bddd08f166ff76d6e67965993c00cfc4a285f5c0504fe5ed7"
+    },
+    {
+      "path": "apps/FLP/tests/synthetic_parameter_navigation.py",
+      "bytes": 11480,
+      "sha256": "813033731f65d6ddd811ab68060a7c73ad4b4ce3ed0791f00cd6a781ec679641"
+    },
+    {
+      "path": "apps/FLP/tests/test_actual_parameters.py",
+      "bytes": 16379,
+      "sha256": "dc78a6e9c50b62694f9e149b504daa4468f01baa0e69d7f01ae2d966c0f88169"
+    },
+    {
+      "path": "apps/FLP/tests/test_algorithms.py",
+      "bytes": 7550,
+      "sha256": "2619eb98407ec18403323e18878a5dec889be45e1d194e73c3e6e9cd8543daf6"
+    },
+    {
+      "path": "apps/FLP/tests/test_analysis_source.py",
+      "bytes": 8714,
+      "sha256": "54fad3ffabe2d5c30a50d8721d631ff0a5986a1e3a7fa106d282a3fdcfbb7404"
+    },
+    {
+      "path": "apps/FLP/tests/test_artifact_alias_reuse.py",
+      "bytes": 1101,
+      "sha256": "a090d09dc98060138b5e4fb06978533c2226db90b9272c73cfbe6e3dbe1b67ee"
+    },
+    {
+      "path": "apps/FLP/tests/test_artifact_byte_progress.py",
+      "bytes": 1933,
+      "sha256": "221c14d491680ee3c2d8e87f2e8b905ff33624b71812eb2a7226737bfd542a14"
+    },
+    {
+      "path": "apps/FLP/tests/test_audit_block_artifacts.py",
+      "bytes": 11236,
+      "sha256": "3e145958556461af35ca30a39cc3840ad9606e05d5d7d858ad4f28978151f507"
+    },
+    {
+      "path": "apps/FLP/tests/test_baro_recorded_diagnostics.py",
+      "bytes": 9209,
+      "sha256": "41d22bff9a60ae9b27f86166c6b22b743c0489c52fce5b5a2c9f85268dbdcf8a"
+    },
+    {
+      "path": "apps/FLP/tests/test_baro_recorded_diagnostics_gui.py",
+      "bytes": 6344,
+      "sha256": "3848f522c8f9e921de6a75f6f0c3b9b8d19e880f72bb0ebdbf95febecb92b69d"
+    },
+    {
+      "path": "apps/FLP/tests/test_cache_generation_ownership.py",
+      "bytes": 2471,
+      "sha256": "60d8bdb0710d2f062babfaa40ab07932759d85ea79b17e24506e45e70cb6f252"
+    },
+    {
+      "path": "apps/FLP/tests/test_clean_workspace.py",
+      "bytes": 12962,
+      "sha256": "6ed8eab735987f537d98b0f24f9601913c9e643140a722eb5acb33ae566a3e01"
+    },
+    {
+      "path": "apps/FLP/tests/test_closeout.py",
+      "bytes": 6238,
+      "sha256": "99245eec9d590d06db254c42be3bb91e1c2370ca70e64877410550cf37d79452"
+    },
+    {
+      "path": "apps/FLP/tests/test_cloud_lifecycle_20261005.py",
+      "bytes": 9385,
+      "sha256": "e82dedd106f0322599c990f6ebc357d6a9e03d6af404c2a24daab8acb7bb5bed"
+    },
+    {
+      "path": "apps/FLP/tests/test_comparison_contracts.py",
+      "bytes": 7200,
+      "sha256": "53b470a26b97f621f3c3bad0e280a364e01faa5364613d3e4527f10c565dc2c4"
+    },
+    {
+      "path": "apps/FLP/tests/test_comparison_sampling.py",
+      "bytes": 3593,
+      "sha256": "0d3813542d6667c905a07d179992ea71d37a773743a818a5dff5575031f8362e"
+    },
+    {
+      "path": "apps/FLP/tests/test_comparison_sampling_gui.py",
+      "bytes": 2761,
+      "sha256": "3c94a803ca58f1cd94b93c25f4992e05ca90f086d2f64426ac40abb511694512"
+    },
+    {
+      "path": "apps/FLP/tests/test_current_log_manual.py",
+      "bytes": 6155,
+      "sha256": "5c0e066b71b21617a9a60a8d078c1fc816316c6ae4ebe52ffe4cc1fd8a53bfa2"
+    },
+    {
+      "path": "apps/FLP/tests/test_custom_review_v2.py",
+      "bytes": 5105,
+      "sha256": "9a4efd101022a84843288b2182a73d1cdb1021eb849b971ee9ef006d57debb8d"
+    },
+    {
+      "path": "apps/FLP/tests/test_decoder_directory_gui.py",
+      "bytes": 7538,
+      "sha256": "06772b38b4ee07e8f9c1da430ca9b8f89e9899b21ad57ccb5753b8569066ad4b"
+    },
+    {
+      "path": "apps/FLP/tests/test_decoder_profiles.py",
+      "bytes": 67994,
+      "sha256": "2fa057c969dfc16da8be6b9ab3738e6fb90c2e20c556c8eac95e9928eaed1965"
+    },
+    {
+      "path": "apps/FLP/tests/test_display_quality.py",
+      "bytes": 12458,
+      "sha256": "26d266fc604ba162eb39a9f888c4984cbbc92d907be98dfee5270b700f4b53a6"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15.py",
+      "bytes": 9449,
+      "sha256": "1d53b03adc411091f32acd7484249d046eebe74dc66e7db60b0bd8d53d49d7de"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_acceptance.py",
+      "bytes": 16752,
+      "sha256": "7e15362d26daa5228659a785e6f0fc785cf0b955baea3d4c69b11451a3f9cfba"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_baro_time.py",
+      "bytes": 9654,
+      "sha256": "68470e314fa4450df524f93c960e4146b79b74c3d6d0f58d042bdc0c5a7c666e"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_c_parity.py",
+      "bytes": 4764,
+      "sha256": "ed014bc395abb0176f755d7a6300720a263128922c0d1502b86579b5dd55de54"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_golden.py",
+      "bytes": 11077,
+      "sha256": "a9b81f278132aa6d5848083a126d0a87bec38ac31ceabea01ba6001b8bc434dd"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_native_parity.py",
+      "bytes": 17236,
+      "sha256": "d941afa2c71c4ef4fd1539a88b970b0a343ccdf8012dd2723fb8cb4b6fd9cc52"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_product.py",
+      "bytes": 5866,
+      "sha256": "0655b1773e3683d06a2b3b6875075b9e2b207ad4fcded7dfbeb7601eb06314fc"
+    },
+    {
+      "path": "apps/FLP/tests/test_eskf15_records.py",
+      "bytes": 6774,
+      "sha256": "e5ce61300f4ce08bea45085f09eef5aae889501321a2e2ea18d951d85a721be9"
+    },
+    {
+      "path": "apps/FLP/tests/test_estimator_visualization.py",
+      "bytes": 22231,
+      "sha256": "c6acc27f7274c1e4acaa86094a6da5fef6e6b4f31bdb90cd5697eb1e3c28dff6"
+    },
+    {
+      "path": "apps/FLP/tests/test_export_theme.py",
+      "bytes": 2058,
+      "sha256": "4eab2dad7c3f73b80bd60c96cf58a697c25f2316260bdaf756ee8512004dcbd0"
+    },
+    {
+      "path": "apps/FLP/tests/test_export_without_navigation.py",
+      "bytes": 9705,
+      "sha256": "18f231bbb102408c1cef754e6ba3fc499c05ebda977a933761c70bd61e634a74"
+    },
+    {
+      "path": "apps/FLP/tests/test_firmware_aggregation_contract.py",
+      "bytes": 4898,
+      "sha256": "c42c6ea49429b7461c9ba51840fc756ff10fe430ac8ac94a9f634d3ffa26392f"
+    },
+    {
+      "path": "apps/FLP/tests/test_fixed_lag_contract.py",
+      "bytes": 6083,
+      "sha256": "27be980af79823b410a2f52e478917949ed99bf3fc601cfd4fcce373bb3dc04f"
+    },
+    {
+      "path": "apps/FLP/tests/test_flight_state_pages.py",
+      "bytes": 16183,
+      "sha256": "3ab1a6ef45c44419a5695844cee4c9d955edb1785741781ef1381c0ddaa9243d"
+    },
+    {
+      "path": "apps/FLP/tests/test_full_task_trajectory_export_20261005.py",
+      "bytes": 3755,
+      "sha256": "6a8a2bf01ef84a07054848d56f337abc347f609ca9cdcc9c5d1f7fbbe60f15a8"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_current_native_parity.py",
+      "bytes": 19463,
+      "sha256": "ee96a7be2c4f16aada0dde5290955aa653cb8b5e4123eff351177ee7a3017c35"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_current_project_audit.py",
+      "bytes": 33788,
+      "sha256": "ba72c949adf86d9d239c65a5825172f9daf6bcae82c168d7aa7bb2e84324ef9b"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_current_state.py",
+      "bytes": 16808,
+      "sha256": "118d323681a4ba61a5065481feb11bc198bca8fc835778bb8a47dabc5d1dd442"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_horizon.py",
+      "bytes": 10840,
+      "sha256": "c5886120658822d3f116820b53a0ce506e38e18bf1a955d69aa50c9f8971fa2a"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_horizon_backend_wire.py",
+      "bytes": 3617,
+      "sha256": "888dbee78cb68f9f04e27894b6464e8b8ae4bcce22ca57538d7ac85dc4cf0f07"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_horizon_identity.py",
+      "bytes": 6348,
+      "sha256": "036ba18826cf1cd1171401bf1affebac74e52846c6a83cc675cd666fd6596860"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_horizon_records.py",
+      "bytes": 9631,
+      "sha256": "8e153c2136785748da5167182bf639ebcdf270fb432d98c50729663cf0403a2a"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_timing_contract.py",
+      "bytes": 13557,
+      "sha256": "4ac5d4b465c97c2e7236caa81e795c581cffd83e710f39c5d0877ee915ada71d"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_timing_records_v2.py",
+      "bytes": 13491,
+      "sha256": "3e4ec1c81ab54496e7f9db8ba01d1b5ef807c15af944380032d29eb39bc70744"
+    },
+    {
+      "path": "apps/FLP/tests/test_fusion_timing_ui.py",
+      "bytes": 1875,
+      "sha256": "d6f87c94c6493213811a8972bb718709cece378ff63224052f62ab141adb3769"
+    },
+    {
+      "path": "apps/FLP/tests/test_generated_aggregation_pair.py",
+      "bytes": 3517,
+      "sha256": "66c5af06f83cf50a1e13a2220b1f6705fc2682d49dbb652984629496c94b5cb2"
+    },
+    {
+      "path": "apps/FLP/tests/test_gl_object_lifetime.py",
+      "bytes": 1914,
+      "sha256": "a5ae30117930d035ed75ea9e482efaba79fd67c520a824f59d0e04f741d25bbe"
+    },
+    {
+      "path": "apps/FLP/tests/test_gnss_export_dependencies.py",
+      "bytes": 6871,
+      "sha256": "d89eaf8b95f68914c2ec86b8788d573776961d4f75b723e2ee4665fae9facd3c"
+    },
+    {
+      "path": "apps/FLP/tests/test_gnss_integrity.py",
+      "bytes": 9029,
+      "sha256": "3a6a38740b6d40d9b16545dea5dbd456ef6435d5631ccd0423a0bd0b1f319006"
+    },
+    {
+      "path": "apps/FLP/tests/test_gnss_integrity_display.py",
+      "bytes": 6523,
+      "sha256": "9cb2833c7e10dfcd6c38dcfcf6c20bb5e7d04957d3c317b367c1ce11b6a411fc"
+    },
+    {
+      "path": "apps/FLP/tests/test_gnss_reacquisition_identity.py",
+      "bytes": 4342,
+      "sha256": "93624fff002efb1abf006892f7f3615c13cd6f1c5ecec317b0bbc9034d1b56ea"
+    },
+    {
+      "path": "apps/FLP/tests/test_gui_algorithm_labels_20261005.py",
+      "bytes": 726,
+      "sha256": "01aab5ccefe399e0bf0e14d58e14fcff52da5807e4cf2238733ad8e587ee31eb"
+    },
+    {
+      "path": "apps/FLP/tests/test_gui_release_identity.py",
+      "bytes": 2264,
+      "sha256": "8989b8ae033a181a0c795f876b466bc84b059eb9d003e06ccb996bb2406db206"
+    },
+    {
+      "path": "apps/FLP/tests/test_gui_smoke.py",
+      "bytes": 27009,
+      "sha256": "4dc70ea48d255b871b87226e9a62a0bb275fa55cd7dd5cae90177a4b4a4bb682"
+    },
+    {
+      "path": "apps/FLP/tests/test_header_field_blockers.py",
+      "bytes": 2074,
+      "sha256": "50a2ba34fbf116953d90fd1969a04052692c0ee07c108e7965bd0c048eb07466"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_backend_numerics.py",
+      "bytes": 10782,
+      "sha256": "ce62ad8eca53a6d925314386fd72d56f309ec9e5cad28527fbc7bc489109fd40"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_execution.py",
+      "bytes": 4294,
+      "sha256": "4f2371285e1576412e6f90a91e47005785bdd210fdfa11ebaabe4a59da41e7bc"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_inputs.py",
+      "bytes": 4650,
+      "sha256": "80f3fe749632ae4655db2f03043917964320f0d72b93a5bd105e4134ae644ad7"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_native_log_open.py",
+      "bytes": 8095,
+      "sha256": "8b45a805f2f57f825eba3b0a77cfdbe93df32811c8300dfac1121382387cb4f3"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_recorded_bodies.py",
+      "bytes": 5010,
+      "sha256": "584f038b39213bbdbfe4197e24d4fc5f7a3e06885931646af595b0736241bf25"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_result.py",
+      "bytes": 3746,
+      "sha256": "2bb590223a86ae56405eee7bb83559fbaac96a4e768f43e54efe6fa3c98e4f04"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizon_timeline.py",
+      "bytes": 7068,
+      "sha256": "3456f1e8212232d415b0efbd8570d9d17f855534d2ddba25060494f27aadffce"
+    },
+    {
+      "path": "apps/FLP/tests/test_horizontal_trajectory.py",
+      "bytes": 5698,
+      "sha256": "b0da95ec88b8ae4f09349ebf29272b0129d36597616b5f4c6bdca6abff0bbd4f"
+    },
+    {
+      "path": "apps/FLP/tests/test_i18n_consistency.py",
+      "bytes": 2137,
+      "sha256": "3a6bb5e2ebf3a6c96dad2ea4871a7a2090e85fe38e8956eb0603acb272985bc4"
+    },
+    {
+      "path": "apps/FLP/tests/test_import_export_messages.py",
+      "bytes": 3985,
+      "sha256": "bc80f13968c88ff2202fe00a365ca11dd837def6dca41cbd7f087c6679d17ace"
+    },
+    {
+      "path": "apps/FLP/tests/test_integrity_parameters.py",
+      "bytes": 2058,
+      "sha256": "35f79a5f457dd38c174e1d2b3759ddbadf299b2000b0c1cc7b8c79f78d5f142b"
+    },
+    {
+      "path": "apps/FLP/tests/test_joint_c_golden.py",
+      "bytes": 8158,
+      "sha256": "52fa3ab5cc4489764a7b54b2f9cb4cd358bf20eb8deb9a0214c11f9dab08eed1"
+    },
+    {
+      "path": "apps/FLP/tests/test_joint_gui_state.py",
+      "bytes": 6779,
+      "sha256": "4aafdd9fc24a8ca85e9222fd97f92faeb07976b877cf58f5a574dba36811afc7"
+    },
+    {
+      "path": "apps/FLP/tests/test_joint_ranges.py",
+      "bytes": 9879,
+      "sha256": "f18301f13429ebd0e8cfff3dbdd8453cd06cd64341fdec266d4866d9dcf15623"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_field_analysis.py",
+      "bytes": 7410,
+      "sha256": "cf4ef25900bc742fc6f829b9d456b9709a77c9e592f76a0be71b1582e30a8ea0"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_horizon.py",
+      "bytes": 8627,
+      "sha256": "0932fc2b7069c407c9b729f74c47590103120b34d5ff18b8369512deb1f98636"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_outage.py",
+      "bytes": 7752,
+      "sha256": "ade6f8424c16fade1599c48bb2bf9370bec339caf98bd161022c739b10f67b51"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_process_model.py",
+      "bytes": 3617,
+      "sha256": "fbf9eb7edfae55e9791f167ebef9558a9c26c524a8ddfc0c147e91698fb15d3c"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_process_model_identity.py",
+      "bytes": 12174,
+      "sha256": "c891a86c1c4fdcc400dcfef44aaea8ebd32a4c5207b7346df765e1144c5a6524"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_replay_failure_publication.py",
+      "bytes": 15091,
+      "sha256": "a326310983e96a00c703e7dac8f68ead4969180a0c5524a3d913ba7415575e1c"
+    },
+    {
+      "path": "apps/FLP/tests/test_kf6_retired_parameter_precision.py",
+      "bytes": 7906,
+      "sha256": "d4cf55d7fe82fc673a5ed9ca2e3bfdcbe249290d3dd256c8436ada870417bf39"
+    },
+    {
+      "path": "apps/FLP/tests/test_landing_display_onset.py",
+      "bytes": 6364,
+      "sha256": "170c4725c00c90699fdd6d6eab953c66f268d09f5db0ed1391e0648ca2cb5263"
+    },
+    {
+      "path": "apps/FLP/tests/test_landing_time_window.py",
+      "bytes": 3726,
+      "sha256": "17a0a403dd35a1e9072a2648e7de789322632a4d93db7c1c9f643e0c1ecb00fa"
+    },
+    {
+      "path": "apps/FLP/tests/test_legacy_writer_recovery_state.py",
+      "bytes": 5886,
+      "sha256": "0a633f8a7ad8cf96a84aad61238fec9f47b1245ae8d6e0be9d1179eb06052793"
+    },
+    {
+      "path": "apps/FLP/tests/test_magnetometer_decoder_routes.py",
+      "bytes": 8055,
+      "sha256": "41ce0c392f949b99fee483735d33d47ca79859b632034be551862d936b6f7cc4"
+    },
+    {
+      "path": "apps/FLP/tests/test_main_window_disposal.py",
+      "bytes": 3040,
+      "sha256": "9dba27ddb8395350b08870a119762d0763b10e59064d9450ef46fed418095180"
+    },
+    {
+      "path": "apps/FLP/tests/test_measurement_diagnostics.py",
+      "bytes": 4364,
+      "sha256": "107ad1313e0f38d734a778bd154478d63dc2bf6955cac624dcc5291c9491d8d1"
+    },
+    {
+      "path": "apps/FLP/tests/test_measurement_plot_layout.py",
+      "bytes": 3829,
+      "sha256": "efc759f9dd48f30691cf588ba5081f8b11b14cde5f8ec8310db058cae2a6ccc0"
+    },
+    {
+      "path": "apps/FLP/tests/test_mission_folder_import.py",
+      "bytes": 9019,
+      "sha256": "97b017e4f93d1a547259ed80cde5fafff155c2a8e09007625c6bfcaa48c0e7d3"
+    },
+    {
+      "path": "apps/FLP/tests/test_mission_profile.py",
+      "bytes": 5397,
+      "sha256": "71461bb19fab1d020a9d97a6b3ffaa543ac1686436b180f49e9534bc107989b0"
+    },
+    {
+      "path": "apps/FLP/tests/test_mission_snapshot_gui.py",
+      "bytes": 3454,
+      "sha256": "cf9bb2e68bef954a0576b3b087c1728ee84914fd1b51861dca4b1b9a46bf1ec6"
+    },
+    {
+      "path": "apps/FLP/tests/test_mission_snapshot_view.py",
+      "bytes": 8503,
+      "sha256": "5c5e4d6f0d514552620f6cc820eff67a33a0c4f7a2feed8e1c88d59cf6c6db97"
+    },
+    {
+      "path": "apps/FLP/tests/test_mission_trajectory.py",
+      "bytes": 8814,
+      "sha256": "6cd93df5652a83f09c8c3debb2fc992c1da13fadecce6c9f315d2e7e0b2046c7"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_body_inputs.py",
+      "bytes": 10685,
+      "sha256": "56de812097152cee6daf91331186f820bcf418eff7be09594ee432f8c83cb1c0"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_c_journal.py",
+      "bytes": 5759,
+      "sha256": "b4c8a1550a9c3312c5d4512fd4b669771db58ab98407a5de5f1497a0750fb0df"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_diagnostics.py",
+      "bytes": 5254,
+      "sha256": "6241bf330cbbfb67935c042dc213992281d49df38aaab29f549d181f105ed346"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_firmware_configuration.py",
+      "bytes": 12027,
+      "sha256": "0bd6f1b498d19f55eee2c6547fcaddd5eb004c07f91b4e4aa3f7fe166ff0d5b5"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_integrity_parity.py",
+      "bytes": 2907,
+      "sha256": "339e7f5873bc85ffbb1e77bec77bb8754edaa9d52bd72de8a334f33ab91162c8"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_plugins.py",
+      "bytes": 14663,
+      "sha256": "88dd3dbd4d7dd26d440f01962d0a260f606e9fcd8b28fa843232f532b98859b0"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_quality_gain.py",
+      "bytes": 16564,
+      "sha256": "b94b748a908dfac4e758566726d3b75a7212e4edce040a0c9d00e143d7da1ef0"
+    },
+    {
+      "path": "apps/FLP/tests/test_navigation_revision_contract.py",
+      "bytes": 3439,
+      "sha256": "13f5f07b4abd2ad85f30230b00376b33673df01f5cca4627ae24c219009ad0c4"
+    },
+    {
+      "path": "apps/FLP/tests/test_nis_gate_contract.py",
+      "bytes": 3645,
+      "sha256": "6178b8394f1010ca2b3f20b8f72496fef7878e51d6300b7047ae57d0b0cd2dea"
+    },
+    {
+      "path": "apps/FLP/tests/test_nis_groups.py",
+      "bytes": 5223,
+      "sha256": "151e792337a68c2958f2869880b00444ce184d2044485983533ede236f0b6946"
+    },
+    {
+      "path": "apps/FLP/tests/test_nis_probability.py",
+      "bytes": 8051,
+      "sha256": "6056ddb1d62c32035bf41721e6072c4d43bcaf3daef5e8cf915bac6e79bf8351"
+    },
+    {
+      "path": "apps/FLP/tests/test_numerical_runtime_guard.py",
+      "bytes": 1967,
+      "sha256": "574ef561cd99b190a5e07d9d8d1800083ed36da181ac6d205ba222902a97fd23"
+    },
+    {
+      "path": "apps/FLP/tests/test_object_catalog13.py",
+      "bytes": 6885,
+      "sha256": "9a9d7a114b9adb823024f417f9c868f06a3cb2d21657daee8e60afe0c792e25f"
+    },
+    {
+      "path": "apps/FLP/tests/test_offline_diagnostics.py",
+      "bytes": 10662,
+      "sha256": "2e6cfe2aed29d83179a95f54baac5579dc5c465a9c425ec1dae8964ad2b3eedc"
+    },
+    {
+      "path": "apps/FLP/tests/test_open_refresh_once.py",
+      "bytes": 781,
+      "sha256": "61dc20ba6688d839003456faae292542a99e89d6d7dd3b18ae2b1ea72db32f37"
+    },
+    {
+      "path": "apps/FLP/tests/test_optional_gnss_replay.py",
+      "bytes": 7928,
+      "sha256": "07f6eaf7850a13bcbf7df692b02e0d4f0b8a5b83b8d59e382cda47780efdc714"
+    },
+    {
+      "path": "apps/FLP/tests/test_optional_secondary_source.py",
+      "bytes": 20957,
+      "sha256": "ba3ad88025ecca63277b964fb7cd61eca9d158b6cfc8170ad963faa5cce2c062"
+    },
+    {
+      "path": "apps/FLP/tests/test_overview_analysis.py",
+      "bytes": 7977,
+      "sha256": "fe58a8ee72216fc83c2604a897a3dd0280d9152ac347edc47eb594843ce145b5"
+    },
+    {
+      "path": "apps/FLP/tests/test_overview_json.py",
+      "bytes": 2438,
+      "sha256": "97512f4269a7d2908ea72403169efef0f32a764e488735126e891d75c7c9e115"
+    },
+    {
+      "path": "apps/FLP/tests/test_packaged_fusion_contracts.py",
+      "bytes": 3070,
+      "sha256": "789ca7d4fdae611e4124607595386191c1dfa06f38a8c7c4dd9f51b954d0145e"
+    },
+    {
+      "path": "apps/FLP/tests/test_path_preferences.py",
+      "bytes": 10221,
+      "sha256": "d899264962c8b3804f2c191b8cbc0fb28a45efcefb3100c1edd4044b4e39324c"
+    },
+    {
+      "path": "apps/FLP/tests/test_plot_menu_lifetime.py",
+      "bytes": 2474,
+      "sha256": "19fe606bb419ce3f09971306e697c0fbe88e0431507c46f90ad60ac6dc45846a"
+    },
+    {
+      "path": "apps/FLP/tests/test_primary_source_policy.py",
+      "bytes": 9328,
+      "sha256": "96fcabc3e42554c4969e4a55188f3f137958f46564666ee573a10ea11b53517c"
+    },
+    {
+      "path": "apps/FLP/tests/test_progress_visible_counts.py",
+      "bytes": 904,
+      "sha256": "f52e86e4548742979243d71ca2b5a71c72c9e9bd6b5e918defe604363da30026"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_artifact_boundaries.py",
+      "bytes": 16029,
+      "sha256": "c25a62ba5f60f39efe1dea8b80375a6d7097278c030eb3daa26a527026d2c798"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_artifacts.py",
+      "bytes": 14033,
+      "sha256": "33903a18af026e1782652b6e760aa3352ff8874bc0e641000e8d8e302c009719"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_export.py",
+      "bytes": 35875,
+      "sha256": "773ff72eac69d46a0164a6b3f0c5dbf1fde068a8cce94fd21589a3bc81bf8247"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_save_lifecycle.py",
+      "bytes": 3496,
+      "sha256": "97da65654ed965ae7ce2c2c090940358bb240ad34c29831718a50294b096b639"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_save_path_boundary.py",
+      "bytes": 3169,
+      "sha256": "895c8760989dfc97e7d3b289af339a11aebf8ce9d5b25a605860893782465d26"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_stage_progress.py",
+      "bytes": 4230,
+      "sha256": "5eee6aea7b95bca0868a093c2f9c95ffc7d857e26a9af4d94e7bcc6f8f436249"
+    },
+    {
+      "path": "apps/FLP/tests/test_project_stage_progress_gui.py",
+      "bytes": 12203,
+      "sha256": "e61089c2870f6f4681d02f2d74a7df98083448ebf80be08e0431d98e62684ac0"
+    },
+    {
+      "path": "apps/FLP/tests/test_quality_revision_selection.py",
+      "bytes": 9062,
+      "sha256": "cb4af96159dc4919882ce8d95ea87e6f73fb6fa929b516a7bc8af469ed92e1ea"
+    },
+    {
+      "path": "apps/FLP/tests/test_record_block_artifacts.py",
+      "bytes": 11121,
+      "sha256": "aef4a822671a9b63c5609a7b4b2297bbeedef89b5dbf69910e84dbe2f2ea4707"
+    },
+    {
+      "path": "apps/FLP/tests/test_recorded_age_reference.py",
+      "bytes": 3649,
+      "sha256": "2211f188a9710b491a8450b6fc6b424519ca99ee20f968107228292baf3e69a8"
+    },
+    {
+      "path": "apps/FLP/tests/test_recorded_mag_rotation.py",
+      "bytes": 2870,
+      "sha256": "297fd2c2f86c940b8e9f394f7470fb58d56436529464b61ae09dc6bff4596038"
+    },
+    {
+      "path": "apps/FLP/tests/test_replay_lifecycle_boundaries.py",
+      "bytes": 12352,
+      "sha256": "580ad59e143b1e729b8747f04652706f5d2032386127d132931b11c5b0763439"
+    },
+    {
+      "path": "apps/FLP/tests/test_replay_mode_and_errors.py",
+      "bytes": 4194,
+      "sha256": "a757f7e2ad3f7f9da459ddbbcd2397b0d79a128835de5d5aa34e8ee16318ab09"
+    },
+    {
+      "path": "apps/FLP/tests/test_replay_page.py",
+      "bytes": 16664,
+      "sha256": "80b07c40d301f752a22f4349fb7f12be5645abbd41746e9617f8f6f6e7d8218c"
+    },
+    {
+      "path": "apps/FLP/tests/test_run_deletion.py",
+      "bytes": 15327,
+      "sha256": "b7a644505c11516cb7ab7ff5190b1151f30fde6b83338a51f637a537d586b173"
+    },
+    {
+      "path": "apps/FLP/tests/test_run_recovery_provenance.py",
+      "bytes": 13646,
+      "sha256": "2cfac4d9bfbeeacf1195baea5a7c711b85eb70dffb9f4bda4da1f722568a32be"
+    },
+    {
+      "path": "apps/FLP/tests/test_serialization_progress.py",
+      "bytes": 796,
+      "sha256": "0cc72bb1a4775fe44e37df45335d6f6afae987c94286f4eef5ea9ef5f5df52f3"
+    },
+    {
+      "path": "apps/FLP/tests/test_sf6_current_state.py",
+      "bytes": 14482,
+      "sha256": "690ab4625a2273d0c9714b0efbe4d90ff7ab0e5feac54367bc9a203fbdc42158"
+    },
+    {
+      "path": "apps/FLP/tests/test_sf6_recorded.py",
+      "bytes": 4407,
+      "sha256": "f393c72df2d8281d5cf5fd75908cd49258041d9de6af8c5b878a81dcd405f131"
+    },
+    {
+      "path": "apps/FLP/tests/test_sf6_replay.py",
+      "bytes": 17343,
+      "sha256": "a98c4061ec552e0bba66d8910b1e396ac9cf0c3d4488ee4d88363724bb178511"
+    },
+    {
+      "path": "apps/FLP/tests/test_silverstar_project_root.py",
+      "bytes": 2138,
+      "sha256": "245d3106afe519b1e86ab30d3f1d3965d8fa676eb5724ecb9671a84c630f645b"
+    },
+    {
+      "path": "apps/FLP/tests/test_sparse_preflight.py",
+      "bytes": 5311,
+      "sha256": "7fb1771325125122776ef31c6d4bac8198b52406c6014587d351d5156ce6f1f9"
+    },
+    {
+      "path": "apps/FLP/tests/test_ss0007_manual.py",
+      "bytes": 9300,
+      "sha256": "7be3e7e5735b33f8bc571a2df19f3f196baa6256aa98446a2d241e548a22b300"
+    },
+    {
+      "path": "apps/FLP/tests/test_ss0014_manual.py",
+      "bytes": 7917,
+      "sha256": "fd634594007ad1015fb5ea663d10cef88c065a7b3aa771eeaa23c876e196061b"
+    },
+    {
+      "path": "apps/FLP/tests/test_ss_test_0_manual.py",
+      "bytes": 11893,
+      "sha256": "6d5e640bd7e84d34ea7f633485396836a35bdd1e9de2015aaaae402e696f52a1"
+    },
+    {
+      "path": "apps/FLP/tests/test_sslog_parser.py",
+      "bytes": 7901,
+      "sha256": "3295f632e7a727ff9ea18410d2d0baa912c5868986ba69b541587a7ce2301a3d"
+    },
+    {
+      "path": "apps/FLP/tests/test_startup_error_visibility.py",
+      "bytes": 2697,
+      "sha256": "3e8d29c8bc16e09651925833194c906b4b2f4fcb8e13ba3c0e628794355f071a"
+    },
+    {
+      "path": "apps/FLP/tests/test_task_cancellation_20261005.py",
+      "bytes": 5974,
+      "sha256": "6da72f10632d2c18bd5bbccfd958fb6d5ccbc3584705e746c0c5d401c14cb997"
+    },
+    {
+      "path": "apps/FLP/tests/test_task_publication_thread_affinity.py",
+      "bytes": 3918,
+      "sha256": "19f7044f606429a50baa3b96d84c68d0b5550b6868a490c57dc6c7bdaf18c6c3"
+    },
+    {
+      "path": "apps/FLP/tests/test_timestamp_semantics.py",
+      "bytes": 4799,
+      "sha256": "25bc1d61c7672fde376bca95fbd2a4be107d15aeab0d78a18179303dfe9f58c8"
+    },
+    {
+      "path": "apps/FLP/tests/test_touch_scroll.py",
+      "bytes": 7029,
+      "sha256": "d3f343d7a92f050cb55a2c666c67742c7ea5f2c3a5de982997aae426510731c4"
+    },
+    {
+      "path": "apps/FLP/tests/test_two_source_comparison.py",
+      "bytes": 5754,
+      "sha256": "e93668f3549e56dbbb4ae0911895df6e5d338e1f571226a8fdf619b52d937d69"
+    },
+    {
+      "path": "apps/FLP/tests/test_user_custom_decoder.py",
+      "bytes": 4346,
+      "sha256": "b36a1463292b236e319c89b17570e3d169e7e0a4143cd7a0b33be4307c662b5b"
+    },
+    {
+      "path": "apps/FLP/tests/test_velocity_variance_comparison.py",
+      "bytes": 4433,
+      "sha256": "43c4d179237fb9decd3146e4832fe48818576db1c39553a281bd5cbbbdb2003e"
+    },
+    {
+      "path": "apps/FLP/tests/test_version.py",
+      "bytes": 1355,
+      "sha256": "e658c4ba86b19380782e2d15623433227b1e30146aad16fa4ac48800ff5e4605"
+    },
+    {
+      "path": "apps/FLP/tests/test_worker_retirement.py",
+      "bytes": 6063,
+      "sha256": "2cd3f6ce7781f7676307607fa8b9c2c74424b98e893ed4abae61fb41932f9c0f"
+    },
+    {
+      "path": "apps/FLP/tests/validation/field_gui_probe.py",
+      "bytes": 10447,
+      "sha256": "45edfda94fb3efea418fe76d6d69e2a5ef3cfc32d6a4d0083fcda14637b814b6"
+    },
+    {
+      "path": "apps/FLP/tools/clean_workspace.py",
+      "bytes": 18051,
+      "sha256": "aef37daa2db2234c4d8d1adacdd3d1e3eb958e2632c729fc83edb445105e2e69"
+    },
+    {
+      "path": "apps/FLP/tools/kf6_field_analysis.py",
+      "bytes": 2502,
+      "sha256": "b88de4302953b688ae747b88e04a53b2b6460166c5af4e3324eea79dac425764"
+    }
+  ],
+  "input_files": [
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/aggregation-eskf/FLP_Software_eskf.ssdecoder",
+      "bytes": 193865,
+      "sha256": "c66ee31ca9fff19743010821a6858c43a6bb84413a16aced73b69bfd3d7cc9e7"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/aggregation-existing/FLP_Software_existing.ssdecoder",
+      "bytes": 188596,
+      "sha256": "c58baf81458e774d5321856a8ad0ebac985cf33e13022bab9c5dc8be6ba21e09"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/aggregation-imported/FLP_Software_imported.ssdecoder",
+      "bytes": 180419,
+      "sha256": "3761bbbc96f67eb741fdd65e0503c3e4c4b837f80825abcf12d7ad91879d75ca"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/codec-golden/Logs/Golden/SS_TEST_0_golden.sslog",
+      "bytes": 1354,
+      "sha256": "92b067b47cdd945ea1d7dc7bbfeea446934ad547cabb3105f87926e53fb9113c"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/codec-golden/probe-cache/16029dbd331555b8aae263617884661b/3cb46f081fb66cfe93cb19813d0adf82.ssdecoder",
+      "bytes": 189124,
+      "sha256": "3cb46f081fb66cfe93cb19813d0adf829394ac3521b182c32551fd78578f44f8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/codec-golden/SilverStar.ssproject",
+      "bytes": 138836,
+      "sha256": "9a88ceb46c1ba12cf7a1fd6195945a9720c3cd2de4a6cc030cf80b76bd56c642"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/codec-golden/SS_TEST_0.ssdecoder",
+      "bytes": 189124,
+      "sha256": "3cb46f081fb66cfe93cb19813d0adf829394ac3521b182c32551fd78578f44f8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/eskf/FLP_Software_eskf.ssdecoder",
+      "bytes": 194422,
+      "sha256": "eabb26276ca29efc73279cbe300784f870dc63cb4a190831483eb227f528b910"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/eskf/SilverStar.ssproject",
+      "bytes": 141192,
+      "sha256": "7ff811bf6ec2905d9153f28e22df822afabbaaa6f535c8f64c67c53907c35d07"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/eskf-replay/FLP_Software_eskf.ssdecoder",
+      "bytes": 194426,
+      "sha256": "81617589429ea527b8ad0298053a6f649c27c7a3a01919aa946885d9f3180de1"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/eskf-replay/SilverStar.ssproject",
+      "bytes": 141192,
+      "sha256": "dbca537921a4816ad18e82a9ba63eaea4fa5babaf525d7cbebc8c7a6c39eaa07"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/Logs/Golden/FLP_Software_existing_golden.sslog",
+      "bytes": 1254,
+      "sha256": "58a91bdd4f1f7bf7f169e1a029f64026795473fb35a36f9d6344f02aae80ac39"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/logger-normal.sslog",
+      "bytes": 4004794,
+      "sha256": "7326478c7a14b058f8a85e436c2963133d89662bc55e8e8b7f3028b22d760151"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/logger-overflow.sslog",
+      "bytes": 4007530,
+      "sha256": "13607bfd37a7cdc3985416c9f9554e3d16142f98487fdb6f701cdfe6fb88e69c"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/logger-startup-burst-overload.sslog",
+      "bytes": 15652063,
+      "sha256": "73fb82d6e9bbcbc31c5d7ed8f3268f29874986023601898f50402bfeaa848560"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/logger-startup-burst.sslog",
+      "bytes": 15650143,
+      "sha256": "2682168aa3a7d9bf7184cc0277fe34ad15b07cd44eceda0073817afd0a5786a4"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/logger-startup-overflow.sslog",
+      "bytes": 4010298,
+      "sha256": "f2c5bbb1ccc513e3f331aef31ebf9ba1615aad878459817e9a8370a19fa2d46a"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/mixed.sslog",
+      "bytes": 3596803,
+      "sha256": "b0155a46977e63dcbae05509100c73fc61c7d535179bc0682127886f8c1e718a"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/preflight-diagnostic-120.sslog",
+      "bytes": 2244047,
+      "sha256": "958d541bf87ae4a4dbf421456807f67f464420ba4c3dc91475111b75cb62c6fd"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/preflight-diagnostic-30.sslog",
+      "bytes": 1097627,
+      "sha256": "9dd4d55649cc64e405c811091a9e16b274d337d68fa6bb7ccd722ae8dbeb3ee2"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/preflight-normal-120.sslog",
+      "bytes": 730843,
+      "sha256": "47d14ae648378f6fb58cc9f0338f33e3ec62a6de45305a9d9b346336bd5e910f"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/build/FCCG/Host/Tests/StorageIntegrity/preflight-normal-30.sslog",
+      "bytes": 713923,
+      "sha256": "04930d0de9b854324750804642da7b07f77caed826808881b712fd6537597ab8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/FLP_Software_existing.ssdecoder",
+      "bytes": 189153,
+      "sha256": "f90067cd885af663ce454cb9d91ed9811dc33040e32802deff2892ce1e5f9cd0"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/existing/SilverStar.ssproject",
+      "bytes": 138859,
+      "sha256": "98ac7387b1f8e3a929c1e3ecdc3a25b118425c33a92c1b0cb662722b5e400d24"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/imported/FLP_Software_imported.ssdecoder",
+      "bytes": 180976,
+      "sha256": "8d9103e9d3fea70431360bc2227a131b70033719688cceb4006c92fd0a557f96"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/imported/SilverStar.ssproject",
+      "bytes": 156298,
+      "sha256": "04cc005646176ff6659d76c7968dfbb57e7c0f92794cf8e3ad1e3bb5b771202e"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/joint/FLP_Software_joint.ssdecoder",
+      "bytes": 189150,
+      "sha256": "7f8758534319681120b7ce58898e7377dc3d15b2cec9f4c6b977392d06acc16f"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/joint/SilverStar.ssproject",
+      "bytes": 138855,
+      "sha256": "77ac527fce5bf0d149bb2ebd791a11dae662fbaa4aa89288a8b88e4de7e3cddb"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/KF6_v6/FLP_Software_existing.ssdecoder",
+      "bytes": 189153,
+      "sha256": "f90067cd885af663ce454cb9d91ed9811dc33040e32802deff2892ce1e5f9cd0"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/pure/FLP_Software_pure.ssdecoder",
+      "bytes": 174895,
+      "sha256": "7d00aeaf1e71a5ac55833c7b9c520301677c7b39b5f5c18844e8bc2c371f8032"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/pure/SilverStar.ssproject",
+      "bytes": 135807,
+      "sha256": "180f2c010fca1f92693fb2395e756c4f9239f53b60c287fa8d04349667baba45"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/sf6/FLP_Software_sf6.ssdecoder",
+      "bytes": 178231,
+      "sha256": "559d348212d96112e714def51e8fa5cf31414c2129f307d1c0d8255cc1dfe339"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/inputs/sf6/SilverStar.ssproject",
+      "bytes": 137134,
+      "sha256": "41ed1de9a6544a9708730d09e3b5c7f867147b16f78eb867cb43ef23883d3730"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/codec-golden/receipt.json",
+      "bytes": 43209,
+      "sha256": "9d03ac2ee8024b0cf6d1fc64a2a49a392ab506bc059233c8a6b96aaa55345522"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/codec-golden2/receipt.json",
+      "bytes": 12482,
+      "sha256": "e35ecab259f2d1c64dfd75adfae268e3e5e46264f33d50efbff170a480a0817f"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/eskf.json",
+      "bytes": 23772,
+      "sha256": "739a0d51819916adffa39ce64ce219e39171e3176e4d8f3d3ba5859055da374b"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/eskf.sslog",
+      "bytes": 62243,
+      "sha256": "0ad1757953eb98264ca300955b20f81b0f30a47c9f524bf24755fc104916fc9e"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/joint/receipt.json",
+      "bytes": 624,
+      "sha256": "de894cf8d55c9d6f34a724333227babd67b4ac34c620b21dc6960c1334b3a277"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/joint2/receipt.json",
+      "bytes": 389,
+      "sha256": "d03352499c61ddaef8ab4cdd2e5623ca86e6edfdd3b2d93f60534d7262fe6459"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/kf.json",
+      "bytes": 24949,
+      "sha256": "0bcd68b409b454d356c7b5904e63e0eeea33244ae20b3ef510d643e710691e2e"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/kf.jsonl",
+      "bytes": 236355,
+      "sha256": "14fcd5a9f0cc17a29359045e878c64087e0366b329b9c4fbbb1a5a77182a27ca"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/sf6.json",
+      "bytes": 22264,
+      "sha256": "dcde544269fbaad894c20a9dadb8e98aabb0f22029a79807c6218bdf8108d3de"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/flp/producers/sf6.sslog",
+      "bytes": 109032,
+      "sha256": "691fcee788d86b68e2fee3d210795599037864009a8d685e362b2711a434528a"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_config0/project/Generated/Inc/project_algorithm_parameters.h",
+      "bytes": 7689,
+      "sha256": "cc8b443b17d358d2dd27f7a2a9e31289b8ddc03d09cece5e4b6a2589d90ccc20"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_config0/project/HorizonBackendUnitConfiguration.ssdecoder",
+      "bytes": 194467,
+      "sha256": "99068adf89d78e0d2f9c1a47a3f36637b634034c319e5519b05971fc6a2c06d4"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case0.frames",
+      "bytes": 15452,
+      "sha256": "ed6a040be7904c873c0652113e963b38c496cd2f75ff76c2a964e26e337f0b66"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case1.frames",
+      "bytes": 27868,
+      "sha256": "ae30f82dda0293b0aa45ae3d06d2c3e8b8e37f53caf925d1513b403863c5394d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case10.frames",
+      "bytes": 14444,
+      "sha256": "5331d5f4f3dc0b59c104e201e143fc4cad3438dcca1d7d765060c106b9b68cd1"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case11.frames",
+      "bytes": 15452,
+      "sha256": "45e64d8a115cfd99743ff1a765f2b9abd5fe3c3dc3f4cdb03de75404be131ebe"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case12.frames",
+      "bytes": 3008,
+      "sha256": "d096907cae3dfea05ffd287116d24a45c9ce9fb82332b9ef6442c0b6cb994c2d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case2.frames",
+      "bytes": 27868,
+      "sha256": "ae30f82dda0293b0aa45ae3d06d2c3e8b8e37f53caf925d1513b403863c5394d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case3.frames",
+      "bytes": 3008,
+      "sha256": "6990147e7417e30e60552ac38b585754cb8a9034eceb58d949abac121e8077c8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case4.frames",
+      "bytes": 3008,
+      "sha256": "6990147e7417e30e60552ac38b585754cb8a9034eceb58d949abac121e8077c8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case5.frames",
+      "bytes": 3008,
+      "sha256": "2b856fbff8de2a2c94af91b30b9d8b4dfbff6df6542678075cfa06566ec9bd89"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case6.frames",
+      "bytes": 16284,
+      "sha256": "f8da2648d9b0da863414b8772c22dd835df333455b08479c687ddad0c4e4a079"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case7.frames",
+      "bytes": 17372,
+      "sha256": "3705b228b1c4a1729ce6b2aff638d8d1f814b879e0549c2f28ae01d9befbf456"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case8.frames",
+      "bytes": 1088,
+      "sha256": "fda3c7b3763a27914d41d955bc712e0ba4bd2e98315f3b7bb38de34b8dd0586f"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/case9.frames",
+      "bytes": 14268,
+      "sha256": "ced3566e30a591e73f43add813cca8f80c8527bed9c1a54c5733f0d40140853a"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O00/compile.json",
+      "bytes": 20985,
+      "sha256": "57ad0d5eed162b176232e81bfd966aae0e1d7a432f2b37ce5a5722b59d2cc75d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case0.frames",
+      "bytes": 15452,
+      "sha256": "ed6a040be7904c873c0652113e963b38c496cd2f75ff76c2a964e26e337f0b66"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case1.frames",
+      "bytes": 27868,
+      "sha256": "ae30f82dda0293b0aa45ae3d06d2c3e8b8e37f53caf925d1513b403863c5394d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case10.frames",
+      "bytes": 14444,
+      "sha256": "5331d5f4f3dc0b59c104e201e143fc4cad3438dcca1d7d765060c106b9b68cd1"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case11.frames",
+      "bytes": 15452,
+      "sha256": "45e64d8a115cfd99743ff1a765f2b9abd5fe3c3dc3f4cdb03de75404be131ebe"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case12.frames",
+      "bytes": 3008,
+      "sha256": "d096907cae3dfea05ffd287116d24a45c9ce9fb82332b9ef6442c0b6cb994c2d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case2.frames",
+      "bytes": 27868,
+      "sha256": "ae30f82dda0293b0aa45ae3d06d2c3e8b8e37f53caf925d1513b403863c5394d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case3.frames",
+      "bytes": 3008,
+      "sha256": "6990147e7417e30e60552ac38b585754cb8a9034eceb58d949abac121e8077c8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case4.frames",
+      "bytes": 3008,
+      "sha256": "6990147e7417e30e60552ac38b585754cb8a9034eceb58d949abac121e8077c8"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case5.frames",
+      "bytes": 3008,
+      "sha256": "2b856fbff8de2a2c94af91b30b9d8b4dfbff6df6542678075cfa06566ec9bd89"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case6.frames",
+      "bytes": 16284,
+      "sha256": "f8da2648d9b0da863414b8772c22dd835df333455b08479c687ddad0c4e4a079"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case7.frames",
+      "bytes": 17372,
+      "sha256": "3705b228b1c4a1729ce6b2aff638d8d1f814b879e0549c2f28ae01d9befbf456"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case8.frames",
+      "bytes": 1088,
+      "sha256": "fda3c7b3763a27914d41d955bc712e0ba4bd2e98315f3b7bb38de34b8dd0586f"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/case9.frames",
+      "bytes": 14268,
+      "sha256": "ced3566e30a591e73f43add813cca8f80c8527bed9c1a54c5733f0d40140853a"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/eskf_backend_horizon-O20/compile.json",
+      "bytes": 20985,
+      "sha256": "d5700366fdde284a38f61363bac7b9c23c03201b2bc86fdb41c0ed58a3280cf0"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_config0/project/Generated/Inc/project_algorithm_parameters.h",
+      "bytes": 5316,
+      "sha256": "48387973fa2b9a04036566becd1841608a158dfc9e718d1556c611b44bbcc540"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_config0/project/KfHorizonBackendUnitConfiguration.ssdecoder",
+      "bytes": 189192,
+      "sha256": "ebaa0d3320fa62e3c383fa4cf315367e3d885a87bbe94e574307b1f29526d4c5"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case0.frames",
+      "bytes": 10732,
+      "sha256": "b89929de656c9e03f90ac7cc64cfa807b254e74bee5822a7b4bfe6ab6051a997"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case1.frames",
+      "bytes": 19460,
+      "sha256": "965d59a24252ff8a13a06d93be9530a38bde976262d89636fbe3dfd01c0d6220"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case10.frames",
+      "bytes": 9572,
+      "sha256": "fd3d410b2c07624bc7728b6aa0de90fef4d7dfba74b2f9db03855dad3c68d8ce"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case11.frames",
+      "bytes": 10732,
+      "sha256": "6b513a987c4410d457621ea75f324537fd2e8f65254630110d454f989d2d291d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case2.frames",
+      "bytes": 19460,
+      "sha256": "965d59a24252ff8a13a06d93be9530a38bde976262d89636fbe3dfd01c0d6220"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case3.frames",
+      "bytes": 2392,
+      "sha256": "e2926a69497f179f1dfbf4ef08319866b1291bb8272cda49e93f0e8fdc226a75"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case4.frames",
+      "bytes": 2392,
+      "sha256": "e2926a69497f179f1dfbf4ef08319866b1291bb8272cda49e93f0e8fdc226a75"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case5.frames",
+      "bytes": 2392,
+      "sha256": "a45df955123d8d2519f77214ce70c237af0bbec6090e646b257d1eeba696f741"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case6.frames",
+      "bytes": 11564,
+      "sha256": "0ee4457a0becb2f15451088f23f2c57e905f382eede11ccabe4e0397204779d6"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case7.frames",
+      "bytes": 12268,
+      "sha256": "68e5f9df6a680d575b108144441b4216bf758b11f309ce6d5ad2f682dc96d2a1"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case8.frames",
+      "bytes": 792,
+      "sha256": "6781b51eb19922800ae9d21e2f4a2243d8883c75a51d503e83d1d84436dfb181"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/case9.frames",
+      "bytes": 9396,
+      "sha256": "dc9939814310fcc3f49721792a56b217dc13e101c504aeb1c9d764d18088f52c"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O00/compile.json",
+      "bytes": 21286,
+      "sha256": "a4194a65abb0de5310045d00e13bd3a85c2535ce44f6c457f77db8c07b0fdfea"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case0.frames",
+      "bytes": 10732,
+      "sha256": "b89929de656c9e03f90ac7cc64cfa807b254e74bee5822a7b4bfe6ab6051a997"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case1.frames",
+      "bytes": 19460,
+      "sha256": "965d59a24252ff8a13a06d93be9530a38bde976262d89636fbe3dfd01c0d6220"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case10.frames",
+      "bytes": 9572,
+      "sha256": "fd3d410b2c07624bc7728b6aa0de90fef4d7dfba74b2f9db03855dad3c68d8ce"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case11.frames",
+      "bytes": 10732,
+      "sha256": "6b513a987c4410d457621ea75f324537fd2e8f65254630110d454f989d2d291d"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case2.frames",
+      "bytes": 19460,
+      "sha256": "965d59a24252ff8a13a06d93be9530a38bde976262d89636fbe3dfd01c0d6220"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case3.frames",
+      "bytes": 2392,
+      "sha256": "e2926a69497f179f1dfbf4ef08319866b1291bb8272cda49e93f0e8fdc226a75"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case4.frames",
+      "bytes": 2392,
+      "sha256": "e2926a69497f179f1dfbf4ef08319866b1291bb8272cda49e93f0e8fdc226a75"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case5.frames",
+      "bytes": 2392,
+      "sha256": "a45df955123d8d2519f77214ce70c237af0bbec6090e646b257d1eeba696f741"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case6.frames",
+      "bytes": 11564,
+      "sha256": "0ee4457a0becb2f15451088f23f2c57e905f382eede11ccabe4e0397204779d6"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case7.frames",
+      "bytes": 12268,
+      "sha256": "68e5f9df6a680d575b108144441b4216bf758b11f309ce6d5ad2f682dc96d2a1"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case8.frames",
+      "bytes": 792,
+      "sha256": "6781b51eb19922800ae9d21e2f4a2243d8883c75a51d503e83d1d84436dfb181"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/case9.frames",
+      "bytes": 9396,
+      "sha256": "dc9939814310fcc3f49721792a56b217dc13e101c504aeb1c9d764d18088f52c"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/horizon-traces-final/kf_backend_horizon-O20/compile.json",
+      "bytes": 21286,
+      "sha256": "7f8836ad9612003888314eda450b58bdff40438a36720b1599f2c76f803cec7c"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon/eskf15/Generated/Inc/project_algorithm_parameters.h",
+      "bytes": 7689,
+      "sha256": "b2cd7f1ca36390726de3b9794b6fbc63824c782e9719914c8ec51a9d39ca5995"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon/eskf15/GuiConvergence_Native_eskf15.ssdecoder",
+      "bytes": 192113,
+      "sha256": "faa7351f822f7fef8aa3b7089194b2ba98e31ebab165c8bee99330373d17b46b"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon/kf6/Generated/Inc/project_algorithm_parameters.h",
+      "bytes": 5316,
+      "sha256": "8ff6aa5fc7f06f096ba304b705284ca70a5d2c25c1ad4b2f6ce24dfa24713379"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon/kf6/GuiConvergence_Native_kf6.ssdecoder",
+      "bytes": 186754,
+      "sha256": "b9b77b90255a45a907feedeb8f2a55a11775c396b6cca66e67ac67595769d7be"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon-traces/eskf_backend_horizon-O20/case0.frames",
+      "bytes": 74204,
+      "sha256": "7e754d789aca098bfac06d5f3b99943467f99b9cd1350de2b5987d04c3c50cb4"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon-traces/eskf_backend_horizon-O20/compile.json",
+      "bytes": 20055,
+      "sha256": "0b19b01fc72aee990db0fc4aecbf85e1cc5827e52096ae658d0053bb4335269e"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon-traces/kf_backend_horizon-O20/case0.frames",
+      "bytes": 48748,
+      "sha256": "7b44e7d265aad7fc9c632dce7ab385152ca40074542c02318625f058bc79fd42"
+    },
+    {
+      "path": ".work/gui-convergence-20261110/native-horizon-traces/kf_backend_horizon-O20/compile.json",
+      "bytes": 20321,
+      "sha256": "70c23a95bdca5fb81c2a97d41c8177c449607092ba3bd3e2f534c23d68694f69"
+    }
+  ],
+  "timing_scopes": {
+    "existing/imported": "normal generated KF6 current mode0",
+    "eskf": "normal generated ESKF15 current mode0",
+    "joint/eskf-replay/aggregation-*": "separate normal generated mode1 replay inputs",
+    "horizon-traces-final": "staged Host mode2/Horizon30ms from actual compile receipts",
+    "native-horizon": "normal generated mode2/Horizon300ms; no timing -D overrides"
+  }
+}

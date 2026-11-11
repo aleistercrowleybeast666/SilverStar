@@ -1,0 +1,18 @@
+[
+  "apps\\FLP\\tests\\test_cloud_lifecycle_20261005.py",
+  "apps\\FLP\\tests\\test_decoder_directory_gui.py",
+  "apps\\FLP\\tests\\test_gui_smoke.py",
+  "apps\\FLP\\tests\\test_joint_gui_state.py",
+  "apps\\FLP\\tests\\test_main_window_disposal.py",
+  "apps\\FLP\\tests\\test_offline_diagnostics.py",
+  "apps\\FLP\\tests\\test_project_artifact_boundaries.py",
+  "apps\\FLP\\tests\\test_project_artifacts.py",
+  "apps\\FLP\\tests\\test_project_save_lifecycle.py",
+  "apps\\FLP\\tests\\test_project_save_path_boundary.py",
+  "apps\\FLP\\tests\\test_project_stage_progress_gui.py",
+  "apps\\FLP\\tests\\test_replay_lifecycle_boundaries.py",
+  "apps\\FLP\\tests\\test_run_deletion.py",
+  "apps\\FLP\\tests\\test_task_cancellation_20261005.py",
+  "apps\\FLP\\tests\\test_task_publication_thread_affinity.py",
+  "apps\\FLP\\tests\\test_worker_retirement.py"
+]

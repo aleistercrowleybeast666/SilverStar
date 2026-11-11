@@ -1,0 +1,57 @@
+{
+  "pid": 24028,
+  "qt": "6.11.1",
+  "scope": "Minimal Qt only; no FLP, pyqtgraph or PyOpenGL imports",
+  "env": {
+    "QT_QPA_PLATFORM": "windows",
+    "QT_SCALE_FACTOR": "1"
+  },
+  "raster": false,
+  "paints": 3,
+  "errors": [],
+  "requested_format": {
+    "swap": null,
+    "interval": null,
+    "alpha": null
+  },
+  "functions_initialized": true,
+  "version": [
+    4,
+    6
+  ],
+  "actual_format": "<PySide6.QtGui.QSurfaceFormat(version 4.6, options QFlags<QSurfaceFormat::FormatOption>(DeprecatedFunctions), depthBufferSize 24, redBufferSize 8, greenBufferSize 8, blueBufferSize 8, alphaBufferSize 8, stencilBufferSize 8, samples 0, swapBehavior QSurfaceFormat::DoubleBuffer, swapInterval 1, colorSpace QColorSpace(), profile  QSurfaceFormat::CompatibilityProfile) at 0x000001FA70E4EEC0>",
+  "own_hwnd": 5179828,
+  "foreground_hwnd": 5179828,
+  "foreground_is_self": true,
+  "surface": "SurfaceType.OpenGLSurface",
+  "dpr": 1.25,
+  "native_before_qwidget_grab": {
+    "white_fraction": 0.9999506285714286,
+    "rgb_std": 1.2167634478758285
+  },
+  "client_global": [
+    268,
+    58,
+    1000,
+    700
+  ],
+  "screen_geometry": [
+    0,
+    0,
+    1536,
+    864
+  ],
+  "own_client_desktop_pregrab": {
+    "white_fraction": 0.9999506285714286,
+    "rgb_std": 1.297171326853358
+  },
+  "qwidget_grab": {
+    "white_fraction": 0.0,
+    "rgb_std": 62.51355165923238
+  },
+  "native_after_qwidget_grab": {
+    "white_fraction": 0.9999506285714286,
+    "rgb_std": 1.2167634478758285
+  },
+  "exit": 0
+}

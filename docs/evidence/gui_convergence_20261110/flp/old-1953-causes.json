@@ -1,0 +1,1403 @@
+{
+  "original_collection": 1953,
+  "original_nonpasses": 275,
+  "original_passed": 1678,
+  "source": "docs/evidence/release_candidate_20261103/flp/suite-review/nonpasses.json",
+  "source_sha256": "b85571a7b65a597c594cbb8f9b92d4795ff162bb8a332deb935d9ae5897e3e08",
+  "scope": "Original first attempts only; current tests never backfill these outcomes.",
+  "counts": {
+    "analysis_only_project_save": 1,
+    "current_gui_and_explicit_reference_plugin_contract": 7,
+    "evidence_hook_path_open_fault": 2,
+    "external_recorded_input_required": 5,
+    "fresh_host_source_trace_or_package_prerequisite": 176,
+    "gui_covariance_owner": 1,
+    "header_and_time_range": 6,
+    "historical_schema_fixture": 12,
+    "missing_explicit_synthetic_process_revision": 6,
+    "monorepo_sf6_c_bridge_path": 12,
+    "old_or_incomplete_semantic_fixture": 22,
+    "optional_recorded_nis_fields": 9,
+    "qt_labelitem_lifecycle_exception": 1,
+    "sf6_mode_revision_form": 1,
+    "software_codec_golden_regenerated": 3,
+    "worker_fixture_and_retirement_contract": 11
+  },
+  "nodes": [
+    {
+      "node": "tests/test_algorithms.py::test_kf6_stationary_replay_has_finite_positive_covariance",
+      "original_status": "failed",
+      "cause": "missing_explicit_synthetic_process_revision"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_measurement_only_baro_diagnostics_use_actual_application_time_and_sorted_values",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_legacy_diagnostic_only_and_old_measurement_layout_keep_legacy_roles",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_measurement_stream_wins_over_diagnostic_snapshot_without_filling_holes",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[0-True-True]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[1-True-True]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[2-True-True]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[3-False-True]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[4-False-True]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[255-False-False]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_invalid_measurements_have_no_valid_diagnostic_points[overrides0]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_invalid_measurements_have_no_valid_diagnostic_points[overrides1]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_invalid_measurements_have_no_valid_diagnostic_points[overrides2]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_missing_diagnostic_boundary_fields_never_invent_time_or_validity[valid_mask]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_missing_diagnostic_boundary_fields_never_invent_time_or_validity[update_result]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics.py::test_missing_diagnostic_boundary_fields_never_invent_time_or_validity[estimator_present_timestamp_us]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[light-zh_CN]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[light-en_US]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[dark-zh_CN]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[dark-en_US]",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_comparison_sampling_gui.py::test_kf_display_curves_overlay_recorded_and_selected_with_full_source",
+      "original_status": "failed",
+      "cause": "missing_explicit_synthetic_process_revision"
+    },
+    {
+      "node": "tests/test_current_log_manual.py::test_current_log_display_and_quality_acceptance",
+      "original_status": "skipped",
+      "cause": "external_recorded_input_required"
+    },
+    {
+      "node": "tests/test_eskf15_c_parity.py::test_actual_c_float32_against_float64_reference",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_golden.py::test_actual_c_producer_exact_decoder_and_15_state_replay[False]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_golden.py::test_actual_c_producer_exact_decoder_and_15_state_replay[True]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[clipped]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[nan]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[covariance]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[prefix_covariance]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_multiple_prefix_commit_and_capacity_rejection_are_bounded",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_actual_c_mid_interval_delayed_replay[10000]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_actual_c_mid_interval_delayed_replay[4000]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_native_parity.py::test_actual_c_windows_gaps_duplicates_late_epochs_and_ttl",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_eskf15_records.py::test_actual_c_record_codec_catalog_and_fragment_roundtrip",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_estimator_visualization.py::test_fake_eskf_and_magnetometer_need_no_state_page_code_change",
+      "original_status": "failed",
+      "cause": "gui_covariance_owner"
+    },
+    {
+      "node": "tests/test_estimator_visualization.py::test_configured_without_valid_updates_keeps_blank_plots_and_nis_thresholds",
+      "original_status": "failed",
+      "cause": "qt_labelitem_lifecycle_exception"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_actual_eskf_current_backend_trace_matches_state_covariance_and_timing",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_actual_kf_current_backend_trace_matches_state_covariance_and_timing",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_nis_rejection_is_completed_attempt_with_unchanged_full_p[-O0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_native_parity.py::test_current_nis_rejection_is_completed_attempt_with_unchanged_full_p[-O2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_only_two_estimators_gain_optional_integer_timing_parameter[kf6]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_only_two_estimators_gain_optional_integer_timing_parameter[eskf15]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_pre_activation_schema_identities_remain_accepted_but_unknown_does_not[kf6]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_pre_activation_schema_identities_remain_accepted_but_unknown_does_not[eskf15]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[None-kf6]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[None-eskf15]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[0-kf6]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[0-eskf15]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[1-kf6]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[1-eskf15]",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O0-30000-120]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O0-32500-120]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O0-10000-120]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O2-30000-120]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O2-32500-120]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O2-10000-120]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_fusion_horizon_backend_wire.py::test_both_actual_backends_wire_boundaries",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[existing-silverstar.algorithm.kf6]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[imported-silverstar.algorithm.kf6]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[pure-silverstar.algorithm.pure_ins]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[eskf-silverstar.algorithm.estimator.eskf15]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_rejects_wrong_identity_and_recorded_configuration[identity]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_rejects_wrong_identity_and_recorded_configuration[recorded_aggregation]",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    },
+    {
+      "node": "tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-en_US]",
+      "original_status": "failed",
+      "cause": "header_and_time_range"
+    },
+    {
+      "node": "tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-en_US]",
+      "original_status": "failed",
+      "cause": "header_and_time_range"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-1-kf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-2-eskf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-1-kf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-2-eskf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-1-kf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-2-eskf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-1-kf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-2-eskf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-1-kf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-2-eskf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-1-kf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-2-eskf]",
+      "original_status": "failed",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual5]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual6]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual7]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual8]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual9]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual10]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual11]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual5]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual6]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual7]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual8]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual9]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual10]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual11]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual5]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual6]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual7]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual8]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual9]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual10]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual11]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_native_log_open.py::test_native_exact_log_open_recorded_and_explicit_what_if[kf6]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_native_log_open.py::test_native_exact_log_open_recorded_and_explicit_what_if[eskf15]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual5]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual6]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual7]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual8]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual9]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual10]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual11]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual5]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual6]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual7]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual8]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual9]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual10]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual11]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_joint_c_golden.py::test_generated_c_log_exact_decoder_replay_and_mechanization",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-zh_CN]",
+      "original_status": "failed",
+      "cause": "header_and_time_range"
+    },
+    {
+      "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-en_US]",
+      "original_status": "failed",
+      "cause": "header_and_time_range"
+    },
+    {
+      "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-zh_CN]",
+      "original_status": "failed",
+      "cause": "header_and_time_range"
+    },
+    {
+      "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-en_US]",
+      "original_status": "failed",
+      "cause": "header_and_time_range"
+    },
+    {
+      "node": "tests/test_joint_gui_state.py::test_project_reopens_selected_what_if_identity_and_exact_time_range",
+      "original_status": "failed",
+      "cause": "missing_explicit_synthetic_process_revision"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O0-10000]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O0-30000]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O0-32500]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_output_never_feedback_and_corrupt_primary_fault_preserves_output[-O0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_completion_backpressure_and_duplicate_receipts_preserve_ownership[-O0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O2-10000]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O2-30000]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O2-32500]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-0]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-1]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-3]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-4]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_output_never_feedback_and_corrupt_primary_fault_preserves_output[-O2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_horizon.py::test_completion_backpressure_and_duplicate_receipts_preserve_ownership[-O2]",
+      "original_status": "error",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_kf6_outage.py::test_old_project_identity_and_new_integer_parameter_are_compatible",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_recorded_and_unchanged_what_if_use_firmware_baseline",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_same_declared_binary32_value_is_accepted[gnss_integrity_recovery_threshold_m]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_same_declared_binary32_value_is_accepted[gnss_integrity_hacc_max_m]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_same_declared_binary32_value_is_accepted[gnss_integrity_sacc_max_mps]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_missing_or_unknown_float32_declaration_remains_conservative[None]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_missing_or_unknown_float32_declaration_remains_conservative[float64]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_kf6_retired_parameter_precision.py::test_missing_or_unknown_float32_declaration_remains_conservative[int32]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_measurement_diagnostics.py::test_recorded_group_sigma_and_distinct_ages_from_exact_timestamps",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_measurement_diagnostics.py::test_recorded_effective_unavailable_without_complete_firmware_parameters",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_mission_trajectory.py::test_replay_stops_at_landing_and_preserves_post_landing_raw_data[Kf6AlgorithmPlugin]",
+      "original_status": "failed",
+      "cause": "missing_explicit_synthetic_process_revision"
+    },
+    {
+      "node": "tests/test_mission_trajectory.py::test_post_landing_inputs_do_not_change_pre_landing_replay[Kf6AlgorithmPlugin]",
+      "original_status": "failed",
+      "cause": "missing_explicit_synthetic_process_revision"
+    },
+    {
+      "node": "tests/test_mission_trajectory.py::test_replay_without_landing_runs_to_valid_input_end[Kf6AlgorithmPlugin]",
+      "original_status": "failed",
+      "cause": "missing_explicit_synthetic_process_revision"
+    },
+    {
+      "node": "tests/test_navigation_integrity_parity.py::test_c_receiver_native_stream_matches_python_at_every_epoch",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_navigation_quality_gain.py::test_real_plugin_selects_gain_qualification_only_for_revision3[3]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_nis_groups.py::test_recorded_group_nis_and_results_are_distinct_in_state_view",
+      "original_status": "failed",
+      "cause": "old_or_incomplete_semantic_fixture"
+    },
+    {
+      "node": "tests/test_offline_diagnostics.py::test_project_excludes_analysis_only_diagnostics",
+      "original_status": "interrupted",
+      "cause": "analysis_only_project_save"
+    },
+    {
+      "node": "tests/test_optional_gnss_replay.py::test_full_kf6_without_gnss_replays_finite_prediction_and_baro[3]",
+      "original_status": "failed",
+      "cause": "optional_recorded_nis_fields"
+    },
+    {
+      "node": "tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[fifo]",
+      "original_status": "interrupted",
+      "cause": "evidence_hook_path_open_fault"
+    },
+    {
+      "node": "tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[reparse]",
+      "original_status": "interrupted",
+      "cause": "evidence_hook_path_open_fault"
+    },
+    {
+      "node": "tests/test_quality_revision_selection.py::test_revision3_actual_parameter_bound_and_retired_override",
+      "original_status": "failed",
+      "cause": "historical_schema_fixture"
+    },
+    {
+      "node": "tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[False]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[True]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[cancel]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[accepted_close]",
+      "original_status": "failed",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_replay_page.py::test_replay_uses_fixed_corrected_imu_and_translates_every_visible_field",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    },
+    {
+      "node": "tests/test_replay_page.py::test_what_if_groups_dirty_and_reset_use_recorded_configuration",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_delayed_groups_order_duplicates_and_wrap[0.0]",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_delayed_groups_order_duplicates_and_wrap[0.2]",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_delayed_groups_order_duplicates_and_wrap[1.0]",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_epoch_age_and_transactional_numeric_guards",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_revision2_updates_latest_boundary_without_replaying_velocity_history",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_revision2_plugin_current_boundary_no_replay_metrics_and_retired_knob_rejection",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_current_state.py::test_gui_and_saved_project_preserve_revision_specific_parameter_contract",
+      "original_status": "failed",
+      "cause": "sf6_mode_revision_form"
+    },
+    {
+      "node": "tests/test_sf6_recorded.py::test_actual_sf6_backend_exact_decoder_and_recorded_sources",
+      "original_status": "skipped",
+      "cause": "fresh_host_source_trace_or_package_prerequisite"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_c_oracle_fixed_lag_groups_duplicates_stale_and_window[0.0]",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_c_oracle_fixed_lag_groups_duplicates_stale_and_window[0.2]",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_c_oracle_fixed_lag_groups_duplicates_stale_and_window[1.0]",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_c_oracle_600ms_event_capacity_zero_gain_and_failed_commit",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_c_oracle_equal_time_group_order_and_sequence_wrap",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_plugin_order_optional_gnss_no_covariance_and_cross_algorithm_what_if",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_plugin_adopted_initial_velocity_and_group_delivery_match_c_oracle",
+      "original_status": "error",
+      "cause": "monorepo_sf6_c_bridge_path"
+    },
+    {
+      "node": "tests/test_sf6_replay.py::test_sf6_parameter_form_starts_with_ordered_gains",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    },
+    {
+      "node": "tests/test_sparse_preflight.py::test_sparse_120_seconds_import_replay_pages_and_export",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    },
+    {
+      "node": "tests/test_ss0007_manual.py::test_ss0007_real_log_landing_horizon_and_bounds",
+      "original_status": "skipped",
+      "cause": "external_recorded_input_required"
+    },
+    {
+      "node": "tests/test_ss0007_manual.py::test_ss0007_real_log_recorded_recomputed_and_what_if_marker_lifecycle",
+      "original_status": "skipped",
+      "cause": "external_recorded_input_required"
+    },
+    {
+      "node": "tests/test_ss0007_manual.py::test_ss0007_real_log_gui_worker_exports_gif_manifest_and_metadata_plots",
+      "original_status": "skipped",
+      "cause": "external_recorded_input_required"
+    },
+    {
+      "node": "tests/test_ss0014_manual.py::test_ss0014_current_log_compatibility_gate",
+      "original_status": "skipped",
+      "cause": "external_recorded_input_required"
+    },
+    {
+      "node": "tests/test_ss_test_0_manual.py::test_ss_test_0_real_package_discovery_manual_import_and_cache",
+      "original_status": "skipped",
+      "cause": "software_codec_golden_regenerated"
+    },
+    {
+      "node": "tests/test_ss_test_0_manual.py::test_ss_test_0_real_golden_matches_expected_exactly",
+      "original_status": "skipped",
+      "cause": "software_codec_golden_regenerated"
+    },
+    {
+      "node": "tests/test_ss_test_0_manual.py::test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke",
+      "original_status": "skipped",
+      "cause": "software_codec_golden_regenerated"
+    },
+    {
+      "node": "tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected]",
+      "original_status": "error",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed]",
+      "original_status": "error",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled]",
+      "original_status": "error",
+      "cause": "worker_fixture_and_retirement_contract"
+    },
+    {
+      "node": "tests/test_touch_scroll.py::test_window_scroll_coverage_and_graphics_exclusions",
+      "original_status": "failed",
+      "cause": "current_gui_and_explicit_reference_plugin_contract"
+    }
+  ]
+}

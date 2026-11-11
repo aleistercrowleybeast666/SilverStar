@@ -1,0 +1,114 @@
+{
+  "head": "45ba8701af5f4baf83692fb15b5fbac2d9dfcc21",
+  "qt": "6.10.1",
+  "pid": 24204,
+  "arguments": {
+    "output": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\compositor-repeat-no-fit-20261112",
+    "no_fit": true,
+    "deferred_fit": false,
+    "before_show_fit": false,
+    "fit_part": null,
+    "no_caption": false,
+    "no_gl": false,
+    "visit_gl": false,
+    "wait_trigger": false,
+    "auto_own_foreground": true
+  },
+  "env": {
+    "QT_QPA_PLATFORM": "windows",
+    "QT_SCALE_FACTOR": "1"
+  },
+  "scope": "Private settings; synthetic empty project only. QWidget.grab and QScreen.grabWindow are diagnostic and not WGC acceptance.",
+  "snapshots": [
+    {
+      "tag": "initial",
+      "surface": "SurfaceType.OpenGLSurface",
+      "dpr": 1.25,
+      "updates_enabled": true,
+      "frame_contained": false,
+      "frame": [
+        7,
+        0,
+        1480,
+        874
+      ],
+      "paint_counts_before_grab": {
+        "MainWindow": 4,
+        "QWidget": 4
+      },
+      "gl": [
+        {
+          "visible": false,
+          "valid": false,
+          "context": false,
+          "context_valid": null,
+          "context_version": null
+        },
+        {
+          "visible": false,
+          "valid": false,
+          "context": false,
+          "context_valid": null,
+          "context_version": null
+        }
+      ],
+      "own_hwnd": 14811190,
+      "foreground_hwnd": 14811190,
+      "foreground_pid": 24204,
+      "native_grab_unoccluded_candidate": true,
+      "native_before_qwidget_grab": {
+        "width": 1850,
+        "height": 1055,
+        "white_fraction": 0.9434973741514026,
+        "nonwhite_pixels": 110279,
+        "rgb_std": 49.83690566073761,
+        "file": "initial-native-before.png"
+      },
+      "qwidget_grab": {
+        "width": 1850,
+        "height": 1055,
+        "white_fraction": 0.4804185986934802,
+        "nonwhite_pixels": 1014093,
+        "rgb_std": 76.8400693752142,
+        "file": "initial-qt.png"
+      },
+      "native_after_qwidget_grab": {
+        "width": 1850,
+        "height": 1055,
+        "white_fraction": 0.9434973741514026,
+        "nonwhite_pixels": 110279,
+        "rgb_std": 49.83690566073761,
+        "file": "initial-native-after.png"
+      },
+      "foreground_unchanged_after_grabs": true
+    }
+  ],
+  "errors": [],
+  "source_files": {
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\app\\application.py": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\main_window.py": "b94e4452a14395be4fa98aa4da30d68ecd8372fa0f8c30dea8e68006f71c3371",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\pages\\charts.py": "f8b650be4a05e36e61add5c9e2bd54f77643e0c07cdf1ad0ee85ac949cc6be1d"
+  },
+  "before_show": {
+    "frame": [
+      7,
+      0,
+      1480,
+      874
+    ],
+    "geometry": [
+      7,
+      30,
+      1480,
+      844
+    ],
+    "available": [
+      0,
+      0,
+      1536,
+      816
+    ],
+    "window_handle_exists": true
+  },
+  "exit": 0
+}

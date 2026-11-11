@@ -1,0 +1,42 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\full-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gcf-full\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gcf-full\\0",
+      "tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "d797a19bc68ef6ad4456fe207b0041921a49533e; FLP traced snapshot in full-environment.json",
+    "elapsed": 1905.06,
+    "exit": 1,
+    "case_seconds": 150,
+    "collected": 1964,
+    "started": 910,
+    "finished": 909,
+    "interrupted": [
+      "tests/test_joint_gui_state.py::test_header_project_has_readable_pixels_and_elides_long_names"
+    ],
+    "untouched": 1054,
+    "phases": {
+      "passed": 2720,
+      "failed": 6,
+      "skipped": 1
+    },
+    "junit_written": false,
+    "log_sha256": "c4e3c04c514fdeec2b6febf0ee5d22b5c55d35888439d62ba7eb4c362b341494",
+    "journal": "full-1.jsonl"
+  }
+]

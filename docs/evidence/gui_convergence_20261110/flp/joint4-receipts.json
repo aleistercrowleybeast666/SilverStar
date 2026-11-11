@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\flp\\joint4-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gcf-joint4\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gcf-joint4\\0",
+      "tests/test_joint_c_golden.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "02f360899aa767a90a897434faf4313d6dbb4788; FLP traced snapshot in joint4-environment.json",
+    "elapsed": 50.84,
+    "exit": 0,
+    "case_seconds": 150,
+    "collected": 1,
+    "started": 1,
+    "finished": 1,
+    "interrupted": [],
+    "untouched": 0,
+    "phases": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "junit_written": true,
+    "log_sha256": "8f5d2b66b814563e7d25b7bcaec8efd8bdd22ffe28fd69dbf0c7354daba334cb",
+    "journal": "joint4-1.jsonl"
+  }
+]

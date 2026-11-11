@@ -1,0 +1,10 @@
+{
+  "manifest_sha256": "49c0e32f92bc4847cbf31ae6245239867e5ce5200e7f0345a97d56808a31f4f6",
+  "archive": "D:\\SilverStar_Archive\\20261110\\task\\flp-duplicates\\exact-duplicate-objects.zip",
+  "archive_sha256": "3c4c235f90a1d754ccd0a0ca200689abe00126b3283b8ea165dbb17ce9509db4",
+  "archive_bytes": 15894996,
+  "unique_objects_physically_restored_and_sha_verified": 614,
+  "selected_files": 940,
+  "selected_bytes": 37486196,
+  "source_deletion": false
+}

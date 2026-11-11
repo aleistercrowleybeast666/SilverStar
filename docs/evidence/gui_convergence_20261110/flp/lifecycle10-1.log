@@ -1,0 +1,512 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gcf-lifecycle10\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 177 items
+
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[success] PASSED [  0%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[error] PASSED [  1%]
+tests/test_cloud_lifecycle_20261005.py::test_terminal_controls_and_error_status[cancel] PASSED [  1%]
+tests/test_cloud_lifecycle_20261005.py::test_repeat_start_preserves_active_worker PASSED [  2%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[task_cancel] PASSED [  2%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[dialog_reject] PASSED [  3%]
+tests/test_cloud_lifecycle_20261005.py::test_discovery_discards_cancelled_or_obsolete_result[replace_request] PASSED [  3%]
+tests/test_cloud_lifecycle_20261005.py::test_cancel_after_result_emit_before_gui_publication PASSED [  4%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay] PASSED [  5%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export] PASSED [  5%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay] PASSED [  6%]
+tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export] PASSED [  6%]
+tests/test_cloud_lifecycle_20261005.py::test_declining_close_keeps_worker_running PASSED [  7%]
+tests/test_decoder_directory_gui.py::test_preferences_preserve_other_settings_and_bound_search PASSED [  7%]
+tests/test_decoder_directory_gui.py::test_manual_blank_decoder_requests_exact_discovery_and_custom_still_requires_package PASSED [  8%]
+tests/test_decoder_directory_gui.py::test_normal_gui_routes_directories_to_actual_exact_coordinator PASSED [  9%]
+tests/test_decoder_directory_gui.py::test_missing_explicit_manual_package_cannot_silently_use_good_cache PASSED [  9%]
+tests/test_decoder_directory_gui.py::test_project_gui_recovers_missing_source_by_exact_cache_and_configured_directory PASSED [ 10%]
+tests/test_decoder_directory_gui.py::test_failed_exact_open_keeps_log_in_manual_chooser PASSED [ 10%]
+tests/test_decoder_directory_gui.py::test_open_single_log_automatically_finds_exact_package PASSED [ 11%]
+tests/test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch] PASSED [ 11%]
+tests/test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid] PASSED [ 12%]
+tests/test_gui_smoke.py::test_runtime_diagnostics_log_version_python_package_and_export_path PASSED [ 12%]
+tests/test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset PASSED [ 13%]
+tests/test_gui_smoke.py::test_export_dialog_uses_project_or_source_default_and_opens_manifest PASSED [ 14%]
+tests/test_gui_smoke.py::test_plugin_install_rejects_unsupported_algorithm_and_refresh_preserves_runtime PASSED [ 14%]
+tests/test_gui_smoke.py::test_new_project_selects_destination_before_import_and_cancel_leaves_no_file PASSED [ 15%]
+tests/test_gui_smoke.py::test_new_project_requires_overwrite_confirmation PASSED [ 15%]
+tests/test_gui_smoke.py::test_export_dialog_lists_failed_items_and_toggles_error_details PASSED [ 16%]
+tests/test_gui_smoke.py::test_export_dialog_runs_gif_and_manifest_through_real_qthreadpool_worker PASSED [ 16%]
+tests/test_gui_smoke.py::test_new_project_form_validates_identity_and_preserves_suffix PASSED [ 17%]
+tests/test_joint_gui_state.py::test_header_project_has_readable_pixels_and_elides_long_names PASSED [ 18%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-zh_CN] PASSED [ 18%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-en_US] PASSED [ 19%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-zh_CN] PASSED [ 19%]
+tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-en_US] PASSED [ 20%]
+tests/test_joint_gui_state.py::test_project_reopens_selected_what_if_identity_and_exact_time_range PASSED [ 20%]
+tests/test_main_window_disposal.py::test_repeated_accepted_close_releases_entire_native_tree PASSED [ 21%]
+tests/test_main_window_disposal.py::test_unsaved_cancel_keeps_window_and_discard_destroys PASSED [ 22%]
+tests/test_main_window_disposal.py::test_busy_close_keeps_window_until_real_worker_retires PASSED [ 22%]
+tests/test_offline_diagnostics.py::test_effective_override_real_skip_reset_and_input_immutability PASSED [ 23%]
+tests/test_offline_diagnostics.py::test_latency_synthetic_known_shift_and_cancellation PASSED [ 23%]
+tests/test_offline_diagnostics.py::test_replay_product_removes_legacy_diagnostics_page[zh_CN] PASSED [ 24%]
+tests/test_offline_diagnostics.py::test_replay_product_removes_legacy_diagnostics_page[en_US] PASSED [ 24%]
+tests/test_offline_diagnostics.py::test_project_excludes_analysis_only_diagnostics PASSED [ 25%]
+tests/test_offline_diagnostics.py::test_project_save_rejects_fabricated_parse_identity PASSED [ 25%]
+tests/test_project_artifact_boundaries.py::test_save_cannot_rebind_old_computation_to_changed_log PASSED [ 26%]
+tests/test_project_artifact_boundaries.py::test_file_replacement_before_replay_does_not_relabel_parsed_arrays PASSED [ 27%]
+tests/test_project_artifact_boundaries.py::test_cache_hit_rechecks_source_and_cancellation_before_publication[append] PASSED [ 27%]
+tests/test_project_artifact_boundaries.py::test_cache_hit_rechecks_source_and_cancellation_before_publication[cancel] PASSED [ 28%]
+tests/test_project_artifact_boundaries.py::test_legal_kf6_revision_two_cannot_restore_under_revision_one_config PASSED [ 28%]
+tests/test_project_artifact_boundaries.py::test_save_data_toggle_retains_files_configurations_and_can_enable_again PASSED [ 29%]
+tests/test_project_artifact_boundaries.py::test_low_space_precheck_preserves_previous_document PASSED [ 29%]
+tests/test_project_artifact_boundaries.py::test_scalar_tag_cannot_allocate_or_expand_an_array PASSED [ 30%]
+tests/test_project_artifact_boundaries.py::test_live_budget_counts_every_timeseries_copy_and_rejects_zero_row_width PASSED [ 31%]
+tests/test_project_artifact_boundaries.py::test_precancel_does_not_stat_or_hash_any_file PASSED [ 31%]
+tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[fifo] PASSED [ 32%]
+tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[reparse] PASSED [ 32%]
+tests/test_project_artifact_boundaries.py::test_configuration_only_missing_primary_stays_unavailable PASSED [ 33%]
+tests/test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[corrupt] PASSED [ 33%]
+tests/test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[parser_revision] PASSED [ 34%]
+tests/test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[changed_log] PASSED [ 35%]
+tests/test_project_artifact_boundaries.py::test_manual_cache_cleanup_preserves_active_results_and_unknown_files PASSED [ 35%]
+tests/test_project_artifact_boundaries.py::test_background_save_captures_option_and_keeps_gui_responsive PASSED [ 36%]
+tests/test_project_artifact_boundaries.py::test_unsaved_close_save_waits_for_background_transaction PASSED [ 36%]
+tests/test_project_artifacts.py::test_four_completed_algorithms_and_two_distinct_runs_roundtrip PASSED [ 37%]
+tests/test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[cancel] PASSED [ 37%]
+tests/test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[disk_full] PASSED [ 38%]
+tests/test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[array_corrupt] PASSED [ 38%]
+tests/test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[manifest_corrupt] PASSED [ 39%]
+tests/test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[path_escape] PASSED [ 40%]
+tests/test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[log] PASSED [ 40%]
+tests/test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[decoder] PASSED [ 41%]
+tests/test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[engine] PASSED [ 41%]
+tests/test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[parameters] PASSED [ 42%]
+tests/test_project_artifacts.py::test_object_arrays_and_hostile_npy_shape_are_rejected_before_allocation PASSED [ 42%]
+tests/test_project_artifacts.py::test_gui_reopen_restores_every_run_and_two_sources_without_replay PASSED [ 43%]
+tests/test_project_artifacts.py::test_valid_full_parse_cache_never_calls_parser_and_preserves_explorer PASSED [ 44%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[clean_close] PASSED [ 44%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_close_option] PASSED [ 45%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[cancel_after_commit] PASSED [ 45%]
+tests/test_project_save_lifecycle.py::test_save_lifecycle_respects_request_cancel_and_commit[snapshot_removed] PASSED [ 46%]
+tests/test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[False] PASSED [ 46%]
+tests/test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[True] PASSED [ 47%]
+tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False] PASSED [ 48%]
+tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False] ERROR [ 48%]
+tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True] PASSED [ 48%]
+tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True] ERROR [ 48%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] PASSED [ 49%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] ERROR [ 49%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] PASSED [ 49%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] ERROR [ 49%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] PASSED [ 50%]
+tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] ERROR [ 50%]
+tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel] PASSED [ 50%]
+tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel] ERROR [ 50%]
+tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close] FAILED [ 51%]
+tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close] ERROR [ 51%]
+tests/test_project_stage_progress_gui.py::test_failed_open_never_reports_complete PASSED [ 51%]
+tests/test_project_stage_progress_gui.py::test_failed_open_never_reports_complete ERROR [ 51%]
+tests/test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction PASSED [ 52%]
+tests/test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction ERROR [ 52%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close] PASSED [ 53%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option] PASSED [ 53%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit] PASSED [ 54%]
+tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed] PASSED [ 54%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish] PASSED [ 55%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish] ERROR [ 55%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] PASSED [ 55%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] ERROR [ 55%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close] FAILED [ 56%]
+tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close] ERROR [ 56%]
+tests/test_replay_lifecycle_boundaries.py::test_store_clear_releases_arrays_when_no_other_owners PASSED [ 57%]
+tests/test_replay_lifecycle_boundaries.py::test_successive_completed_runs_are_retained_without_copying_arrays PASSED [ 57%]
+tests/test_replay_lifecycle_boundaries.py::test_switching_dataset_releases_previous_replay_page_result PASSED [ 58%]
+tests/test_replay_lifecycle_boundaries.py::test_same_dataset_refresh_preserves_completed_history_and_last_result PASSED [ 58%]
+tests/test_replay_lifecycle_boundaries.py::test_task_result_publication_requires_current_uncancelled_worker[active] PASSED [ 59%]
+tests/test_replay_lifecycle_boundaries.py::test_task_result_publication_requires_current_uncancelled_worker[cancelled] PASSED [ 59%]
+tests/test_replay_lifecycle_boundaries.py::test_task_result_publication_requires_current_uncancelled_worker[superseded] PASSED [ 60%]
+tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[False] PASSED [ 61%]
+tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[True] FAILED [ 61%]
+tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[cancel] PASSED [ 62%]
+tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[accepted_close] FAILED [ 62%]
+tests/test_run_deletion.py::test_removed_highest_index_is_never_reused_and_undo_is_exact PASSED [ 63%]
+tests/test_run_deletion.py::test_delete_save_reopen_recover_and_reserved_index[True] PASSED [ 63%]
+tests/test_run_deletion.py::test_delete_save_reopen_recover_and_reserved_index[False] PASSED [ 64%]
+tests/test_run_deletion.py::test_failed_save_keeps_committed_references_and_window_undo[cancel] PASSED [ 64%]
+tests/test_run_deletion.py::test_failed_save_keeps_committed_references_and_window_undo[disk_full] PASSED [ 65%]
+tests/test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[True] PASSED [ 66%]
+tests/test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[False] PASSED [ 66%]
+tests/test_run_deletion.py::test_missing_recovery_candidate_never_substitutes_another_run PASSED [ 67%]
+tests/test_run_deletion.py::test_old_v3_configuration_only_run_indices_are_reserved PASSED [ 67%]
+tests/test_run_deletion.py::test_gui_cancel_delete_primary_secondary_busy_and_undo PASSED [ 68%]
+tests/test_run_deletion.py::test_gui_saved_recovery_runs_off_gui_thread_and_reopen_retains_missing_primary PASSED [ 68%]
+tests/test_run_deletion.py::test_hostile_recovery_history_is_rejected[traversal] PASSED [ 69%]
+tests/test_run_deletion.py::test_hostile_recovery_history_is_rejected[identity] PASSED [ 70%]
+tests/test_run_deletion.py::test_hostile_recovery_history_is_rejected[deleted_configuration] PASSED [ 70%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected] PASSED [ 71%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed] PASSED [ 71%]
+tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled] PASSED [ 72%]
+tests/test_task_cancellation_20261005.py::test_cancelled_discovery_result_is_not_published PASSED [ 72%]
+tests/test_task_cancellation_20261005.py::test_declining_close_does_not_cancel_active_task PASSED [ 73%]
+tests/test_task_cancellation_20261005.py::test_cancellation_updates_local_and_global_status PASSED [ 74%]
+tests/test_task_cancellation_20261005.py::test_mechanization_observes_cancellation_between_intervals PASSED [ 74%]
+tests/test_task_publication_thread_affinity.py::test_real_qthreadpool_result_publication_runs_on_gui_thread PASSED [ 75%]
+tests/test_task_publication_thread_affinity.py::test_completed_worker_releases_its_payload_after_gc PASSED [ 75%]
+tests/test_worker_retirement.py::test_finished_does_not_retire_or_allow_close_until_actual_return PASSED [ 76%]
+tests/test_worker_retirement.py::test_finished_does_not_retire_or_allow_close_until_actual_return ERROR [ 76%]
+tests/test_worker_retirement.py::test_old_sender_cannot_finish_cancel_or_publish_into_active_task PASSED [ 76%]
+tests/test_worker_retirement.py::test_old_sender_cannot_finish_cancel_or_publish_into_active_task ERROR [ 76%]
+tests/test_worker_retirement.py::test_nested_result_event_loop_keeps_callbacks_until_publication_returns PASSED [ 77%]
+tests/test_worker_retirement.py::test_nested_result_event_loop_keeps_callbacks_until_publication_returns ERROR [ 77%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-zh_CN] PASSED [ 77%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-en_US] PASSED [ 78%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-zh_CN] PASSED [ 79%]
+tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-en_US] PASSED [ 79%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-1-kf] PASSED [ 80%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-2-eskf] PASSED [ 80%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-1-kf] PASSED [ 81%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-2-eskf] PASSED [ 81%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-1-kf] PASSED [ 82%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-2-eskf] PASSED [ 83%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-1-kf] PASSED [ 83%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-2-eskf] PASSED [ 84%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-1-kf] PASSED [ 84%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-2-eskf] PASSED [ 85%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-1-kf] PASSED [ 85%]
+tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-2-eskf] PASSED [ 86%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual0] PASSED [ 87%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual1] PASSED [ 87%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual2] PASSED [ 88%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual3] PASSED [ 88%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual4] PASSED [ 89%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual5] PASSED [ 89%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual6] PASSED [ 90%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual7] PASSED [ 90%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual8] PASSED [ 91%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual9] PASSED [ 92%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual10] PASSED [ 92%]
+tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual11] PASSED [ 93%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual0] PASSED [ 93%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual1] PASSED [ 94%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual2] PASSED [ 94%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual3] PASSED [ 95%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual4] PASSED [ 96%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual5] PASSED [ 96%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual6] PASSED [ 97%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual7] PASSED [ 97%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual8] PASSED [ 98%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual9] PASSED [ 98%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual10] PASSED [ 99%]
+tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual11] PASSED [100%]
+
+=================================== ERRORS ====================================
+_ ERROR at teardown of test_background_save_stages_finish_only_after_gui_publication[False] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_background_save_stages_finish_only_after_gui_publication[True] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+------------------------------ Captured log call ------------------------------
+WARNING  root:log_open.py:493 Full dataset cache unavailable; strict parse follows: artifact_manifest_corrupt
+_ ERROR at teardown of test_cancelled_or_closed_open_never_publishes_complete[cancel] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_cancelled_or_closed_open_never_publishes_complete[close] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+________ ERROR at teardown of test_failed_open_never_reports_complete _________
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1320 Background task failed: project_read_failed:[Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\.work\\gcf-lifecycle10\\0\\test_failed_open_never_reports0\\missing.ssflp'
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\project.py", line 424, in Project_Load
+    payload = json.loads(project_path.read_text(encoding="utf-8"))
+                         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 792, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\.work\\gcf-lifecycle10\\0\\test_failed_open_never_reports0\\missing.ssflp'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 66, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 715, in <lambda>
+    worker = FunctionWorker(lambda context: self._ProjectOpen_Run(Path(path), context))
+                                            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 695, in _ProjectOpen_Run
+    project = Project_Load(Path(path))
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\project.py", line 426, in Project_Load
+    raise ValueError(f"project_read_failed:{exc}") from exc
+ValueError: project_read_failed:[Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\.work\\gcf-lifecycle10\\0\\test_failed_open_never_reports0\\missing.ssflp'
+_ ERROR at teardown of test_repeated_save_open_and_import_preserve_active_transaction _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_slow_array_save_keeps_gui_responsive_and_atomic[finish] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_slow_array_save_keeps_gui_responsive_and_atomic[close] _
+tests\test_project_stage_progress_gui.py:51: in window
+    result._Project_SetDirty(False); result.close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_finished_does_not_retire_or_allow_close_until_actual_return _
+tests\test_worker_retirement.py:22: in window
+    result._Project_SetDirty(False)
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_old_sender_cannot_finish_cancel_or_publish_into_active_task _
+tests\test_worker_retirement.py:22: in window
+    result._Project_SetDirty(False)
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+_ ERROR at teardown of test_nested_result_event_loop_keeps_callbacks_until_publication_returns _
+tests\test_worker_retirement.py:22: in window
+    result._Project_SetDirty(False)
+src\silverstar_flp\ui\main_window.py:1688: in _Project_SetDirty
+    self._ProjectHeader_Refresh()
+src\silverstar_flp\ui\main_window.py:1699: in _ProjectHeader_Refresh
+    self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+src\silverstar_flp\ui\widgets.py:73: in ProjectName_Set
+    self._Text_Refresh()
+src\silverstar_flp\ui\widgets.py:77: in _Text_Refresh
+    metrics = self.fontMetrics()
+              ^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (ProjectHeaderLabel) already deleted.
+================================== FAILURES ===================================
+________ test_cancelled_or_closed_open_never_publishes_complete[close] ________
+tests\test_project_stage_progress_gui.py:144: in test_cancelled_or_closed_open_never_publishes_complete
+    _Finished(qtbot, window, success=False)
+tests\test_project_stage_progress_gui.py:66: in _Finished
+    assert window.progress_bar.value() == 1000 if success else window.progress_bar.value() < 1000
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (PySide6.QtWidgets.QProgressBar) already deleted.
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+_________ test_slow_array_save_keeps_gui_responsive_and_atomic[close] _________
+tests\test_project_stage_progress_gui.py:234: in test_slow_array_save_keeps_gui_responsive_and_atomic
+    _Finished(qtbot, window, success=action != 'cancel')
+tests\test_project_stage_progress_gui.py:66: in _Finished
+    assert window.progress_bar.value() == 1000 if success else window.progress_bar.value() < 1000
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (PySide6.QtWidgets.QProgressBar) already deleted.
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+___ test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[True] ___
+tests\test_replay_lifecycle_boundaries.py:215: in test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker
+    window._Replay_Start(plugin.metadata.plugin_id, ReplayRequest())
+src\silverstar_flp\ui\main_window.py:1103: in _Replay_Start
+    self._Task_Start(
+src\silverstar_flp\ui\main_window.py:1232: in _Task_Start
+    if QThread.currentThread() != self.thread() or worker.signals.thread() != self.thread():
+                                  ^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+
+During handling of the above exception, another exception occurred:
+tests\test_replay_lifecycle_boundaries.py:228: in test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker
+    window.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+_ test_queued_replay_result_is_not_published_after_cancellation[accepted_close] _
+tests\test_replay_lifecycle_boundaries.py:280: in test_queued_replay_result_is_not_published_after_cancellation
+    window.status_label.text(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   RuntimeError: Internal C++ object (PySide6.QtWidgets.QLabel) already deleted.
+
+During handling of the above exception, another exception occurred:
+tests\test_replay_lifecycle_boundaries.py:290: in test_queued_replay_result_is_not_published_after_cancellation
+    window.close()
+E   RuntimeError: Internal C++ object (MainWindow) already deleted.
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\flp\lifecycle10-1.xml -
+=========================== short test summary info ===========================
+ERROR tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False]
+ERROR tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True]
+ERROR tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid]
+ERROR tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing]
+ERROR tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt]
+ERROR tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel]
+ERROR tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close]
+ERROR tests/test_project_stage_progress_gui.py::test_failed_open_never_reports_complete
+ERROR tests/test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction
+ERROR tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish]
+ERROR tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel]
+ERROR tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close]
+ERROR tests/test_worker_retirement.py::test_finished_does_not_retire_or_allow_close_until_actual_return
+ERROR tests/test_worker_retirement.py::test_old_sender_cannot_finish_cancel_or_publish_into_active_task
+ERROR tests/test_worker_retirement.py::test_nested_result_event_loop_keeps_callbacks_until_publication_returns
+FAILED tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close]
+FAILED tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close]
+FAILED tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[True]
+FAILED tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[accepted_close]
+============ 4 failed, 173 passed, 15 errors in 866.91s (0:14:26) =============

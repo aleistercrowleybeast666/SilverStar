@@ -1,0 +1,78 @@
+{
+  "query_scope": "GitHub connector issue/PR search, all states, created ascending, limit 100, 2026-11-10",
+  "repositories": {
+    "SilverStar_GSHC": {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issues": []
+        },
+        "isError": false
+      }
+    },
+    "SilverStar_FLP": {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issues": []
+        },
+        "isError": false
+      }
+    },
+    "SilverStar_FCCG": {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issues": []
+        },
+        "isError": false
+      }
+    }
+  },
+  "search_result_limitation": "Connector search returned empty; not evidence of no discussions. Reconciled against actual REST all-state enumeration and PR refs.",
+  "actual_enumeration": {
+    "SilverStar_GSHC": {
+      "issues_and_prs": 0,
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\all-issues-and-prs.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "SilverStar_FLP": {
+      "issues_and_prs": 2,
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\all-issues-and-prs.json",
+      "sha256": "b06cede552a5f96728d5373caee00bf883f3e5f87a6364b8d6f264f78d5fc395"
+    },
+    "SilverStar_FCCG": {
+      "issues_and_prs": 1,
+      "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\all-issues-and-prs.json",
+      "sha256": "1999e35cc2d3e4973dbadd1c3ad61c6c958709e6d7ff8da1a5d3f898238e9459"
+    }
+  },
+  "discussion_archives": [
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\retired\\known-pr-discussions.json",
+      "sha256": "b0a0a501e51063b88f02f3565551b15c374ad69bfe23da56974f8fc13a2326b4"
+    },
+    {
+      "path": "D:\\SilverStar_Archive\\20261110\\retired\\pr-reviews.json",
+      "sha256": "9b6a14c0ad236c65af552ccdd16215a197f5a0ae1906df9ef77484ca39c5b3af"
+    }
+  ]
+}

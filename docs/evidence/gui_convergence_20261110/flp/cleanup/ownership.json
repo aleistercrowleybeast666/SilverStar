@@ -1,0 +1,31 @@
+{
+  "owner": "FLP convergence / flp_finish continuation",
+  "purpose": "November 10 FLP regression repair, fresh tests, and Qt exception investigation",
+  "scratch_roots": [
+    "D:/python_software/SilverStar/.work/gc10flp-t1",
+    "D:/python_software/SilverStar/.work/gc10flp-t2",
+    "D:/python_software/SilverStar/.work/gc10flp-t3",
+    "D:/python_software/SilverStar/.work/gc10flp-t4",
+    "D:/python_software/SilverStar/.work/gc10flp-h",
+    "D:/python_software/SilverStar/.work/gc10flp-t5",
+    "D:/python_software/SilverStar/.work/gc10flp-t6",
+    "D:/python_software/SilverStar/.work/gc10flp-t7",
+    "D:/python_software/SilverStar/.work/gc10flp-probe",
+    "D:/python_software/SilverStar/.work/gc10flp-probe-cache",
+    "D:/python_software/SilverStar/.work/gcf-inputs1",
+    "D:/python_software/SilverStar/.work/gcf-inputs2",
+    "D:/python_software/SilverStar/.work/gcf-inputs3",
+    "D:/python_software/SilverStar/.work/gcf-joint4",
+    "D:/python_software/SilverStar/.work/gcf-full",
+    "D:/python_software/SilverStar/.work/gcf-lifecycle8",
+    "D:/python_software/SilverStar/.work/gcf-lifecycle9",
+    "D:/python_software/SilverStar/.work/gcf-lifecycle10",
+    "D:/python_software/SilverStar/.work/gcf-lifecycle11",
+    "D:/python_software/SilverStar/.work/gcf-full2"
+  ],
+  "scratch_content": "Only pytest-generated synthetic inputs, caches, outputs, and screenshots from the recorded commands; no user input was copied here.",
+  "retain_for_report": "D:/python_software/SilverStar/.work/gui-convergence-20261110/flp",
+  "original_inputs": "apps/FLP/tests source fixtures and old evidence remain immutable in their original locations.",
+  "cleanup_owner": "root agent: inspect final resolved paths and inventory hashes before any deletion",
+  "software_input_scope": "Current task inputs/projects are generated, but retain all unique trace sources, provenance, decoder/log pairs, producer receipts, and formal results before verified cleanup; not hardware inputs."
+}

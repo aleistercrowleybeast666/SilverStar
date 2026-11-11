@@ -1,0 +1,137 @@
+{
+  "task": "SCG owned generated-copy retirement; resumed 2026-11-11",
+  "scope": "16 explicit historical generated/test trees; no product changes",
+  "inventory_head": "b5f9d645313db7dbf39e0737012fe31db11353d5",
+  "report_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+  "head_note": "Context only. Original generation/build commits and exact byte identities remain in scg/receipt.json; no old generated artifact is attributed to the report HEAD.",
+  "manifest": {
+    "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\manifest-v2.json",
+    "size": 11436333,
+    "sha256": "d9624f463027bd9c943e532407dd4590797ad80d072672da83c66cf8485f5f51"
+  },
+  "original_manifest_preserved": {
+    "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\manifest.json",
+    "size": 11434972,
+    "sha256": "12e3fddd15bcd62e7fd82e550edefbb7f617cb4a61ee24802b54537a743c981e"
+  },
+  "script": {
+    "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\cleanup_scg.py",
+    "size": 17019,
+    "sha256": "e84233091eeb60cd933d998e820c7c1c4b48ee12f64f789263a097be948f1521"
+  },
+  "restore_instructions": {
+    "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\README.md",
+    "size": 1925,
+    "sha256": "4bd0cbaee4cd34349e0a006dc92119a77699f5a6e80e2666ce4d31c57509c816"
+  },
+  "archive_exit": 0,
+  "delete_exit": 0,
+  "journal_reconciled": true,
+  "all_journal_paths_absent": true,
+  "result_source": {
+    "path": "D:\\SilverStar_Archive\\20261110\\task\\scg\\cleanup-result.json",
+    "size": 3051,
+    "sha256": "6287fae1f676cd5d2f3505706fea9bc078d319fbd083c62d01d07e280c0f656e"
+  },
+  "result": {
+    "schema": "silverstar.scg-task-cleanup/1",
+    "manifest_sha256": "d9624f463027bd9c943e532407dd4590797ad80d072672da83c66cf8485f5f51",
+    "archive": {
+      "schema": "silverstar.scg-task-archive/1",
+      "manifest_sha256": "d9624f463027bd9c943e532407dd4590797ad80d072672da83c66cf8485f5f51",
+      "archive": "D:\\SilverStar_Archive\\20261110\\task\\scg\\generated-copies.zip",
+      "archive_sha256": "398eb4066b8e504fe311e19904a4de68b279cccd9b39771850557527913822ca",
+      "archive_bytes": 267900415,
+      "files": 15944,
+      "logical_bytes": 1217753052,
+      "distinct_contents_restored": 3892,
+      "distinct_restored_bytes": 614344677,
+      "restoration": "Every unique content physically reconstructed on disk, reopened and SHA/size verified; every path strictly validated by manifest.",
+      "required_builds_unchanged": true,
+      "source_deletion": false,
+      "completed_utc": "2026-11-11T11:37:42.096800+00:00",
+      "disk_before": {
+        "volume": "D:\\",
+        "utc": "2026-11-11T11:17:04.770498+00:00",
+        "total_bytes": 294972813312,
+        "free_bytes": 33900048384,
+        "used_bytes": 261072764928,
+        "qualification": "Source and archive share this volume. Concurrent archives/builds may change free bytes; interval deltas are observational and cannot be attributed solely to this cleanup."
+      },
+      "disk_after": {
+        "volume": "D:\\",
+        "utc": "2026-11-11T11:37:42.096995+00:00",
+        "total_bytes": 294972813312,
+        "free_bytes": 39065214976,
+        "used_bytes": 255907598336,
+        "qualification": "Source and archive share this volume. Concurrent archives/builds may change free bytes; interval deltas are observational and cannot be attributed solely to this cleanup."
+      }
+    },
+    "deleted_files": 13759,
+    "deleted_bytes": 1081518924,
+    "deleted_paths_journal": "D:\\SilverStar_Archive\\20261110\\task\\scg\\deleted-files.jsonl",
+    "journal_sha256": "e4ea3a8d7d9df017dc9f52ad73111576823f79fd42c8c591ca1655cc7fea6ab3",
+    "empty_directories_removed": 5524,
+    "errors": [],
+    "retained_files_sha_verified": 13786,
+    "preserved_complete_trees": [
+      "b/f4",
+      "b/capture",
+      "current-b/h7",
+      "current-b/research",
+      "final-generation"
+    ],
+    "after_files": 14114,
+    "after_bytes": 1245375174,
+    "completed_utc": "2026-11-11T11:56:19.578648+00:00",
+    "disk_before": {
+      "volume": "D:\\",
+      "utc": "2026-11-11T11:40:35.299130+00:00",
+      "total_bytes": 294972813312,
+      "free_bytes": 39426809856,
+      "used_bytes": 255546003456,
+      "qualification": "Source and archive share this volume. Concurrent archives/builds may change free bytes; interval deltas are observational and cannot be attributed solely to this cleanup."
+    },
+    "disk_after": {
+      "volume": "D:\\",
+      "utc": "2026-11-11T11:56:19.578860+00:00",
+      "total_bytes": 294972813312,
+      "free_bytes": 43731083264,
+      "used_bytes": 251241730048,
+      "qualification": "Source and archive share this volume. Concurrent archives/builds may change free bytes; interval deltas are observational and cannot be attributed solely to this cleanup."
+    }
+  },
+  "logs": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\cleanup-plan.log",
+      "size": 644,
+      "sha256": "4769e0edf83aed88813ee18f0055a16df27a2dac906ff1842a4b450579974e6d"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\cleanup-plan-final.log",
+      "size": 981,
+      "sha256": "9e0999b6570e7c88560362dfbc4a8a4600cf8d767b42edf046202b0eee8728bd"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\cleanup-revise.log",
+      "size": 366,
+      "sha256": "f88e47e8d80276bf90b3ca8e29e5689117278342cce1cb8d7739f8e2ace37185"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\cleanup-archive.log",
+      "size": 1596,
+      "sha256": "9b446f8d288ff2d2f7f6cf1023f33caa80bb26142adc58e31a02b9b6011d6054"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\cleanup-delete.log",
+      "size": 2790,
+      "sha256": "ce275eeb60de4aad392c8af7681fc7f61eb8a78ef96bae79514352c000dbb214"
+    }
+  ],
+  "limits": [
+    "Physical free-space deltas include concurrent I/O; logical bytes are reported separately.",
+    "Objects were physically restored one at a time, not as one simultaneous full-path checkout.",
+    "after_files/after_bytes are the script observation before its last log write; a new evidence helper also lives outside selected deletion scopes.",
+    "No ACL changes, symlink traversal, recursive delete, hardware action or firmware test rerun."
+  ]
+}

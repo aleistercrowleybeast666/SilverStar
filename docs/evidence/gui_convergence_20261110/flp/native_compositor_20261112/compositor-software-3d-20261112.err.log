@@ -1,0 +1,30 @@
+Error calling Python override of QOpenGLWidget::paintGL(): Traceback (most recent call last):
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+    self.paint(region=region, viewport=region)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 227, in paint
+    GL.glClearColor(*bgcolor)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\platform\baseplatform.py", line 487, in __call__
+    return self(*args, **named)
+  File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+OpenGL.error.GLError: GLError(
+	err = 1282,
+	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+	baseOperation = glClearColor,
+	cArguments = (1.0, 1.0, 1.0, 1.0)
+)
+Error calling Python override of QOpenGLWidget::paintGL(): Traceback (most recent call last):
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+    self.paint(region=region, viewport=region)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 227, in paint
+    GL.glClearColor(*bgcolor)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+OpenGL.error.GLError: GLError(
+	err = 1282,
+	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+	baseOperation = glClearColor,
+	cArguments = (1.0, 1.0, 1.0, 1.0)
+)

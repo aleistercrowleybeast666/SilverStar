@@ -1,0 +1,1035 @@
+{
+  "task": "gui-convergence-20261110, continued 2026-11-11",
+  "repositories": [
+    {
+      "repository": "SilverStar_GSHC",
+      "archive_restore": {
+        "source": "D:\\python_software\\SilverStar_GSHC",
+        "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\checkout-files.zip",
+        "archive_sha256": "d1c976a2889bc0cba00542c763e5253eac139a1d2065892d0d3a387f7b026108",
+        "archive_bytes": 807660795,
+        "manifest_sha256": "bfb12cfaf33fbf3f82922891617634632aae01557bb744d226754d6943b47ca2",
+        "readable_files": 16532,
+        "logical_bytes": 1226406516,
+        "distinct_contents_restored": 15568,
+        "retained_count": 0,
+        "restoration": "Every unique object physically restored, reread, size/SHA verified; paths in manifest.",
+        "source_deletion": false,
+        "finished": "2026-11-10T02:41:32.891000+08:00"
+      },
+      "manifest": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\checkout-files-manifest.json",
+        "size": 5456272,
+        "sha256": "bfb12cfaf33fbf3f82922891617634632aae01557bb744d226754d6943b47ca2"
+      },
+      "git_history": {
+        "head": "cbee51e1f259d56a8e9dcdb7c3b236f9b054e4fb",
+        "remote": "https://github.com/aleistercrowleybeast666/SilverStar_GSHC.git",
+        "mirror": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\history.git",
+        "bundle": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\SilverStar_GSHC.bundle",
+        "bundle_bytes": 4241962,
+        "bundle_sha256": "f416661805ff0abcc117ce69e32a8a94cde44c225108c32f9c43dfbe82bd1710",
+        "all_refs_restored": true,
+        "tree_restored": true,
+        "lfs_exit": 0,
+        "lfs_stdout": "",
+        "wiki_exit": 128,
+        "wiki_stderr": "remote: Repository not found.\nfatal: repository 'https://github.com/aleistercrowleybeast666/SilverStar_GSHC.wiki.git/' not found\n"
+      },
+      "wiki_scope": "Remote returned repository-not-found; no wiki contents acquired, not proof of historical nonexistence.",
+      "retirement_tip": {
+        "retirement_main": "f299fbc1e9b32ed09148e3cfd19a0db33be1f355",
+        "readme_sha256": "4eeab275337209b972750788b0ddc873b3e90ce0e7b959ec62f5c22300bd06aa",
+        "bundle": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\migration-tip.bundle",
+        "bundle_bytes": 4042646,
+        "bundle_sha256": "0634718b4f862b569eedb42fb424d34ff6461fcb5dc6d904cc024745befad7f2",
+        "restore_verified": true
+      },
+      "deletion": {
+        "removed_files": 16532,
+        "removed_logical_bytes": 1226406516,
+        "d_free_before": 30124802048,
+        "d_free_after": 30861258752,
+        "interval_free_delta": 736456704,
+        "physical_note": "Drive free-space interval only; concurrent archives/builds prevent exclusive attribution.",
+        "root_absent": true,
+        "finished": "2026-11-10T03:36:31.6583950+08:00",
+        "original_skipped": [],
+        "changed_or_denied": [],
+        "complete_receipt": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC\\deletion-receipt.json",
+          "size": 1322833,
+          "sha256": "ffea3828813ac05b4e7869a0897ddeced44c42d1334707bf6a45bb6d3bd07ca7"
+        }
+      }
+    },
+    {
+      "repository": "SilverStar_FLP",
+      "archive_restore": {
+        "source": "D:\\python_software\\SilverStar_FLP",
+        "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\checkout-files.zip",
+        "archive_sha256": "e64fc07d51d9d120fb60eeb326902724e539f9906f886e5caad09b8dfda3f186",
+        "archive_bytes": 1046698589,
+        "manifest_sha256": "e1bfbeefedd8dbad20d8827cdc587196ec890265c6cb513edb9e6f76f16965aa",
+        "readable_files": 55924,
+        "logical_bytes": 2737349713,
+        "distinct_contents_restored": 27609,
+        "retained_count": 107,
+        "restoration": "Every unique object physically restored, reread, size/SHA verified; paths in manifest.",
+        "source_deletion": false,
+        "finished": "2026-11-10T02:57:36.513494+08:00"
+      },
+      "manifest": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\checkout-files-manifest.json",
+        "size": 21515623,
+        "sha256": "e1bfbeefedd8dbad20d8827cdc587196ec890265c6cb513edb9e6f76f16965aa"
+      },
+      "git_history": {
+        "head": "d3872a9a564c11467dad9e80753bb70e15634f98",
+        "remote": "https://github.com/aleistercrowleybeast666/SilverStar_FLP.git",
+        "mirror": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\history.git",
+        "bundle": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\SilverStar_FLP.bundle",
+        "bundle_bytes": 23759674,
+        "bundle_sha256": "d867989dad184909f22ee7144239eca813d8db1ef10654df0fbbaff47044dd0e",
+        "all_refs_restored": true,
+        "tree_restored": true,
+        "lfs_exit": 0,
+        "lfs_stdout": "",
+        "wiki_exit": 128,
+        "wiki_stderr": "remote: Repository not found.\nfatal: repository 'https://github.com/aleistercrowleybeast666/SilverStar_FLP.wiki.git/' not found\n"
+      },
+      "wiki_scope": "Remote returned repository-not-found; no wiki contents acquired, not proof of historical nonexistence.",
+      "retirement_tip": {
+        "retirement_main": "f698cb055bcca269aa3995fa6e411c177583423b",
+        "readme_sha256": "798d55cbe079078853e7ddead3bc11e3f839f6262d440099e1a932d4541a0f8d",
+        "bundle": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\migration-tip.bundle",
+        "bundle_bytes": 23759655,
+        "bundle_sha256": "1952e9c4376c102f3d0bbf312effcd094517527dad4a65794a6fb4ab993b20c6",
+        "restore_verified": true
+      },
+      "deletion": {
+        "removed_files": 55924,
+        "removed_logical_bytes": 2737349713,
+        "d_free_before": 32426000384,
+        "d_free_after": 34411458560,
+        "interval_free_delta": 1985458176,
+        "physical_note": "Drive free-space interval only; concurrent archives/builds prevent exclusive attribution.",
+        "root_absent": false,
+        "finished": "2026-11-10T03:58:33.4998780+08:00",
+        "original_skipped": [
+          {
+            "path": "tests/joint_rework_20260927/full_final3/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_final3/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_final2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_final2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_final1/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_final1/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_closeout/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/full_closeout/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/final_retired_all_temp/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/final_retired_all_temp/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/final_complete_temp/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/final_complete_temp/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/final_all_0_0_5/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/final_all_0_0_5/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/approved_quality_full_temp/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/approved_quality_full_temp/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/approved_quality_final_temp/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/joint_rework_20260927/approved_quality_final_temp/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full_final2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full_final2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full_final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full_final/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full_closeout/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full_closeout/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_release_0_0_4_full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_rev2_final3/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_rev2_final3/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_final2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_final2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_final1/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_final1/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_current/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.tmp_full_current/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest_cache/touch-validation/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest_cache/touch-validation/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest_cache/nis_0916/full2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest_cache/nis_0916/full2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest_cache/nis_0916/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest_cache/nis_0916/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-work-0917/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-work-0917/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-v2-full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-v2-full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-v2-final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-v2-final/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-v2-closeout/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-v2-closeout/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-root-full-20260917/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-root-full-20260917/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-root-final-20260917/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-root-final-20260917/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-integrity-full2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-integrity-full2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-integrity-full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-integrity-full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full5/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full5/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full4/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full4/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full-final2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full-final2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full-final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full-final/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-final-0917/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-final-0917/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-closeout-0917/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.pytest-closeout-0917/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-generated/pytest-full-final3/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-generated/pytest-full-final3/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-generated/pytest-full-final2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-generated/pytest-full-final2/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-generated/pytest-full-final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-generated/pytest-full-final/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-full-pytest/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "tests/.integrity-full-pytest/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FLP\\.pytest_cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FLP\\\\.pytest_cache'"
+          },
+          {
+            "path": ".acceptance/timestamp_semantics/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/timestamp_semantics/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/ss0002_headless/full_final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/ss0002_headless/full_final/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/ss0002_headless/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/ss0002_headless/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/quality_acceptance_v2/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/quality_acceptance/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/identity_full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/identity_full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/full_verified/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/full_verified/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/full_final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/full_final/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/full1/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/focused4/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/final_focus/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/parameters25/final_focus/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/full_verified/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/full_final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/focused_final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/dialogs_gui/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/dialogs_gui/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/comparison_sampling/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/comparison_sampling/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/closeout/full/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/closeout/full/test_retirement_refuses_juncti0/repo/.codex_pytest_old/test_case/linked",
+            "reason": "reparse point retained, never followed"
+          },
+          {
+            "path": ".acceptance/cleanup_final/test_symlink_escape_and_replac0/repo/build",
+            "reason": "reparse point retained, never followed"
+          }
+        ],
+        "changed_or_denied": [],
+        "complete_receipt": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FLP\\deletion-receipt.json",
+          "size": 5656545,
+          "sha256": "adcf84a3bd86b36c40d591ac5b86d92b0f328eb17ff06e1cb9b949628d73991e"
+        }
+      }
+    },
+    {
+      "repository": "SilverStar_FCCG",
+      "archive_restore": {
+        "source": "D:\\python_software\\SilverStar_FCCG",
+        "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\checkout-files.zip",
+        "archive_sha256": "853d8e610464a0e2a969e49d252b313ae1b94d854e25c9bd85532a1bfde9d05e",
+        "archive_bytes": 2685870878,
+        "manifest_sha256": "440fa96cb1d781b2c3faf512a0924ed72f4c2cfab41f3dbad811c747809e152c",
+        "readable_files": 463684,
+        "logical_bytes": 23298183556,
+        "distinct_contents_restored": 28168,
+        "retained_count": 86,
+        "restoration": "Every unique object physically restored, reread, size/SHA verified; paths in manifest.",
+        "source_deletion": false,
+        "finished": "2026-11-10T04:26:54.888428+08:00"
+      },
+      "manifest": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\checkout-files-manifest.json",
+        "size": 193040491,
+        "sha256": "440fa96cb1d781b2c3faf512a0924ed72f4c2cfab41f3dbad811c747809e152c"
+      },
+      "git_history": {
+        "head": "f58b17e98e73fc77afb288689e496b6e6bcf5832",
+        "remote": "https://github.com/aleistercrowleybeast666/SilverStar_FCCG.git",
+        "mirror": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\history.git",
+        "bundle": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\SilverStar_FCCG.bundle",
+        "bundle_bytes": 131281937,
+        "bundle_sha256": "12847224e6faa7eb8a2dcaa65a68e2ae477c4aab4b2118f996c4394b88503457",
+        "all_refs_restored": true,
+        "tree_restored": true,
+        "lfs_exit": 0,
+        "lfs_stdout": "",
+        "wiki_exit": 128,
+        "wiki_stderr": "remote: Repository not found.\nfatal: repository 'https://github.com/aleistercrowleybeast666/SilverStar_FCCG.wiki.git/' not found\n"
+      },
+      "wiki_scope": "Remote returned repository-not-found; no wiki contents acquired, not proof of historical nonexistence.",
+      "retirement_tip": {
+        "retirement_main": "7ef764ceb082f63ad06b0959bf3061a2b6cdde66",
+        "readme_sha256": "28f539bf90fc25b3322d41197d5cf915c10078047f2bf6aa8ebabc135ca2241f",
+        "bundle": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\migration-tip.bundle",
+        "bundle_bytes": 131281487,
+        "bundle_sha256": "ccc4f278b9f44b2aff587ecdd5bf8077f09d14c9e5f37107e1a61749b6d0b342",
+        "restore_verified": true
+      },
+      "deletion": {
+        "removed_files": 463684,
+        "removed_logical_bytes": 23298183556,
+        "d_free_before": 33548816384,
+        "d_free_after": 56256417792,
+        "interval_free_delta": 22707601408,
+        "physical_note": "Drive free-space interval only; concurrent archives/builds prevent exclusive attribution.",
+        "root_absent": false,
+        "finished": "2026-11-11T20:41:09.7334617+08:00",
+        "original_skipped": [
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\ranges-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\ranges-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-replay2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-replay2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-replay",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-replay'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-log-retirement2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-log-retirement2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-log-retirement",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-log-retirement'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-golden17",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-golden17'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-full19",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-full19'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-full18",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-full18'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-full-final",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-full-final'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-full",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-full'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-frontend2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-frontend2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-frontend",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-frontend'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-fix18",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-fix18'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-final-focused",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-final-focused'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-final-fixes",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-final-fixes'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-final-contract",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-final-contract'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-failure-check",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-failure-check'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-contract",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-contract'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-cache-final",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-cache-final'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\pytest-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\pytest-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-full3",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-full3'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-full2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-full2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-full-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-full-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-focused2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-focused2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-focused1",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-focused1'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-dpi2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-dpi2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-dpi-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-dpi-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-doc-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-doc-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\gshc-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\gshc-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-new23",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-new23'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-gui25",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-gui25'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-full20",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-full20'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-full-cache20",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-full-cache20'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-focus19",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-focus19'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-focus-cache19",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-focus-cache19'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-dpi27",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-dpi27'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-dpi26",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-dpi26'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-cache27",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-cache27'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-cache26",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-cache26'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-cache25",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-cache25'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\flp-cache23",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\flp-cache23'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\fccg-doc-final2",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\fccg-doc-final2'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\fccg-doc-final",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\fccg-doc-final'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\fccg-doc-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\fccg-doc-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\failure-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\failure-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\contract-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\contract-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\cache-full19",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\cache-full19'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\cache-full18",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\cache-full18'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\cache-full17",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\cache-full17'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\cache-fix18",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\cache-fix18'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\joint\\cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\joint\\\\cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-full",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-full'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-final",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-final'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-doc-final",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-doc-final'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-cache'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-03",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-03'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-02",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-02'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\artifacts\\compliance\\pytest-01",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\artifacts\\\\compliance\\\\pytest-01'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.work-qualified-release-full-postlabel-20260825-0300",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.work-qualified-release-full-postlabel-20260825-0300'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.work-qualified-release-full-final-20260825-0237",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.work-qualified-release-full-final-20260825-0237'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest_cache\\sparse0916",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest_cache\\\\sparse0916'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-work-parameters24-focused",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-work-parameters24-focused'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-work-parameters24-docs",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-work-parameters24-docs'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-work-closeout0916",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-work-closeout0916'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-work-0917-parameters",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-work-0917-parameters'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-work",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-work'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-sparse-0916e",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-sparse-0916e'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-sparse-0916d",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-sparse-0916d'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-sparse-0916c",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-sparse-0916c'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-sparse-0916b",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-sparse-0916b'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-sparse-0916",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-sparse-0916'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16e",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16e'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16d",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16d'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16c",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16c'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16b",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16b'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16-stack",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16-stack'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16-last",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16-last'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16-frozen",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16-frozen'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16-complete",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16-complete'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-runtime16",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-runtime16'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-last-0917",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-last-0917'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-full-0917",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-full-0917'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-focus-0917",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-focus-0917'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-final-focus-0917",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-final-focus-0917'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-doc-final-0917",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-doc-final-0917'"
+          },
+          {
+            "path": "\\\\?\\D:\\python_software\\SilverStar_FCCG\\tests\\.pytest-cache",
+            "reason": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\python_software\\\\SilverStar_FCCG\\\\tests\\\\.pytest-cache'"
+          }
+        ],
+        "changed_or_denied": [],
+        "complete_receipt": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_FCCG\\deletion-receipt.json",
+          "size": 61657125,
+          "sha256": "078d78c9c66a3b24cde7f54c149f06704a30e5246e187e715a182cf1b6721a66"
+        }
+      }
+    },
+    {
+      "repository": "SilverStar_GSHC_Android",
+      "archive_restore": {
+        "source": "D:\\python_software\\SilverStar_GSHC_Android",
+        "archive": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\shell-remainder.zip",
+        "archive_sha256": "b471a998853268830598c509938cd36f2ea5aa3defc20193e963ae391779bb10",
+        "archive_bytes": 34890486,
+        "manifest_sha256": "2f96693b8fd4d30a51ca6507e311725a5921be976678b924a3e1ba86022d4513",
+        "readable_files": 18051,
+        "logical_bytes": 1923551302,
+        "external_verified_files": 16802,
+        "distinct_contents_restored": 876,
+        "retained_count": 0,
+        "source_deletion": false,
+        "finished": "2026-11-10T03:34:40.944473+08:00",
+        "restoration": "Exact external tool/key copies checked again; every remainder object physically restored and reread."
+      },
+      "manifest": {
+        "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\checkout-files-manifest.json",
+        "size": 10231470,
+        "sha256": "2f96693b8fd4d30a51ca6507e311725a5921be976678b924a3e1ba86022d4513"
+      },
+      "deletion": {
+        "removed_files": 18051,
+        "removed_logical_bytes": 1923551302,
+        "d_free_before": 30821781504,
+        "d_free_after": 32428888064,
+        "interval_free_delta": 1607106560,
+        "physical_note": "Drive free-space interval only; concurrent archives/builds prevent exclusive attribution.",
+        "root_absent": true,
+        "finished": "2026-11-10T03:46:44.3958010+08:00",
+        "original_skipped": [],
+        "changed_or_denied": [],
+        "complete_receipt": {
+          "path": "D:\\SilverStar_Archive\\20261110\\retired\\SilverStar_GSHC_Android\\deletion-receipt.json",
+          "size": 1979202,
+          "sha256": "4c7bb9268590952f4887b4c09847244d4cf5288684acf442c5a309e5478e5ae7"
+        }
+      }
+    }
+  ],
+  "remote_retirement": [
+    {
+      "repository": "SilverStar_GSHC",
+      "archived": true,
+      "visibility_unchanged": true,
+      "main": "f299fbc1e9b32ed09148e3cfd19a0db33be1f355",
+      "url": "https://github.com/aleistercrowleybeast666/SilverStar_GSHC"
+    },
+    {
+      "repository": "SilverStar_FLP",
+      "archived": true,
+      "visibility_unchanged": true,
+      "main": "f698cb055bcca269aa3995fa6e411c177583423b",
+      "url": "https://github.com/aleistercrowleybeast666/SilverStar_FLP"
+    },
+    {
+      "repository": "SilverStar_FCCG",
+      "archived": true,
+      "visibility_unchanged": true,
+      "main": "7ef764ceb082f63ad06b0959bf3061a2b6cdde66",
+      "url": "https://github.com/aleistercrowleybeast666/SilverStar_FCCG"
+    }
+  ],
+  "retirement_tip_receipt": {
+    "path": "D:\\SilverStar_Archive\\20261110\\retired\\retirement-history.json",
+    "size": 1372,
+    "sha256": "d2e51200e0a13e85e3d6678c7392dabca67af6a2e2d366261df859da396f9baa"
+  },
+  "permanent_remote_deletion": false,
+  "physical_scope": "Logical removals and each measured free-space interval are distinct. Do not add overlapping free-space intervals or claim remote history shrank."
+}

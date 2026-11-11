@@ -6,6 +6,8 @@
 
 当前开发分支的 SS-TM、寻回和解码包改造范围、验证及未完成项见[统一改造记录](docs/public/TELEMETRY_UNIFICATION_20261026.md)。该开发工作尚未完成全部验收，不改变稳定发布身份。
 
+2026-11-10～12 候选工作包括三页 SCG 工作流、Underline → TreeDiagram → SCG 实际联调、FLP 回归及仓库清理；运行方法、包身份、验证与未完成项见[本轮交付报告](docs/evidence/gui_convergence_20261110/REPORT_ZH.md)。当前候选的 FLP/GSHC 原生显示采样白屏仍阻断 GUI 验收；工作分支候选与下方稳定发布分别管理。
+
 **稳定发布：[v0.1.2 · 2026-10-12](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2)** · [下载 Windows 便携包](https://github.com/aleistercrowleybeast666/SilverStar/releases/download/v0.1.2/SilverStar_0_1_2_Windows_Portable.zip) · [示例日志](docs/public/examples/README.md) · [使用文档](docs/public/README.md) · [问题反馈](https://github.com/aleistercrowleybeast666/SilverStar/issues)
 
 ## 下载与快速体验

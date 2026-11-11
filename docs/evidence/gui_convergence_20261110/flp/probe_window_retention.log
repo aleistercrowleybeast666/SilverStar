@@ -1,0 +1,6 @@
+{"policy": "existing_close", "iteration": 0, "constructed_seconds": 4.027576099993894, "wrapper_alive": true, "widgets": 2576, "top_levels": 297, "callback_errors": 0}
+{"policy": "existing_close", "iteration": 1, "constructed_seconds": 6.509479599997576, "wrapper_alive": true, "widgets": 5152, "top_levels": 594, "callback_errors": 0}
+{"policy": "existing_close", "iteration": 2, "constructed_seconds": 9.349883300004876, "wrapper_alive": true, "widgets": 7728, "top_levels": 891, "callback_errors": 0}
+{"policy": "native_delete_on_close", "iteration": 0, "constructed_seconds": 3.2580596999978297, "wrapper_alive": false, "widgets": 0, "top_levels": 0, "callback_errors": 0}
+{"policy": "native_delete_on_close", "iteration": 1, "constructed_seconds": 3.0558380000002217, "wrapper_alive": false, "widgets": 0, "top_levels": 0, "callback_errors": 0}
+{"policy": "native_delete_on_close", "iteration": 2, "constructed_seconds": 3.0103828999999678, "wrapper_alive": false, "widgets": 0, "top_levels": 0, "callback_errors": 0}
