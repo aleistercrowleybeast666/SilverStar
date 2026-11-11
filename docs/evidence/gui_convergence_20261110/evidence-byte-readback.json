@@ -1,0 +1,907 @@
+{
+  "previous_commit": "4b9878b332d94e18978e69f17fb82cdd880b834a",
+  "problem": "Git stat cache retained normalized blobs after attributes were added; explicit scoped add --renormalize is necessary.",
+  "command": [
+    "git",
+    "add",
+    "--renormalize",
+    "--",
+    "docs/evidence/gui_convergence_20261110"
+  ],
+  "scope": "99 originally byte-indexed FLP execution/diagnostic files, unchanged original result semantics and hashes.",
+  "previous_mismatches": 58,
+  "staged_mismatches": 0,
+  "files": [
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle10-source.patch",
+      "expected_raw_sha256": "eb7a6fad601b2af40dd604225c970b427f29b92ce670897b61a54bd50e0650dc",
+      "previous_commit_sha256": "eb7a6fad601b2af40dd604225c970b427f29b92ce670897b61a54bd50e0650dc",
+      "staged_sha256": "eb7a6fad601b2af40dd604225c970b427f29b92ce670897b61a54bd50e0650dc",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle10-inputs.json",
+      "expected_raw_sha256": "62a167895539972c81d2060329de4eca0209b14e282756f1040e361673ca87fd",
+      "previous_commit_sha256": "f799acfb5b22cf6cb245817f3c83204b46bc0e61adb51e0cc01fd1af986a8842",
+      "staged_sha256": "62a167895539972c81d2060329de4eca0209b14e282756f1040e361673ca87fd",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle-registration-files.json",
+      "expected_raw_sha256": "876c8e54aae7904184d2f83705955ac5c390770ced3ddaf841477c2bb4e198bf",
+      "previous_commit_sha256": "c4662839535ecaaa0b4a9ac3f2eea3ad46748d477199f0957669538bb18cdf74",
+      "staged_sha256": "876c8e54aae7904184d2f83705955ac5c390770ced3ddaf841477c2bb4e198bf",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/run_regression.ps1",
+      "expected_raw_sha256": "54a642074e147f5dd9de5fafb20fca6046944bf7570eee4576572b409b502c36",
+      "previous_commit_sha256": "54a642074e147f5dd9de5fafb20fca6046944bf7570eee4576572b409b502c36",
+      "staged_sha256": "54a642074e147f5dd9de5fafb20fca6046944bf7570eee4576572b409b502c36",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/capture_inputs.py",
+      "expected_raw_sha256": "c3835e7b7ddeffc2555edeca0718170f4052b9c79e324bbe5cf258508ca45bd1",
+      "previous_commit_sha256": "c3835e7b7ddeffc2555edeca0718170f4052b9c79e324bbe5cf258508ca45bd1",
+      "staged_sha256": "c3835e7b7ddeffc2555edeca0718170f4052b9c79e324bbe5cf258508ca45bd1",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/summarize_full.py",
+      "expected_raw_sha256": "be0f9193e9dfce74dc6397accc012a8f73c55e66b78529dc19343f1dfa084094",
+      "previous_commit_sha256": "be0f9193e9dfce74dc6397accc012a8f73c55e66b78529dc19343f1dfa084094",
+      "staged_sha256": "be0f9193e9dfce74dc6397accc012a8f73c55e66b78529dc19343f1dfa084094",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle8-1.log",
+      "expected_raw_sha256": "a02f4b95107805653c6749a46044b3ce136d57a61b530f28346b5228be0467bc",
+      "previous_commit_sha256": "36e1084d07a50ca3267a505ad5af8071edcaf287dad9976fe4d1464cfa0401cf",
+      "staged_sha256": "a02f4b95107805653c6749a46044b3ce136d57a61b530f28346b5228be0467bc",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle8-1.jsonl.gz",
+      "expected_raw_sha256": "3271a2cc160a8aef3c651bd20fb20159fbf569ff12fabd94dea4b1344171eb30",
+      "previous_commit_sha256": "3271a2cc160a8aef3c651bd20fb20159fbf569ff12fabd94dea4b1344171eb30",
+      "staged_sha256": "3271a2cc160a8aef3c651bd20fb20159fbf569ff12fabd94dea4b1344171eb30",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle8-environment.json",
+      "expected_raw_sha256": "b4e4773e6a2ec4a932e077419dee17398c1db3b477ecf150420ef8648ee363fe",
+      "previous_commit_sha256": "7341659cb9c1013e35cc5822e6be8ba0ab5f249f2fbd19db12e02d9868c0dfff",
+      "staged_sha256": "b4e4773e6a2ec4a932e077419dee17398c1db3b477ecf150420ef8648ee363fe",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle8-receipts.json",
+      "expected_raw_sha256": "88378233edaf9e2c97a8b9b236d716f04258e2754481a8654a6af63a7a085766",
+      "previous_commit_sha256": "672bf8f139f0032da699ba14da0498ad9b4bf071dfa11092493eacc667055003",
+      "staged_sha256": "88378233edaf9e2c97a8b9b236d716f04258e2754481a8654a6af63a7a085766",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle9-1.log",
+      "expected_raw_sha256": "ac4b952eb446427a983ea62724599e0dab868acc54308bf0c1ac44f6236e184f",
+      "previous_commit_sha256": "d713b4c3450000187b8b9571177e52cbf449b42e8ff88198b14614e63e1a101e",
+      "staged_sha256": "ac4b952eb446427a983ea62724599e0dab868acc54308bf0c1ac44f6236e184f",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle9-1.jsonl.gz",
+      "expected_raw_sha256": "55bf605984181349d5abd00b1a044f8b17e1b388c2db2cf3e0594645f33dc9a9",
+      "previous_commit_sha256": "55bf605984181349d5abd00b1a044f8b17e1b388c2db2cf3e0594645f33dc9a9",
+      "staged_sha256": "55bf605984181349d5abd00b1a044f8b17e1b388c2db2cf3e0594645f33dc9a9",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle9-environment.json",
+      "expected_raw_sha256": "3f0ee7fbc99e2f9ce4e15de5aa368affb48efd0e06b0c651cc9c828d71ebc75c",
+      "previous_commit_sha256": "df9be2923740bb9b5fda0f779f30a79aad41a4784dae9b02e2b0745a710b0387",
+      "staged_sha256": "3f0ee7fbc99e2f9ce4e15de5aa368affb48efd0e06b0c651cc9c828d71ebc75c",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle9-receipts.json",
+      "expected_raw_sha256": "853d5fb87d3c4d9cf49dab0e5a40a836e8c479db0ed7ad72483a679cfeb42e2b",
+      "previous_commit_sha256": "a638e666b2e220295e29a398ef45aa123dc8ad6d79719a2efdb7829d5dd54fd5",
+      "staged_sha256": "853d5fb87d3c4d9cf49dab0e5a40a836e8c479db0ed7ad72483a679cfeb42e2b",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle10-1.log",
+      "expected_raw_sha256": "22f62bdbc3e934c07a6afa57d4863a78eebf5308d741c7d114a86b4c62f41bff",
+      "previous_commit_sha256": "e7ded99dd1b9af30ccb13de714f4344c9e0bffcaccec5cef5c8fe43fa484372a",
+      "staged_sha256": "22f62bdbc3e934c07a6afa57d4863a78eebf5308d741c7d114a86b4c62f41bff",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle10-1.jsonl.gz",
+      "expected_raw_sha256": "d20a461531e5168d3d39abb8a7022598d13649c331e6f5b7bc0f21f2f245cd06",
+      "previous_commit_sha256": "d20a461531e5168d3d39abb8a7022598d13649c331e6f5b7bc0f21f2f245cd06",
+      "staged_sha256": "d20a461531e5168d3d39abb8a7022598d13649c331e6f5b7bc0f21f2f245cd06",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle10-environment.json",
+      "expected_raw_sha256": "8f2f90ddb02afcff07b0fd42e12069f1731794c56a4b6d663678f27dab16066c",
+      "previous_commit_sha256": "554efb109d724e6236cecd948d7d3907bdf21b3d5b40c1a7592e7b62eedc19b7",
+      "staged_sha256": "8f2f90ddb02afcff07b0fd42e12069f1731794c56a4b6d663678f27dab16066c",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle10-receipts.json",
+      "expected_raw_sha256": "b1b87e11b21283a92cf32ce2ca091c2be86311eb373f3d32b44f24b6eb39fc8f",
+      "previous_commit_sha256": "0e7895613c6b2a0d44da24aef3f18687cd3215ee48a6e4c4e5e7b2c27a178606",
+      "staged_sha256": "b1b87e11b21283a92cf32ce2ca091c2be86311eb373f3d32b44f24b6eb39fc8f",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle11-1.log",
+      "expected_raw_sha256": "5b7c3ecbfafe4ead9796516b65a860415b337ffc4ac7980416b61ee69f06d18d",
+      "previous_commit_sha256": "c2bd677f58a6b76871c845b2eaa5fbafe409fceab090eeb55f64e066b71c0ad3",
+      "staged_sha256": "5b7c3ecbfafe4ead9796516b65a860415b337ffc4ac7980416b61ee69f06d18d",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle11-1.jsonl.gz",
+      "expected_raw_sha256": "41029f88d8bb07057a6f13820fd0ab6c78f17d1d770e0d46bef17b306d193566",
+      "previous_commit_sha256": "41029f88d8bb07057a6f13820fd0ab6c78f17d1d770e0d46bef17b306d193566",
+      "staged_sha256": "41029f88d8bb07057a6f13820fd0ab6c78f17d1d770e0d46bef17b306d193566",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle11-environment.json",
+      "expected_raw_sha256": "4b754a42f3a44d6f734b519424630ba5e3ba28b11d0754328167093d5d1f04b4",
+      "previous_commit_sha256": "2eedd320c54c74132486f52dbae9dd67881af3f9108d840bf9212b8330887437",
+      "staged_sha256": "4b754a42f3a44d6f734b519424630ba5e3ba28b11d0754328167093d5d1f04b4",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/lifecycle11-receipts.json",
+      "expected_raw_sha256": "cd85aceb5db2521cee695c537f1197cb22a7170056a8f67f33424565a38213bd",
+      "previous_commit_sha256": "5adc775f95ffa71853ec9ab95c988c60259c6bf5d51b2f56456d77fe1a2d2aa1",
+      "staged_sha256": "cd85aceb5db2521cee695c537f1197cb22a7170056a8f67f33424565a38213bd",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/full2-1.log",
+      "expected_raw_sha256": "19c55394bf1f22951951e96086bd4d7506e9ed748ac13aedccb297ff1fcb3c33",
+      "previous_commit_sha256": "b46195c388967ccf025e4acef15635f22961575eee8c3870e29d7b73fcbf70a1",
+      "staged_sha256": "19c55394bf1f22951951e96086bd4d7506e9ed748ac13aedccb297ff1fcb3c33",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/full2-1.jsonl.gz",
+      "expected_raw_sha256": "7b73dedb7eb72d887ef0b154c964ce032e9b54656dd8c672cafc7129e035dc15",
+      "previous_commit_sha256": "7b73dedb7eb72d887ef0b154c964ce032e9b54656dd8c672cafc7129e035dc15",
+      "staged_sha256": "7b73dedb7eb72d887ef0b154c964ce032e9b54656dd8c672cafc7129e035dc15",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/full2-environment.json",
+      "expected_raw_sha256": "d380c859f2b24bf601a88e2572f3a6fb1b1eaa0f1481f2db5eba12cb708d2f96",
+      "previous_commit_sha256": "75a1eb29e9bbf17a874f82e0d684c9dd869bbd0714b78563f1a5e3845e09b6a6",
+      "staged_sha256": "d380c859f2b24bf601a88e2572f3a6fb1b1eaa0f1481f2db5eba12cb708d2f96",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/full2-receipts.json",
+      "expected_raw_sha256": "386f11e98e1590dd3a0b75398864367250d88819ae7ad9a8b893a22764e8c0d5",
+      "previous_commit_sha256": "6161571480d7e50b2a433070019831836e0fb413c7869130613ed8bcae5788cb",
+      "staged_sha256": "386f11e98e1590dd3a0b75398864367250d88819ae7ad9a8b893a22764e8c0d5",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/full2-inputs.json",
+      "expected_raw_sha256": "55124cf194815c0cf2715b8b4e62624a21cc42082c698bd4da30c2621afe0cc2",
+      "previous_commit_sha256": "e4609139c73669b43b6129f259c907ec3378e94e3c5dac1e326e44d6eff3c46f",
+      "staged_sha256": "55124cf194815c0cf2715b8b4e62624a21cc42082c698bd4da30c2621afe0cc2",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/full2-summary.json",
+      "expected_raw_sha256": "2f3eaf110f680d843cc682aac3050b2138604c921334c8bdcd98aefadb01ed84",
+      "previous_commit_sha256": "48862db4f2e7d292409fe943cd34dc5a734f597966c87c9130f9eaa0eaba43e4",
+      "staged_sha256": "2f3eaf110f680d843cc682aac3050b2138604c921334c8bdcd98aefadb01ed84",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-default.json",
+      "expected_raw_sha256": "67c54fa16b274ad62dec09dd5809030db5fda36c7f07ea249f7c71ebee15429e",
+      "previous_commit_sha256": "55543b9d8ac63fdbec86a3fb0f1139fd18944e73350c9c0cfcfc05ca6952537e",
+      "staged_sha256": "67c54fa16b274ad62dec09dd5809030db5fda36c7f07ea249f7c71ebee15429e",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-default.log",
+      "expected_raw_sha256": "8ee5f1068dd4c2d98edd4ef09104dd5072310c93d1cc22778ed2bb96285a0eb5",
+      "previous_commit_sha256": "96e9c728b8eedd253a17b11230d677eec571b7e5a829885d433f512bd02a83a9",
+      "staged_sha256": "8ee5f1068dd4c2d98edd4ef09104dd5072310c93d1cc22778ed2bb96285a0eb5",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-default.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-no-fit.json",
+      "expected_raw_sha256": "5b24ed3975d1561da15cd6beace4a79bc049a662c452de1d84f278b13fc3e3e7",
+      "previous_commit_sha256": "311b961a874e9f7c3213de20848ca1c8eee02273430e2a057d470e0c3ea7017b",
+      "staged_sha256": "5b24ed3975d1561da15cd6beace4a79bc049a662c452de1d84f278b13fc3e3e7",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-no-fit.log",
+      "expected_raw_sha256": "7be8b52d605f2f8a34aa446edcd859809f8b95816e9cc8d656961068ee99cb37",
+      "previous_commit_sha256": "bb07231a36f2a8e7c6053ee5abf283aac9e072c8abd0d3ddd55e16a0d5925c59",
+      "staged_sha256": "7be8b52d605f2f8a34aa446edcd859809f8b95816e9cc8d656961068ee99cb37",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-no-fit.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-resume-deferred-20261112.json",
+      "expected_raw_sha256": "16fa01a383828acd584ea56005cc245b54ec5c5d8f413b37f90f6b47c2522f55",
+      "previous_commit_sha256": "fc67c0f62d5c10c3d7150564e6dbb32db118257c6f9c405d11d9713806d009d5",
+      "staged_sha256": "16fa01a383828acd584ea56005cc245b54ec5c5d8f413b37f90f6b47c2522f55",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-resume-deferred-20261112.log",
+      "expected_raw_sha256": "f7e9c88d6ebb00706112e4e08957476ba83b3f793f52655bc1d5157bc18aab5d",
+      "previous_commit_sha256": "921e2f91ec3a0f3eaab38e904485b376367ae2b75f0bedaac4159ba08179a731",
+      "staged_sha256": "f7e9c88d6ebb00706112e4e08957476ba83b3f793f52655bc1d5157bc18aab5d",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-resume-deferred-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-preshow-20261112.json",
+      "expected_raw_sha256": "057d111bcdb38114a58b7246bedffec96d8f8c8f72d8cb99e84013860ad9f158",
+      "previous_commit_sha256": "dea50a521b1ab26bc1f021734249e113f791515ad4c278c6ea623c13788d24fe",
+      "staged_sha256": "057d111bcdb38114a58b7246bedffec96d8f8c8f72d8cb99e84013860ad9f158",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-preshow-20261112.log",
+      "expected_raw_sha256": "13fcc1b08a9400c4a32be3a5bf4da750a43fcf8eeba15e9e844f710a01047369",
+      "previous_commit_sha256": "cac11e9ff3b69b14597219c86f6d548241399f99dde6be62b7c17884264fa20d",
+      "staged_sha256": "13fcc1b08a9400c4a32be3a5bf4da750a43fcf8eeba15e9e844f710a01047369",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-preshow-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-preshow-no-caption-20261112.json",
+      "expected_raw_sha256": "aaeb9eff47166aff8dda0bceeebcfa871c313e3cd6c45de2ae600b77b1626196",
+      "previous_commit_sha256": "51592906de61989be5870f5379c9dc48fae3af074573cda0f88ca0da2020b36a",
+      "staged_sha256": "aaeb9eff47166aff8dda0bceeebcfa871c313e3cd6c45de2ae600b77b1626196",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-preshow-no-caption-20261112.log",
+      "expected_raw_sha256": "2b40f52546548275073015dba44b75ccead121b3d8f95ef8df9669d7e3fd9fd6",
+      "previous_commit_sha256": "1c9d5bae48e98138ec9976c1a3e329df8813016a2f04587f610b6d0b7b08939f",
+      "staged_sha256": "2b40f52546548275073015dba44b75ccead121b3d8f95ef8df9669d7e3fd9fd6",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-preshow-no-caption-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-resize-20261112.json",
+      "expected_raw_sha256": "a28c9340b20fa5fc0397002028bf05259f5ffc409151bf8cf0e6f171a0ed1f6d",
+      "previous_commit_sha256": "27ca0691ecadad4ab3e898c9814c4d8689f8a82ccb4c14a77ea2ddc4f1a76aef",
+      "staged_sha256": "a28c9340b20fa5fc0397002028bf05259f5ffc409151bf8cf0e6f171a0ed1f6d",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-resize-20261112.log",
+      "expected_raw_sha256": "d7010c9f2dd028e7e9f3b5ea37a4a0d4a8ca380e64aeebb1ca1652496889b2b9",
+      "previous_commit_sha256": "4715952369763b787bd0bde4379e611949ad957c502bcc9995f368aa4d1f8f42",
+      "staged_sha256": "d7010c9f2dd028e7e9f3b5ea37a4a0d4a8ca380e64aeebb1ca1652496889b2b9",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-resize-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-minimum-20261112.json",
+      "expected_raw_sha256": "9af2496572adaf82f883a5c9eb115af3c4ad8cc84e6d23487282611c42e557e2",
+      "previous_commit_sha256": "8db06c6ca357eb5b2eecaff4adc63326bf18b591dd99b6f42ba15ca5b2946da8",
+      "staged_sha256": "9af2496572adaf82f883a5c9eb115af3c4ad8cc84e6d23487282611c42e557e2",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-minimum-20261112.log",
+      "expected_raw_sha256": "9fe2251dd5f22bfb793267142647d5c371d5e88f95a6f751955026a0bce2f17e",
+      "previous_commit_sha256": "9c375b4145401513f669a1f8239fddef1f66b909da862b3c5a878f11da88ef54",
+      "staged_sha256": "9fe2251dd5f22bfb793267142647d5c371d5e88f95a6f751955026a0bce2f17e",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-minimum-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-move-20261112.json",
+      "expected_raw_sha256": "6c5e4b39830c18fa286a68740ea67ec471f5a5449ad1b8f1bc1503ac189a36fa",
+      "previous_commit_sha256": "b08107614b468b41ce3b8135fc90b4cd72c60b5b8b4848ff3b58b52d2cb2100a",
+      "staged_sha256": "6c5e4b39830c18fa286a68740ea67ec471f5a5449ad1b8f1bc1503ac189a36fa",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-move-20261112.log",
+      "expected_raw_sha256": "f9c5f6baf8e6d51b4448b018e4c5f5d28e42e77ad72d2cbcfa298e27addf7d65",
+      "previous_commit_sha256": "51cb7d69e8853af6d8baec57842cf091779fb8ada76b05272d580f7068274dff",
+      "staged_sha256": "f9c5f6baf8e6d51b4448b018e4c5f5d28e42e77ad72d2cbcfa298e27addf7d65",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-part-move-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-fit-20261112.json",
+      "expected_raw_sha256": "b52286232a6e0aa784527fe418a0aa56810a23ebae4c69fd25664fc8c45729eb",
+      "previous_commit_sha256": "10dbfd244209fd6349fae58083ebd6f5d81df5f854be959f0c3661906d182f8c",
+      "staged_sha256": "b52286232a6e0aa784527fe418a0aa56810a23ebae4c69fd25664fc8c45729eb",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-fit-20261112.log",
+      "expected_raw_sha256": "a29336608eefd066ea3b1153465329af0dc718539dfc69258ea18f0c6a5ec75f",
+      "previous_commit_sha256": "d186177ceb22d387e5811cca85a263f386f33170f528cf2d9bd64885f2573d77",
+      "staged_sha256": "a29336608eefd066ea3b1153465329af0dc718539dfc69258ea18f0c6a5ec75f",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-fit-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-gl-20261112.json",
+      "expected_raw_sha256": "cdd64c3667613bb71320589f5f767876116ccf312292efdc7695291fe21c4c47",
+      "previous_commit_sha256": "027b195c69dd297eebd82bb3e1b7622d4ebe3b614ad078cd60939dbff22c206f",
+      "staged_sha256": "cdd64c3667613bb71320589f5f767876116ccf312292efdc7695291fe21c4c47",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-gl-20261112.log",
+      "expected_raw_sha256": "1bf6fd1fd828dbc3ae1959893b13db87c802183be41205e5ac5e51c34e2129ab",
+      "previous_commit_sha256": "724bc4a5fefcabd67a1388e7881520ed352b3bd70a956d9eac6fd11a395f0972",
+      "staged_sha256": "1bf6fd1fd828dbc3ae1959893b13db87c802183be41205e5ac5e51c34e2129ab",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-gl-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-share-contexts-20261112.json",
+      "expected_raw_sha256": "b6cbe1bb920507c2b8a3b59ee9e3fc70556e3869f345ffae58efae5a304cee14",
+      "previous_commit_sha256": "07bb7cecf40ac9a91e07868143ab6ff308b514cc08d81dc3d4297f2732c75aa5",
+      "staged_sha256": "b6cbe1bb920507c2b8a3b59ee9e3fc70556e3869f345ffae58efae5a304cee14",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-share-contexts-20261112.log",
+      "expected_raw_sha256": "d434f89680bf75a527011b722a6e625a07ed830792665e4a51e85a08ab62bff5",
+      "previous_commit_sha256": "0d3a5c4d99d35265d1f882f96925b09283d384c05c4e51e491c3dbe39f670b9d",
+      "staged_sha256": "d434f89680bf75a527011b722a6e625a07ed830792665e4a51e85a08ab62bff5",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-share-contexts-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-software-3d-20261112.json",
+      "expected_raw_sha256": "613eafb29b2759cd3c3af1fd64182b2d706a59df4ba1071b844648bb314f6482",
+      "previous_commit_sha256": "2e57aa76d25eacd687d5b42a8d28668419f7cac9726cea6a198e46ac7bedb2da",
+      "staged_sha256": "613eafb29b2759cd3c3af1fd64182b2d706a59df4ba1071b844648bb314f6482",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-software-3d-20261112.log",
+      "expected_raw_sha256": "6c5e9330355b02319c5953d4a728c6fdeb999ba89a11b5e977edff6775e20443",
+      "previous_commit_sha256": "da180ff0d0a1e6a8ba6d83696272e91fda8bdabe504de75a0991bbfa7ebfcdfa",
+      "staged_sha256": "6c5e9330355b02319c5953d4a728c6fdeb999ba89a11b5e977edff6775e20443",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-software-3d-20261112.err.log",
+      "expected_raw_sha256": "721784e0acecaf20ff2eb9c5d05d78a1169ad410d8cb5501e6d44d0cec51bf17",
+      "previous_commit_sha256": "cd119a7baef377e59803aba5c9aaf8e331c49978bd23abb72d97e21a0c077b62",
+      "staged_sha256": "721784e0acecaf20ff2eb9c5d05d78a1169ad410d8cb5501e6d44d0cec51bf17",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-20261112.json",
+      "expected_raw_sha256": "8a2b1334571a01c0d34b1fef2ca16c08c3b8e2ab029eaa1b083269d4279158fe",
+      "previous_commit_sha256": "6632561dcff6b3df1546589043991bf72ae168d3b7d3b4d59a76f049d99dad8a",
+      "staged_sha256": "8a2b1334571a01c0d34b1fef2ca16c08c3b8e2ab029eaa1b083269d4279158fe",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-20261112.log",
+      "expected_raw_sha256": "4cccb8a776d0593263aa4b7e545fa0a2a9e8bcd0150fde703c19a1de53218ce7",
+      "previous_commit_sha256": "fc9122b2392c87cbf4f8dc825fbb5ff3535a94730505cefcc6aff8bc846c7700",
+      "staged_sha256": "4cccb8a776d0593263aa4b7e545fa0a2a9e8bcd0150fde703c19a1de53218ce7",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-raster-20261112.json",
+      "expected_raw_sha256": "ced0e4153bc2d00b45c38c418c712c577a2ca0e50d61c9bc3cdecf23c0d4310b",
+      "previous_commit_sha256": "a90e3aa36eff9820d58b710464a984c32d42cd5edfdf04d9b3cbe7b7ad2fea87",
+      "staged_sha256": "ced0e4153bc2d00b45c38c418c712c577a2ca0e50d61c9bc3cdecf23c0d4310b",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-raster-20261112.log",
+      "expected_raw_sha256": "5392bacee5ceb39acb66b1896283890916d24b695860e154d4f3ff40ce7632ef",
+      "previous_commit_sha256": "d93cbcea453efe459303df4e34d21f2f812916519ca5045a426c130388d39c27",
+      "staged_sha256": "5392bacee5ceb39acb66b1896283890916d24b695860e154d4f3ff40ce7632ef",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-raster-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-alpha-20261112.json",
+      "expected_raw_sha256": "47dd815b42e75b1e0299a9b442a217f3026405409ae4fe74e419270ea65d3725",
+      "previous_commit_sha256": "3c8ceeca1c75cbda6cbf61b567d1895dc2be91cc97596ccef35a62765de2a83e",
+      "staged_sha256": "47dd815b42e75b1e0299a9b442a217f3026405409ae4fe74e419270ea65d3725",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-alpha-20261112.log",
+      "expected_raw_sha256": "6b2b1c201faf667c808844b941f3d716b6ff874294167b8e6a84727d80fe956c",
+      "previous_commit_sha256": "3d11b13cca2cbec8c407e17aa8b089bb124e5a94c96bebfb801ee9576739d002",
+      "staged_sha256": "6b2b1c201faf667c808844b941f3d716b6ff874294167b8e6a84727d80fe956c",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-alpha-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-single-20261112.json",
+      "expected_raw_sha256": "c6d19146b0ed8318f4324ddc78cf3cc301e92b68121ef4e120f826c599ebaa21",
+      "previous_commit_sha256": "aded19a16a3d54b05f48f818f28d567a299296725c0d5b92739473f553d3d682",
+      "staged_sha256": "c6d19146b0ed8318f4324ddc78cf3cc301e92b68121ef4e120f826c599ebaa21",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-single-20261112.log",
+      "expected_raw_sha256": "5c94530e404edc5ba95f6d51bc824de79a95e5913b60ff84debbe740581be229",
+      "previous_commit_sha256": "baabfd802a309c2a3096ab589c25833c2ad512a1b1b5ef8fc2944dc5ca922750",
+      "staged_sha256": "5c94530e404edc5ba95f6d51bc824de79a95e5913b60ff84debbe740581be229",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-single-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-nosync-20261112.json",
+      "expected_raw_sha256": "97e3e7a5dfbc91f024677f51d3f44118605c75fb0c86761c6c29b994f8b1a0f4",
+      "previous_commit_sha256": "21ebcc779e664cd66b2d1df1b71bd5450064c986491119d66b2b6988e9b56590",
+      "staged_sha256": "97e3e7a5dfbc91f024677f51d3f44118605c75fb0c86761c6c29b994f8b1a0f4",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-nosync-20261112.log",
+      "expected_raw_sha256": "24d060d50172d4d0da3db5653d3fa68e801ea357bdbc7c26964892ce8229c66e",
+      "previous_commit_sha256": "65981d1c8ac1057f42d35f099f09ec1f67355844fb92be0c5351cf890ef12337",
+      "staged_sha256": "24d060d50172d4d0da3db5653d3fa68e801ea357bdbc7c26964892ce8229c66e",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-nosync-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-own-client-20261112.json",
+      "expected_raw_sha256": "4f9ca9dd68dd3d902dd285db61460c60a336804a464a171b22db50f450414bb4",
+      "previous_commit_sha256": "8e8da89ebfca11532ae67d5eb5500b16c410b7b631fdf05d6565ecff0ef7d2bc",
+      "staged_sha256": "4f9ca9dd68dd3d902dd285db61460c60a336804a464a171b22db50f450414bb4",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-own-client-20261112.log",
+      "expected_raw_sha256": "9d6ea7a689de04887ae5e1f5fc350afaaa678a645982f01fadd97208bbefb22b",
+      "previous_commit_sha256": "2def56b97140e225f22c6aa30ae9ceedb6d443fd1d3ccb7e18b259211cd4d6a2",
+      "staged_sha256": "9d6ea7a689de04887ae5e1f5fc350afaaa678a645982f01fadd97208bbefb22b",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-own-client-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-qt611-own-client-20261112.json",
+      "expected_raw_sha256": "bb311cf900e44f029e0aeca55f10bbdaf6bbe790d3a3f58fa339ac43f131b2cc",
+      "previous_commit_sha256": "cb408aaa506534ef2312e516c237aa4976ecea1d4b95142223b102988fe35c9e",
+      "staged_sha256": "bb311cf900e44f029e0aeca55f10bbdaf6bbe790d3a3f58fa339ac43f131b2cc",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-qt611-own-client-20261112.log",
+      "expected_raw_sha256": "b73ccf065f2ada015b44f3e4581317000e1af065c57f8743f567bf9e160fa27c",
+      "previous_commit_sha256": "456d70a314b0e3dee3ac982f167ca2d5deb8884cbc4dc0d4eab7ca34a3456740",
+      "staged_sha256": "b73ccf065f2ada015b44f3e4581317000e1af065c57f8743f567bf9e160fa27c",
+      "previous_matches": false,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-qt611-own-client-20261112.err.log",
+      "expected_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_commit_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-default-initial-native-before.png",
+      "expected_raw_sha256": "0f83d3788aa2537e5a1dfc6c1e363406de204dd142789c10d393596c77032637",
+      "previous_commit_sha256": "0f83d3788aa2537e5a1dfc6c1e363406de204dd142789c10d393596c77032637",
+      "staged_sha256": "0f83d3788aa2537e5a1dfc6c1e363406de204dd142789c10d393596c77032637",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-focused-no-fit-initial-native-before.png",
+      "expected_raw_sha256": "dc2c3a25712e31b4b9e14824206ee7114e5ba90d59285cb6caa9bb7e0030c0b4",
+      "previous_commit_sha256": "dc2c3a25712e31b4b9e14824206ee7114e5ba90d59285cb6caa9bb7e0030c0b4",
+      "staged_sha256": "dc2c3a25712e31b4b9e14824206ee7114e5ba90d59285cb6caa9bb7e0030c0b4",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-fit-20261112-initial-native-before.png",
+      "expected_raw_sha256": "d9697e704ccee260847b4d9b561ad22f69b3ced008710936379a841afd4318c1",
+      "previous_commit_sha256": "d9697e704ccee260847b4d9b561ad22f69b3ced008710936379a841afd4318c1",
+      "staged_sha256": "d9697e704ccee260847b4d9b561ad22f69b3ced008710936379a841afd4318c1",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-repeat-no-gl-20261112-initial-native-before.png",
+      "expected_raw_sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "previous_commit_sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "staged_sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-resume-deferred-20261112-visible-gl-native-before.png",
+      "expected_raw_sha256": "fff9e23360418e96d99606bdae5a1740770b66647da4bb3ceb5bc0522d924a61",
+      "previous_commit_sha256": "fff9e23360418e96d99606bdae5a1740770b66647da4bb3ceb5bc0522d924a61",
+      "staged_sha256": "fff9e23360418e96d99606bdae5a1740770b66647da4bb3ceb5bc0522d924a61",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-software-3d-20261112-initial-native-before.png",
+      "expected_raw_sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "previous_commit_sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "staged_sha256": "8f23657900ad5c05c2fbced7a3d58d9985ff18705a90bb8e6dc01ea6c776300c",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-own-client-20261112-native-before.png",
+      "expected_raw_sha256": "44734a19617f21d017a5b59bd6027aeb0c7babe329a0d1d13bd6daa9bc66f5b8",
+      "previous_commit_sha256": "44734a19617f21d017a5b59bd6027aeb0c7babe329a0d1d13bd6daa9bc66f5b8",
+      "staged_sha256": "44734a19617f21d017a5b59bd6027aeb0c7babe329a0d1d13bd6daa9bc66f5b8",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-own-client-20261112-own-client-desktop-before.png",
+      "expected_raw_sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "previous_commit_sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "staged_sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-own-client-20261112-qt.png",
+      "expected_raw_sha256": "982fe5119c8b5c7e8b57453ade4113739c21d802f62d1031b8512fa9ee5eca1d",
+      "previous_commit_sha256": "982fe5119c8b5c7e8b57453ade4113739c21d802f62d1031b8512fa9ee5eca1d",
+      "staged_sha256": "982fe5119c8b5c7e8b57453ade4113739c21d802f62d1031b8512fa9ee5eca1d",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-raster-20261112-native-before.png",
+      "expected_raw_sha256": "bbd9452a450d4a7903fab1d82971518b0ea0a210f208b144907292a729c5b5ce",
+      "previous_commit_sha256": "bbd9452a450d4a7903fab1d82971518b0ea0a210f208b144907292a729c5b5ce",
+      "staged_sha256": "bbd9452a450d4a7903fab1d82971518b0ea0a210f208b144907292a729c5b5ce",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal-gl-qt611-own-client-20261112-own-client-desktop-before.png",
+      "expected_raw_sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "previous_commit_sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "staged_sha256": "cd878e824147f54e68f94606d1088477c7e85528e89fadd71c0511c469ef79c0",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/native_compositor_probe.py",
+      "expected_raw_sha256": "e02acf10b9428f85b1658ad3cd4afb5b3078ed728b32bfadb26d50330e510b09",
+      "previous_commit_sha256": "e02acf10b9428f85b1658ad3cd4afb5b3078ed728b32bfadb26d50330e510b09",
+      "staged_sha256": "e02acf10b9428f85b1658ad3cd4afb5b3078ed728b32bfadb26d50330e510b09",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/minimal_native_gl.py",
+      "expected_raw_sha256": "10f6f2c638c05c8c5b6b76f53ba672b337be51edfc26d19ff081a567425c62d1",
+      "previous_commit_sha256": "10f6f2c638c05c8c5b6b76f53ba672b337be51edfc26d19ff081a567425c62d1",
+      "staged_sha256": "10f6f2c638c05c8c5b6b76f53ba672b337be51edfc26d19ff081a567425c62d1",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    },
+    {
+      "path": "docs/evidence/gui_convergence_20261110/flp/native_compositor_20261112/compositor-paused.json",
+      "expected_raw_sha256": "93c0cd7598160a1b1f60e38735d3328ab3b9c170b609e91665bb3fe4b69a0cee",
+      "previous_commit_sha256": "93c0cd7598160a1b1f60e38735d3328ab3b9c170b609e91665bb3fe4b69a0cee",
+      "staged_sha256": "93c0cd7598160a1b1f60e38735d3328ab3b9c170b609e91665bb3fe4b69a0cee",
+      "previous_matches": true,
+      "staged_matches": true,
+      "change_is_only_CRLF_preservation": true
+    }
+  ]
+}

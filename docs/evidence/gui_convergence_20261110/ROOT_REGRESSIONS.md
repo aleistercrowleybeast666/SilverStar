@@ -65,3 +65,8 @@ $env:SILVERSTAR_GSHC_DATA_ROOT = "$PWD/.work/gui-convergence-20261110/gshc-final
 精确命令、源码HEAD和该次暂存tree见[完整命令收据](root_regressions/final-delivery-checks.json.gz)，
 [字节索引](root_regressions/final-delivery-index.json)。随后补充原始失败日志及本收据，
 最终提交的产物门禁和远端CI另行核对，不把后续文件冒称包含在这次245项检查中。
+
+对提交对象做独立字节读回时，发现Git文件状态缓存保留了加入属性前的LF blob。
+明确对本轮证据执行 `git add --renormalize` 后，99项原始散列索引的暂存blob全部一致；
+差异仅是保留真实CRLF，不修改任何旧测试结论。修复前提交及逐文件前后散列见
+[提交字节读回收据](evidence-byte-readback.json)。这不是修改产物门禁或产品代码。
