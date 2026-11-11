@@ -12,9 +12,9 @@ from threading import Event, Lock
 from typing import Callable
 from uuid import uuid4
 
-from PySide6.QtCore import QObject, QThread, Qt, Signal, QTimer, QUrl
+from PySide6.QtCore import QObject, QRect, QThread, Qt, Signal, QTimer, QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QApplication, QFileDialog, QMainWindow, QMessageBox
 
 from config import (
     APP_EN_NAME,
@@ -3440,6 +3440,33 @@ class Controller(QObject):
         self.processing_thread = None
 
 
+def Application_ConstrainInitialGeometry(
+    window: QMainWindow, available: QRect | None = None,
+) -> None:
+    """Keep the initial native frame on its screen without resetting valid geometry."""
+    if window.isMaximized() or window.isFullScreen():
+        return
+    if available is None:
+        screen = window.screen()
+        if screen is None:
+            return
+        available = screen.availableGeometry()
+    frame = window.frameGeometry()
+    if not available.isValid() or available.contains(frame):
+        return
+    border_width = max(0, frame.width() - window.width())
+    border_height = max(0, frame.height() - window.height())
+    width = max(1, available.width() - border_width)
+    height = max(1, available.height() - border_height)
+    window.setMinimumSize(min(window.minimumWidth(), width), min(window.minimumHeight(), height))
+    window.resize(min(window.width(), width), min(window.height(), height))
+    frame = window.frameGeometry()
+    window.move(
+        max(available.left(), min(frame.left(), available.right() - frame.width() + 1)),
+        max(available.top(), min(frame.top(), available.bottom() - frame.height() + 1)),
+    )
+
+
 def main() -> int:
     app = QApplication(sys.argv)
     app.setOrganizationName(APP_ORGANIZATION)
@@ -3449,6 +3476,9 @@ def main() -> int:
     window = MainWindow()
     controller = Controller(window)
     window.show()
+    Application_ConstrainInitialGeometry(window)
+    # Native frame margins can settle after show; this is startup-only.
+    QTimer.singleShot(0, window, lambda: Application_ConstrainInitialGeometry(window))
     return_code = app.exec()
     controller.shutdown()
     return return_code

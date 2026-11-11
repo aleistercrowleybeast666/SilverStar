@@ -1,0 +1,126 @@
+{
+  "source_head_before_commit": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+  "source_scope": "Three app-local startup entry changes, plus observing production-main regression tool; no configuration/science/runtime timer changes",
+  "source_identity": {
+    "apps/SCG/src/silverstar_fccg/app/application.py": {
+      "worktree_sha256": "397b63ce9ba9a54803882e6ff8fec85e3ab988a993dbe3e5aeab3e6bd3d091b8",
+      "lf_normalized_sha256": "295d97de6478ca23ad89840c384aab07b15ebddfe2771c101b1a4bbd5d66974f"
+    },
+    "apps/FLP/src/silverstar_flp/app/application.py": {
+      "worktree_sha256": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+      "lf_normalized_sha256": "5f0cc9075cd60902b689512b33834d6f7dfc9911dc22c8f6fbd00bfe0e807c2f"
+    },
+    "apps/GSHC/app.py": {
+      "worktree_sha256": "9b5b7893e1d9087450993f581bf2f42d65c61209efec51d6b17818e1f1f8a4a9",
+      "lf_normalized_sha256": "2ee1e0c61548dc501a53d2deae18562d6bb2d843f1791fd67db46a4b5e941459"
+    },
+    "tools/validation/gui_initial_frame_probe.py": {
+      "worktree_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+      "lf_normalized_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a"
+    }
+  },
+  "baseline_entry_identity": {
+    "apps\\SCG\\src\\silverstar_fccg\\app\\application.py": "d6a39fe02a925d228b6a9216a460d29fad49d80a73c3e41cbf194727bc98d687",
+    "apps\\FLP\\src\\silverstar_flp\\app\\application.py": "cc392fbb68ef2df64d01a858bd4ab421be87a74202520e14689dbef08cf91cc7",
+    "apps\\GSHC\\app.py": "4d73fef3991f300ae02ba84f633af84cc20fc793bf1c3510748f5ab29e92538e"
+  },
+  "native_results": {
+    "default_first_show": "6/6 passed",
+    "rapid_close": "3/3 passed",
+    "settings": "private INI",
+    "hardware": "No device actions. GSHC uses real Controller with injected empty inventory/ports and rejecting hardware-open boundary.",
+    "input_scope": "Empty default projects only; no user project opened"
+  },
+  "regressions": [
+    {
+      "product": "SCG",
+      "cwd": "D:\\python_software\\SilverStar\\apps\\SCG",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_gui_qa_repair.py::test_windows_first_show_has_final_page_and_style_state",
+        "tests/test_gui_qa_repair.py::test_close_waits_for_worker_and_does_not_dispatch_cancelled_result",
+        "tests/test_product_error_identity.py",
+        "-q",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg-regression"
+      ],
+      "environment": {
+        "QT_QPA_PLATFORM": "offscreen",
+        "QT_QPA_FONTDIR": "C:/Windows/Fonts"
+      },
+      "passed": 4,
+      "seconds": 21.42,
+      "exit_code": 0
+    },
+    {
+      "product": "FLP",
+      "receipt": "flp-regression-receipt.json",
+      "passed": 11,
+      "seconds": 39.9,
+      "exit_code": 0,
+      "scope": "Two complete files, original 150 second watchdog, no continuations, no Qt exception log"
+    },
+    {
+      "product": "GSHC",
+      "cwd": "D:\\python_software\\SilverStar\\apps\\GSHC",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_release_layout.py",
+        "tests/test_qt_test_lifecycle.py",
+        "-q",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc-regression"
+      ],
+      "environment": {
+        "QT_QPA_PLATFORM": "offscreen",
+        "QT_QPA_FONTDIR": "C:/Windows/Fonts",
+        "SILVERSTAR_GSHC_DATA_ROOT": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc-regression-data"
+      },
+      "passed": 8,
+      "seconds": 39.73,
+      "exit_code": 0
+    }
+  ],
+  "excluded_initial_flp_probe": {
+    "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp125\\measurement.json",
+    "sha256": "3d58d39010abdaf1c604e9328df55cf68f28adac404f03137202203437ef7402",
+    "reason": "QSettings(org, app) ignored default Ini format and wrote native registry language=zh_CN/theme=light. Original values were unknown and not guessed/restored. Excluded from private-setting acceptance; corrected probes use explicit INI factory. No user project opened."
+  },
+  "scope_limits": "Native Qt scripted measurement and real application.main path, not mouse-driven packaged EXE acceptance. Prior complete FLP suite remains at its recorded pre-fit source identity; these three focused regression batches are separate.",
+  "files": {
+    ".gitattributes": {
+      "bytes": 25,
+      "sha256": "ddbb95083a652e5dee8c14bfb292e08fc5700277844902b4fe2bde606e9f6d6a"
+    },
+    "after.json": {
+      "bytes": 24842,
+      "sha256": "3928c1b960a8cc86af635df4609c0df2d6e1549969f8f741b0696439e96694f3"
+    },
+    "before.json": {
+      "bytes": 15873,
+      "sha256": "ba886be7d63039ba24ccdcf8b171fa24f7c3c4c18e41ac30aec1c46048449d2f"
+    },
+    "commands.json": {
+      "bytes": 5505,
+      "sha256": "ad809ad7efa5adfdb867b81302953cd7d5f46ac36befc6d9876240a14baa2c5b"
+    },
+    "flp-regression-receipt.json": {
+      "bytes": 1481,
+      "sha256": "6a116aed1946ea2069b6ea35d49037a7e3a7fff5cd84b19693ac3d025db8769a"
+    },
+    "flp-regression.log": {
+      "bytes": 1960,
+      "sha256": "a4949c77b02b437d05e4f9a449b1fdbd1cb4150989e85a5e125f58c362cfee82"
+    },
+    "gshc-regression.log": {
+      "bytes": 101,
+      "sha256": "8e738e349c54fa19a668b3d7e03bdbe247c101d49b69acf483e6c3d2783bbe62"
+    },
+    "scg-regression.log": {
+      "bytes": 101,
+      "sha256": "977fd69b573bbebcd5fbcd2e9eee2e63d2e6196ef7cfc7d3d1986e5ff1bb421f"
+    }
+  }
+}

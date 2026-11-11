@@ -1,0 +1,664 @@
+{
+  "scg125": {
+    "product": "SCG",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "main_window_sha256": "1f10a26ba73df555de0b7797fbcacb46090726edf8bf28e4eda79ad134905c31",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "platform": "windows",
+    "scale_factor": "1",
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg125\\settings.ini",
+    "manual_resize_move_maximize": false,
+    "user_project_opened": false,
+    "before_show_geometry": {
+      "x": 7,
+      "y": 30,
+      "width": 1460,
+      "height": 844
+    },
+    "minimum_size": [
+      900,
+      700
+    ],
+    "samples": [
+      {
+        "label": "1500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.25,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 864
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 816
+        },
+        "client_geometry": {
+          "x": 7,
+          "y": 30,
+          "width": 1460,
+          "height": 844
+        },
+        "frame_geometry": {
+          "x": 7,
+          "y": 0,
+          "width": 1460,
+          "height": 874
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 58
+        },
+        "status_bar_global": [
+          7,
+          839,
+          1466,
+          873
+        ],
+        "status_bar_contained": false
+      },
+      {
+        "label": "3500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.25,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 864
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 816
+        },
+        "client_geometry": {
+          "x": 7,
+          "y": 30,
+          "width": 1460,
+          "height": 844
+        },
+        "frame_geometry": {
+          "x": 7,
+          "y": 0,
+          "width": 1460,
+          "height": 874
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 58
+        },
+        "status_bar_global": [
+          7,
+          839,
+          1466,
+          873
+        ],
+        "status_bar_contained": false
+      }
+    ],
+    "normal_close_accepted": true
+  },
+  "scg150": {
+    "product": "SCG",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "main_window_sha256": "1f10a26ba73df555de0b7797fbcacb46090726edf8bf28e4eda79ad134905c31",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "platform": "windows",
+    "scale_factor": "1.2",
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg150\\settings.ini",
+    "manual_resize_move_maximize": false,
+    "user_project_opened": false,
+    "before_show_geometry": {
+      "x": 6,
+      "y": 25,
+      "width": 1283,
+      "height": 703
+    },
+    "minimum_size": [
+      900,
+      700
+    ],
+    "samples": [
+      {
+        "label": "1500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.5,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 680
+        },
+        "client_geometry": {
+          "x": 6,
+          "y": 25,
+          "width": 1283,
+          "height": 703
+        },
+        "frame_geometry": {
+          "x": 6,
+          "y": 0,
+          "width": 1283,
+          "height": 728
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 9,
+          "bottom": 48
+        },
+        "status_bar_global": [
+          6,
+          693,
+          1288,
+          727
+        ],
+        "status_bar_contained": false
+      },
+      {
+        "label": "3500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.5,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 680
+        },
+        "client_geometry": {
+          "x": 6,
+          "y": 25,
+          "width": 1283,
+          "height": 703
+        },
+        "frame_geometry": {
+          "x": 6,
+          "y": 0,
+          "width": 1283,
+          "height": 728
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 9,
+          "bottom": 48
+        },
+        "status_bar_global": [
+          6,
+          693,
+          1288,
+          727
+        ],
+        "status_bar_contained": false
+      }
+    ],
+    "normal_close_accepted": true
+  },
+  "flp125": {
+    "product": "FLP",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "main_window_sha256": "b94e4452a14395be4fa98aa4da30d68ecd8372fa0f8c30dea8e68006f71c3371",
+    "python": "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "platform": "windows",
+    "scale_factor": "1",
+    "private_settings": "D:/python_software/SilverStar/.work/gui-convergence-20261110/first-show-native/flp125-private/settings.ini",
+    "manual_resize_move_maximize": false,
+    "user_project_opened": false,
+    "before_show_geometry": {
+      "x": 7,
+      "y": 30,
+      "width": 1480,
+      "height": 844
+    },
+    "minimum_size": [
+      1000,
+      700
+    ],
+    "samples": [
+      {
+        "label": "1500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.25,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 864
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 816
+        },
+        "client_geometry": {
+          "x": 7,
+          "y": 30,
+          "width": 1480,
+          "height": 844
+        },
+        "frame_geometry": {
+          "x": 7,
+          "y": 0,
+          "width": 1480,
+          "height": 874
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 58
+        },
+        "status_bar_global": [
+          7,
+          839,
+          1486,
+          873
+        ],
+        "status_bar_contained": false
+      },
+      {
+        "label": "3500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.25,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 864
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 816
+        },
+        "client_geometry": {
+          "x": 7,
+          "y": 30,
+          "width": 1480,
+          "height": 844
+        },
+        "frame_geometry": {
+          "x": 7,
+          "y": 0,
+          "width": 1480,
+          "height": 874
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 58
+        },
+        "status_bar_global": [
+          7,
+          839,
+          1486,
+          873
+        ],
+        "status_bar_contained": false
+      }
+    ],
+    "normal_close_accepted": true
+  },
+  "flp150": {
+    "product": "FLP",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "main_window_sha256": "b94e4452a14395be4fa98aa4da30d68ecd8372fa0f8c30dea8e68006f71c3371",
+    "python": "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "platform": "windows",
+    "scale_factor": "1.2",
+    "private_settings": "D:/python_software/SilverStar/.work/gui-convergence-20261110/first-show-native/flp150-private/settings.ini",
+    "manual_resize_move_maximize": false,
+    "user_project_opened": false,
+    "before_show_geometry": {
+      "x": 6,
+      "y": 25,
+      "width": 1283,
+      "height": 703
+    },
+    "minimum_size": [
+      1000,
+      700
+    ],
+    "samples": [
+      {
+        "label": "1500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.5,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 680
+        },
+        "client_geometry": {
+          "x": 6,
+          "y": 25,
+          "width": 1283,
+          "height": 703
+        },
+        "frame_geometry": {
+          "x": 6,
+          "y": 0,
+          "width": 1283,
+          "height": 728
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 9,
+          "bottom": 48
+        },
+        "status_bar_global": [
+          6,
+          693,
+          1288,
+          727
+        ],
+        "status_bar_contained": false
+      },
+      {
+        "label": "3500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.5,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 680
+        },
+        "client_geometry": {
+          "x": 6,
+          "y": 25,
+          "width": 1283,
+          "height": 703
+        },
+        "frame_geometry": {
+          "x": 6,
+          "y": 0,
+          "width": 1283,
+          "height": 728
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 9,
+          "bottom": 48
+        },
+        "status_bar_global": [
+          6,
+          693,
+          1288,
+          727
+        ],
+        "status_bar_contained": false
+      }
+    ],
+    "normal_close_accepted": true
+  },
+  "gshc125": {
+    "product": "GSHC",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "main_window_sha256": "6de674c1602cfd0ac98928e94120d63fa575b31ead8f9e15ebc33a8c499c621f",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "platform": "windows",
+    "scale_factor": "1",
+    "private_settings": "D:/python_software/SilverStar/.work/gui-convergence-20261110/first-show-native/gshc125/settings.ini",
+    "manual_resize_move_maximize": false,
+    "user_project_opened": false,
+    "private_candidate": false,
+    "gshc_controller_created": false,
+    "before_show_geometry": {
+      "x": 0,
+      "y": 0,
+      "width": 1760,
+      "height": 960
+    },
+    "minimum_size": [
+      0,
+      0
+    ],
+    "samples": [
+      {
+        "label": "1500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.25,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 864
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 816
+        },
+        "client_geometry": {
+          "x": 7,
+          "y": 30,
+          "width": 1539,
+          "height": 844
+        },
+        "frame_geometry": {
+          "x": 7,
+          "y": 0,
+          "width": 1539,
+          "height": 874
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 10,
+          "bottom": 58
+        },
+        "status_bar_global": null,
+        "status_bar_contained": null
+      },
+      {
+        "label": "3500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.25,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 864
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 816
+        },
+        "client_geometry": {
+          "x": 7,
+          "y": 30,
+          "width": 1539,
+          "height": 844
+        },
+        "frame_geometry": {
+          "x": 7,
+          "y": 0,
+          "width": 1539,
+          "height": 874
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 10,
+          "bottom": 58
+        },
+        "status_bar_global": null,
+        "status_bar_contained": null
+      }
+    ],
+    "normal_close_accepted": true
+  },
+  "gshc150": {
+    "product": "GSHC",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "main_window_sha256": "6de674c1602cfd0ac98928e94120d63fa575b31ead8f9e15ebc33a8c499c621f",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "platform": "windows",
+    "scale_factor": "1.2",
+    "private_settings": "D:/python_software/SilverStar/.work/gui-convergence-20261110/first-show-native/gshc150/settings.ini",
+    "manual_resize_move_maximize": false,
+    "user_project_opened": false,
+    "private_candidate": false,
+    "gshc_controller_created": false,
+    "before_show_geometry": {
+      "x": 0,
+      "y": 0,
+      "width": 1760,
+      "height": 960
+    },
+    "minimum_size": [
+      0,
+      0
+    ],
+    "samples": [
+      {
+        "label": "1500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.5,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 680
+        },
+        "client_geometry": {
+          "x": 6,
+          "y": 25,
+          "width": 1283,
+          "height": 703
+        },
+        "frame_geometry": {
+          "x": 6,
+          "y": 0,
+          "width": 1283,
+          "height": 728
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 9,
+          "bottom": 48
+        },
+        "status_bar_global": null,
+        "status_bar_contained": null
+      },
+      {
+        "label": "3500ms",
+        "screen": "\\\\.\\DISPLAY1",
+        "device_pixel_ratio": 1.5,
+        "screen_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720
+        },
+        "available_geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 680
+        },
+        "client_geometry": {
+          "x": 6,
+          "y": 25,
+          "width": 1283,
+          "height": 703
+        },
+        "frame_geometry": {
+          "x": 6,
+          "y": 0,
+          "width": 1283,
+          "height": 728
+        },
+        "frame_contained": false,
+        "maximized": false,
+        "overflow_logical": {
+          "left": 0,
+          "top": 0,
+          "right": 9,
+          "bottom": 48
+        },
+        "status_bar_global": null,
+        "status_bar_contained": null
+      }
+    ],
+    "normal_close_accepted": true
+  }
+}

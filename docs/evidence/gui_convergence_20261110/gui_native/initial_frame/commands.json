@@ -1,0 +1,149 @@
+[
+  {
+    "case": "scg125-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\launcher_probe.py",
+      "SCG",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg125-production"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1"
+    },
+    "probe_sha256": "10e65c69bcb3c9b5aa048c47a138b6f49eb4e752a4784bc7d378dca5acf8bc35",
+    "exit_code": 0
+  },
+  {
+    "case": "scg150-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "SCG",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg150-production"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1.2"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "scg-rapid-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "SCG",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg-rapid-production",
+      "--rapid-close"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1.2"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "flp125-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "FLP",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp125-production"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "flp150-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "FLP",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp150-production"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1.2"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "flp-rapid-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "FLP",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp-rapid-production",
+      "--rapid-close"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1.2"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "gshc125-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "GSHC",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc125-production"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "gshc150-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "GSHC",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc150-production"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1.2"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  },
+  {
+    "case": "gshc-rapid-production",
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\tools\\validation\\gui_initial_frame_probe.py",
+      "GSHC",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc-rapid-production",
+      "--rapid-close"
+    ],
+    "environment": {
+      "QT_QPA_PLATFORM": "windows",
+      "QT_SCALE_FACTOR": "1.2"
+    },
+    "probe_sha256": "ed5a0084202faed9fb7bfee31bf882a7766de646ed44703e651927c21689a10a",
+    "exit_code": 0
+  }
+]

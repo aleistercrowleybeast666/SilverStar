@@ -1,0 +1,23 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: D:\python_software\SilverStar\.work\gui-convergence-20261110\first-show-native\flp-regression\c0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 11 items
+
+tests/test_main_window_disposal.py::test_repeated_accepted_close_releases_entire_native_tree PASSED [  9%]
+tests/test_main_window_disposal.py::test_unsaved_cancel_keeps_window_and_discard_destroys PASSED [ 18%]
+tests/test_main_window_disposal.py::test_busy_close_keeps_window_until_real_worker_retires PASSED [ 27%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[1-light-zh_CN] PASSED [ 36%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[1-light-en_US] PASSED [ 45%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[1-dark-zh_CN] PASSED [ 54%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[1-dark-en_US] PASSED [ 63%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[2-light-zh_CN] PASSED [ 72%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[2-light-en_US] PASSED [ 81%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[2-dark-zh_CN] PASSED [ 90%]
+tests/test_measurement_plot_layout.py::test_sigma_timing_and_measurement_plot_alignment[2-dark-en_US] PASSED [100%]
+
+- generated xml file: D:\python_software\SilverStar\.work\gui-convergence-20261110\first-show-native\flp-fit-1.xml -
+============================= 11 passed in 39.90s =============================

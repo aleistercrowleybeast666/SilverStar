@@ -1,0 +1,1089 @@
+{
+  "scg125-production": {
+    "product": "SCG",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1",
+    "rapid_close": false,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg125-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1460,
+            874
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1460,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1460,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1460,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      }
+    ],
+    "errors": [],
+    "application_source": "D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\app\\application.py",
+    "application_sha256": "397b63ce9ba9a54803882e6ff8fec85e3ab988a993dbe3e5aeab3e6bd3d091b8",
+    "platform": "windows",
+    "before_show_size": [
+      1460,
+      844
+    ],
+    "settled_first_show": {
+      "dpr": 1.25,
+      "frame": [
+        7,
+        0,
+        1460,
+        816
+      ],
+      "available": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "after_view_changes": {
+      "dpr": 1.25,
+      "frame": [
+        7,
+        0,
+        1460,
+        816
+      ],
+      "available": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "valid_geometry_preserved": true,
+    "maximized_preserved": true,
+    "normal_close_accepted": true,
+    "main_exit_code": 0
+  },
+  "scg150-production": {
+    "product": "SCG",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1.2",
+    "rapid_close": false,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg150-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            6,
+            0,
+            1283,
+            728
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      }
+    ],
+    "errors": [],
+    "application_source": "D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\app\\application.py",
+    "application_sha256": "397b63ce9ba9a54803882e6ff8fec85e3ab988a993dbe3e5aeab3e6bd3d091b8",
+    "platform": "windows",
+    "before_show_size": [
+      1283,
+      703
+    ],
+    "settled_first_show": {
+      "dpr": 1.5,
+      "frame": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "available": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "after_view_changes": {
+      "dpr": 1.5,
+      "frame": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "available": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "valid_geometry_preserved": true,
+    "maximized_preserved": true,
+    "normal_close_accepted": true,
+    "main_exit_code": 0
+  },
+  "scg-rapid-production": {
+    "product": "SCG",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1.2",
+    "rapid_close": true,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\scg-rapid-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            6,
+            0,
+            1283,
+            728
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      }
+    ],
+    "errors": [],
+    "application_source": "D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\app\\application.py",
+    "application_sha256": "397b63ce9ba9a54803882e6ff8fec85e3ab988a993dbe3e5aeab3e6bd3d091b8",
+    "platform": "windows",
+    "before_show_size": [
+      1283,
+      703
+    ],
+    "normal_close_accepted": true,
+    "valid_after_rapid_close": true,
+    "main_exit_code": 0
+  },
+  "flp125-production": {
+    "product": "FLP",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1",
+    "rapid_close": false,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp125-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1480,
+            874
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1480,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1480,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1480,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      }
+    ],
+    "errors": [],
+    "application_source": "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\app\\application.py",
+    "application_sha256": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+    "platform": "windows",
+    "before_show_size": [
+      1480,
+      844
+    ],
+    "settled_first_show": {
+      "dpr": 1.25,
+      "frame": [
+        7,
+        0,
+        1480,
+        816
+      ],
+      "available": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "after_view_changes": {
+      "dpr": 1.25,
+      "frame": [
+        7,
+        0,
+        1480,
+        816
+      ],
+      "available": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "valid_geometry_preserved": true,
+    "maximized_preserved": true,
+    "normal_close_accepted": true,
+    "main_exit_code": 0
+  },
+  "flp150-production": {
+    "product": "FLP",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1.2",
+    "rapid_close": false,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp150-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            6,
+            0,
+            1283,
+            728
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      }
+    ],
+    "errors": [],
+    "application_source": "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\app\\application.py",
+    "application_sha256": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+    "platform": "windows",
+    "before_show_size": [
+      1283,
+      703
+    ],
+    "settled_first_show": {
+      "dpr": 1.5,
+      "frame": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "available": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "after_view_changes": {
+      "dpr": 1.5,
+      "frame": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "available": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": true
+    },
+    "valid_geometry_preserved": true,
+    "maximized_preserved": true,
+    "normal_close_accepted": true,
+    "main_exit_code": 0
+  },
+  "flp-rapid-production": {
+    "product": "FLP",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1.2",
+    "rapid_close": true,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp-rapid-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            6,
+            0,
+            1283,
+            728
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": true
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": true
+        }
+      }
+    ],
+    "errors": [],
+    "application_source": "D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\app\\application.py",
+    "application_sha256": "48c47781c00fa490cb62204cd185749b2101f9742963bce2f41fa886f8ca4759",
+    "platform": "windows",
+    "before_show_size": [
+      1283,
+      703
+    ],
+    "normal_close_accepted": true,
+    "valid_after_rapid_close": false,
+    "main_exit_code": 0
+  },
+  "gshc125-production": {
+    "product": "GSHC",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1",
+    "rapid_close": false,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc125-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.25,
+          "frame": [
+            7,
+            0,
+            1539,
+            874
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": null
+        },
+        "after": {
+          "dpr": 1.25,
+          "frame": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.25,
+          "frame": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        },
+        "after": {
+          "dpr": 1.25,
+          "frame": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "available": [
+            0,
+            0,
+            1536,
+            816
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        }
+      }
+    ],
+    "errors": [],
+    "hardware_boundary": "Real Controller; empty injected host inventory/ports; serial open and SWD factory reject",
+    "application_source": "D:\\python_software\\SilverStar\\apps\\GSHC\\app.py",
+    "application_sha256": "9b5b7893e1d9087450993f581bf2f42d65c61209efec51d6b17818e1f1f8a4a9",
+    "platform": "windows",
+    "before_show_size": [
+      1760,
+      960
+    ],
+    "settled_first_show": {
+      "dpr": 1.25,
+      "frame": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "available": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": null
+    },
+    "after_view_changes": {
+      "dpr": 1.25,
+      "frame": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "available": [
+        0,
+        0,
+        1536,
+        816
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": null
+    },
+    "valid_geometry_preserved": true,
+    "maximized_preserved": true,
+    "normal_close_accepted": true,
+    "main_exit_code": 0
+  },
+  "gshc150-production": {
+    "product": "GSHC",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1.2",
+    "rapid_close": false,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc150-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            6,
+            0,
+            1283,
+            728
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": null
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        }
+      }
+    ],
+    "errors": [],
+    "hardware_boundary": "Real Controller; empty injected host inventory/ports; serial open and SWD factory reject",
+    "application_source": "D:\\python_software\\SilverStar\\apps\\GSHC\\app.py",
+    "application_sha256": "9b5b7893e1d9087450993f581bf2f42d65c61209efec51d6b17818e1f1f8a4a9",
+    "platform": "windows",
+    "before_show_size": [
+      1760,
+      960
+    ],
+    "settled_first_show": {
+      "dpr": 1.5,
+      "frame": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "available": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": null
+    },
+    "after_view_changes": {
+      "dpr": 1.5,
+      "frame": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "available": [
+        0,
+        0,
+        1280,
+        680
+      ],
+      "frame_contained": true,
+      "maximized": false,
+      "status_bar_contained": null
+    },
+    "valid_geometry_preserved": true,
+    "maximized_preserved": true,
+    "normal_close_accepted": true,
+    "main_exit_code": 0
+  },
+  "gshc-rapid-production": {
+    "product": "GSHC",
+    "source_head": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12",
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "qt": "6.10.1",
+    "scale_factor": "1.2",
+    "rapid_close": true,
+    "private_settings": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\gshc-rapid-production\\settings.ini",
+    "user_project_opened": false,
+    "initial_geometry_modified_by_probe": false,
+    "entry_fit_calls": [
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            6,
+            0,
+            1283,
+            728
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": false,
+          "maximized": false,
+          "status_bar_contained": null
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        }
+      },
+      {
+        "before": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        },
+        "after": {
+          "dpr": 1.5,
+          "frame": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "available": [
+            0,
+            0,
+            1280,
+            680
+          ],
+          "frame_contained": true,
+          "maximized": false,
+          "status_bar_contained": null
+        }
+      }
+    ],
+    "errors": [],
+    "hardware_boundary": "Real Controller; empty injected host inventory/ports; serial open and SWD factory reject",
+    "application_source": "D:\\python_software\\SilverStar\\apps\\GSHC\\app.py",
+    "application_sha256": "9b5b7893e1d9087450993f581bf2f42d65c61209efec51d6b17818e1f1f8a4a9",
+    "platform": "windows",
+    "before_show_size": [
+      1760,
+      960
+    ],
+    "normal_close_accepted": false,
+    "valid_after_rapid_close": true,
+    "main_exit_code": 0
+  }
+}

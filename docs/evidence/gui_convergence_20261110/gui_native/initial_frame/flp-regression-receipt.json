@@ -1,0 +1,41 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-u",
+      "-m",
+      "pytest",
+      "-p",
+      "flp_case_watch",
+      "-v",
+      "--tb=short",
+      "--disable-warnings",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp-fit-1.xml",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp-regression\\c0",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\first-show-native\\flp-regression\\0",
+      "tests/test_main_window_disposal.py",
+      "tests/test_measurement_plot_layout.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "source_base": "ea0f587dd3364b850e5ad07e7544d0bd934dcb12; startup-fit dirty app/application.py SHA256 48C47781C00FA490CB62204CD185749B2101F9742963BCE2F41FA886F8CA4759",
+    "elapsed": 43.76,
+    "exit": 0,
+    "case_seconds": 150,
+    "collected": 11,
+    "started": 11,
+    "finished": 11,
+    "interrupted": [],
+    "untouched": 0,
+    "phases": {
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0
+    },
+    "junit_written": true,
+    "log_sha256": "a4949c77b02b437d05e4f9a449b1fdbd1cb4150989e85a5e125f58c362cfee82",
+    "journal": "flp-fit-1.jsonl"
+  }
+]
