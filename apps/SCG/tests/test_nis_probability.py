@@ -56,7 +56,7 @@ def test_apps_share_exact_conversion_source_and_reference_vectors():
 
 
 from silverstar_fccg.project.reference import ReferenceProject_Create
-from silverstar_fccg.project.model import ProjectModel_Parse, ProjectModelError
+from silverstar_fccg.project.model import ProjectModel_Parse, ProjectModelError, PROJECT_TARGET_SCOPE_FORMAT_VERSION
 from silverstar_fccg.project.algorithm_parameters import AlgorithmParameters_Resolve
 from silverstar_fccg.ui.nis_editor import NisProbabilityEditor
 
@@ -64,25 +64,31 @@ KF = "silverstar.algorithm.estimator.kf6"
 
 
 def test_scg_untouched_numeric_and_edited_probability_roundtrip(builtin_catalog):
-    model = ReferenceProject_Create(catalog=builtin_catalog)
+    fixtures = Path(__file__).parent / 'fixtures/project_format_14_23'
+    old = json.loads((fixtures / 'v17.json').read_text(encoding='utf-8'))
     legacy = 9.210123456789
-    model.algorithm_parameters[KF]["nis_2d_soft"] = legacy
-    old = model.Dictionary_Get()
-    assert old["format_version"] < 18
-    loaded = ProjectModel_Parse(old)
-    assert loaded.algorithm_parameters[KF]["nis_2d_soft"] == legacy
+    old['algorithm_parameters'][KF]['nis_2d_soft'] = legacy
+    assert old["format_version"] == 17
+    model = ProjectModel_Parse(old)
+    assert model.algorithm_parameters[KF]["nis_2d_soft"] == legacy
+    assert ProjectModel_Parse(model.Dictionary_Get()).algorithm_parameters[KF]['nis_2d_soft'] == legacy
     primary = NisInput_Create(0.95, 2)
     model.algorithm_parameters[KF]["nis_2d_soft"] = primary
     saved = model.Dictionary_Get()
-    assert saved["format_version"] == 18
+    assert saved["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION == 24
     assert ProjectModel_Parse(saved).algorithm_parameters[KF]["nis_2d_soft"] == primary
     groups = AlgorithmParameters_Resolve(model, builtin_catalog)
     actual = next(p["value"] for g in groups if g["component"] == KF
                   for p in g["parameters"] if p["id"] == "nis_2d_soft")
     assert math.isclose(actual, 5.991464547107979, rel_tol=1e-7)
-    saved["format_version"] = 17
-    with pytest.raises(ProjectModelError):
-        ProjectModel_Parse(saved)
+    # Keep the historical version boundary independent of newer mission fields.
+    historical = json.loads((fixtures / 'v18.json').read_text(encoding='utf-8'))
+    historical['algorithm_parameters'][KF]['nis_2d_soft'] = primary
+    assert historical['format_version'] == 18
+    assert ProjectModel_Parse(historical).algorithm_parameters[KF]['nis_2d_soft'] == primary
+    historical['format_version'] = 17
+    with pytest.raises(ProjectModelError, match='NIS probability input requires project format 18'):
+        ProjectModel_Parse(historical)
 
 
 def test_scg_soft_hard_order_and_target_rounding(builtin_catalog):

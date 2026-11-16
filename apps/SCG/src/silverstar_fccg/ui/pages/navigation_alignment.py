@@ -58,6 +58,13 @@ class AlignmentConfigurationEditor(QWidget):
         self.release_vectors_button = QPushButton(translator.Text_Get("alignment.release_vectors"))
         self.release_vectors_button.clicked.connect(self._ReleaseVectors_Select)
         action_layout.addWidget(self.release_vectors_button)
+        self.defaults_button = QPushButton(translator.Text_Get('editor.defaults.alignment'))
+        self.defaults_button.setObjectName('alignmentRestoreDefaults')
+        self.defaults_button.setAutoDefault(False)
+        self.defaults_button.setDefault(False)
+        self.defaults_button.setToolTip(translator.Text_Get('editor.defaults.alignment_hint'))
+        self.defaults_button.clicked.connect(self._Defaults_Restore)
+        action_layout.addWidget(self.defaults_button)
         self.confirm_button = QPushButton(translator.Text_Get("alignment.confirm"))
         self.cancel_button = QPushButton(translator.Text_Get("alignment.cancel"))
         self.confirm_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -121,6 +128,18 @@ class AlignmentConfigurationEditor(QWidget):
         self._dirty = False
         self.Configuration_Set(self._committed, self._committed_strategy, self._sources)
 
+    def _Defaults_Restore(self) -> None:
+        defaults = AlignmentConfiguration()
+        self._constraints = list(defaults.constraints)
+        self._Vector_Rebuild()
+        with QSignalBlocker(self._authority):
+            self._authority.setChecked(defaults.external_yaw_authoritative)
+        self._azimuth.setText(str(defaults.external_known_azimuth_deg))
+        self._Strategy_Display()
+        self.release_vectors_button.hide()
+        self._dirty = True
+        self._notice.setText(self._translator.Text_Get('editor.defaults.pending'))
+
     def Issue_Show(self, message: str) -> None:
         self._notice.setText(message)
 
@@ -129,6 +148,8 @@ class AlignmentConfigurationEditor(QWidget):
         self.confirm_button.setText(translator.Text_Get("alignment.confirm"))
         self.cancel_button.setText(translator.Text_Get("alignment.cancel"))
         self.release_vectors_button.setText(translator.Text_Get("alignment.release_vectors"))
+        self.defaults_button.setText(translator.Text_Get('editor.defaults.alignment'))
+        self.defaults_button.setToolTip(translator.Text_Get('editor.defaults.alignment_hint'))
         self._authority.setText(translator.Text_Get("alignment.yaw_authoritative"))
         self._external_form.labelForField(self._source).setText(
             translator.Text_Get("alignment.external_source"))

@@ -3,6 +3,7 @@ from copy import deepcopy
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QLabel, QScrollArea, QVBoxLayout, QWidget
+from silverstar_fccg.ui.window_geometry import PropertyDialog
 
 from silverstar_fccg.project.model import ProtocolSelection
 from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
@@ -10,7 +11,7 @@ from silverstar_fccg.ui.pages.components import FlightConfigurationPage
 from silverstar_fccg.ui.pages.navigation_alignment import AlignmentConfigurationEditor
 
 
-class WorkflowPropertiesDialog(QDialog):
+class WorkflowPropertiesDialog(PropertyDialog):
     def __init__(self, translator, display, catalog, section, parent=None):
         super().__init__(parent)
         self.setProperty('collectNumericDrafts', True)

@@ -155,6 +155,8 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
                 self.editors[("shared", shared_key)] = editor
             common_layout.addLayout(form)
             reset = QPushButton(self._translator.Text_Get("algorithm_parameters.shared_reset"))
+            reset.setAutoDefault(False)
+            reset.setDefault(False)
             reset.clicked.connect(lambda: [self.sharedDefaultsRequested.emit(key) for key in shared_groups])
             common_layout.addWidget(reset)
             layout.addWidget(common)
@@ -205,6 +207,8 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
             non_shared = [p for p in owner.algorithm_parameters if not p.shared_key]
             if non_shared:
                 reset = QPushButton(self._translator.Text_Get("algorithm_parameters.reset"))
+                reset.setAutoDefault(False)
+                reset.setDefault(False)
                 reset.clicked.connect(lambda _checked=False, c=owner.component_id:
                                       QTimer.singleShot(0, self, lambda: self.defaultsRequested.emit(c)))
                 group_layout.addWidget(reset)

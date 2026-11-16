@@ -84,6 +84,10 @@ class NisProbabilityEditor(QWidget):
 
     CommittedValue_Set = setValue
 
+    def DraftValue_Reset(self, value: object) -> None:
+        self.setValue(value)
+        self.percent.DraftValue_Reset(self.percent.CommittedValue_Get())
+
     def value(self) -> float:
         actual = NisInput_Resolve(self._input, self.df)
         if isinstance(self._input, dict):

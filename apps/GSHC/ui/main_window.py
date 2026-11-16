@@ -4,6 +4,7 @@ from ui.diagnostic_labels import Text
 from ui.connection_controls import HeaderStatus_Set, ConnectionActions_Render
 
 from dataclasses import dataclass
+import html
 from pathlib import Path
 from mission_profile import MissionProfile_Read, MissionTrace_Read
 from typing import Callable
@@ -1074,6 +1075,10 @@ class ExportOptionsDialog(QDialog):
         super().__init__(parent)
         self.i18n = i18n
         self.preferences = preferences
+        defaults = ResolvedExportOptions()
+        self._committed_ranges = {
+            "page": defaults.page_duration_s, "gif": defaults.gif_source_duration_s,
+        }
         self.setMinimumWidth(520)
 
         outer = QVBoxLayout(self)
@@ -1113,6 +1118,8 @@ class ExportOptionsDialog(QDialog):
             self.range_labels[kind] = label
             self.range_combos[kind] = combo
             self.range_custom[kind] = spin
+            spin.installEventFilter(self)
+            spin.lineEdit().installEventFilter(self)
             ranges.addWidget(label, row, 0)
             ranges.addWidget(combo, row, 1)
             ranges.addWidget(spin, row, 2)
@@ -1149,16 +1156,31 @@ class ExportOptionsDialog(QDialog):
         self.lbl_required.setWordWrap(True)
         root.addWidget(self.lbl_required)
 
+        self.lbl_range_error = QLabel()
+        self.lbl_range_error.setWordWrap(True)
+        self.lbl_range_error.hide()
+        outer.addWidget(self.lbl_range_error)
+
         action_row = QHBoxLayout()
+        self.btn_restore_defaults = QPushButton()
+        self.btn_restore_defaults.setAutoDefault(False)
+        action_row.addWidget(self.btn_restore_defaults)
         action_row.addStretch(1)
         self.btn_cancel = QPushButton()
         self.btn_accept = QPushButton()
+        # Validate before Qt can fix incomplete spinbox text on focus loss.
+        self.btn_accept.setFocusPolicy(Qt.TabFocus)
+        self.btn_accept.setAutoDefault(True)
+        self.btn_accept.setDefault(True)
+        for button in (self.btn_select_all, self.btn_select_none, self.btn_cancel):
+            button.setAutoDefault(False)
         action_row.addWidget(self.btn_cancel)
         action_row.addWidget(self.btn_accept)
-        root.addLayout(action_row)
+        outer.addLayout(action_row)
 
         self.btn_select_all.clicked.connect(lambda: self._set_all_checked(True))
         self.btn_select_none.clicked.connect(lambda: self._set_all_checked(False))
+        self.btn_restore_defaults.clicked.connect(self.Export_RestoreDefaults)
         self.btn_cancel.clicked.connect(self.reject)
         self.btn_accept.clicked.connect(self.accept)
         self.retranslate_ui()
@@ -1208,6 +1230,9 @@ class ExportOptionsDialog(QDialog):
         self.btn_select_none.setText(self.i18n.tr("button.select_none"))
         self.btn_cancel.setText(self.i18n.tr("button.cancel"))
         self.btn_accept.setText(self.i18n.tr("button.export_start"))
+        self.btn_restore_defaults.setText(self.i18n.tr("button.restore_defaults"))
+        self.btn_restore_defaults.setToolTip(self.i18n.tr("export.defaults.scope"))
+        self.lbl_range_error.setText(self.i18n.tr("export.range.invalid"))
         self.lbl_suffix_note.setText(self.i18n.tr("export.suffix.note"))
         self.lbl_required.setText(self.i18n.tr("export.items.required"))
         self._update_accept_enabled()
@@ -1224,7 +1249,56 @@ class ExportOptionsDialog(QDialog):
         selected = self.preferences.export_items()
         for item, checkbox in self.item_checkboxes.items():
             checkbox.setChecked(item in selected)
+        self._Ranges_Load(self._committed_ranges)
         self._update_accept_enabled()
+
+    def Export_RestoreDefaults(self) -> None:
+        """Replace this dialog's draft; preferences change only at export commit."""
+        self.language_combo.setCurrentIndex(
+            self.language_combo.findData(self.preferences.DEFAULT_EXPORT_LANGUAGE.value))
+        self.export_theme_combo.setCurrentIndex(
+            self.export_theme_combo.findData(self.preferences.DEFAULT_EXPORT_THEME.value))
+        for item, checkbox in self.item_checkboxes.items():
+            checkbox.setChecked(item in self.preferences.DEFAULT_EXPORT_ITEMS)
+        defaults = ResolvedExportOptions()
+        self._Ranges_Load({"page": defaults.page_duration_s, "gif": defaults.gif_source_duration_s})
+        self._update_accept_enabled()
+
+    def _Ranges_Load(self, ranges: dict[str, float | None]) -> None:
+        for kind, value in ranges.items():
+            key = "full" if value is None else f"{value:g}"
+            combo = self.range_combos[kind]
+            index = combo.findData(key)
+            combo.setCurrentIndex(index if index >= 0 else combo.findData("custom"))
+            self.range_custom[kind].setValue(
+                value if value is not None else ResolvedExportOptions().page_duration_s)
+        self.lbl_range_error.hide()
+
+    def _Ranges_Validate(self) -> bool:
+        for kind, spin in self.range_custom.items():
+            if self.range_combos[kind].currentData() != "custom":
+                continue
+            if not spin.hasAcceptableInput():
+                self.lbl_range_error.show()
+                spin.setFocus()
+                spin.lineEdit().selectAll()
+                return False
+            spin.interpretText()
+        self.lbl_range_error.hide()
+        return True
+
+    def accept(self) -> None:
+        if self._Ranges_Validate() and any(box.isChecked() for box in self.item_checkboxes.values()):
+            super().accept()
+
+    def eventFilter(self, watched, event) -> bool:
+        if event.type() == QEvent.KeyPress and event.key() in (Qt.Key_Return, Qt.Key_Enter):
+            if any(watched is spin or watched is spin.lineEdit() for spin in self.range_custom.values()):
+                # QAbstractSpinBox would otherwise fix invalid text before the
+                # dialog's default button can validate the original draft.
+                self.accept()
+                return True
+        return super().eventFilter(watched, event)
 
     def _set_all_checked(self, checked: bool) -> None:
         for checkbox in self.item_checkboxes.values():
@@ -1252,6 +1326,8 @@ class ExportOptionsDialog(QDialog):
         ui_language: Language,
         theme: Theme,
     ) -> ResolvedExportOptions:
+        if not self._Ranges_Validate():
+            raise ValueError("export_range_invalid")
         export_language = ExportLanguage(str(self.language_combo.currentData()))
         items = frozenset(
             item
@@ -1259,10 +1335,7 @@ class ExportOptionsDialog(QDialog):
             if checkbox.isChecked()
         )
         theme_mode = ExportTheme(str(self.export_theme_combo.currentData()))
-        self.preferences.set_export_language(export_language)
-        self.preferences.set_export_theme(theme_mode)
-        self.preferences.set_export_items(items)
-        return ResolvedExportOptions(
+        options = ResolvedExportOptions(
             language=resolve_export_language(export_language, ui_language),
             theme=resolve_export_theme(theme_mode, theme),
             theme_mode=theme_mode,
@@ -1270,6 +1343,13 @@ class ExportOptionsDialog(QDialog):
             page_duration_s=self._Range_Value("page"),
             gif_source_duration_s=self._Range_Value("gif"),
         )
+        self.preferences.set_export_language(export_language)
+        self.preferences.set_export_theme(theme_mode)
+        self.preferences.set_export_items(items)
+        self._committed_ranges = {
+            "page": options.page_duration_s, "gif": options.gif_source_duration_s,
+        }
+        return options
 
 
 class MainWindow(QMainWindow):
@@ -1766,6 +1846,7 @@ class MainWindow(QMainWindow):
         root_layout.addWidget(self.header_identity_widget,0,0)
         root_layout.addWidget(self.header_preferences_widget,0,1,Qt.AlignRight)
         root_layout.addWidget(self.header_connection_widget,1,0,1,2)
+        root_layout.addWidget(self._MissionProfile_BuildHeader(),2,0,1,2)
         root_layout.setColumnStretch(0,1)
         for combo in (self.port_combo,self.debug_port_combo):
             combo.setMinimumWidth(72)
@@ -2137,6 +2218,57 @@ class MainWindow(QMainWindow):
         self.plot_layout.setVerticalSpacing(4)
         return box
 
+    def _MissionProfile_BuildHeader(self) -> QWidget:
+        self._declared_mission_profile = None
+        self._declared_mission_trace = None
+        self._mission_profile_error = ''
+        row = QWidget()
+        self.header_mission_widget = row
+        layout = QHBoxLayout(row)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(6)
+        self.btn_mission_profile = QPushButton()
+        self._bind_text(self.btn_mission_profile, 'mission_profile.toolbar_open')
+        self.btn_mission_profile.clicked.connect(self._MissionProfile_Open)
+        layout.addWidget(self.btn_mission_profile)
+        self.lbl_mission_profile_summary = QLabel()
+        self.lbl_mission_profile_summary.setTextFormat(Qt.PlainText)
+        self.lbl_mission_profile_summary.setMinimumWidth(0)
+        self.lbl_mission_profile_summary.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+        layout.addWidget(self.lbl_mission_profile_summary, 1)
+        self.btn_mission_profile_details = QPushButton()
+        self._bind_text(self.btn_mission_profile_details, 'mission_profile.details')
+        self.btn_mission_profile_details.clicked.connect(self._MissionProfile_ShowDetails)
+        layout.addWidget(self.btn_mission_profile_details)
+
+        self.mission_profile_dialog = QDialog(self)
+        self.mission_profile_dialog.resize(560, 300)
+        details = QVBoxLayout(self.mission_profile_dialog)
+        content = QWidget()
+        content_layout = QVBoxLayout(content)
+        self.lbl_mission_profile = QLabel()
+        self.lbl_mission_profile.setWordWrap(True)
+        self.lbl_mission_profile.setTextFormat(Qt.PlainText)
+        self.lbl_mission_profile.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        content_layout.addWidget(self.lbl_mission_profile)
+        content_layout.addStretch(1)
+        details.addWidget(TouchScroll_Wrap(content), 1)
+        self.btn_mission_trace = QPushButton()
+        self._bind_text(self.btn_mission_trace, 'mission_process.trace_open')
+        self.btn_mission_trace.setEnabled(False)
+        self.btn_mission_trace.clicked.connect(self._MissionTrace_Open)
+        details.addWidget(self.btn_mission_trace)
+        close_button = QPushButton()
+        self._bind_text(close_button, 'button.close')
+        close_button.clicked.connect(self.mission_profile_dialog.reject)
+        details.addWidget(close_button, 0, Qt.AlignRight)
+        return row
+
+    def _MissionProfile_ShowDetails(self) -> None:
+        self.mission_profile_dialog.show()
+        self.mission_profile_dialog.raise_()
+        self.mission_profile_dialog.activateWindow()
+
     def _MissionProfile_Open(self) -> None:
         selected, _filter = QFileDialog.getOpenFileName(self, self.i18n.tr('mission_profile.open'),
             str(Path.home() / 'Documents'), 'SilverStar (*.ssmission)')
@@ -2169,6 +2301,14 @@ class MainWindow(QMainWindow):
         if self._mission_profile_error:
             text += '\n' + self.i18n.tr('mission_profile.invalid', error=self._mission_profile_error)
         self.lbl_mission_profile.setText(text)
+        self.mission_profile_dialog.setWindowTitle(self.i18n.tr('mission_profile.title'))
+        summary = (self.i18n.tr('mission_profile.loaded_short', name=profile['project']['name'])
+                   if profile else self.i18n.tr('mission_profile.none_short'))
+        if self._mission_profile_error:
+            summary = self.i18n.tr('mission_profile.error_short') + ' · ' + summary
+        self.lbl_mission_profile_summary.setText(summary)
+        self.lbl_mission_profile_summary.setToolTip('<qt>' + html.escape(summary) + '</qt>')
+        self.btn_mission_profile.setToolTip(self.i18n.tr('mission_profile.open'))
         if hasattr(self, 'btn_mission_trace'):
             self.btn_mission_trace.setEnabled(bool(profile and 'process' in profile))
 
@@ -2190,26 +2330,6 @@ class MainWindow(QMainWindow):
         root = QVBoxLayout(page)
         self.recovery_panel = RecoveryPanel(page, i18n=self.i18n)
         root.addWidget(self.recovery_panel)
-        self._declared_mission_profile = None
-        self._mission_profile_error = ''
-        mission_box = QGroupBox()
-        self._bind_text(mission_box, 'mission_profile.title')
-        mission_layout = QVBoxLayout(mission_box)
-        self.lbl_mission_profile = QLabel()
-        self.lbl_mission_profile.setWordWrap(True)
-        self.lbl_mission_profile.setTextFormat(Qt.TextFormat.PlainText)
-        self.lbl_mission_profile.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        mission_layout.addWidget(self.lbl_mission_profile)
-        self.btn_mission_profile = QPushButton()
-        self._bind_text(self.btn_mission_profile, 'mission_profile.open')
-        self.btn_mission_profile.clicked.connect(self._MissionProfile_Open)
-        mission_layout.addWidget(self.btn_mission_profile)
-        self.btn_mission_trace = QPushButton()
-        self._bind_text(self.btn_mission_trace, 'mission_process.trace_open')
-        self.btn_mission_trace.setEnabled(False)
-        self.btn_mission_trace.clicked.connect(self._MissionTrace_Open)
-        mission_layout.addWidget(self.btn_mission_trace)
-        root.addWidget(mission_box)
         box = QGroupBox()
         self._bind_text(box, "group.post_process")
         layout = QVBoxLayout(box)

@@ -99,14 +99,8 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         self.root_layout.addWidget(self.link_group)
         self.device_group = QGroupBox(self)
         device_layout = QGridLayout(self.device_group)
-        self.device_buttons = {}
         for column, target in enumerate(('flight', 'ground')):
             device_layout.addWidget(self.device_summaries[target], 0, column)
-            button = QPushButton(self.device_group)
-            button.clicked.connect(lambda _checked=False, selected=target:
-                                   self.targetEditRequested.emit(selected, 'devices'))
-            device_layout.addWidget(button, 1, column)
-            self.device_buttons[target] = button
         self.root_layout.addWidget(self.device_group)
         self._target_sections = {}
         for target in ('flight', 'ground'):
@@ -357,7 +351,7 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         for target, card in self.target_cards.items():
             card.setTitle(translator.Text_Get('workspace.hardware.' + target))
             self.target_buttons[target].setText(translator.Text_Get('hardware.editor.configure'))
-            self.device_buttons[target].setText(translator.Text_Get('workspace.hardware.' + target + '.edit'))
+            self.target_buttons[target].setToolTip(translator.Text_Get('hardware.editor.configure_hint'))
         for section in self._sections.values():
             key = section.property('workspaceTitleKey')
             if key:

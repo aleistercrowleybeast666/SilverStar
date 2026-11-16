@@ -11,6 +11,7 @@ from silverstar_fccg.core.view_models import ComponentType
 from silverstar_fccg.project.retired_cdc import NativeCdcHardware_Is, NativeCdcMigration_Required
 from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
 from silverstar_fccg.ui.widgets import CollapsibleSection
+from silverstar_fccg.ui.window_geometry import PropertyDialog
 from silverstar_fccg.project.logging import LoggingProfile_AvailabilityTransitionApply
 from silverstar_fccg.project.mission_functions import FunctionsStrategies_Synchronize
 from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get, RADIO_PLUGIN
@@ -157,7 +158,7 @@ class HardwareDraftController(HardwareEditingActions, QObject):
         super()._GroundTarget_Change(field, value)
 
 
-class HardwareTransactionDialog(QDialog):
+class HardwareTransactionDialog(PropertyDialog):
     def __init__(self, translator, model, service, target, section='hardware', parent=None):
         super().__init__(parent)
         self.setProperty('collectNumericDrafts', True)

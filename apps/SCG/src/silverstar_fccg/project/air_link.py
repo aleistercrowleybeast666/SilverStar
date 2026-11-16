@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.plugins.manifest import PluginManifest, RadioContribution
-from silverstar_fccg.project.model import ProjectModel
+from silverstar_fccg.project.model import AirLinkConfiguration, ProjectModel
 from silverstar_fccg.project.radio_variants import (
     RADIO_PLUGIN, FlightRadioConfiguration_Get, RadioManifest_Resolve,
 )
@@ -20,10 +20,26 @@ def RadioLinkCompatible_Get(link, radio: RadioContribution) -> bool:
     return not RadioCandidateIssues_Get(link, radio)
 
 
+def AirLinkDefaults_Get(link, family: str):
+    """Restore one supported PHY, preserving protocol migration and owner identity."""
+    if family not in ('sx128x', 'sx127x'):
+        raise ValueError('Select a supported LoRa family before restoring its defaults')
+    values = {}
+    if family == 'sx127x':
+        from silverstar_fccg.project.sx1278 import Sx1278LinkDefaults_Get
+        values = Sx1278LinkDefaults_Get()
+    return replace(AirLinkConfiguration(), **values,
+                   protocol_profile=link.protocol_profile,
+                   flight_radio_instance=link.flight_radio_instance)
+
+
 def _AirLinkProfileIssues_Get(link) -> list[AirLinkIssue]:
     if link.radio_family == "nrf24":
         return [AirLinkIssue("RADIO_SUPPORT_REMOVED",
             "NRF24 support was removed. Select and bind the actual replacement hardware explicitly.")]
+    if link.radio_technology != 'lora' or link.phy_mode != 'lora':
+        return [AirLinkIssue('AIR_LINK_PHY_INCOMPATIBLE',
+            'Both endpoints must use LoRa; other radio technologies and modulation modes are not supported.')]
     if link.radio_family == "sx127x":
         from silverstar_fccg.project.sx1278 import Sx1278Link_Validate
         try:
@@ -109,7 +125,7 @@ def RadioCandidateIssues_Get(
 
 
 def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog, *, target_scope="flight") -> tuple[AirLinkIssue, ...]:
-    """Validate the shared link and only the explicitly requested endpoints."""
+    """Validate shared PHY against every configured peer; require requested endpoints."""
     target_scope = getattr(target_scope, "value", target_scope)
     if target_scope not in ("flight", "ground", "all"):
         raise ValueError("AIR link target scope is invalid")
@@ -117,12 +133,12 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog, *, target_sco
     issues = _AirLinkProfileIssues_Get(link)
     flight_instance = model.DeviceInstance_Get(link.flight_radio_instance)
     flight = flight_error = None
-    if target_scope in ("flight", "all"):
+    if target_scope in ("flight", "all") or flight_instance is not None:
         flight, flight_error = _Radio_Get(
             catalog, flight_instance.plugin if flight_instance else "", "Flight")
     ground = None
     ground_error = None
-    if target_scope in ("ground", "all"):
+    if target_scope in ("ground", "all") or model.ground_target.radio_plugin:
         ground, ground_error = _Radio_Get(
             catalog, model.ground_target.radio_plugin, "Ground"
         )

@@ -132,7 +132,7 @@ class AirLinkPage(ScrollableLocalizedPage):
         form.setRowVisible(self.ground_tx_power, False)
         for name, key, choices in (
             ("radio_technology", "field.air_technology",
-             (("LoRa", "lora"), ("Packet Radio / Other", "packet"))),
+             (("LoRa", "lora"),)),
             ("radio_family", "field.air_family", (("SX128x", "sx128x"),)),
             ("phy_mode", "field.air_phy", (("LoRa", "lora"),)),
             ("coding_rate", "field.air_coding_rate", (("4/5", "4/5"),)),
@@ -176,10 +176,8 @@ class AirLinkPage(ScrollableLocalizedPage):
         self._radio_technologies = {radio.technology for radio in radios}
 
     def _DeclaredChoices_Get(self, name, link):
-        if name == "radio_technology":
-            original = self._radio_choices[name]
-            known = {identity for _title, identity in original}
-            return (*original, *((identity, identity) for identity in sorted(self._radio_technologies - known)))
+        if name in {"radio_technology", "phy_mode"}:
+            return (("LoRa", "lora"),)
         if name not in {"radio_family", "phy_mode", "coding_rate"}:
             return self._radio_choices[name]
         radios = tuple(radio for radio in self._radio_contracts if radio.technology == link.radio_technology)

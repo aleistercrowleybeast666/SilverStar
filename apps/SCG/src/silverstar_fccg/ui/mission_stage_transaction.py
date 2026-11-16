@@ -15,10 +15,11 @@ from silverstar_fccg.ui.mission_process_panel import MissionStageEditor, Mission
 from silverstar_fccg.ui.pages.algorithm_parameters import NavigationConfigurationPage
 from silverstar_fccg.ui.widgets import CollapsibleSection, StandardComboBox
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
+from silverstar_fccg.ui.window_geometry import PropertyDialog
 from silverstar_fccg.project.mission_process import MissionProcess_Default, MissionProcessFirmware_Require
 
 
-class MissionStageTransactionDialog(QDialog):
+class MissionStageTransactionDialog(PropertyDialog):
     def __init__(self, translator, model, catalog, stage_id, parent=None, *, function_drafts=None,
                  stage_only=False, function_id=None, display=None):
         super().__init__(parent)
@@ -220,7 +221,22 @@ class MissionStageTransactionDialog(QDialog):
             text('capsule.apply' if function_id else 'workflow.transaction.apply'))
         buttons.button(QDialogButtonBox.StandardButton.Ok).setObjectName('primaryButton')
         buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(text('capsule.cancel'))
+        self.defaults_button = buttons.addButton(text('editor.defaults.parameters'), QDialogButtonBox.ButtonRole.ResetRole)
+        self.defaults_button.setAutoDefault(False)
+        self.defaults_button.setDefault(False)
+        self.defaults_button.setObjectName('functionRestoreDefaults')
+        self.defaults_button.setToolTip(text('editor.defaults.parameters_hint'))
+        self.defaults_button.setVisible(bool(owners))
+        self.defaults_button.clicked.connect(self._CurrentDefaults_Reset)
         buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject); root.addWidget(buttons)
+
+    def _CurrentDefaults_Reset(self):
+        owner = self.parameter_owner.currentData()
+        if not owner:
+            return
+        self._Defaults_Set(owner)
+        self._Group_Reveal(self.parameter_section)
+        self.error.setText(self._translator.Text_Get('editor.defaults.pending'))
 
     def _FunctionDialog_Open(self, identity, stage_id):
         self.next_function = identity
@@ -258,29 +274,32 @@ class MissionStageTransactionDialog(QDialog):
         # Keep every category editor on the same private shared-instance set.
         for editor in self.bindings: editor._configuration = deepcopy(value)
 
-    def _Parameter_Set(self, component, parameter, value):
+    def _Parameter_Set(self, component, parameter, value, *, discard_pending=False):
         self._draft.algorithm_parameters[component][parameter] = value
         editor = self.parameters.editors.get((component, parameter))
-        if editor is not None: editor.CommittedValue_Set(value)
+        if editor is not None:
+            setter = editor.DraftValue_Reset if discard_pending and hasattr(editor, 'DraftValue_Reset') else editor.CommittedValue_Set
+            setter(value)
 
     def _SharedParameter_Set(self, key, value):
         for owner in AlgorithmParameterOwners_Get(self._draft, self._catalog):
             for parameter in owner.algorithm_parameters:
                 if parameter.shared_key == key:
                     self._Parameter_Set(owner.component_id, parameter.parameter_id,
-                                        parameter.default if value is None else value)
+                                        parameter.default if value is None else value, discard_pending=value is None)
         editor = self.parameters.editors.get(('shared', key))
         if editor is not None:
             for owner in AlgorithmParameterOwners_Get(self._draft, self._catalog):
                 matching = next((p for p in owner.algorithm_parameters if p.shared_key == key), None)
                 if matching is not None:
-                    editor.CommittedValue_Set(self._draft.algorithm_parameters[owner.component_id][matching.parameter_id])
+                    setter = editor.DraftValue_Reset if value is None and hasattr(editor, 'DraftValue_Reset') else editor.CommittedValue_Set
+                    setter(self._draft.algorithm_parameters[owner.component_id][matching.parameter_id])
                     break
 
     def _Defaults_Set(self, component):
         for parameter in self._catalog.Component_Get(component).algorithm_parameters:
             if not parameter.shared_key and parameter.lifecycle == 'active':
-                self._Parameter_Set(component, parameter.parameter_id, parameter.default)
+                self._Parameter_Set(component, parameter.parameter_id, parameter.default, discard_pending=True)
 
     def _ValidationError_Show(self, error):
         detail = str(error)

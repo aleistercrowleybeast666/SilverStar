@@ -8,11 +8,16 @@ def Sx1278Module_Validate(module, power):
         raise ValueError("Experimental E32-400M20S requires its explicit module and +17 dBm chip setting")
 
 
-def Sx1278Link_Validate(link):
-    expected = {"radio_family": "sx127x", "radio_technology": "lora", "phy_mode": "lora",
+def Sx1278LinkDefaults_Get():
+    """The single supported experimental PHY, shared by validation and editors."""
+    return {"radio_family": "sx127x", "radio_technology": "lora", "phy_mode": "lora",
                 "frequency_hz": 433_000_000, "bandwidth_hz": 125_000, "spreading_factor": 7,
                 "coding_rate": "4/5", "preamble_symbols": 16, "header_mode": "explicit",
                 "crc_enabled": True, "iq_mode": "normal", "packet_mtu": 61}
+
+
+def Sx1278Link_Validate(link):
+    expected = Sx1278LinkDefaults_Get()
     if any(type(getattr(link, field)) is not type(value) or getattr(link, field) != value
            for field, value in expected.items()):
         raise ValueError("SX1278 experimental PHY is 433 MHz/SF7/BW125/4-5/preamble16/explicit/CRC/normal-IQ/MTU61")

@@ -15,6 +15,7 @@ from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.ui.main_window import MainWindow
 from silverstar_fccg.ui.message_box import MessageBoxButtons_Localize
+from silverstar_fccg.ui.window_geometry import Window_ConstrainInitialGeometry
 
 
 def WorkspaceRoot_Get() -> Path:
@@ -54,27 +55,7 @@ def Application_ConstrainInitialGeometry(
     window: QMainWindow, available: QRect | None = None,
 ) -> None:
     """Keep the initial native frame on its screen without resetting valid geometry."""
-    if window.isMaximized() or window.isFullScreen():
-        return
-    if available is None:
-        screen = window.screen()
-        if screen is None:
-            return
-        available = screen.availableGeometry()
-    frame = window.frameGeometry()
-    if not available.isValid() or available.contains(frame):
-        return
-    border_width = max(0, frame.width() - window.width())
-    border_height = max(0, frame.height() - window.height())
-    width = max(1, available.width() - border_width)
-    height = max(1, available.height() - border_height)
-    window.setMinimumSize(min(window.minimumWidth(), width), min(window.minimumHeight(), height))
-    window.resize(min(window.width(), width), min(window.height(), height))
-    frame = window.frameGeometry()
-    window.move(
-        max(available.left(), min(frame.left(), available.right() - frame.width() + 1)),
-        max(available.top(), min(frame.top(), available.bottom() - frame.height() + 1)),
-    )
+    Window_ConstrainInitialGeometry(window, available)
 
 
 def main(arguments: list[str] | None = None) -> int:

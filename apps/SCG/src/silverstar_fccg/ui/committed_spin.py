@@ -33,6 +33,11 @@ class _EnterCommitMixin:
     def CommittedValue_Get(self) -> int | float:
         return self._committed_value
 
+    def DraftValue_Reset(self, value: float) -> None:
+        """Explicit defaults discard even pending text equal to the stored default."""
+        self._pending_text = None
+        self.CommittedValue_Set(value)
+
     def _Draft_Restore(self) -> None:
         with QSignalBlocker(self):
             self.setValue(self._committed_value)

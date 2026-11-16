@@ -70,6 +70,9 @@ def resolve_export_language(
 
 
 class AppPreferences:
+    DEFAULT_EXPORT_LANGUAGE = ExportLanguage.FOLLOW_UI
+    DEFAULT_EXPORT_THEME = ExportTheme.FOLLOW_UI
+    DEFAULT_EXPORT_ITEMS = frozenset(ALL_EXPORT_ITEMS)
     SETTINGS_THEME_KEY = "appearance/theme"
     SETTINGS_EXPORT_LANGUAGE_KEY = "export/language"
     SETTINGS_EXPORT_THEME_KEY = "export/theme_mode"
@@ -94,13 +97,13 @@ class AppPreferences:
         raw = str(
             self.settings.value(
                 self.SETTINGS_EXPORT_LANGUAGE_KEY,
-                ExportLanguage.FOLLOW_UI.value,
+                self.DEFAULT_EXPORT_LANGUAGE.value,
             )
         )
         try:
             return ExportLanguage(raw)
         except ValueError:
-            return ExportLanguage.FOLLOW_UI
+            return self.DEFAULT_EXPORT_LANGUAGE
 
     def set_export_language(self, language: ExportLanguage | str) -> None:
         selected = (
@@ -112,11 +115,11 @@ class AppPreferences:
         self.settings.sync()
 
     def export_theme(self) -> ExportTheme:
-        raw = str(self.settings.value(self.SETTINGS_EXPORT_THEME_KEY, ExportTheme.FOLLOW_UI.value))
+        raw = str(self.settings.value(self.SETTINGS_EXPORT_THEME_KEY, self.DEFAULT_EXPORT_THEME.value))
         try:
             return ExportTheme(raw)
         except ValueError:
-            return ExportTheme.FOLLOW_UI
+            return self.DEFAULT_EXPORT_THEME
 
     def set_export_theme(self, theme: ExportTheme | str) -> None:
         selected = theme if isinstance(theme, ExportTheme) else ExportTheme(str(theme))
@@ -126,7 +129,7 @@ class AppPreferences:
     def export_items(self) -> frozenset[ExportItem]:
         raw = self.settings.value(self.SETTINGS_EXPORT_ITEMS_KEY, None)
         if raw is None:
-            return frozenset(ALL_EXPORT_ITEMS)
+            return self.DEFAULT_EXPORT_ITEMS
         values = [raw] if isinstance(raw, str) else list(raw)
         selected: set[ExportItem] = set()
         for value in values:

@@ -27,6 +27,14 @@ class EnumParam:
 
 
 ZH_CN: dict[str, str] = {
+    "button.restore_defaults": "恢复默认设置",
+    "export.defaults.scope": "仅恢复本次导出选项；开始导出后才保存偏好。取消不改变已保存设置或数据。",
+    "export.range.invalid": "请输入有效的自定义时长（0.001–1000000000 秒）。",
+    "mission_profile.toolbar_open": "任务快照…",
+    "mission_profile.details": "详情",
+    "mission_profile.none_short": "未加载任务快照 · 实时状态来自设备遥测",
+    "mission_profile.loaded_short": "离线快照，设备未核对 · {name}",
+    "mission_profile.error_short": "导入被拒绝，请查看详情",
     'mission_process.declared': '配置的任务阶段：{stages}（桌面参考，固件生效状态未核对）',
     'mission_process.trace_open': '打开离线任务过程记录',
     'mission_process.reference_trace': '桌面参考执行（不是板端 Recorded 数据，不改变实时状态）：{timeline}',
@@ -346,6 +354,14 @@ ZH_CN: dict[str, str] = {
 
 
 EN_US: dict[str, str] = {
+    "button.restore_defaults": "Restore defaults",
+    "export.defaults.scope": "Restore this export draft only. Preferences are saved when export starts. Cancel preserves saved settings and data.",
+    "export.range.invalid": "Enter a valid custom duration (0.001–1000000000 seconds).",
+    "mission_profile.toolbar_open": "Mission snapshot…",
+    "mission_profile.details": "Details",
+    "mission_profile.none_short": "No mission snapshot · live state comes from telemetry",
+    "mission_profile.loaded_short": "Offline snapshot, device unverified · {name}",
+    "mission_profile.error_short": "Import refused; see details",
     "mission_profile.title": "SCG mission configuration (offline view)",
     'mission_process.declared': 'Declared phases: {stages} (desktop reference; firmware application unverified)',
     'mission_process.trace_open': 'Open offline mission trace',

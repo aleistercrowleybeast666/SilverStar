@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 import pytest
+import json
+from pathlib import Path
 from silverstar_fccg.project.alignment import (
     ALIGNMENT_MAX_CONSTRAINTS,
     AlignmentConfiguration,
     AlignmentConfiguration_Parse,
     AlignmentConstraint,
 )
-from silverstar_fccg.project.model import PROJECT_FORMAT_VERSION, ProjectModel_Parse
+from silverstar_fccg.project.model import PROJECT_TARGET_SCOPE_FORMAT_VERSION, ProjectModel_Parse, ProjectModelError
 from silverstar_fccg.project.reference import ReferenceProject_Create
 
 
@@ -24,7 +26,7 @@ def test_bounded_alignment_configuration_round_trips_in_project(builtin_catalog)
         external_known_azimuth_deg=235.0,
     )
     encoded = model.Dictionary_Get()
-    assert encoded["format_version"] == PROJECT_FORMAT_VERSION == 14
+    assert encoded["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION == 24
     assert ProjectModel_Parse(encoded).alignment == model.alignment
     from silverstar_fccg.generator.render import _FlightConfigHeader_Render
 
@@ -64,11 +66,17 @@ def test_constraint_count_and_yaw_authority_are_bounded() -> None:
 
 
 def test_pre_release_format_13_uses_explicit_default_alignment(builtin_catalog) -> None:
-    model = ReferenceProject_Create("PreviousProject", catalog=builtin_catalog)
-    encoded = model.Dictionary_Get()
+    fixture = Path(__file__).parent / 'fixtures/project_format_14_23/v14.json'
+    encoded = json.loads(fixture.read_text(encoding='utf-8'))
+    assert encoded['format_version'] == 14
     encoded["format_version"] = 13
     del encoded["alignment"]
     assert ProjectModel_Parse(encoded).alignment == AlignmentConfiguration()
+    # A current payload relabelled as v13 must still fail its mission gate.
+    invalid = ReferenceProject_Create('Not a historical fixture', catalog=builtin_catalog).Dictionary_Get()
+    invalid['format_version'] = 13
+    with pytest.raises(ProjectModelError, match='mission_process requires project format_version 22'):
+        ProjectModel_Parse(invalid)
 
 
 def test_reference_selects_vector_strategy_and_single_source(builtin_catalog) -> None:
