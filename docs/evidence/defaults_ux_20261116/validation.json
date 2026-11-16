@@ -1,0 +1,284 @@
+{
+  "baseline": "cf33be46bffcb43fc60bbca710fa20c0126ffe79",
+  "source_commit": "66d244202c3d6f592606a882283e9d15a60dbf76",
+  "tested_changed_source_sha256": {
+    "apps/GSHC/services/i18n.py": "142f35a170a18a60f27ae78eb2116a95f920fe38572b4c4ac6b927d4f56d345d",
+    "apps/GSHC/services/preferences.py": "96c55a877edd3791d111fb303eede02e861c5b6c9742a0177094142f323b8212",
+    "apps/GSHC/tests/test_defaults_toolbar.py": "04d91e33b743f1954dea73b12db8963c42bc74b6c148528b46984d67b3d1b425",
+    "apps/GSHC/ui/main_window.py": "af1a8a30ad27001c42dedac0fb2e0dc8765f630a06be49418c40b095d4faa1d3",
+    "apps/SCG/src/silverstar_fccg/app/application.py": "a0dba784dcc5a87df0a0ecd6d47a493ab51b19813d5479042973a5b82db83787",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "e2184319049cab8ffd7524feccda4d03bdca3361c1ebd7719fca9a2ffefd6689",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "d733942ce1bc76df84dea2fa71611696d4cd6790c87f08fad260b2ab48325fe9",
+    "apps/SCG/src/silverstar_fccg/project/air_link.py": "1ff515f9be114d48f6770694b3d25ddd8f586ea3dc34a2cbeafaa576d6880a88",
+    "apps/SCG/src/silverstar_fccg/project/sx1278.py": "d90f1c396d545838f463d9192c43f3980fa6195ddefd8a27d362c3d5d1fc0f38",
+    "apps/SCG/src/silverstar_fccg/ui/committed_spin.py": "3e49c6944e38deb09c66058e7fb659c5b6c5cf1a84dcb341914c080d997773c1",
+    "apps/SCG/src/silverstar_fccg/ui/hardware_transaction.py": "20a4048d03959fb0f5fd52aa71817dc1647d4e5973e7989b0d7c332ada1993a5",
+    "apps/SCG/src/silverstar_fccg/ui/mission_stage_transaction.py": "4299689134670a92bb663f872df536ced035b0da4c327ecef608ddc3be6e28c4",
+    "apps/SCG/src/silverstar_fccg/ui/nis_editor.py": "8a5a3a6058bb7760047178b2db92699d9a12c5da80c0fa58d739d8c77ed42644",
+    "apps/SCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py": "a18dddf933fd01b9c2b872959742d63e079b369aba531fdb7a390d968857a620",
+    "apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py": "0437e75e59ef3ef8ec7f64e030073fbcf0012cd9d8a647fce21c789e755ce492",
+    "apps/SCG/src/silverstar_fccg/ui/pages/navigation_alignment.py": "5cb501ff06570cda6950794d601d7fbbfa8d80de00fbd1442d8e0383db5c9777",
+    "apps/SCG/src/silverstar_fccg/ui/pages/targets.py": "442936cb612fea8d15cffaccc6ec8e51333bae016b85f152ac3e3bab0c73ef91",
+    "apps/SCG/src/silverstar_fccg/ui/radio_transaction.py": "b3ed49b938c73480ec7af722666e1d13c9c76f95fe03f9531c78c05c6a295edb",
+    "apps/SCG/src/silverstar_fccg/ui/window_geometry.py": "b28bf98592e92a832edb9e5aca97cfb7351a00eb1d114b18fdf5c3b909371bbd",
+    "apps/SCG/src/silverstar_fccg/ui/workflow_properties.py": "998da92b956ce97e8b3b051cbe9b3f8de3017efe674947601d8cf591c970609a",
+    "apps/SCG/tests/test_defaults_ux.py": "ad9a19d256baf0c1e32d70b6c600c16f52d4ffe10a4fa91afd0cf0ea96b9e5f5",
+    "apps/SCG/tests/test_nis_probability.py": "7519b142526335952a7b649107e846b4124358553698285afb6ad10494eb41fb",
+    "apps/SCG/tests/test_round4_alignment_project.py": "4989b064e2c04192ab757acf709dbd85cac9987cdff079fdefba87aed414525f"
+  },
+  "counts": {
+    "SCG": {
+      "tests": 209.0,
+      "failures": 0.0,
+      "errors": 0.0,
+      "skipped": 0.0,
+      "time": 410.287
+    },
+    "GSHC": {
+      "tests": 89.0,
+      "failures": 0.0,
+      "errors": 0.0,
+      "skipped": 0.0,
+      "time": 200.8
+    }
+  },
+  "source_manifests": {
+    "SCG": {
+      "count": 9930,
+      "sha256": "494310a3dc2017138e9c3ba0d54d7fae12805e76cf62d899fe26ddb70e352799",
+      "all_inputs_match_final_worktree": true
+    },
+    "GSHC": {
+      "count": 194,
+      "sha256": "ce1f13fa1628cc4891af65339e1d06a0b37d1407c9f8f625d30cd817929b00da",
+      "all_inputs_match_final_worktree": true
+    }
+  },
+  "commands": {
+    "SCG": {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_defaults_ux.py",
+        "apps/SCG/tests/test_radio_transaction.py",
+        "apps/SCG/tests/test_hardware_workspace.py",
+        "apps/SCG/tests/test_hardware_transaction.py",
+        "apps/SCG/tests/test_round2_targets.py",
+        "apps/SCG/tests/test_telemetry_alignment.py",
+        "apps/SCG/tests/test_tm_workflow_transaction.py",
+        "apps/SCG/tests/test_nis_probability.py",
+        "apps/SCG/tests/test_round4_alignment_project.py",
+        "apps/SCG/tests/test_sx1278_project.py",
+        "-vv",
+        "-o",
+        "faulthandler_timeout=180",
+        "--basetemp=.work/defaults-ux-20261116/root/accepted-tmp",
+        "--junitxml=.work/defaults-ux-20261116/root/accepted.xml"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "QT_QPA_PLATFORM": "offscreen",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit_code": 0
+    },
+    "GSHC": {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "pytest",
+        "-q",
+        "apps/GSHC/tests/test_defaults_toolbar.py",
+        "apps/GSHC/tests/test_mission_profile.py",
+        "apps/GSHC/tests/test_ui_workflow.py",
+        "apps/GSHC/tests/test_time_exports.py",
+        "apps/GSHC/tests/test_i18n.py",
+        "apps/GSHC/tests/test_port_gui.py",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\enter-final-tmp",
+        "-o",
+        "cache_dir=D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\cache",
+        "--junitxml=D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\enter-final.xml"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "environment": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "QT_QPA_PLATFORM": "offscreen",
+        "QT_QPA_FONTDIR": "C:/Windows/Fonts",
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\GSHC",
+        "SILVERSTAR_GSHC_DATA_ROOT": "D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\data",
+        "MPLCONFIGDIR": "D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\matplotlib",
+        "TEMP": "D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\temp",
+        "TMP": "D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\gshc\\temp"
+      },
+      "exit_code": 0
+    }
+  },
+  "logs": {
+    "scg.log": {
+      "sha256": "2bd748fd63d26e83df9524eed9323a4e2c6a86517ca34ca9b9636d5e3bbdfdd4",
+      "bytes": 24879
+    },
+    "gshc.log": {
+      "sha256": "6ad56c38b0694bed72dfbe670edc353456b5087cb8320a14186f8596fb97166e",
+      "bytes": 194
+    },
+    "radio_pre_post.json": {
+      "sha256": "cb576730a0f904b0ff6d49738e63179b032bb446364af26d63cb52293247bb3f",
+      "bytes": 357
+    },
+    "stale_fixture_baseline.json": {
+      "sha256": "8319ce043d789b1aa88f10d5a8fa805a74cf8d9459e5b855bdad1e0875c077c5",
+      "bytes": 3028
+    }
+  },
+  "layout": [
+    {
+      "dialog": "radioTransaction",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.25,
+      "width": 780,
+      "height": 572
+    },
+    {
+      "dialog": "hardwareTransaction_flight",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.25,
+      "width": 960,
+      "height": 572
+    },
+    {
+      "dialog": "missionStageTransaction",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.25,
+      "width": 1020,
+      "height": 572
+    },
+    {
+      "dialog": "workflowProperties_preparation",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.25,
+      "width": 820,
+      "height": 572
+    },
+    {
+      "dialog": "radioTransaction",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.25,
+      "width": 780,
+      "height": 572
+    },
+    {
+      "dialog": "hardwareTransaction_flight",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.25,
+      "width": 960,
+      "height": 572
+    },
+    {
+      "dialog": "missionStageTransaction",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.25,
+      "width": 1020,
+      "height": 572
+    },
+    {
+      "dialog": "workflowProperties_preparation",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.25,
+      "width": 820,
+      "height": 572
+    },
+    {
+      "dialog": "radioTransaction",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.5,
+      "width": 780,
+      "height": 478
+    },
+    {
+      "dialog": "hardwareTransaction_flight",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.5,
+      "width": 908,
+      "height": 478
+    },
+    {
+      "dialog": "missionStageTransaction",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.5,
+      "width": 908,
+      "height": 478
+    },
+    {
+      "dialog": "workflowProperties_preparation",
+      "language": "zh_CN",
+      "theme": "light",
+      "actual_dpr": 1.5,
+      "width": 820,
+      "height": 478
+    },
+    {
+      "dialog": "radioTransaction",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.5,
+      "width": 780,
+      "height": 478
+    },
+    {
+      "dialog": "hardwareTransaction_flight",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.5,
+      "width": 908,
+      "height": 478
+    },
+    {
+      "dialog": "missionStageTransaction",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.5,
+      "width": 908,
+      "height": 478
+    },
+    {
+      "dialog": "workflowProperties_preparation",
+      "language": "en_US",
+      "theme": "dark",
+      "actual_dpr": 1.5,
+      "width": 820,
+      "height": 478
+    }
+  ],
+  "scope": "Related SCG/GSHC software suites; not all SilverStar tests, hardware, ARM or native desktop acceptance.",
+  "other_repositories": {
+    "Underline_RETLDC": {
+      "commit": "ef964623bba5f80cff9d97e2e4c33ba491f4e3eb",
+      "complete_suite_passed": 420,
+      "ci": "https://github.com/aleistercrowleybeast666/Underline_RETLDC/actions/runs/43842044112"
+    },
+    "TreeDiagram": {
+      "commit": "83c90491a1a9ce4c0a42641ed0161b160632802f",
+      "complete_suite_passed": 173,
+      "ci": "https://github.com/aleistercrowleybeast666/TreeDiagram/actions/runs/43840254218"
+    }
+  }
+}

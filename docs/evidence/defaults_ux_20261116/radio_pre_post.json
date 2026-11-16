@@ -1,0 +1,17 @@
+{
+  "baseline": "cf33be46bffcb43fc60bbca710fa20c0126ffe79",
+  "configured_peer": {
+    "before": [],
+    "after": [
+      "AIR_LINK_FAMILY_MISMATCH",
+      "AIR_LINK_FREQUENCY_OUT_OF_RANGE",
+      "AIR_LINK_PHY_INCOMPATIBLE"
+    ]
+  },
+  "declared_non_lora": {
+    "before": [],
+    "after": [
+      "AIR_LINK_PHY_INCOMPATIBLE"
+    ]
+  }
+}

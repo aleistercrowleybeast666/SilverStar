@@ -1,0 +1,29 @@
+{
+  "baseline": "cf33be46bffcb43fc60bbca710fa20c0126ffe79",
+  "unchanged_source_git_sha256": {
+    "apps/SCG/src/silverstar_fccg/project/model.py": "d904bbea2695aa649b6a333c5f8967f303c4795267648aa7cf518f4fe9031c3c",
+    "apps/SCG/src/silverstar_fccg/project/reference.py": "3b346e2b46e819b271703848e5b797239cfed1ed56b502f79b79db1b1278d775",
+    "apps/SCG/tests/test_nis_probability.py": "ef88ac24c2d9bc1da3c9c032f70cca0b016965cc51f926ff4b4a36f1de86f6ef",
+    "apps/SCG/tests/test_round4_alignment_project.py": "872f582b8e6f017971103d6511f225e26675a1a6b7647588820d3dee92db45c9"
+  },
+  "failures": [
+    {
+      "test": "test_scg_untouched_numeric_and_edited_probability_roundtrip",
+      "error": "",
+      "type": "AssertionError",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\root\\stale_fixture_baseline.py\", line 31, in <module>\n    namespace[name](catalog)\n    ~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_nis_probability.py\", line 71, in test_scg_untouched_numeric_and_edited_probability_roundtrip\n    assert old[\"format_version\"] < 18\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "test": "test_bounded_alignment_configuration_round_trips_in_project",
+      "error": "",
+      "type": "AssertionError",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\root\\stale_fixture_baseline.py\", line 31, in <module>\n    namespace[name](catalog)\n    ~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_round4_alignment_project.py\", line 27, in test_bounded_alignment_configuration_round_trips_in_project\n    assert encoded[\"format_version\"] == PROJECT_FORMAT_VERSION == 14\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "test": "test_pre_release_format_13_uses_explicit_default_alignment",
+      "error": "mission_process requires project format_version 22",
+      "type": "ProjectModelError",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\.work\\defaults-ux-20261116\\root\\stale_fixture_baseline.py\", line 31, in <module>\n    namespace[name](catalog)\n    ~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_round4_alignment_project.py\", line 71, in test_pre_release_format_13_uses_explicit_default_alignment\n    assert ProjectModel_Parse(encoded).alignment == AlignmentConfiguration()\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\project\\model.py\", line 2110, in ProjectModel_Parse\n    raise ProjectModelError('mission_process requires project format_version 22')\nsilverstar_fccg.project.model.ProjectModelError: mission_process requires project format_version 22\n"
+    }
+  ]
+}
