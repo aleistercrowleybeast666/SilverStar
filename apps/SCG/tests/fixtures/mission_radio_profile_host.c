@@ -41,12 +41,31 @@ int main(void)
         assert(memcmp(&profile,&before,sizeof(profile))==0);
     }
     snapshot[70]=2U;
+    assert(MissionRadioProfile_Read(snapshot,86U,&profile)==MissionRadioProfileResult_Ok);
+    assert(profile.bytes[0]==2U && memcmp(profile.bytes+1U,sx1278+5U,15U)==0);
+    before=profile;
+    for(length=0U;length<86U;length++)
+    {
+        assert(MissionRadioProfile_Read(snapshot,(uint16_t)length,&profile)!=MissionRadioProfileResult_Ok);
+        assert(memcmp(&profile,&before,sizeof(profile))==0);
+    }
+    for(length=71U;length<86U;length++)
+    {
+        snapshot[length]^=1U;
+        assert(MissionRadioProfile_Read(snapshot,86U,&profile)==MissionRadioProfileResult_Invalid);
+        assert(memcmp(&profile,&before,sizeof(profile))==0);
+        snapshot[length]^=1U;
+    }
+    snapshot[70]=3U;
     assert(MissionRadioProfile_Read(snapshot,86U,&profile)==MissionRadioProfileResult_Invalid);
     assert(memcmp(&profile,&before,sizeof(profile))==0);
     snapshot[4]=4U;snapshot[66]=3U;
     memcpy(snapshot+67U,sx1278,sizeof(sx1278));
     assert(MissionRadioProfile_Read(snapshot,87U,&profile)==MissionRadioProfileResult_Ok);
     assert(profile.schema==4U && profile.backend==MissionRadioBackend_Sx1278);
+    snapshot[71]=2U;
+    assert(MissionRadioProfile_Read(snapshot,87U,&profile)==MissionRadioProfileResult_Ok);
+    assert(profile.bytes[0]==2U);
     before=profile;
     for(length=0U;length<87U;length++)
     {

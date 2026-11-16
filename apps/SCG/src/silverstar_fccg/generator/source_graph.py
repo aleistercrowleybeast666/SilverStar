@@ -102,10 +102,20 @@ def _ModuleProviderActive_Is(
 
 
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
+    from silverstar_fccg.project.logging import LoggingOperationJournal_ErrorGet
+    journal_error = LoggingOperationJournal_ErrorGet(model)
+    if journal_error is not None:
+        raise SourceGraphError(journal_error)
     from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcHardware_Is
     if NativeCdcHardware_Is(model.hardware):
         raise SourceGraphError(MIGRATION_NOTICE)
-    if model.mcu == "silverstar.mcu.stm32c071fbp6":
+    # The historical imported USB target remains retired. Only the owned
+    # UART board profile has a complete current clock/source/IRQ contract.
+    if (model.mcu == "silverstar.mcu.stm32c071fbp6"
+            and not (model.core == "silverstar.core.ground.0_1_0"
+                and model.board == "silverstar.board.ssgs_1_0"
+                and model.hardware.mode == "board_plugin"
+                and model.hardware.hal_cmsis_source_policy == "plugin_payload_authoritative")):
         raise SourceGraphError('C071 historical target has no supported UART generation profile')
     catalog = catalog.ProjectView_Get(model)
     ground_base = model.hardware.inventory.get("ground_cubemx_base", {})

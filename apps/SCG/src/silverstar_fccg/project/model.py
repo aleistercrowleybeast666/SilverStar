@@ -1901,8 +1901,8 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
     active = "radio0"
     if radio_instances_allowed:
         values = data["radio_instances"]
-        if not isinstance(values, list) or not 1 <= len(values) <= 4:
-            raise ProjectModelError("ground_target.radio_instances requires 1..4 instances")
+        if not isinstance(values, list) or not 0 <= len(values) <= 4:
+            raise ProjectModelError("ground_target.radio_instances requires 1..4 configured instances or an empty selection")
         parsed = []
         for item in values:
             entry = _Object_Require(item, "Ground radio instance")
@@ -1922,9 +1922,12 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
             raise ProjectModelError("Ground radio instance IDs must be unique")
         active = _String_Require(data, "active_radio_instance")
         selected = next((radio for radio in radios if radio.instance_id == active), None)
-        if selected is None:
+        empty = not radios and active == 'radio0' and not data['radio_plugin'] and not data['module_variant']
+        if not radios and not empty:
+            raise ProjectModelError("ground_target.radio_instances requires 1..4 configured instances or an empty selection")
+        if selected is None and not empty:
             raise ProjectModelError("Ground active radio is not configured")
-        if (selected.plugin, selected.module_variant, selected.tx_power_dbm) != (data["radio_plugin"], data["module_variant"], tx_power):
+        if selected is not None and (selected.plugin, selected.module_variant, selected.tx_power_dbm) != (data["radio_plugin"], data["module_variant"], tx_power):
             raise ProjectModelError("Ground active radio snapshot does not match its configured instance")
     return GroundTargetConfiguration(
         mcu=data["mcu"], board=data["board"],

@@ -4,6 +4,7 @@ from collections.abc import Iterable, Sequence
 from typing import Any
 
 from PySide6.QtCore import QPoint, Qt, Signal
+from PySide6.QtGui import QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
@@ -11,15 +12,15 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QStyle,
-    QToolButton,
     QTableWidget,
     QTableWidgetItem,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
 
-from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.core.i18n import Translator
+from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 
 
 class StandardComboBox(QComboBox):
@@ -29,6 +30,10 @@ class StandardComboBox(QComboBox):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
+        # Keep the item-model wrapper and its QObject owner explicit across
+        # repeated property-page rebuilds and deferred widget destruction.
+        self._items_model = QStandardItemModel(self)
+        self.setModel(self._items_model)
         TouchScroll_Enable(self.view())
         self.setMaxVisibleItems(self.MAX_VISIBLE_ITEMS)
         self.setMinimumContentsLength(12)

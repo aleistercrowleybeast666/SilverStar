@@ -4,8 +4,8 @@
   "name": "STM32C0 platform resources",
   "type": "mcu_family",
   "class": "stm32c0",
-  "version": "0.1.1",
-  "description": "Exact STM32C071FBP6 platform resource bindings for existing custom hardware metadata.",
+  "version": "0.1.2",
+  "description": "STM32C071FBP6 SSGS1.0 software candidate: bounded SPI/GPIO/time and UART DMA Ground bridge.",
   "requires": {
     "components": [
       {
@@ -29,18 +29,23 @@
       "Platform/STM32C0/Src/platform_critical_stm32c0.c"
     ],
     "include_dirs": [
-      "Platform/STM32C0/Inc"
+      "Platform/STM32C0/Inc",
+      "Drivers/STM32C0xx_HAL_Driver/Inc",
+      "Drivers/STM32C0xx_HAL_Driver/Inc/Legacy",
+      "Drivers/CMSIS/Device/ST/STM32C0xx/Include",
+      "Drivers/CMSIS/Include"
     ]
   },
   "payload": {
     "roots": [
-      "Platform/STM32C0"
+      "Platform/STM32C0",
+      "Drivers"
     ]
   },
   "metadata": {
     "vendor": "STM32",
     "family": "STM32C0",
-    "source_policy": "imported_tree_authoritative",
+    "source_policy": "plugin_payload_authoritative",
     "reference": {
       "vendor_package": "STM32Cube FW_C0 V1.4.1",
       "validated_software_commit": "df36e89370128378b1fb08f7b982746bfc35dfb4"
@@ -48,7 +53,8 @@
     "display_names": {
       "zh_CN": "STM32C0 系列后端",
       "en_US": "STM32C0 Family Backend"
-    }
+    },
+    "pc_uart_dma_adapter": "stm32_hal_receive_to_idle"
   },
   "platform": {
     "abi": {
@@ -102,6 +108,16 @@
           "table_symbol": "s_time_resources",
           "getter": "PlatformStm32c0Resource_TimeGet",
           "struct_type": "PlatformStm32c0TimeResource"
+        },
+        "uart": {
+          "collection": "uarts",
+          "include_header": "usart.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformUartId",
+          "count_symbol": "PLATFORM_UART_COUNT",
+          "table_symbol": "s_uart_handles",
+          "getter": "PlatformStm32c0Resource_UartHandleGet",
+          "struct_type": ""
         }
       }
     },
@@ -158,7 +174,120 @@
         "ownership": "shared"
       }
     },
-    "module_providers": {},
+    "module_providers": {
+      "base": {
+        "inventory_modules": [
+          "NVIC",
+          "RCC",
+          "SYS",
+          "CORTEX_M0*",
+          "DEBUG"
+        ],
+        "init_sources": [
+          "Core/Src/main.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_cortex.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_exti.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash_ex.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.base"
+        ],
+        "limitations": [],
+        "always": true
+      },
+      "gpio": {
+        "inventory_modules": [
+          "GPIO"
+        ],
+        "init_sources": [
+          "Core/Src/gpio.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_gpio.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.gpio"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "dma": {
+        "inventory_modules": [
+          "DMA"
+        ],
+        "init_sources": [
+          "Core/Src/dma.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.dma"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "uart": {
+        "inventory_modules": [
+          "USART*",
+          "UART*",
+          "LPUART*"
+        ],
+        "init_sources": [
+          "Core/Src/usart.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.uart"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "spi": {
+        "inventory_modules": [
+          "SPI*"
+        ],
+        "init_sources": [
+          "Core/Src/spi.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi.c",
+          "Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.spi"
+        ],
+        "limitations": [],
+        "always": false
+      }
+    },
     "compatibility": {
       "cubemx_versions": [
         "6.15.0"
@@ -166,13 +295,14 @@
       "firmware_packages": [
         "STM32Cube FW_C0 V1.4.1"
       ],
-      "source_policy": "imported_tree_authoritative"
+      "source_policy": "plugin_payload_authoritative"
     },
     "support": {
       "level": "experimental",
       "limitations": [
-        "Retained STM32C071FBP6 resource and device identity for historical imports.",
-        "No current Flight or Ground firmware generation profile."
+        "Only the exact SSGS1.0 UART board profile is a current generation target.",
+        "No MCU native USB CDC or Flight profile.",
+        "No board, UART throughput, RF, timing or power validation."
       ]
     }
   }

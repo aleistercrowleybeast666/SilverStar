@@ -1,4 +1,5 @@
 """Protocol-guided and editable commands; the maintenance owner performs I/O."""
+from ui.message_box_placement import MessageBox_Show
 from PySide6.QtCore import Signal,Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,
@@ -173,7 +174,7 @@ class MaintenanceConsole(QWidget):
         elif not ConsoleCommand_IsKnown(command):
             question=Text(self.i18n,'此命令尚未核实，将原样发送一个命令。继续？','This command is unverified and will be sent as one line. Continue?')
         else:question=''
-        if question and QMessageBox.question(self,self.title.text(),question,QMessageBox.Yes|QMessageBox.No,QMessageBox.No)!=QMessageBox.Yes:return
+        if question and MessageBox_Show(QMessageBox.question, self,self.title.text(),question,QMessageBox.Yes|QMessageBox.No,QMessageBox.No)!=QMessageBox.Yes:return
         self.send_requested.emit(command)
 
     def set_connection(self,connected,busy=False):

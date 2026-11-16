@@ -1,0 +1,1005 @@
+{
+  "provenance": {
+    "elf": ".work/pf1117/contract-e19-b/Flight_Controller/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf",
+    "elf_sha256": "4b70eb604cccc264a4a78b90fe4dc1cbf0f487e60d739819d0d6b30806bb4b0d",
+    "objdump_d_sha256": "e34036e7e002ecab7deca762eb8fb0d1d0448de9404130452998fbfea6378bd4",
+    "objdump_t_sha256": "c8484234f6e50798f303d07faab53920c03a6486d86335f3fbba5835347d033e",
+    "compiler": "Arm GNU Toolchain 14.3.Rel1",
+    "scope": "Actual linked final E19 B Release Cortex-M4 CRT; exact entry rows and PC literal bytes plus full nm and actual init arrays. Not synthetic MCU acceptance."
+  },
+  "function_entries": {
+    "deregister_tm_clones": {
+      "start": 134221656,
+      "end": 134221684,
+      "section": ".text",
+      "symbol_name": "deregister_tm_clones",
+      "rows": [
+        [
+          134221656,
+          2,
+          "ldr",
+          "r0, [pc, #12]\t@ (8000f68 <deregister_tm_clones+0x10>)"
+        ],
+        [
+          134221658,
+          2,
+          "ldr",
+          "r3, [pc, #16]\t@ (8000f6c <deregister_tm_clones+0x14>)"
+        ],
+        [
+          134221660,
+          2,
+          "cmp",
+          "r3, r0"
+        ],
+        [
+          134221662,
+          2,
+          "beq.n",
+          "8000f66 <deregister_tm_clones+0xe>"
+        ],
+        [
+          134221664,
+          2,
+          "ldr",
+          "r3, [pc, #12]\t@ (8000f70 <deregister_tm_clones+0x18>)"
+        ],
+        [
+          134221666,
+          2,
+          "cbz",
+          "r3, 8000f66 <deregister_tm_clones+0xe>"
+        ],
+        [
+          134221668,
+          2,
+          "bx",
+          "r3"
+        ],
+        [
+          134221670,
+          2,
+          "bx",
+          "lr"
+        ]
+      ],
+      "literals": [
+        [
+          ".word",
+          "0x20000474"
+        ],
+        [
+          ".word",
+          "0x20000474"
+        ],
+        [
+          ".word",
+          "0x00000000"
+        ]
+      ],
+      "memory": {
+        "134221656": 3,
+        "134221657": 72,
+        "134221658": 4,
+        "134221659": 75,
+        "134221660": 131,
+        "134221661": 66,
+        "134221662": 2,
+        "134221663": 208,
+        "134221664": 3,
+        "134221665": 75,
+        "134221666": 3,
+        "134221667": 177,
+        "134221668": 24,
+        "134221669": 71,
+        "134221670": 112,
+        "134221671": 71,
+        "134221672": 116,
+        "134221673": 4,
+        "134221674": 0,
+        "134221675": 32,
+        "134221676": 116,
+        "134221677": 4,
+        "134221678": 0,
+        "134221679": 32,
+        "134221680": 0,
+        "134221681": 0,
+        "134221682": 0,
+        "134221683": 0
+      }
+    },
+    "register_tm_clones": {
+      "start": 134221684,
+      "end": 134221720,
+      "section": ".text",
+      "symbol_name": "register_tm_clones",
+      "rows": [
+        [
+          134221684,
+          2,
+          "ldr",
+          "r0, [pc, #20]\t@ (8000f8c <register_tm_clones+0x18>)"
+        ],
+        [
+          134221686,
+          2,
+          "ldr",
+          "r3, [pc, #24]\t@ (8000f90 <register_tm_clones+0x1c>)"
+        ],
+        [
+          134221688,
+          2,
+          "subs",
+          "r3, r3, r0"
+        ],
+        [
+          134221690,
+          2,
+          "lsrs",
+          "r1, r3, #31"
+        ],
+        [
+          134221692,
+          4,
+          "add.w",
+          "r1, r1, r3, asr #2"
+        ],
+        [
+          134221696,
+          2,
+          "asrs",
+          "r1, r1, #1"
+        ],
+        [
+          134221698,
+          2,
+          "beq.n",
+          "8000f8a <register_tm_clones+0x16>"
+        ],
+        [
+          134221700,
+          2,
+          "ldr",
+          "r3, [pc, #12]\t@ (8000f94 <register_tm_clones+0x20>)"
+        ],
+        [
+          134221702,
+          2,
+          "cbz",
+          "r3, 8000f8a <register_tm_clones+0x16>"
+        ],
+        [
+          134221704,
+          2,
+          "bx",
+          "r3"
+        ],
+        [
+          134221706,
+          2,
+          "bx",
+          "lr"
+        ]
+      ],
+      "literals": [
+        [
+          ".word",
+          "0x20000474"
+        ],
+        [
+          ".word",
+          "0x20000474"
+        ],
+        [
+          ".word",
+          "0x00000000"
+        ]
+      ],
+      "memory": {
+        "134221684": 5,
+        "134221685": 72,
+        "134221686": 6,
+        "134221687": 75,
+        "134221688": 27,
+        "134221689": 26,
+        "134221690": 217,
+        "134221691": 15,
+        "134221692": 1,
+        "134221693": 235,
+        "134221694": 163,
+        "134221695": 1,
+        "134221696": 73,
+        "134221697": 16,
+        "134221698": 2,
+        "134221699": 208,
+        "134221700": 3,
+        "134221701": 75,
+        "134221702": 3,
+        "134221703": 177,
+        "134221704": 24,
+        "134221705": 71,
+        "134221706": 112,
+        "134221707": 71,
+        "134221708": 116,
+        "134221709": 4,
+        "134221710": 0,
+        "134221711": 32,
+        "134221712": 116,
+        "134221713": 4,
+        "134221714": 0,
+        "134221715": 32,
+        "134221716": 0,
+        "134221717": 0,
+        "134221718": 0,
+        "134221719": 0
+      }
+    },
+    "__libc_init_array": {
+      "start": 134515320,
+      "end": 134515392,
+      "section": ".text",
+      "symbol_name": "__libc_init_array",
+      "rows": [
+        [
+          134515320,
+          2,
+          "push",
+          "{r4, r5, r6, lr}"
+        ],
+        [
+          134515322,
+          2,
+          "ldr",
+          "r3, [pc, #52]\t@ (8048ab0 <__libc_init_array+0x38>)"
+        ],
+        [
+          134515324,
+          2,
+          "ldr",
+          "r5, [pc, #52]\t@ (8048ab4 <__libc_init_array+0x3c>)"
+        ],
+        [
+          134515326,
+          2,
+          "subs",
+          "r3, r3, r5"
+        ],
+        [
+          134515328,
+          2,
+          "asrs",
+          "r4, r3, #2"
+        ],
+        [
+          134515330,
+          2,
+          "movs",
+          "r6, #0"
+        ],
+        [
+          134515332,
+          2,
+          "cmp",
+          "r6, r4"
+        ],
+        [
+          134515334,
+          2,
+          "bne.n",
+          "8048a9c <__libc_init_array+0x24>"
+        ],
+        [
+          134515336,
+          4,
+          "bl",
+          "804d050 <_init>"
+        ],
+        [
+          134515340,
+          2,
+          "ldr",
+          "r5, [pc, #40]\t@ (8048ab8 <__libc_init_array+0x40>)"
+        ],
+        [
+          134515342,
+          2,
+          "ldr",
+          "r3, [pc, #44]\t@ (8048abc <__libc_init_array+0x44>)"
+        ],
+        [
+          134515344,
+          2,
+          "subs",
+          "r3, r3, r5"
+        ],
+        [
+          134515346,
+          2,
+          "asrs",
+          "r4, r3, #2"
+        ],
+        [
+          134515348,
+          2,
+          "movs",
+          "r6, #0"
+        ],
+        [
+          134515350,
+          2,
+          "cmp",
+          "r6, r4"
+        ],
+        [
+          134515352,
+          2,
+          "bne.n",
+          "8048aa6 <__libc_init_array+0x2e>"
+        ],
+        [
+          134515354,
+          2,
+          "pop",
+          "{r4, r5, r6, pc}"
+        ],
+        [
+          134515356,
+          4,
+          "ldr.w",
+          "r3, [r5], #4"
+        ],
+        [
+          134515360,
+          2,
+          "blx",
+          "r3"
+        ],
+        [
+          134515362,
+          2,
+          "adds",
+          "r6, #1"
+        ],
+        [
+          134515364,
+          2,
+          "b.n",
+          "8048a84 <__libc_init_array+0xc>"
+        ],
+        [
+          134515366,
+          4,
+          "ldr.w",
+          "r3, [r5], #4"
+        ],
+        [
+          134515370,
+          2,
+          "blx",
+          "r3"
+        ],
+        [
+          134515372,
+          2,
+          "adds",
+          "r6, #1"
+        ],
+        [
+          134515374,
+          2,
+          "b.n",
+          "8048a96 <__libc_init_array+0x1e>"
+        ]
+      ],
+      "literals": [
+        [
+          ".word",
+          "0x08054d18"
+        ],
+        [
+          ".word",
+          "0x08054d18"
+        ],
+        [
+          ".word",
+          "0x08054d18"
+        ],
+        [
+          ".word",
+          "0x08054d1c"
+        ]
+      ],
+      "memory": {
+        "134515320": 112,
+        "134515321": 181,
+        "134515322": 13,
+        "134515323": 75,
+        "134515324": 13,
+        "134515325": 77,
+        "134515326": 91,
+        "134515327": 27,
+        "134515328": 156,
+        "134515329": 16,
+        "134515330": 0,
+        "134515331": 38,
+        "134515332": 166,
+        "134515333": 66,
+        "134515334": 9,
+        "134515335": 209,
+        "134515336": 4,
+        "134515337": 240,
+        "134515338": 226,
+        "134515339": 250,
+        "134515340": 10,
+        "134515341": 77,
+        "134515342": 11,
+        "134515343": 75,
+        "134515344": 91,
+        "134515345": 27,
+        "134515346": 156,
+        "134515347": 16,
+        "134515348": 0,
+        "134515349": 38,
+        "134515350": 166,
+        "134515351": 66,
+        "134515352": 5,
+        "134515353": 209,
+        "134515354": 112,
+        "134515355": 189,
+        "134515356": 85,
+        "134515357": 248,
+        "134515358": 4,
+        "134515359": 59,
+        "134515360": 152,
+        "134515361": 71,
+        "134515362": 1,
+        "134515363": 54,
+        "134515364": 238,
+        "134515365": 231,
+        "134515366": 85,
+        "134515367": 248,
+        "134515368": 4,
+        "134515369": 59,
+        "134515370": 152,
+        "134515371": 71,
+        "134515372": 1,
+        "134515373": 54,
+        "134515374": 242,
+        "134515375": 231,
+        "134515376": 24,
+        "134515377": 77,
+        "134515378": 5,
+        "134515379": 8,
+        "134515380": 24,
+        "134515381": 77,
+        "134515382": 5,
+        "134515383": 8,
+        "134515384": 24,
+        "134515385": 77,
+        "134515386": 5,
+        "134515387": 8,
+        "134515388": 28,
+        "134515389": 77,
+        "134515390": 5,
+        "134515391": 8
+      }
+    },
+    "frame_dummy": {
+      "start": 134221760,
+      "end": 134221796,
+      "section": ".text",
+      "symbol_name": "frame_dummy",
+      "rows": [
+        [
+          134221760,
+          2,
+          "push",
+          "{r3, lr}"
+        ],
+        [
+          134221762,
+          2,
+          "ldr",
+          "r3, [pc, #20]\t@ (8000fd8 <frame_dummy+0x18>)"
+        ],
+        [
+          134221764,
+          2,
+          "cbz",
+          "r3, 8000fce <frame_dummy+0xe>"
+        ],
+        [
+          134221766,
+          2,
+          "ldr",
+          "r1, [pc, #20]\t@ (8000fdc <frame_dummy+0x1c>)"
+        ],
+        [
+          134221768,
+          2,
+          "ldr",
+          "r0, [pc, #20]\t@ (8000fe0 <frame_dummy+0x20>)"
+        ],
+        [
+          134221770,
+          4,
+          "nop.w",
+          ""
+        ],
+        [
+          134221774,
+          4,
+          "ldmia.w",
+          "sp!, {r3, lr}"
+        ],
+        [
+          134221778,
+          4,
+          "b.w",
+          "8000f74 <register_tm_clones>"
+        ],
+        [
+          134221782,
+          2,
+          "nop",
+          ""
+        ]
+      ],
+      "literals": [
+        [
+          ".word",
+          "0x00000000"
+        ],
+        [
+          ".word",
+          "0x20002f44"
+        ],
+        [
+          ".word",
+          "0x0804d050"
+        ]
+      ],
+      "memory": {
+        "134221760": 8,
+        "134221761": 181,
+        "134221762": 5,
+        "134221763": 75,
+        "134221764": 27,
+        "134221765": 177,
+        "134221766": 5,
+        "134221767": 73,
+        "134221768": 5,
+        "134221769": 72,
+        "134221770": 175,
+        "134221771": 243,
+        "134221772": 0,
+        "134221773": 128,
+        "134221774": 189,
+        "134221775": 232,
+        "134221776": 8,
+        "134221777": 64,
+        "134221778": 255,
+        "134221779": 247,
+        "134221780": 207,
+        "134221781": 191,
+        "134221782": 0,
+        "134221783": 191,
+        "134221784": 0,
+        "134221785": 0,
+        "134221786": 0,
+        "134221787": 0,
+        "134221788": 68,
+        "134221789": 47,
+        "134221790": 0,
+        "134221791": 32,
+        "134221792": 80,
+        "134221793": 208,
+        "134221794": 4,
+        "134221795": 8
+      }
+    },
+    "_init": {
+      "start": 134533200,
+      "end": 134533212,
+      "section": ".text",
+      "symbol_name": "_init",
+      "rows": [
+        [
+          134533200,
+          2,
+          "push",
+          "{r3, r4, r5, r6, r7, lr}"
+        ],
+        [
+          134533202,
+          2,
+          "nop",
+          ""
+        ],
+        [
+          134533204,
+          2,
+          "pop",
+          "{r3, r4, r5, r6, r7}"
+        ],
+        [
+          134533206,
+          2,
+          "pop",
+          "{r3}"
+        ],
+        [
+          134533208,
+          2,
+          "mov",
+          "lr, r3"
+        ],
+        [
+          134533210,
+          2,
+          "bx",
+          "lr"
+        ]
+      ],
+      "literals": [],
+      "memory": {
+        "134533200": 248,
+        "134533201": 181,
+        "134533202": 0,
+        "134533203": 191,
+        "134533204": 248,
+        "134533205": 188,
+        "134533206": 8,
+        "134533207": 188,
+        "134533208": 158,
+        "134533209": 70,
+        "134533210": 112,
+        "134533211": 71
+      }
+    }
+  },
+  "assembly_proofs": {
+    "deregister_tm_clones": {
+      "edges": [],
+      "indirect": [
+        [
+          134221668,
+          "bx",
+          "r3"
+        ]
+      ],
+      "frame_bytes": 0,
+      "unknown_sp": [],
+      "reachable_addresses": [
+        134221656,
+        134221658,
+        134221660,
+        134221662,
+        134221664,
+        134221666,
+        134221668,
+        134221670
+      ],
+      "successors": {
+        "134221656": [
+          134221658
+        ],
+        "134221658": [
+          134221660
+        ],
+        "134221660": [
+          134221662
+        ],
+        "134221662": [
+          134221670,
+          134221664
+        ],
+        "134221664": [
+          134221666
+        ],
+        "134221666": [
+          134221670,
+          134221668
+        ],
+        "134221668": [],
+        "134221670": []
+      },
+      "returns": [
+        134221670
+      ],
+      "tail_returns": [],
+      "local_link_calls": {},
+      "switches": {},
+      "saved_link_returns": []
+    },
+    "register_tm_clones": {
+      "edges": [],
+      "indirect": [
+        [
+          134221704,
+          "bx",
+          "r3"
+        ]
+      ],
+      "frame_bytes": 0,
+      "unknown_sp": [],
+      "reachable_addresses": [
+        134221684,
+        134221686,
+        134221688,
+        134221690,
+        134221692,
+        134221696,
+        134221698,
+        134221700,
+        134221702,
+        134221704,
+        134221706
+      ],
+      "successors": {
+        "134221684": [
+          134221686
+        ],
+        "134221686": [
+          134221688
+        ],
+        "134221688": [
+          134221690
+        ],
+        "134221690": [
+          134221692
+        ],
+        "134221692": [
+          134221696
+        ],
+        "134221696": [
+          134221698
+        ],
+        "134221698": [
+          134221706,
+          134221700
+        ],
+        "134221700": [
+          134221702
+        ],
+        "134221702": [
+          134221706,
+          134221704
+        ],
+        "134221704": [],
+        "134221706": []
+      },
+      "returns": [
+        134221706
+      ],
+      "tail_returns": [],
+      "local_link_calls": {},
+      "switches": {},
+      "saved_link_returns": []
+    },
+    "__libc_init_array": {
+      "edges": [
+        "_init"
+      ],
+      "indirect": [
+        [
+          134515360,
+          "blx",
+          "r3"
+        ],
+        [
+          134515370,
+          "blx",
+          "r3"
+        ]
+      ],
+      "frame_bytes": 16,
+      "unknown_sp": [],
+      "reachable_addresses": [
+        134515320,
+        134515322,
+        134515324,
+        134515326,
+        134515328,
+        134515330,
+        134515332,
+        134515334,
+        134515336,
+        134515340,
+        134515342,
+        134515344,
+        134515346,
+        134515348,
+        134515350,
+        134515352,
+        134515354,
+        134515356,
+        134515360,
+        134515362,
+        134515364,
+        134515366,
+        134515370,
+        134515372,
+        134515374
+      ],
+      "successors": {
+        "134515320": [
+          134515322
+        ],
+        "134515322": [
+          134515324
+        ],
+        "134515324": [
+          134515326
+        ],
+        "134515326": [
+          134515328
+        ],
+        "134515328": [
+          134515330
+        ],
+        "134515330": [
+          134515332
+        ],
+        "134515332": [
+          134515334
+        ],
+        "134515334": [
+          134515356,
+          134515336
+        ],
+        "134515336": [
+          134515340
+        ],
+        "134515340": [
+          134515342
+        ],
+        "134515342": [
+          134515344
+        ],
+        "134515344": [
+          134515346
+        ],
+        "134515346": [
+          134515348
+        ],
+        "134515348": [
+          134515350
+        ],
+        "134515350": [
+          134515352
+        ],
+        "134515352": [
+          134515366,
+          134515354
+        ],
+        "134515354": [],
+        "134515356": [
+          134515360
+        ],
+        "134515360": [
+          134515362
+        ],
+        "134515362": [
+          134515364
+        ],
+        "134515364": [
+          134515332
+        ],
+        "134515366": [
+          134515370
+        ],
+        "134515370": [
+          134515372
+        ],
+        "134515372": [
+          134515374
+        ],
+        "134515374": [
+          134515350
+        ]
+      },
+      "returns": [
+        134515354
+      ],
+      "tail_returns": [],
+      "local_link_calls": {},
+      "switches": {},
+      "saved_link_returns": []
+    },
+    "frame_dummy": {
+      "edges": [
+        "register_tm_clones"
+      ],
+      "indirect": [],
+      "frame_bytes": 8,
+      "unknown_sp": [],
+      "reachable_addresses": [
+        134221760,
+        134221762,
+        134221764,
+        134221766,
+        134221768,
+        134221770,
+        134221774,
+        134221778
+      ],
+      "successors": {
+        "134221760": [
+          134221762
+        ],
+        "134221762": [
+          134221764
+        ],
+        "134221764": [
+          134221774,
+          134221766
+        ],
+        "134221766": [
+          134221768
+        ],
+        "134221768": [
+          134221770
+        ],
+        "134221770": [
+          134221774
+        ],
+        "134221774": [
+          134221778
+        ],
+        "134221778": [],
+        "134221782": []
+      },
+      "returns": [],
+      "tail_returns": [
+        "register_tm_clones"
+      ],
+      "local_link_calls": {},
+      "switches": {},
+      "saved_link_returns": []
+    },
+    "_init": {
+      "edges": [],
+      "indirect": [],
+      "frame_bytes": 24,
+      "unknown_sp": [],
+      "reachable_addresses": [
+        134533200,
+        134533202,
+        134533204,
+        134533206,
+        134533208,
+        134533210
+      ],
+      "successors": {
+        "134533200": [
+          134533202
+        ],
+        "134533202": [
+          134533204
+        ],
+        "134533204": [
+          134533206
+        ],
+        "134533206": [
+          134533208
+        ],
+        "134533208": [
+          134533210
+        ],
+        "134533210": []
+      },
+      "returns": [
+        134533210
+      ],
+      "tail_returns": [],
+      "local_link_calls": {},
+      "switches": {},
+      "saved_link_returns": []
+    }
+  },
+  "nm": "00000000 a \n2001600c b ._user_heap_stack\n08054d10 r .ARM\n00000000 n .ARM.attributes\n08054d10 n .ARM.extab\n20002f40 b .bss\n10000000 b .ccmram_bss\n10000000 ? .ccmram_data\n00000000 n .comment\n20000000 d .data\n00000000 N .debug_abbrev\n00000000 N .debug_aranges\n00000000 N .debug_frame\n00000000 N .debug_info\n00000000 N .debug_line\n00000000 N .debug_line_str\n00000000 N .debug_loclists\n00000000 N .debug_rnglists\n00000000 N .debug_str\n20000478 b .dma_bss\n08054d1c r .fini_array\n08054d18 r .init_array\n08000000 r .isr_vector\n08054d18 d .preinit_array\n0804d068 r .rodata\n08000190 t .text\n0800026c 00000276 T __adddf3\n08000c34 00000160 T __addsf3\n08000a98 00000010 T __aeabi_cdcmpeq\n08000a98 00000010 T __aeabi_cdcmple\n08000a88 00000020 T __aeabi_cdrcmple\n08000b88 0000009e T __aeabi_d2f\n08000b38 0000004e T __aeabi_d2iz\n08000f18 00000040 T __aeabi_d2uiz\n0804cd1c 0000003c T __aeabi_d2ulz\n0800026c 00000276 T __aeabi_dadd\n08000aa8 00000012 T __aeabi_dcmpeq\n08000ae4 00000012 T __aeabi_dcmpge\n08000af8 00000012 T __aeabi_dcmpgt\n08000ad0 00000012 T __aeabi_dcmple\n08000abc 00000012 T __aeabi_dcmplt\n08000b0c 0000002c T __aeabi_dcmpun\n0800082c 000001d0 T __aeabi_ddiv\n080005d8 00000254 T __aeabi_dmul\n08000260 T __aeabi_drsub\n08000268 0000027a T __aeabi_dsub\n08000528 00000042 T __aeabi_f2d\n08000c34 00000160 T __aeabi_fadd\n08000c28 0000016c T __aeabi_frsub\n08000c30 00000164 T __aeabi_fsub\n08000504 00000022 T __aeabi_i2d\n08000d9c 0000001c T __aeabi_i2f\n08000f14 00000002 W __aeabi_idiv0\n0800057c 0000005a T __aeabi_l2d\n08000dc8 0000007c T __aeabi_l2f\n08000f14 00000002 W __aeabi_ldiv0\n08000e44 T __aeabi_ldivmod\n080004e4 0000001e T __aeabi_ui2d\n08000d94 00000024 T __aeabi_ui2f\n0800056c 0000006a T __aeabi_ul2d\n08000db8 0000008c T __aeabi_ul2f\n08000ee4 T __aeabi_uldivmod\n2001600c B __bss_end__\n20002f40 B __bss_start__\n08000a0c 0000007a T __cmpdf2\n0800082c 000001d0 T __divdf3\n08000f98 t __do_global_dtors_aux\n08054d1c r __do_global_dtors_aux_fini_array_entry\n0804d050 t __EH_FRAME_BEGIN__\n08000a0c 0000007a T __eqdf2\n08048a6c 0000000c T __errno\n08054d18 R __exidx_end\n08054d10 R __exidx_start\n08000528 00000042 T __extendsfdf2\n08000b38 0000004e T __fixdfsi\n0804cd1c 0000003c T __fixunsdfdi\n08000f18 00000040 T __fixunsdfsi\n0800057c 0000005a T __floatdidf\n08000dc8 0000007c T __floatdisf\n08000504 00000022 T __floatsidf\n08000d9c 0000001c T __floatsisf\n0800056c 0000006a T __floatundidf\n08000db8 0000008c T __floatundisf\n080004e4 0000001e T __floatunsidf\n08000d94 00000024 T __floatunsisf\n080490c8 00000038 T __fpclassifyf\n08054d18 r __frame_dummy_init_array_entry\n080009fc 0000008a T __gedf2\n080009fc 0000008a T __gtdf2\n0804abd0 00000248 T __ieee754_acosf\n0804ae18 0000014c T __ieee754_atan2f\n0804af64 0000011c T __ieee754_hypotf\n08049988 00000c7c T __ieee754_pow\n0804b080 000006b8 T __ieee754_powf\n0804a608 00000424 T __ieee754_rem_pio2\n0804b738 0000026c T __ieee754_rem_pio2f\n08049168 000001f0 T __ieee754_sqrt\n08049358 00000006 T __ieee754_sqrtf\n08054d1c r __init_array_end\n08054d18 r __init_array_start\n08049590 0000026c T __kernel_cos\n0804aa3c 00000104 T __kernel_cosf\n0804be08 00000888 T __kernel_rem_pio2\n0804c690 0000068c T __kernel_rem_pio2f\n08049800 00000184 T __kernel_sin\n0804ab40 00000090 T __kernel_sinf\n08000a04 00000082 T __ledf2\n08048a78 00000048 T __libc_init_array\n08000a04 00000082 T __ltdf2\n0804bcc8 00000010 T __math_oflow\n0804bdfc 0000000c T __math_oflowf\n0804bcb8 00000010 T __math_uflow\n0804bdf0 0000000c T __math_uflowf\n080005d8 00000254 T __muldf3\n08000a0c 0000007a T __nedf2\n08054d18 d __preinit_array_end\n08054d18 d __preinit_array_start\n20015ed4 00000138 B __sf\n08000268 0000027a T __subdf3\n08000c30 00000164 T __subsf3\n20000474 D __TMC_END__\n08000b88 0000009e T __truncdfsf2\n0804cd58 000002f8 T __udivmoddi4\n08000b0c 0000002c T __unorddf2\n00000000 a _aeabi_ldivmod.o\n00000000 a _aeabi_uldivmod.o\n00000000 a _arm_addsubdf3.o\n00000000 a _arm_addsubsf3.o\n00000000 a _arm_cmpdf2.o\n00000000 a _arm_fixdfsi.o\n00000000 a _arm_fixunsdfsi.o\n00000000 a _arm_muldivdf3.o\n00000000 a _arm_truncdfsf2.o\n00000000 a _arm_unorddf2.o\n00000000 a _dvmd_tls.o\n2001600c B _ebss\n1000f4c0 B _eccmram_bss\n10000000 ? _eccmram_data\n20000474 D _edata\n20002f40 B _edma_bss\n20020000 R _estack\n0804d068 T _etext\n0804d05c T _fini\n20000428 0000004c D _impure_data\n20000424 00000004 D _impure_ptr\n0804d050 T _init\n00000000 A _Min_Heap_Size\n00000900 A _Min_Stack_Size\n20002f40 B _sbss\n10000000 B _sccmram_bss\n10000000 ? _sccmram_data\n20000000 D _sdata\n20000478 B _sdma_bss\n08055194 A _siccmram_data\n08054d20 A _sidata\n08053564 00000010 r accel_ranges_g.1\n08048d50 00000058 T acosf\n00000000 a adc.c\n080489e4 00000002 W ADC_IRQHandler\n08053d74 00000010 R AHBPrescTable\n08045cd0 000000b8 T Air_AckBuild\n08046114 00000058 T Air_CapabilityBuild\n08045c24 000000ac T Air_CmdParse\n0804628c 00000004 T Air_CompactV0ImuQuantize\n08046208 00000084 T Air_FlightStateBuild\n080459c0 00000228 T Air_FrameValidate\n080461d4 00000034 T Air_PreflightStateBuild\n0804616c 00000034 T Air_PreflightStatusBuild\n080461a0 00000034 T Air_SensorStatusBuild\n00000000 a alignment_strategy_binding.c\n08035aa4 00000004 T AlignmentStrategy_HardwareQuaternionRequired\n08035a40 00000052 t AlignmentStrategy_HorizontalGet\n08035a94 0000000c T AlignmentStrategy_Init\n08035aa0 00000004 T AlignmentStrategy_MagnetometerRequired\n080359d0 00000070 t AlignmentStrategy_Normalize\n08035aa8 00000644 T AlignmentStrategy_SampleProcess\n08053d6c 00000008 R APBPrescTable\n00000000 a app_tasks.c\n08000fe4 00000488 T AppTask_Device\n08004468 00002470 T AppTask_Estimator\n0800708c 00000db8 T AppTask_Flight\n08008fbc 000006fc T AppTask_Ins\n0801c248 00000b54 T AppTask_Logger\n08019e48 00000012 T AppTask_Serial\n08017434 000000f8 T AppTask_Telemetry\n0800146c 000001cc T AppTasks_Init\n08048da8 00000004 T atan2f\n0804b9a4 000001a4 T atanf\n08054c78 00000010 r atanhi\n08054c68 00000010 r atanlo\n00000000 a attitude_alignment.c\n00000000 a attitude_frame.c\n00000000 a attitude_preflight.c\n080325c8 000000dc T Attitude_PropagateQuaternionBodyIncrement\n080322f8 000000c2 t Attitude_QuaternionMultiply.part.0\n08032444 00000078 T Attitude_QuaternionNormalize\n080326a4 00000018 T Attitude_RotateVector\n080323bc 00000088 t Attitude_RotateVector.part.0\n080324bc 0000010c T Attitude_RotationVectorToQuaternion\n080326bc 000000e0 T Attitude_YawEnuFromQuaternion\n08033520 00000104 T AttitudeAlignment_TiltConsistent\n080336a0 0000001c T AttitudePreflight_Init\n08033890 0000003a T AttitudePreflight_LatestGet\n080336bc 00000110 T AttitudePreflight_LatestUpdate\n080337cc 000000b8 T AttitudePreflight_MissionFreeze\n080338cc 0000003c T AttitudePreflight_MissionGet\n08033884 0000000a T AttitudePreflight_MissionUnfreeze\n08033624 0000007c t AttitudePreflight_QuaternionValid\n080538b4 0000000c r body_x.0\n00000000 a bsp_driver_sd.c\n080477b8 00000018 T BSP_PlatformIsDetected\n08047728 00000002 W BSP_SD_AbortCallback\n0804771c 0000000c W BSP_SD_GetCardInfo\n08047708 00000014 W BSP_SD_GetCardState\n08047788 00000030 W BSP_SD_Init\n08047768 0000001e W BSP_SD_IsDetected\n080476d0 0000001c W BSP_SD_ReadBlocks_DMA\n08047d04 00000054 T BSP_SD_ReadCpltCallback\n080476ec 0000001c W BSP_SD_WriteBlocks_DMA\n08047cb0 00000054 T BSP_SD_WriteCpltCallback\n08053488 00000009 r build_tag.1\n08053888 00000009 r build_tag.2\n080471a4 00000002 T BusFault_Handler\n080489e4 00000002 W CAN1_RX0_IRQHandler\n080489e4 00000002 W CAN1_RX1_IRQHandler\n080489e4 00000002 W CAN1_SCE_IRQHandler\n080489e4 00000002 W CAN1_TX_IRQHandler\n080489e4 00000002 W CAN2_RX0_IRQHandler\n080489e4 00000002 W CAN2_RX1_IRQHandler\n080489e4 00000002 W CAN2_SCE_IRQHandler\n080489e4 00000002 W CAN2_TX_IRQHandler\n08049468 00000094 T ceilf\n08020e88 00000084 t check_fs\n08020a64 000000a0 t chk_lock\n00000000 a common_format.c\n00000000 a common_ringbuf.c\n00000000 a common_spsc_queue.c\n08009c78 00000044 t CommonFormat_CharacterPut\n0800a234 0000009c t CommonFormat_FieldPut\n08009d90 0000022c t CommonFormat_FixedCreate\n0800a0e0 00000154 t CommonFormat_NumberPut\n08009bc0 00000034 t CommonFormat_ParserAdvance\n0800acd8 0000001c T CommonFormat_Print\n08009fbc 00000080 t CommonFormat_RepeatPut\n0800a03c 000000a4 t CommonFormat_TextPut\n08009cbc 000000d4 t CommonFormat_UnsignedCreate\n08009bf4 00000084 t CommonFormat_UnsignedDecimalParse\n0800a2d0 00000a08 T CommonFormat_VPrint\n0800b128 0000001e T CommonSpscQueue_Count\n0800af10 00000050 T CommonSpscQueue_Init\n0800b044 000000e4 T CommonSpscQueue_Pop\n0800af60 000000e4 T CommonSpscQueue_Push\n0800b148 00000016 T CommonSpscQueue_Reset\n20002f40 b completed.1\n080530a0 00000028 r config.0\n00000000 a console_uart_device.c\n0802efc0 0000003c T ConsoleUart_DiagnosticsGet\n0802ef38 0000001a T ConsoleUart_Init\n0802ef54 00000006 T ConsoleUart_Process\n0802ef98 00000028 T ConsoleUart_Read\n0802ef5c 0000003c T ConsoleUart_Write\n080530c8 00000028 r constraints.0\n0805384c 00000028 r constraints.0\n00000000 a control_research.c\n00000000 a control_research_runtime.c\n08007f90 00000038 T ControlResearch_Init\n08008548 00000116 T ControlResearch_InputRead\n08007fc8 00000580 T ControlResearch_Process\n08008698 000000ac T ControlResearch_PublicationCheck\n08008660 00000038 T ControlResearch_RuntimeProcess\n08007ee4 000000ac t ControlResearch_StateRequire\n08007e44 000000a0 t ControlResearch_Terminate\n080488a8 00000010 T ControlResearchBackend_Start\n080488bc 00000010 T ControlResearchBackend_Step\n080488b8 00000004 T ControlResearchBackend_Stop\n08048968 t CopyCcmDataInit\n08048952 t CopyDataInit\n08048c38 00000088 T cos\n08048efc 00000070 T cosf\n080214a0 000000d2 t create_chain\n00000000 a crti.o\n00000000 a crtn.o\n00000000 a crtstuff.c\n080532b4 0000000c r CSWTCH.104\n080532a0 00000014 r CSWTCH.106\n08053288 00000018 r CSWTCH.108\n08053118 00000010 r CSWTCH.11\n08053270 00000018 r CSWTCH.110\n08053ce8 0000001c r CSWTCH.115\n080538f8 00000024 r CSWTCH.116\n080538e0 00000018 r CSWTCH.118\n08053cc8 00000020 r CSWTCH.119\n08053200 00000010 r CSWTCH.12\n08053ca8 00000020 r CSWTCH.121\n080535b8 00000005 r CSWTCH.121\n08053c90 00000018 r CSWTCH.123\n08053c5c 00000034 r CSWTCH.126\n08053c50 0000000c r CSWTCH.133\n08053c30 00000020 r CSWTCH.135\n08053c14 0000001c r CSWTCH.137\n08053c00 00000014 r CSWTCH.139\n08053c14 0000001c r CSWTCH.141\n08053bf0 00000010 r CSWTCH.143\n08053be4 0000000c r CSWTCH.145\n08053bc4 00000020 r CSWTCH.148\n08053bb8 0000000c r CSWTCH.151\n080538c0 00000020 r CSWTCH.152\n08053ba0 00000018 r CSWTCH.155\n08053b80 00000020 r CSWTCH.157\n08053b54 0000002c r CSWTCH.159\n080531f4 0000000c r CSWTCH.17\n0805370c 00000004 r CSWTCH.18\n08053838 00000011 r CSWTCH.19\n080531e4 00000010 r CSWTCH.19\n0805318c 00000018 r CSWTCH.19\n080536dc 00000030 r CSWTCH.20\n08053b10 00000044 r CSWTCH.201\n08053ad4 0000003c r CSWTCH.208\n08053090 00000008 r CSWTCH.225\n0805391c 0000000c r CSWTCH.25\n08053404 00000010 r CSWTCH.297\n08053894 0000000e r CSWTCH.36\n080536d4 00000007 r CSWTCH.43\n080536cc 00000007 r CSWTCH.47\n080536c4 00000005 r CSWTCH.52\n08053d38 00000031 r CSWTCH.54\n080536bc 00000005 r CSWTCH.55\n08053808 00000008 r CSWTCH.6\n08053d04 00000031 r CSWTCH.66\n08053938 00000014 r CSWTCH.7\n080548c4 0000000c r CSWTCH.8\n08053814 00000014 r CSWTCH.81\n08053398 00000018 r CSWTCH.82\n08053368 00000030 r CSWTCH.84\n08053210 00000018 r CSWTCH.9\n08053928 00000010 r CSWTCH.9\n080548b8 0000000c r CSWTCH.9\n08053810 00000003 r CSWTCH.92\n0805353c 0000000c r CSWTCH.92\n08053530 0000000c r CSWTCH.94\n08053414 0000002f r CSWTCH.94\n080489e4 00000002 W DCMI_IRQHandler\n00000000 a debug_log.c\n0800b238 00000002 T DebugLog_Init\n0800b250 000000b8 T DebugLog_Print\n0800b23c 00000012 T DebugLog_Write\n080471ac 00000002 T DebugMon_Handler\n080489e4 00000002 T Default_Handler\n08000f58 t deregister_tm_clones\n00000000 a device_native_log.c\n00000000 a device_task.c\n08019f48 0000015c t DeviceNativeLog_GnssInstanceProcess\n08019e5c 000000ec t DeviceNativeLog_MagnetometerInstanceProcess\n0801a278 0000017c T DeviceNativeLog_PowerProcess\n0801a0a4 000001d4 T DeviceNativeLog_Process\n00000000 a diagnostic_log.c\n0801a440 000000a8 T DiagnosticLog_StatsProcess\n0801a3f4 0000004c t DiagnosticLog_StatsRecordBuild\n0801a4e8 00000140 T DiagnosticLog_TelemetryProcess\n08021898 000001d8 t dir_find\n08021574 0000013c t dir_next\n080216b0 00000144 t dir_read.constprop.0\n08021d4c 00000380 t dir_register\n080217f4 000000a2 t dir_sdi\n20011528 0000000c B disk\n080209ec 00000028 T disk_initialize\n08020a4c 00000018 T disk_ioctl\n08020a14 0000001c T disk_read\n080209d8 00000014 T disk_status\n08020a30 0000001c T disk_write\n00000000 a diskio.c\n00000000 a dma.c\n080489e4 00000002 W DMA1_Stream0_IRQHandler\n080471b0 0000000c T DMA1_Stream1_IRQHandler\n080489e4 00000002 W DMA1_Stream2_IRQHandler\n080471bc 0000000c T DMA1_Stream3_IRQHandler\n080489e4 00000002 W DMA1_Stream4_IRQHandler\n080471c8 0000000c T DMA1_Stream5_IRQHandler\n080471d4 0000000c T DMA1_Stream6_IRQHandler\n080489e4 00000002 W DMA1_Stream7_IRQHandler\n080489e4 00000002 W DMA2_Stream0_IRQHandler\n080489e4 00000002 W DMA2_Stream1_IRQHandler\n08047230 0000000c T DMA2_Stream2_IRQHandler\n0804723c 0000000c T DMA2_Stream3_IRQHandler\n080489e4 00000002 W DMA2_Stream4_IRQHandler\n080489e4 00000002 W DMA2_Stream5_IRQHandler\n08047248 0000000c T DMA2_Stream6_IRQHandler\n08047254 0000000c T DMA2_Stream7_IRQHandler\n00000000 a e_pow.c\n00000000 a e_rem_pio2.c\n00000000 a e_sqrt.c\n00000000 a ef_acos.c\n00000000 a ef_atan2.c\n00000000 a ef_hypot.c\n00000000 a ef_pow.c\n00000000 a ef_rem_pio2.c\n00000000 a ef_sqrt.c\n20016010 B end\n00000000 a errno.c\n08046e4c 00000004 T Error_Handler\n00000000 a estimator_barometer_pending.c\n08001fb8 00000084 t Estimator_BarometerUpdateStateSet\n00000000 a estimator_bus.c\n08002d1c 0000055c t Estimator_DiagnosticsPublish\n08001b4c 00000098 t Estimator_FaultSnapshotPublish\n080068d8 000000c8 T Estimator_GetInitialStateSnapshot\n080069a0 00000070 T Estimator_GetLatestSnapshot\n08002404 000000b8 t Estimator_GnssEnuSampleInlier.constprop.0\n080024bc 00000860 t Estimator_GnssOriginFreeze\n08001ad4 00000078 t Estimator_GnssOriginSampleValid\n08001d80 00000238 t Estimator_GnssRecoveryLogPush\n080035b4 00000404 t Estimator_InitializeNavigation\n0800203c 000003c8 t Estimator_LogPush\n08001be4 00000070 t Estimator_MeasurementResultConvert\n08001c54 00000060 t Estimator_MeasurementResultFlagBuild\n08003278 0000010c t Estimator_OriginWindowReset\n08001cb4 0000007c t Estimator_PredictionLogPush\n08001d30 00000050 t Estimator_ReplayInsert\n08003564 00000050 t Estimator_SnapshotPublish\n08003384 000001e0 t Estimator_SnapshotPublish.part.0\n00000000 a estimator_task.c\n080017d4 00000020 T EstimatorBarometerPending_Consume\n08001790 00000042 T EstimatorBarometerPending_Get\n08001738 0000000c T EstimatorBarometerPending_Reset\n08001744 0000004a T EstimatorBarometerPending_TryLatch\n080017f4 00000060 T EstimatorBus_Init\n0800193c 000000c0 T EstimatorBus_PredictionPop\n0800187c 000000c0 T EstimatorBus_PredictionPush\n08001a60 00000050 T EstimatorBus_PressureGetLatest\n080019fc 00000064 T EstimatorBus_PressurePublish\n08001854 00000028 T EstimatorBus_ResetFlightData\n08001ab0 00000024 T EstimatorBus_StatsGet\n08004394 000000d4 T EstimatorTask_AbortMission\n08006be8 00000098 T EstimatorTask_BarometerAlignmentStatusGet\n080039b8 00000044 T EstimatorTask_ControlInputInvalidate\n080039fc 000000a0 T EstimatorTask_ControlProvenanceCheck\n08003a9c 0000066c T EstimatorTask_FreezeOrigins\n08006aa8 00000140 T EstimatorTask_GnssAlignmentStatusGet\n08004108 0000005c T EstimatorTask_InitializeMission\n08006a10 00000098 T EstimatorTask_OriginsReset\n08004298 000000fc T EstimatorTask_PrepareNavigation\n08004164 00000134 T EstimatorTask_RollbackMissionStart\n080489e4 00000002 W ETH_IRQHandler\n080489e4 00000002 W ETH_WKUP_IRQHandler\n080534ac 00000080 r ExCvt\n080489e4 00000002 W EXTI0_IRQHandler\n080489e4 00000002 W EXTI1_IRQHandler\n080489e4 00000002 W EXTI15_10_IRQHandler\n080489e4 00000002 W EXTI2_IRQHandler\n080489e4 00000002 W EXTI3_IRQHandler\n080489e4 00000002 W EXTI4_IRQHandler\n080471e0 00000012 T EXTI9_5_IRQHandler\n08022898 00000064 T f_close\n08022c4c 0000006c T f_closedir\n080228fc 000002ba T f_lseek\n08022d58 00000220 T f_mkdir\n080220cc 00000068 T f_mount\n08022134 00000294 T f_open\n08022bb8 00000094 T f_opendir\n080223c8 000001d0 T f_read\n08022cb8 0000005c T f_readdir\n08022d14 00000044 T f_stat\n080227c8 000000ce T f_sync\n08022598 00000230 T f_write\n0804aa2c 00000010 T fabs\n08048f6c 0000000e T fabsf\n20011524 00000004 b FatFs\n00000000 a fatfs.c\n00000000 a fatfs_lfn_ascii.c\n08022f78 00000048 T FATFS_LinkDriver\n00000000 a fatfs_platform.c\n00000000 a ff.c\n08031558 0000000c T ff_convert\n00000000 a ff_gen_drv.c\n08031564 0000000e T ff_wtoupper\n0805317c 00000010 r fields.0\n20011500 00000020 b Files\n0804897c t FillZerobss\n0804899c t FillZeroCcmBss\n0804898c t FillZeroDmaBss\n08020f0c 00000264 t find_volume\n00000000 a findfp.c\n08048ff0 00000016 T finite\n08049008 00000014 T finitef\n08053494 00000008 r flagBitshiftOffset.0\n080489e4 00000002 W FLASH_IRQHandler\n00000000 a flight_deployment.c\n00000000 a flight_landing.c\n00000000 a flight_task.c\n080354fc 000000ec T FlightDeployment_ContextInit\n08035714 0000000c T FlightLanding_BarometerRegressionReset\n080355e8 0000012c T FlightLanding_ContextInit\n0803afa4 0000010c T FlightLog_FileHeaderSerialize\n0803b0b0 00000128 T FlightLog_RecordSerialize\n08006c80 00000054 t FlightTask_AlignmentEvidenceRetry\n08006cd4 00000118 t FlightTask_CalibrationResultWrite.part.0\n08049360 00000108 T floor\n080494fc 00000094 T floorf\n08049028 0000004e T fmaxf\n08049078 0000004e T fminf\n08021a70 000002dc t follow_path\n080489e4 00000002 W FPU_IRQHandler\n08000fc0 t frame_dummy\n00000000 a freertos_hooks.c\n00000000 a freertos_target_irq.c\n20011520 00000002 b Fsid\n080489e4 00000002 W FSMC_IRQHandler\n08000000 00000188 R g_pfnVectors\n00000000 a geodesy_local.c\n080327a0 000002b8 T GeoLocalFrame_Init\n08032a58 00000208 T GeoLocalFrame_ToEnu\n080212f8 00000124 t get_fat.isra.0\n080476cc 00000004 T get_fattime\n08020c6c 0000016e t get_fileinfo\n08020bb0 0000003a t get_ldnumber\n080281a0 000000f8 t Gnss_ConfigAsyncKeyFinish.constprop.0\n080280d4 000000cc t Gnss_ConfigAsyncNextGroup.constprop.0\n08028010 00000080 t Gnss_ConfigSnapshotMerge.part.0\n08028298 00000120 t Gnss_DiscontinuityHandle\n08028628 00000210 t Gnss_ParseNmeaByte\n08028410 000000d4 t Gnss_UbxFrameEnqueue.part.0.constprop.0\n08027dc0 0000013c t Gnss_UpdateStatus\n08027efc 00000114 t Gnss_ValgetAsyncPoll\n080284e4 00000144 t Gnss_ValgetAsyncStart\n0802a410 00000160 t Gnss_ValgetLayerRead\n080283b8 00000058 t Gnss_ValidBaudRecord\n0802ad80 000000b0 T GnssNeoM9n_ConfigReadAsyncCancel\n0802aacc 000002b4 T GnssNeoM9n_ConfigReadAsyncPoll\n0802aa1c 000000b0 T GnssNeoM9n_ConfigReadAsyncStart\n0802a570 0000000a T GnssNeoM9n_GetData\n08028090 00000044 t GnssNeoM9n_GetData.part.0\n0802b2e4 00000048 T GnssNeoM9n_GetRfDiagnostics\n0802b29c 00000048 T GnssNeoM9n_GetSatelliteDiagnostics\n0802a57c 00000108 T GnssNeoM9n_GetStatusSnapshot\n0802884c 00000038 T GnssNeoM9n_IdentityDiagnosticsGet\n08028950 00000254 T GnssNeoM9n_Init\n0802aee4 000001c0 T GnssNeoM9n_ItemReadPoll\n0802ae30 000000b4 T GnssNeoM9n_ItemReadStart\n0802b1e8 000000b4 T GnssNeoM9n_ItemWritePoll\n0802b0a4 00000144 T GnssNeoM9n_ItemWriteStart\n08028838 00000014 T GnssNeoM9n_LastValidBaudGet\n0802a0c0 00000350 T GnssNeoM9n_ProbePoll\n08028884 000000cc T GnssNeoM9n_ProbeStart\n08028ba4 0000151c T GnssNeoM9n_Process\n0802a684 00000398 T GnssNeoM9n_ReadHardwareConfig\n0802b830 000000ec T GnssNeoM9n_ReadRfDiagnostics\n0802b668 000000ec T GnssNeoM9n_ReadSatelliteDiagnostics\n0802b404 00000048 T GnssNeoM9n_RfDiagnosticsAsyncCancel\n0802b3bc 00000048 T GnssNeoM9n_RfDiagnosticsAsyncPoll\n0802b754 000000dc T GnssNeoM9n_RfDiagnosticsAsyncStart\n0802b374 00000048 T GnssNeoM9n_SatelliteDiagnosticsAsyncCancel\n0802b32c 00000048 T GnssNeoM9n_SatelliteDiagnosticsAsyncPoll\n0802b580 000000e8 T GnssNeoM9n_SatelliteDiagnosticsAsyncStart\n0802b44c 00000134 T GnssNeoM9n_SendUbx\n0802b91c 0000003c T GnssNeoM9n_StreamDiagnosticsGet\n00000000 a gpio.c\n08053554 00000010 r gyro_ranges_dps.0\n20015700 00000048 B hadc1\n0801f428 00000150 T HAL_ADC_ConfigChannel\n0801f420 00000006 T HAL_ADC_GetValue\n0801f0c0 00000158 T HAL_ADC_Init\n08046a80 00000070 T HAL_ADC_MspInit\n0801f358 000000c6 T HAL_ADC_PollForConversion\n0801f218 00000108 T HAL_ADC_Start\n0801f320 00000036 T HAL_ADC_Stop\n0801d224 00000024 W HAL_Delay\n0801df94 00000092 T HAL_DMA_Abort\n0801e028 00000024 T HAL_DMA_Abort_IT\n0801dea0 0000007c T HAL_DMA_DeInit\n0801e1f8 00000004 T HAL_DMA_GetError\n0801dd78 00000128 T HAL_DMA_Init\n0801e04c 000001ac T HAL_DMA_IRQHandler\n0801df1c 00000078 T HAL_DMA_Start_IT\n0801d218 0000000c W HAL_GetTick\n0801dbd8 00000174 T HAL_GPIO_DeInit\n08023cc4 0000006c T HAL_GPIO_EXTI_Callback\n0801dd60 00000018 T HAL_GPIO_EXTI_IRQHandler\n0801d9a4 00000234 T HAL_GPIO_Init\n0801dd4c 0000000c T HAL_GPIO_ReadPin\n0801dd58 00000008 T HAL_GPIO_WritePin\n0801d200 00000018 W HAL_IncTick\n0801d1cc 00000034 T HAL_Init\n08047100 00000098 T HAL_InitTick\n080470c0 00000040 T HAL_MspInit\n0801d300 00000024 T HAL_NVIC_DisableIRQ\n0801d2e4 0000001c T HAL_NVIC_EnableIRQ\n0801d26c 00000078 T HAL_NVIC_SetPriority\n0801d248 00000024 T HAL_NVIC_SetPriorityGrouping\n0801d758 0000013c T HAL_RCC_ClockConfig\n0801d960 00000044 T HAL_RCC_GetClockConfig\n0801d8d4 0000008c W HAL_RCC_GetOscConfig\n0801d894 00000020 T HAL_RCC_GetPCLK1Freq\n0801d8b4 00000020 T HAL_RCC_GetPCLK2Freq\n0801d6f0 00000068 W HAL_RCC_GetSysClockFreq\n0801d324 000003cc W HAL_RCC_OscConfig\n0804772c 00000014 T HAL_SD_AbortCallback\n08020028 00000140 T HAL_SD_ConfigWideBusOperation\n0801fbc4 00000002 W HAL_SD_ErrorCallback\n0801fc10 00000178 T HAL_SD_GetCardCSD\n08020000 00000028 T HAL_SD_GetCardInfo\n08020168 00000028 T HAL_SD_GetCardState\n0801ffc4 0000003a T HAL_SD_Init\n0801fd88 0000023c T HAL_SD_InitCard\n08020240 00000250 T HAL_SD_IRQHandler\n08046e70 00000190 T HAL_SD_MspInit\n0801f968 00000130 T HAL_SD_ReadBlocks_DMA\n08047754 00000014 T HAL_SD_RxCpltCallback\n08047740 00000014 T HAL_SD_TxCpltCallback\n0801fa98 0000012c T HAL_SD_WriteBlocks_DMA\n0801edf8 000000c2 T HAL_SPI_Init\n08047048 00000078 T HAL_SPI_MspInit\n0801eebc 00000202 T HAL_SPI_TransmitReceive\n0801f818 0000005c T HAL_TIM_Base_Init\n0801f578 00000002 W HAL_TIM_Base_MspInit\n0801f57c 00000074 T HAL_TIM_Base_Start_IT\n0801f5f4 00000002 W HAL_TIM_IC_CaptureCallback\n0801f600 00000136 T HAL_TIM_IRQHandler\n0801f5f0 00000002 W HAL_TIM_OC_DelayElapsedCallback\n08046e38 00000014 T HAL_TIM_PeriodElapsedCallback\n0801f5f8 00000002 W HAL_TIM_PWM_PulseFinishedCallback\n0801f5fc 00000002 W HAL_TIM_TriggerCallback\n0801f878 00000002 W HAL_TIMEx_BreakCallback\n0801f874 00000002 W HAL_TIMEx_CommutCallback\n0801e544 000000a8 T HAL_UART_AbortReceive\n0801e38c 00000036 T HAL_UART_DeInit\n08023a60 000000ac T HAL_UART_ErrorCallback\n0801e328 00000064 T HAL_UART_Init\n0801e844 0000033c T HAL_UART_IRQHandler\n080475fc 000000b4 T HAL_UART_MspDeInit\n0804731c 000002e0 T HAL_UART_MspInit\n0801e648 00000002 W HAL_UART_RxCpltCallback\n0801e64c 00000002 W HAL_UART_RxHalfCpltCallback\n0801e3c4 000000ec T HAL_UART_Transmit\n0801e4b0 00000090 T HAL_UART_Transmit_DMA\n08023898 000000a4 T HAL_UART_TxCpltCallback\n0801e638 00000002 W HAL_UART_TxHalfCpltCallback\n0801e540 00000004 T HAL_UARTEx_GetRxEventType\n0801ec2c 0000005c T HAL_UARTEx_ReceiveToIdle_DMA\n0802393c 00000124 T HAL_UARTEx_RxEventCallback\n0804719c 00000002 T HardFault_Handler\n080489e4 00000002 W HASH_RNG_IRQHandler\n200157a8 00000060 B hdma_sdio_rx\n20015748 00000060 B hdma_sdio_tx\n20015b10 00000060 B hdma_usart1_rx\n20015ab0 00000060 B hdma_usart1_tx\n20015a50 00000060 B hdma_usart2_rx\n200159f0 00000060 B hdma_usart2_tx\n20015990 00000060 B hdma_usart3_rx\n20015930 00000060 B hdma_usart3_tx\n080533b0 00000011 r hex.0\n080535d8 00000011 r hex.1\n20015808 00000084 B hsd\n20015890 00000058 B hspi1\n200158e8 00000048 B htim1\n20015c00 00000048 B huart1\n20015bb8 00000048 B huart2\n20015b70 00000048 B huart3\n08048dac 00000050 T hypotf\n080489e4 00000002 W I2C1_ER_IRQHandler\n080489e4 00000002 W I2C1_EV_IRQHandler\n080489e4 00000002 W I2C2_ER_IRQHandler\n080489e4 00000002 W I2C2_EV_IRQHandler\n080489e4 00000002 W I2C3_ER_IRQHandler\n080489e4 00000002 W I2C3_EV_IRQHandler\n00000000 a impure.c\n08026270 00000040 T IMU_ConfigCacheGet\n080262b0 0000004c T IMU_ConfigCacheSetAll\n0802617c 00000014 T IMU_GetConsecutiveLegalFrameCount\n080261c0 00000010 T IMU_GetData\n08025b40 00000088 T IMU_Init\n08026190 00000030 T IMU_IsOnline\n08025b04 0000003c T IMU_LocalGravitySet\n080252e8 000002d8 t IMU_OnFrameDecoded.constprop.0\n08025244 000000a4 t IMU_ParseReadResponseByte\n08025bc8 000005b4 T IMU_Poll\n08025688 00000160 T IMU_RegisterReadAsyncPoll\n080255c0 000000c8 T IMU_RegisterReadAsyncStart\n080258c4 000000fc T IMU_RegisterWriteAsyncPoll\n080257e8 000000dc T IMU_RegisterWriteAsyncStart\n00000000 a imu_sample_bus.c\n00000000 a imu_six_face_calibration.c\n08025a4c 000000b8 T IMU_StartupRegisterGet\n080262fc 00000030 T IMU_StreamDiagnosticsGet\n080259c0 0000008c T IMU_StreamReset\n08008744 0000004c T ImuSampleBus_Init\n08008940 000000a0 T ImuSampleBus_Pop\n080087b8 00000188 T ImuSampleBus_Process\n08008790 00000028 T ImuSampleBus_Reset\n080089e0 0000002c T ImuSampleBus_StatsGet\n080347e4 00000224 T ImuSixFace_CorrectionCalculate\n08020b04 000000ac t inc_lock\n00000000 a indicator_service.c\n080489e4 t Infinite_Loop\n00000000 a init.c\n08054cc8 00000010 r init_jk\n08054d04 0000000c r init_jk\n0803a8e0 00000088 T Ins_ComputeSecondOrderConing\n0803a810 000000d0 T Ins_ComputeSubIntervalIncrement\n08009860 00000028 T Ins_GetAlignmentSnapshot\n08009818 00000048 T Ins_GetInitialAttitude\n00000000 a ins_mechanization.c\n00000000 a ins_task.c\n0803a968 00000060 T Ins_TransformDeltaVelocityToNavigation\n0803a9c8 00000030 T InsInertial_Reset\n0803a9f8 000005aa T InsInertial_Update\n0803a7e4 00000022 T InsMechanization_Init\n0803a808 00000008 T InsMechanization_ResetNavigation\n0803a788 0000005c t InsMechanization_ResetNavigation.part.0\n0800979c 0000007c T InsTask_AbortMission\n08009888 000000fc T InsTask_AlignmentReset\n08009984 0000023c T InsTask_AttitudeAlignmentStatusGet\n08008f44 00000078 t InsTask_AttitudeReadinessRefresh.isra.0\n08008a8c 0000017c t InsTask_DiagnosticsPublish\n080096cc 000000d0 T InsTask_InitializeMission\n08008c44 0000008c t InsTask_InputReject\n08008cd0 00000044 t InsTask_MissionScopeStop.part.0\n08008c08 0000003c t InsTask_OutputPublish\n080096b8 00000014 T InsTask_PrepareStart\n08008dac 00000198 t InsTask_PrepareStart.part.0\n08008d14 00000098 t InsTask_ProvenanceObserve.isra.0\n08008a0c 00000080 t InsTask_SampleCorrect\n00000000 a jy901b_barometer_adapter.c\n00000000 a jy901b_device.c\n00000000 a jy901b_imu_adapter.c\n00000000 a jy901b_quaternion_adapter.c\n00000000 a jy901b_sample_quality.c\n00000000 a jy901b_startup.c\n08026514 00000020 T Jy901bAdapter_AlgorithmStage\n080269cc 00000124 T Jy901bAdapter_FrameHealthGet\n08026964 00000068 T Jy901bAdapter_OutputRateValueGet\n08026438 000000dc T Jy901bAdapter_SharedInit\n08026574 000003a8 T Jy901bAdapter_SharedProcess\n0802691c 00000048 T Jy901bAdapter_SharedSnapshotGet\n08026534 00000040 T Jy901bAdapter_SharedStart\n080278a0 0000007c t Jy901bBarometerAdapter_ConfigCheck.isra.0\n08027964 0000000e T Jy901bBarometerInstance_CapabilitiesGet\n08027a0c 00000048 T Jy901bBarometerInstance_ConfigApply\n08027a54 00000028 T Jy901bBarometerInstance_EffectiveConfigGet\n08027974 00000008 T Jy901bBarometerInstance_HealthGet\n08027934 00000030 T Jy901bBarometerInstance_InfoGet\n0802791c 00000004 T Jy901bBarometerInstance_Init\n0802797c 00000090 T Jy901bBarometerInstance_LatestSampleGet\n08027930 00000004 T Jy901bBarometerInstance_Process\n08027920 0000000e T Jy901bBarometerInstance_Start\n08026248 00000028 T Jy901bImu_OverflowCountTake\n080261d0 00000078 T Jy901bImu_SampleGetNext\n0802632c 0000010c t Jy901bImuAdapter_ConfigValidate\n08026bd8 0000000e T Jy901bImuInstance_CapabilitiesGet\n08026f70 000000ac T Jy901bImuInstance_ConfigApply\n0802701c 000001bc T Jy901bImuInstance_ConfigVerify\n080271d8 00000038 T Jy901bImuInstance_EffectiveConfigGet\n08026be8 00000048 T Jy901bImuInstance_HealthGet\n08026b7c 0000005c T Jy901bImuInstance_InfoGet\n08026af0 00000004 T Jy901bImuInstance_Init\n08026ccc 00000048 T Jy901bImuInstance_IoDetailGet\n08026c30 0000009c T Jy901bImuInstance_IoDiagnosticsGet\n08026d14 00000168 T Jy901bImuInstance_LatestSampleGet\n08026e80 000000f0 T Jy901bImuInstance_NextSampleGet\n08026b70 0000000a T Jy901bImuInstance_Process\n08026b34 0000003c T Jy901bImuInstance_RuntimeOwnerActivate\n08026af4 00000040 T Jy901bImuInstance_Start\n08027a7c 00000078 t Jy901bQuaternionAdapter_ConfigCheck.isra.0\n08027af4 00000170 t Jy901bQuaternionAdapter_GetSample\n08027cd4 0000000e T Jy901bQuaternionInstance_CapabilitiesGet\n08027cf0 000000a8 T Jy901bQuaternionInstance_ConfigApply\n08027d98 00000028 T Jy901bQuaternionInstance_EffectiveConfigGet\n08027ce4 00000008 T Jy901bQuaternionInstance_HealthGet\n08027c78 0000005c T Jy901bQuaternionInstance_InfoGet\n08027c64 00000004 T Jy901bQuaternionInstance_Init\n08027cec 00000004 T Jy901bQuaternionInstance_LatestSampleGet\n08027c68 0000000e T Jy901bQuaternionInstance_Start\n08027774 0000012c T Jy901bSample_QualityEvaluate\n08027528 000000d4 t Jy901bStartup_ConfigApply\n08027340 000000a0 t Jy901bStartup_ConfigRead\n080273e0 00000100 t Jy901bStartup_ConfigVerify\n08027764 00000010 T Jy901bStartup_FailureGet\n0802768c 000000b8 T Jy901bStartup_Init\n080275fc 0000001e t Jy901bStartup_ProbePoll\n080274e0 00000048 t Jy901bStartup_ProbeStart\n0802761c 00000070 t Jy901bStartup_Reconnect\n08027254 000000ec t Jy901bStartup_RegisterReadStep\n08027210 00000042 t Jy901bStartup_SamplePoll\n08027754 00000010 T Jy901bStartup_StateGet\n08027744 00000010 T Jy901bStartup_Tick\n00000000 a k_cos.c\n00000000 a k_rem_pio2.c\n00000000 a k_sin.c\n00000000 a kf_cos.c\n00000000 a kf_rem_pio2.c\n00000000 a kf_sin.c\n20002f60 00000008 b last_health_log_us.0\n20002f70 00000004 b last_rf_sequence.2\n20002f74 00000004 b last_satellite_sequence.3\n20002f7c 00000004 b last_sequence.6\n20002f80 00000004 b last_sequence.7\n20002f78 00000001 b last_usable.4\n08045590 0000000a T LegacyAir_AckResultIsValid\n08044e54 0000007c T LegacyAir_CapabilityBuild\n08044dec 00000054 t LegacyAir_CapabilityFieldsAreValid.part.0\n0804527c 00000048 T LegacyAir_CmdIdIsValid\n080451b8 000000c4 T LegacyAir_CmdTokenIsValid\n08044ed0 000000c4 T LegacyAir_CompactV0ImuQuantize\n08045130 00000088 T LegacyAir_FlightStateBuild\n08045580 0000000e T LegacyAir_FrameValidate\n080452c4 000002bc t LegacyAir_FrameValidate.part.0\n08044e40 00000014 T LegacyAir_GetExpectedFrameLength\n08044b90 00000058 t LegacyAir_NavigationFrameValidate\n08044d58 00000094 t LegacyAir_PhysicalToI16\n080450c4 0000006c T LegacyAir_PreflightStateBuild\n08044f94 00000098 T LegacyAir_PreflightStatusBuild\n08044b50 00000040 t LegacyAir_PreflightStatusFieldsAreValid\n0804502c 00000098 T LegacyAir_SensorStatusBuild\n08044b10 00000040 t LegacyAir_StartBlockReasonIsValid\n08044c9c 000000bc t LegacyAir_StatePrefixPut\n08044be8 000000b4 t LegacyAir_StatusFieldsAreValid\n20011498 00000062 b LfnBuf\n0805349c 0000000d r LfnOfs\n00000000 a libc_a-memchr.o\n00000000 a libc_a-strcmp.o\n00000000 a libc_a-strlen.o\n00000000 a libgcc2.c\n00000000 a libgcc2.c\n00000000 a list.c\n00000000 a log_file_storage.c\n00000000 a log_sink_service.c\n08015e60 000000f8 t LogFile_Abort\n08015c5c 000000e0 t LogFile_BlockEncode\n08015d3c 00000064 t LogFile_CrcUpdate\n08015e08 00000058 t LogFile_NumberParse\n08015da0 00000068 t LogFile_ResponseCopyLocked\n0803194c 000001a8 t LogFileStorage_ReadBounded\n00000000 a logger_bus.c\n00000000 a logger_task.c\n0801b8d4 0000001e T LoggerBus_AlignmentEvidencePush\n0801b8b4 0000001e T LoggerBus_AlignmentResultPush\n0801b854 00000020 T LoggerBus_BaroMeasurementPush\n0801b7d4 00000020 T LoggerBus_BaroNativePush\n0801a628 00000058 t LoggerBus_BootstrapSuppress\n0801b894 0000001e T LoggerBus_CalibrationResultPush\n0801afa4 00000104 t LoggerBus_ConfiguredRecordPush\n0801bc3c 00000058 T LoggerBus_Count\n0801b664 00000090 T LoggerBus_DecoderProfileDescriptorPush\n0801b134 000000e0 T LoggerBus_DisableForBootNoStorage\n0801b348 00000020 T LoggerBus_EstimatorPush\n0801bcb4 00000020 T LoggerBus_EstimatorStepPush\n0801b2ec 0000003a T LoggerBus_EventPush\n0801b9b0 000000c0 T LoggerBus_FinalizationArm\n0801bab8 00000020 T LoggerBus_FinalizationComplete\n0801ba70 00000048 T LoggerBus_FinalizationProcess\n0801bad8 00000018 T LoggerBus_FinalizationStateGet\n0801b834 00000020 T LoggerBus_GnssMeasurementPush\n0801b7b4 00000020 T LoggerBus_GnssNativePush\n0801bdcc 00000020 T LoggerBus_GnssRecoveryPush\n0801b774 0000001e T LoggerBus_HealthPush\n0801b874 00000020 T LoggerBus_ImuCorrectedPush\n0801b814 00000020 T LoggerBus_InertialIncrementPush\n0801b214 000000d8 T LoggerBus_Init\n0801b6f4 00000020 T LoggerBus_Kf6DiagnosticPush\n0801b734 00000020 T LoggerBus_Kf6FullPPush\n0801bdec 0000001e T LoggerBus_LandingDiagnosticPush\n0801b7f4 00000020 T LoggerBus_MagNativePush\n0801b8f4 000000bc T LoggerBus_MaintenanceDrainBegin\n0801b714 00000020 T LoggerBus_NavigationQualityPush\n0801bcd4 000000f8 T LoggerBus_NavigationSnapshotPush\n0801baf0 0000014c T LoggerBus_NextPop\n0801bc94 00000020 T LoggerBus_OverflowCountGet\n0801b754 0000001e T LoggerBus_PowerPush\n0801a680 00000094 t LoggerBus_QueueGeometryValidate\n0801a830 00000104 t LoggerBus_QueuePop\n0801ae28 0000017c t LoggerBus_RecordPush\n0801a934 00000138 t LoggerBus_RequestBuild\n0801a714 00000084 t LoggerBus_RequestClaim\n0801aa6c 000003bc t LoggerBus_RequestPop\n0801a798 00000098 t LoggerBus_RequestPublish\n0801b610 00000018 T LoggerBus_StartAcknowledgedGet\n0801b5ac 00000024 T LoggerBus_StartBarrierGet\n0801b5d0 00000040 T LoggerBus_StartDurable\n0801b628 0000003c T LoggerBus_StartFault\n0801b438 00000174 T LoggerBus_StartRecordsPush\n0801b11c 00000018 T LoggerBus_StartupStateGet\n0801b328 0000001e T LoggerBus_StatsPush\n0801b0a8 00000074 T LoggerBus_StreamingReady\n0801b368 000000d0 T LoggerBus_SystemConfigPush\n0801b794 0000001e T LoggerBus_TelemetryDiagnosticPush\n0801bf4c 0000003c t LoggerTask_Close\n0801cd9c 0000002c T LoggerTask_DiagnosticsGet\n0801c070 00000058 t LoggerTask_Flush\n0801be0c 0000004c t LoggerTask_IterationRecord\n0801c0c8 00000180 t LoggerTask_RecordAppend\n0801be58 000000f4 t LoggerTask_SinkWrite\n0801bf88 000000e8 t LoggerTask_SnapshotMaintain\n0804896e t LoopCopyCcmDataInit\n08048958 t LoopCopyDataInit\n08048980 t LoopFillZerobss\n080489a0 t LoopFillZeroCcmBss\n08048990 t LoopFillZeroDmaBss\n08049100 00000068 T lroundf\n00000000 a mag_calibration_storage.c\n08046de8 0000004e T main\n00000000 a main.c\n00000000 a math_err.c\n00000000 a math_errf.c\n080001b0 T memchr\n080489e6 00000020 T memcmp\n00000000 a memcmp.c\n08048ac0 0000001c T memcpy\n00000000 a memcpy-stub.c\n080471a0 00000002 T MemManage_Handler\n08048a06 00000032 T memmove\n00000000 a memmove.c\n08048a38 00000010 T memset\n00000000 a memset.c\n00000000 a mission_action_service.c\n00000000 a mission_snapshot.c\n08030584 000001f4 t MissionSnapshot_DevicesWrite\n08030778 00000114 t MissionSnapshot_ParametersWrite\n08030490 00000080 t MissionSnapshot_SectionCommit\n08030510 00000074 t MissionSnapshot_U32Write\n08030408 00000088 t MissionSnapshot_WriterReset\n08020e54 00000032 t move_window\n08046a00 0000007c T MX_ADC1_Init\n08046af0 000000bc T MX_DMA_Init\n080476b0 0000001c T MX_FATFS_Init\n08046bac 00000198 T MX_GPIO_Init\n08046e50 00000020 T MX_SDIO_SD_Init\n08047000 00000048 T MX_SPI1_Init\n08047274 00000038 T MX_USART1_UART_Init\n080472ac 00000038 T MX_USART2_UART_Init\n080472e4 00000038 T MX_USART3_UART_Init\n0804901c 0000000c T nanf\n00000000 a navigation_kf.c\n00000000 a navigation_kf_replay.c\n00000000 a navigation_quality.c\n08039594 000003b8 t NavigationFusion_EventApply\n08038f54 0000019c t NavigationFusion_EventValid\n080390f0 00000066 t NavigationFusion_ModelMatches\n0803945c 00000088 t NavigationFusion_ReceiveTrack\n0803627c 000001e0 t NavigationKf_CholeskyInverse\n080360ec 00000094 t NavigationKf_CovarianceSymmetrizeAndClamp\n08036204 00000078 t NavigationKf_GnssEpochBaselineSet\n08037bd0 000007b0 T NavigationKf_GnssEpochTrack\n08038824 00000404 T NavigationKf_GnssGroupRecover\n08038380 000004a4 T NavigationKf_GnssGroupResultProcess\n08037034 00000084 T NavigationKf_Init\n08036564 000000cc t NavigationKf_NumericRecovery.part.0\n08037574 00000016 T NavigationKf_Predict\n0803719c 000003d8 T NavigationKf_PredictInterval\n080370b8 00000008 T NavigationKf_Reset\n08036be0 0000031c t NavigationKf_Reset.part.0\n080370c0 000000dc T NavigationKf_ResetWithCovariance\n08036180 00000084 t NavigationKf_SeparatedResultAggregate\n08038cac 00000038 T NavigationKf_SetBaroStd\n08038ce4 00000150 T NavigationKf_SetNisThresholds\n08038c28 00000084 T NavigationKf_SetProcessAccelStd\n080364d0 00000094 t NavigationKf_StateAndCovarianceValid\n08037b60 00000070 T NavigationKf_UpdateBaroAltitude\n0803645c 00000074 t NavigationKf_UpdateCounters.part.0\n0803758c 000002e0 T NavigationKf_UpdateGnssPositionGroups\n0803786c 000002f4 T NavigationKf_UpdateGnssVelocityGroups\n08036efc 00000138 t NavigationKf_UpdateVector\n08036630 000005b0 t NavigationKf_UpdateVector.part.0\n08032e10 00000034 T NavigationQuality_SatelliteVarianceScale\n08038e34 00000078 t NavigationReplay_EventBefore\n08038eac 000000a6 t NavigationReplay_EventGet\n08039df8 0000096c T NavigationReplay_Insert\n080399c0 00000398 T NavigationReplay_Predict\n08039158 00000304 t NavigationReplay_Prune\n08039d58 000000a0 T NavigationReplay_ReceiveTrack\n0803994c 00000070 T NavigationReplay_Reset\n0803a764 00000022 T NavigationReplay_RuntimeRecord\n080394e4 000000ae t NavigationReplay_SegmentPredict\n08032e64 0000009c T NavigationWindow_ConfigValidate\n08032f00 0000055c T NavigationWindow_Receive\n08032e44 0000001e T NavigationWindow_Reset\n0803345c 000000c4 T NavigationWindow_VarianceScale\n00000000 a neo_m9n_device.c\n00000000 a neo_m9n_startup.c\n00000000 a neo_m9n_system_adapter.c\n0802b958 000000c4 t NeoM9nGnssAdapter_ConfigCheck\n0802bfbc 00000848 t NeoM9nGnssAdapter_Process\n0802bed0 000000ec t NeoM9nGnssAdapter_RfDiagnosticsMap\n0802ba1c 0000009c t NeoM9nGnssAdapter_RuntimeCompletionTake\n0802bbb0 00000084 t NeoM9nGnssAdapter_RuntimeOutputErrorSet.part.0\n0802bc34 00000234 t NeoM9nGnssAdapter_RuntimeRequestWait\n0802be68 00000068 t NeoM9nGnssAdapter_RuntimeTransactionCancel.constprop.0\n0802bab8 000000f8 t NeoM9nGnssAdapter_SatelliteDiagnosticsMap\n0802c9f4 00000010 T NeoM9nGnssInstance_CapabilitiesGet\n0802cd5c 000000c4 T NeoM9nGnssInstance_ConfigApply\n0802ce20 00000088 T NeoM9nGnssInstance_ConfigVerify\n0802cea8 00000038 T NeoM9nGnssInstance_EffectiveConfigGet\n0802cee0 00000184 T NeoM9nGnssInstance_HardwareConfigRead\n0802ca04 00000048 T NeoM9nGnssInstance_HealthGet\n0802c9c0 00000034 T NeoM9nGnssInstance_InfoGet\n0802c804 00000104 T NeoM9nGnssInstance_Init\n0802cb20 00000034 T NeoM9nGnssInstance_IoDetailGet\n0802ca7c 000000a4 T NeoM9nGnssInstance_IoDiagnosticsGet\n0802d064 00000044 T NeoM9nGnssInstance_LastConfigReportGet\n0802d1ec 00000038 T NeoM9nGnssInstance_LatestRfDiagnosticsGet\n0802cb54 0000017c T NeoM9nGnssInstance_LatestSampleGet\n0802d12c 00000038 T NeoM9nGnssInstance_LatestSatelliteDiagnosticsGet\n0802c9b4 0000000a T NeoM9nGnssInstance_Process\n0802ca4c 00000030 T NeoM9nGnssInstance_RecoveryBusyGet\n0802d164 00000088 T NeoM9nGnssInstance_RfDiagnosticsRead\n0802c970 00000044 T NeoM9nGnssInstance_RuntimeOwnerActivate\n0802d0a8 00000084 T NeoM9nGnssInstance_SatelliteDiagnosticsRead\n0802c908 00000040 T NeoM9nGnssInstance_Start\n0802c948 00000028 T NeoM9nGnssInstance_Stop\n0802ccd0 0000008c T NeoM9nGnssInstance_TimeGet\n0802d598 00000148 t NeoM9nStartup_ConfigApply\n0802d534 00000062 t NeoM9nStartup_ConfigRead\n0802d4f8 0000003c t NeoM9nStartup_ConfigVerify\n0802d9b4 00000010 T NeoM9nStartup_FailureGet\n0802d6e0 000000e4 T NeoM9nStartup_Init\n0802d258 000000e8 t NeoM9nStartup_ItemGet\n0802d340 000000f0 t NeoM9nStartup_ItemReadStep\n0802d4e4 00000014 t NeoM9nStartup_ProbePoll\n0802d430 0000001e t NeoM9nStartup_ProbeStart\n0802d450 00000094 t NeoM9nStartup_Reconnect\n0802d7c4 0000001c T NeoM9nStartup_RecoveryPending\n0802d224 00000032 t NeoM9nStartup_SamplePoll\n0802d9a4 00000010 T NeoM9nStartup_StateGet\n0802d7e0 000001c4 T NeoM9nStartup_Tick\n08047198 00000002 T NMI_Handler\n080548d0 00000080 r npio2_hw\n08054730 00000080 r npio2_hw\n20002f44 b object.0\n08054728 00000008 r one\n080489e4 00000002 W OTG_FS_IRQHandler\n080489e4 00000002 W OTG_FS_WKUP_IRQHandler\n080489e4 00000002 W OTG_HS_EP1_IN_IRQHandler\n080489e4 00000002 W OTG_HS_EP1_OUT_IRQHandler\n080489e4 00000002 W OTG_HS_IRQHandler\n080489e4 00000002 W OTG_HS_WKUP_IRQHandler\n00000000 a output_service.c\n08024ed4 0000005c T PendSV_Handler\n00000000 a persistent_storage.c\n080300d0 000000fc t PersistentStorage_LatestGet\n080301cc 000000e0 T PersistentStorage_ObjectRead\n080302ac 0000015c T PersistentStorage_ObjectWriteAtomic\n0802ffb8 0000006c t PersistentStorage_RecordCrcGet.constprop.0\n08030024 000000ac t PersistentStorage_RecordParse.constprop.0\n08054c88 00000040 r PIo2\n08054cd8 0000002c r PIo2\n00000000 a platform_adc_stm32f4.c\n00000000 a platform_boot_session_stm32f4.c\n00000000 a platform_critical_stm32f4.c\n00000000 a platform_gpio_stm32f4.c\n00000000 a platform_memory_stm32f4.c\n00000000 a platform_resources.c\n00000000 a platform_spi_stm32f4.c\n00000000 a platform_time_stm32f4.c\n00000000 a platform_uart_stm32f4.c\n08023b60 0000006c T PlatformAdc_Read\n0801d0d8 000000f4 T PlatformBootSession_Get\n0801d0a4 00000008 T PlatformCritical_Enter\n0801d0ac 00000006 T PlatformCritical_Exit\n08023c44 00000080 T PlatformGpio_IrqConsume\n08023bcc 00000078 T PlatformGpio_Write\n0801d0b4 00000024 T PlatformMemory_IsDmaAccessible\n08023b0c 00000052 T PlatformSpi_Transfer\n08047d80 00000014 T PlatformStm32f4Resource_AdcHandleGet\n08047d94 00000034 T PlatformStm32f4Resource_GpioGet\n08047d6c 00000014 T PlatformStm32f4Resource_SpiHandleGet\n08047dc8 00000028 T PlatformStm32f4Resource_TimeGet\n08047d58 00000014 T PlatformStm32f4Resource_UartHandleGet\n08023f04 00000004 T PlatformTime_DelayMs\n08023d30 000000bc T PlatformTime_Init\n08023dec 00000004 T PlatformTime_Ms\n08023df0 00000114 T PlatformTime_Us\n08023778 00000040 T PlatformUart_BaudGet\n080231f4 00000060 t PlatformUart_BaudRestore\n08023684 000000f4 T PlatformUart_BaudSet\n08023808 00000060 T PlatformUart_DiagnosticsGet\n08023254 00000138 T PlatformUart_Init\n08023868 00000030 T PlatformUart_Process\n0802352c 0000006c T PlatformUart_Read\n0802316c 00000086 t PlatformUart_ReceiveRestart\n080237b8 00000050 T PlatformUart_RxCountGet\n08023598 00000058 T PlatformUart_RxFlush\n08023128 00000044 t PlatformUart_RxPush.part.0\n08023650 00000034 T PlatformUart_RxRestart\n080230a0 00000088 t PlatformUart_RxStart\n080235f0 00000060 T PlatformUart_RxStop\n08022fc0 000000e0 t PlatformUart_TxTryStart\n0802338c 000000b0 T PlatformUart_Write\n0802343c 000000f0 T PlatformUart_WriteFrameAsync\n00000000 a port.c\n08048ae0 000000f0 T pow\n00000000 a power_service.c\n08048dfc 000000ba T powf\n080538a4 0000000d r prefix.1\n08053828 0000000d r prefix.2\n080535ec 00000015 r prefix.3\n080535c0 00000018 r prefixes.0\n08053874 00000014 r profile.1\n00000000 a project_control_research.c\n00000000 a project_device_instances.c\n00000000 a project_log_config.c\n00000000 a project_log_decoder_profile.c\n00000000 a project_metadata.c\n00000000 a project_mission_parameters.c\n00000000 a project_mission_process.c\n00000000 a project_resources.c\n080484cc 0000001c T ProjectAttitudeInstance_ConfigApply\n080484e8 00000010 T ProjectAttitudeInstance_EffectiveConfigGet\n080484ac 00000010 T ProjectAttitudeInstance_HealthGet\n0804849c 00000010 T ProjectAttitudeInstance_InfoGet\n08048484 0000000a T ProjectAttitudeInstance_Init\n080484bc 00000010 T ProjectAttitudeInstance_LatestSampleGet\n08048490 0000000a T ProjectAttitudeInstance_Start\n080483c8 00000010 T ProjectBarometerInstance_CapabilitiesGet\n080483f8 0000001c T ProjectBarometerInstance_ConfigApply\n0804838c 00000006 T ProjectBarometerInstance_CountGet\n08048414 00000010 T ProjectBarometerInstance_EffectiveConfigGet\n080483d8 00000010 T ProjectBarometerInstance_HealthGet\n080483b8 00000010 T ProjectBarometerInstance_InfoGet\n08048394 0000000a T ProjectBarometerInstance_Init\n080483e8 00000010 T ProjectBarometerInstance_LatestSampleGet\n080483ac 0000000a T ProjectBarometerInstance_Process\n080483a0 0000000a T ProjectBarometerInstance_Start\n08047ed4 000000b8 T ProjectDeviceInstance_CapabilitiesGet\n08047df0 00000004 T ProjectDeviceInstance_CountGet\n08047df4 00000026 T ProjectDeviceInstance_DescriptorGet\n08047f8c 000000a4 T ProjectDeviceInstance_HealthGet\n08047e1c 000000b8 T ProjectDeviceInstance_InfoGet\n08048030 00000118 T ProjectDeviceInstance_IoDiagnosticsGet\n0804827c 00000010 T ProjectGnssInstance_CapabilitiesGet\n080482d4 0000001c T ProjectGnssInstance_ConfigApply\n080482f0 0000001c T ProjectGnssInstance_ConfigVerify\n08048228 00000006 T ProjectGnssInstance_CountGet\n0804830c 00000010 T ProjectGnssInstance_EffectiveConfigGet\n0804831c 00000010 T ProjectGnssInstance_HardwareConfigRead\n0804828c 00000010 T ProjectGnssInstance_HealthGet\n0804826c 00000010 T ProjectGnssInstance_InfoGet\n08048230 0000000a T ProjectGnssInstance_Init\n0804837c 00000010 T ProjectGnssInstance_IoDetailGet\n0804834c 00000010 T ProjectGnssInstance_LastConfigReportGet\n0804836c 00000010 T ProjectGnssInstance_LatestRfDiagnosticsGet\n080482b4 00000010 T ProjectGnssInstance_LatestSampleGet\n0804835c 00000010 T ProjectGnssInstance_LatestSatelliteDiagnosticsGet\n08048260 0000000a T ProjectGnssInstance_Process\n0804829c 00000018 T ProjectGnssInstance_RecoveryBusyGet\n0804833c 00000010 T ProjectGnssInstance_RfDiagnosticsRead\n08048254 0000000a T ProjectGnssInstance_RuntimeOwnerActivate\n0804832c 00000010 T ProjectGnssInstance_SatelliteDiagnosticsRead\n0804823c 0000000a T ProjectGnssInstance_Start\n08048248 0000000a T ProjectGnssInstance_Stop\n080482c4 00000010 T ProjectGnssInstance_TimeGet\n08048190 00000010 T ProjectImuInstance_CapabilitiesGet\n080481d0 0000001c T ProjectImuInstance_ConfigApply\n080481ec 0000001c T ProjectImuInstance_ConfigVerify\n08048148 00000006 T ProjectImuInstance_CountGet\n08048208 00000010 T ProjectImuInstance_EffectiveConfigGet\n080481a0 00000010 T ProjectImuInstance_HealthGet\n08048180 00000010 T ProjectImuInstance_InfoGet\n08048150 0000000a T ProjectImuInstance_Init\n08048218 00000010 T ProjectImuInstance_IoDetailGet\n080481b0 00000010 T ProjectImuInstance_LatestSampleGet\n080481c0 00000010 T ProjectImuInstance_NextSampleGet\n08048174 0000000a T ProjectImuInstance_Process\n08048168 0000000a T ProjectImuInstance_RuntimeOwnerActivate\n0804815c 0000000a T ProjectImuInstance_Start\n080485e8 00000024 T ProjectJy901bResources_Get\n08048928 00000018 T ProjectLogConfig_StreamByIndexGet\n080488cc 0000005c T ProjectLogDecoderProfile_Get\n08048444 0000000a T ProjectMagnetometerInstance_CapabilitiesGet\n08048468 00000010 T ProjectMagnetometerInstance_ConfigApply\n08048424 00000006 T ProjectMagnetometerInstance_CountGet\n08048478 0000000a T ProjectMagnetometerInstance_EffectiveConfigGet\n08048450 0000000a T ProjectMagnetometerInstance_HealthGet\n08048438 0000000a T ProjectMagnetometerInstance_InfoGet\n0804842c 00000004 T ProjectMagnetometerInstance_Init\n0804845c 0000000a T ProjectMagnetometerInstance_LatestSampleGet\n08048434 00000004 T ProjectMagnetometerInstance_Process\n08048430 00000004 T ProjectMagnetometerInstance_Start\n08048658 0000003c T ProjectMaintenanceUart_Validate\n08048880 00000028 T ProjectMissionFunction_ConfigGet\n0804884c 00000034 T ProjectMissionStage_ConfigGet\n0804860c 00000020 T ProjectNeoM9nResources_Get\n080485b8 00000006 T ProjectPowerInstance_CountGet\n080485d4 00000012 T ProjectPowerInstance_EffectiveConfigGet\n080485c0 00000012 T ProjectPowerInstance_LatestSampleGet\n0804862c 0000002c T ProjectSx1278Resources_Get\n080484f8 00000006 T ProjectTelemetryInstance_CountGet\n080485a8 00000010 T ProjectTelemetryInstance_HealthGet\n08048598 00000010 T ProjectTelemetryInstance_InfoGet\n08048500 0000000a T ProjectTelemetryInstance_Init\n08048524 0000000a T ProjectTelemetryInstance_ModeSet\n0804858c 0000000a T ProjectTelemetryInstance_Process\n0804856c 00000020 T ProjectTelemetryInstance_Receive\n08048530 0000001e T ProjectTelemetryInstance_SendControl\n0804850c 0000000a T ProjectTelemetryInstance_Start\n08048518 0000000a T ProjectTelemetryInstance_Stop\n08048550 0000001c T ProjectTelemetryInstance_TxResultGet\n0802448c 00000060 t prvAddCurrentTaskToDelayedList.isra.0\n08024098 00000060 t prvCopyDataToQueue.isra.0\n08024468 00000024 t prvIdleTask\n08024eac 00000028 t prvPortStartFirstTask\n08024f44 00000040 t prvTaskExitError\n0802400c 0000008c t prvUnlockQueue\n08021170 00000188 t put_fat.part.0\n080489e4 00000002 W PVD_IRQHandler\n200121b0 00000004 B pxCurrentTCB\n200120e4 00000004 b pxDelayedTaskList\n200120e0 00000004 b pxOverflowDelayedTaskList\n08024f84 00000028 T pxPortInitialiseStack\n20012110 000000a0 b pxReadyTasksLists\n00000000 a queue.c\n080489e4 00000002 W RCC_IRQHandler\n08000f74 t register_tm_clones\n08053548 0000000a r registers.0\n080537f0 00000017 r registers.1\n0802141c 00000082 t remove_chain\n08053604 00000008 r request.4\n08048940 0000006e W Reset_Handler\n20015e80 00000001 B retSD\n0800ad40 0000002e T RingBuf_GetFree\n0800ae8c 00000022 T RingBuf_GetLinearReadLen\n0800aeb0 0000000c T RingBuf_GetLinearReadPtr\n0800ad18 00000028 T RingBuf_GetUsed\n0800acf4 00000016 T RingBuf_Init\n0800ae0c 00000080 T RingBuf_Pop\n0800ad70 0000009c T RingBuf_Push\n0800ad0c 0000000c T RingBuf_Reset\n0800aebc 00000054 T RingBuf_Skip\n080489e4 00000002 W RTC_Alarm_IRQHandler\n080489e4 00000002 W RTC_WKUP_IRQHandler\n20009ebc 0000000c b s_accel_square_sum\n20009ed4 0000000c b s_accel_sum\n2000a342 00000001 b s_accepting_records\n1000b6d8 000000c0 b s_ack_cache\n2000a2be 00000001 b s_ack_cache_next\n2000a2c0 00000001 b s_ack_head\n1000b798 00000080 b s_ack_queue\n2000a2bf 00000001 b s_ack_tail\n20009acc 00000001 b s_action_active\n20009e80 00000001 b s_action_active\n20009ac4 00000004 b s_action_sequence\n20000402 00000001 d s_active_bank\n2001400c 00000004 b s_active_mission_id\n08054108 0000000c r s_adc_handles\n20000478 00001000 b s_aggregate_buffer\n0805414c 00000040 r s_algorithm_descriptors\n2000942c 00000001 b s_alignment_final_ready\n2000942e 00000001 b s_alignment_invalid_sample_seen\n1000a7a8 00000048 b s_alignment_log\n1000aa28 00000068 b s_alignment_snapshot\n2000942f 00000001 b s_alignment_source\n20007de0 00000004 b s_alignment_start_sequence\n2000a298 00000001 b s_alignment_state\n20007ddc 00000001 b s_alignment_state_known\n2000a299 00000001 b s_alignment_status_known\n1000aa90 00000048 b s_alignment_strategy\n20009438 00000048 b s_assert_fault\n20014820 00000140 b s_async_event\n200096aa 00000001 b s_attitude_ready\n2000942d 00000001 b s_attitude_source_available\n200096a9 00000001 b s_attitude_status\n200145d8 00000040 b s_baro_candidate_window\n20014618 00000040 b s_baro_trigger_window\n20009640 00000068 b s_barometer_diagnostics\n20009638 00000001 b s_barometer_diagnostics_valid\n2000a188 00000004 b s_binary_request\n2000a341 00000001 b s_boot_disabled\n20015660 00000004 b s_boot_session\n20011490 00000004 b s_boot_session\n20007de4 00000004 b s_calibration_diagnostic_sequence\n2000a27c 00000004 b s_calibration_diagnostic_sequence\n20007de8 00000004 b s_calibration_face_event_sequence\n2000a280 00000004 b s_calibration_face_event_sequence\n2000a284 00000001 b s_calibration_mode\n2000942b 00000001 b s_calibration_ready\n20007df0 00000004 b s_calibration_start_sequence\n2000a285 00000001 b s_calibration_state\n20007dec 00000004 b s_calibration_state_sequence\n2000a286 00000001 b s_calibration_status_known\n20009480 00000010 b s_capabilities\n2000a2a8 00000001 b s_capability_ack_known\n2000a2a0 00000008 b s_capability_ack_us\n2000a270 00000001 b s_capability_send_pending\n2000a271 00000001 b s_capability_sent\n2000a26c 00000001 b s_capability_state\n1000b678 00000060 b s_capability_tx\n200096da 00000001 b s_capture_active\n200096e4 00000040 b s_capture_working\n200147b0 00000060 b s_channels\n20009ace 00000001 b s_collecting\n20009e85 00000001 b s_collector_state\n2000a26f 00000001 b s_command_policy\n20014008 00000004 b s_commit_sequence\n20009e82 00000001 b s_compute_pending\n080532c0 000000a8 r s_config\n2001289c 00000054 b s_config_async_contexts\n08053690 00000004 r s_config_dynamic_keys\n080536a0 00000004 r s_config_nav_pvt_keys\n080536a4 00000014 r s_config_protocol_keys\n08053694 0000000c r s_config_rate_keys\n08053618 00000048 r s_config_read_groups\n08053660 00000030 r s_config_signal_keys\n080536b8 00000004 r s_config_uart_keys\n20014549 00000001 b s_configuration_actions\n20014974 00000004 b s_console_alignment_completion_sequence\n20014960 00000001 b s_console_alignment_state\n2001497c 00000004 b s_console_calibration_completion_sequence\n20014978 00000004 b s_console_calibration_diagnostic_sequence\n20014980 00000004 b s_console_calibration_face_event_sequence\n2001496c 00000004 b s_console_deploy_event_sequence\n20014984 00000004 b s_console_discontinuity_sequence\n20014970 00000004 b s_console_flight_action_sequence\n20014968 00000004 b s_console_impact_event_sequence\n20014964 00000004 b s_console_landing_event_sequence\n20014988 00000004 b s_console_start_request_id\n20013670 00000298 b s_context\n200127b0 000000d4 b s_contexts\n1000c2d8 00000190 b s_contexts\n20012650 00000160 b s_contexts\n200128f0 00000bd0 b s_contexts\n20013590 000000a0 b s_contexts\n200121c0 00000490 b s_contexts\n1000a928 00000048 b s_control\n10007898 00000001 b s_control_input_invalid\n00000000 a s_cos.c\n080533c4 00000040 r s_crc_nibble\n1000c4f8 00000004 b s_cursor\n2000a148 00000028 b s_delayed_epoch\n2000a120 00000028 b s_delayed_evaluation\n2000a112 00000001 b s_delayed_initialized\n2000a114 00000005 b s_delayed_used\n20007dd4 00000004 b s_deploy_detail_log_sequence\n2000a278 00000004 b s_deploy_event_sequence\n20007dd8 00000004 b s_deploy_log_sequence\n08053968 00000014 r s_deployment_config\n20014678 0000001c b s_deployment_context\n200096db 00000001 b s_descriptor_count\n20009764 00000040 b s_descriptors\n08054190 00000150 r s_device_descriptors\n10006000 00000a00 b s_device_stack\n2000314c 0000004c b s_device_task_control\n1000c000 00000070 b s_diagnostics\n2000a348 0000002c b s_diagnostics\n2000a248 00000024 b s_diagnostics\n1000c518 00000034 b s_directory\n1000c500 00000001 b s_directory_open\n20000404 00000018 d s_effective_config\n20012890 0000000c b s_effective_configs\n20012884 0000000c b s_effective_configs\n2000a180 00000008 b s_epoch_us\n10007ce8 00002ac0 b s_estimator\n200094e0 00000140 b s_estimator_gnss_diagnostics\n20009492 00000001 b s_estimator_gnss_diagnostics_valid\n2000d074 0000001c b s_estimator_logger_queue\n2000a374 00002d00 b s_estimator_logger_storage\n08053128 00000054 r s_estimator_profile\n200096a8 00000001 b s_estimator_profile_frozen\n10004400 00001000 b s_estimator_stack\n20009620 00000018 b s_estimator_status_diagnostics\n20009493 00000001 b s_estimator_status_diagnostics_valid\n200030b4 0000004c b s_estimator_task_control\n20007d78 00000050 b s_estimator_task_timing\n2001565c 00000004 b s_event_id\n00000000 a s_fabs.c\n1000c508 00000001 b s_failed\n20007e00 00000001 b s_fault_event_written\n200145d0 00000004 b s_fault_reason_mask\n20013bc4 00000230 b s_file\n20013990 00000001 b s_file_open\n2000a338 00000008 b s_finalization_deadline_us\n2000a340 00000001 b s_finalization_state\n00000000 a s_finite.c\n200003fc 00000004 d s_first_mount_fresult\n10003400 00001000 b s_flight_stack\n20003068 0000004c b s_flight_task_control\n00000000 a s_floor.c\n20010f2c 00000001 b s_frozen\n20009acd 00000001 b s_frozen\n080544d8 00000019 r s_functions\n20003208 00000001 b s_fusion_execution\n20000400 00000002 d s_generation\n2000a0c8 00000038 b s_gnss\n2000a29b 00000001 b s_gnss_position_usable\n10007800 00000098 b s_gnss_recovery_previous\n2000a29c 00000001 b s_gnss_state_known\n20011f40 000000f0 b s_gpio\n08053e08 00000300 r s_gpio_resources\n08053da8 00000060 r s_gpio_resources_valid\n1000b050 00000140 b s_groups\n20009ad0 00000060 b s_guard\n20009eb0 0000000c b s_gyro_square_sum\n20009ec8 0000000c b s_gyro_sum\n20007e20 00000002 b s_head\n200031ec 00000002 b s_head\n20014480 00000028 b s_health\n200096b0 00000028 b s_health\n20013940 00000050 b s_health\n20013910 00000028 b s_health\n20012058 0000004c b s_idle_task_control\n1000c0d8 00000200 b s_idle_task_stack\n20007dd0 00000004 b s_impact_log_sequence\n2000a100 00000011 b s_imu\n2000a17c 00000004 b s_imu_faults\n2000a178 00000004 b s_imu_quality\n20009430 00000004 b s_increment_sequence\n2000a030 00000040 b s_indicator\n2000a070 00000001 b s_initialized\n20007e1c 00000001 b s_initialized\n20010f2d 00000001 b s_initialized\n20009e84 00000001 b s_initialized\n20013939 00000001 b s_initialized\n200144e1 00000001 b s_initialized\n200147a8 00000001 b s_initialized\n200147a9 00000001 b s_initialized\n200031e8 00000001 b s_initialized\n20013992 00000001 b s_initialized\n20012044 00000001 b s_initialized\n20009acf 00000001 b s_initialized\n2000a345 00000001 b s_initialized\n20009428 00000001 b s_input_fault_latched\n20009498 00000018 b s_ins_diagnostics\n20009490 00000001 b s_ins_diagnostics_valid\n10005400 00000c00 b s_ins_stack\n20003100 0000004c b s_ins_task_control\n10007c30 000000b8 b s_integrity\n200031f4 00000004 b s_integrity_log_failures\n1000c780 000004c0 b s_io_baselines\n0805372c 0000005c r s_item_keys\n200094b0 00000030 b s_kf_diagnostics\n20009491 00000001 b s_kf_diagnostics_valid\n0805394c 0000001c r s_landing_config\n20014658 00000020 b s_landing_context\n20007dc8 00000004 b s_landing_diagnostic_log_sequence\n2000a274 00000004 b s_landing_event_sequence\n20007dcc 00000004 b s_landing_log_sequence\n200144d8 00000008 b s_last_attempt_us\n20007e18 00000004 b s_last_device_sequence\n20012030 00000008 b s_last_monotonic_us\n20009e88 00000008 b s_last_sample_us\n20012040 00000004 b s_last_tick_ms\n20009ee0 00000058 b s_latest_sample\n20009e81 00000001 b s_latest_sample_valid\n200145d4 00000001 b s_lifecycle_state\n20015590 000000c0 b s_line\n2001558c 00000002 b s_line_length\n2000a29d 00000001 b s_locked\n20009ac8 00000004 b s_log_sequence\n20007ddd 00000001 b s_logged_alignment_state\n1000c070 00000068 b s_logger\n20010f10 0000001c b s_logger_queue\n10002800 00000c00 b s_logger_stack\n2000d090 00003e80 b s_logger_storage\n2000301c 0000004c b s_logger_task_control\n080530f0 00000011 r s_lower_digits.0\n1000ac40 00000410 b s_mag_calibration\n20014410 00000001 b s_mag_calibration_load_complete\n20014411 00000001 b s_mag_calibration_load_instance\n2000a02c 00000004 b s_mag_calibration_next_request_id\n1000c468 00000074 b s_mag_calibration_record\n20014010 00000200 b s_mag_data\n2001481d 00000001 b s_mag_stream_enabled\n2001481c 00000001 b s_mag_stream_instance\n20014818 00000004 b s_mag_stream_last_sequence\n20014810 00000008 b s_mag_stream_next_us\n1000b408 00000270 b s_mailbox\n20014548 00000001 b s_maintenance\n2001393a 00000001 b s_manifest_ready\n2000942a 00000001 b s_mission_attitude_frozen\n2001393c 00000004 b s_mission_id\n20009429 00000001 b s_mission_running\n20009ab8 00000008 b s_mission_start_us\n20009aa9 00000001 b s_mission_started\n20009ab0 00000008 b s_mission_stop_us\n20009aa8 00000001 b s_mission_stopped\n2000a175 00000001 b s_model_mismatch\n20015650 00000008 b s_monotonic_us\n20013991 00000001 b s_mounted\n2000a2c8 00000070 b s_native_log\n200031f8 00000004 b s_native_previous_tow_ms\n20003200 00000008 b s_native_week_us\n1000ab30 000000b8 b s_navigation_input\n080531a4 0000002c r s_navigation_profile\n200096d8 00000001 b s_navigation_profile_frozen\n2000a238 00000008 b s_next_capability_us\n2000a344 00000001 b s_next_estimator_queue\n2000a228 00000008 b s_next_preflight_state_us\n2000a230 00000008 b s_next_preflight_status_us\n2000a220 00000008 b s_next_stream_us\n20013994 00000230 b s_object_file\n20015668 00000098 b s_observations\n08053574 0000001c r s_operations\n08053710 0000001c r s_operations\n200031ee 00000001 b s_origin_collection_busy\n1000a9d8 00000050 b s_output\n1000a8f0 00000038 b s_output\n080542e0 000001f8 r s_parameters\n20014210 00000200 b s_payload\n20009ea4 0000000c b s_pending_accel_mean\n2000a072 00000001 b s_pending_event_count\n2000a071 00000001 b s_pending_event_flush_active\n2000a074 00000010 b s_pending_events\n20009e98 0000000c b s_pending_gyro_mean\n200097a8 00000008 b s_phase_started_us\n1000a978 00000010 b s_prediction_provenance\n1000aad8 00000058 b s_preflight_attitude\n2000a288 00000004 b s_preflight_attitude_alignment_sequence\n2000a28c 00000001 b s_preflight_attitude_source\n2000a28d 00000001 b s_preflight_attitude_source_known\n2000a26d 00000001 b s_preflight_status_known\n2000a240 00000008 b s_preflight_status_observed\n2000a26e 00000001 b s_preflight_status_send_pending\n20000070 00000008 d s_preparation\n200031b0 00000038 b s_pressure\n200031a8 00000001 b s_pressure_received\n200031a9 00000001 b s_pressure_valid\n2000a170 00000005 b s_previous_state\n1000abe8 00000058 b s_process\n0805451c 00000204 r s_project_log_streams\n08054144 00000006 r s_ProjectJy901bResources\n08054140 00000004 r s_ProjectNeoM9nResources\n08054138 00000007 r s_ProjectSx1278Resources\n0805360c 0000000c r s_protocol_capabilities\n1000a970 00000001 b s_provenance_seen\n20013630 00000040 b s_published\n1000a988 00000050 b s_published_output\n100078a0 000001c8 b s_published_snapshot\n20007e28 00001600 b s_queue\n10006a00 00000e00 b s_queue\n2000a343 00000001 b s_queue_drain_run\n1000c550 00000230 b s_reader\n1000c4e8 00000004 b s_reader_file_id\n1000c510 00000001 b s_reader_open\n1000c4e0 00000001 b s_reader_sequential\n1000c4f0 00000004 b s_reader_size\n20013df4 00000212 b s_record\n1000bee0 0000011c b s_record_buffer\n20013908 00000004 b s_rejected_frame_bytes\n20003210 00004b68 b s_replay\n200031f0 00000004 b s_replay_epoch\n1000cc40 00002880 b s_replay_storage\n1000bb48 00000398 b s_request\n2001454f 00000001 b s_request_head\n200145b0 00000020 b s_request_queue\n2001454e 00000001 b s_request_tail\n2001498c 00000c00 b s_response\n2001454d 00000001 b s_response_head\n20014550 00000060 b s_response_queue\n2001454c 00000001 b s_response_tail\n20013588 00000001 b s_runtime_owner_active_contexts\n200134c0 000000c8 b s_runtime_transactions\n200144a8 00000030 b s_sample\n20009e83 00000001 b s_sampling_active\n00000000 a s_scalbn.c\n1000b1b8 00000230 b s_scratch\n20015e83 00000001 b s_sd_busy\n20015e82 00000001 b s_sd_poisoned\n20015e84 00000004 b s_sd_queue\n20015e8c 00000048 b s_sd_queue_control\n20015e88 00000002 b s_sd_queue_storage\n20002d40 00000200 b s_sd_scratch\n20000420 00000001 d s_sd_status\n20015e81 00000001 b s_sd_transfer_active\n2000a29a 00000001 b s_selftest_event_sent\n2000a293 00000001 b s_sensor_snapshot_active\n2000a290 00000001 b s_sensor_snapshot_id\n2000a292 00000001 b s_sensor_snapshot_index\n2000a294 00000004 b s_sensor_snapshot_sequence\n2000a28f 00000001 b s_sensor_snapshot_terminal_pending\n2000a28e 00000001 b s_sensor_snapshot_terminal_state\n2000a291 00000001 b s_sensor_snapshot_total\n2001565a 00000002 b s_sequence\n10001000 00001800 b s_serial_stack\n20002fd0 0000004c b s_serial_task_control\n00000000 a s_sin.c\n20014418 00000068 b s_sink\n1000b190 00000028 b s_snapshot\n10007a68 000001c8 b s_snapshot\n20009724 00000040 b s_snapshot\n200096dc 00000008 b s_snapshot_info\n08053228 00000048 r s_source_descriptors\n08054114 0000000c r s_spi_handles\n0805397c 00000158 r s_sslog_metadata\n080544f4 00000028 r s_stages\n2000a2b8 00000002 b s_start_cmd_sequence\n2000a2ac 0000000c b s_start_command\n20007df4 0000000c b s_start_diagnostic_sequence\n200144e4 00000004 b s_start_diagnostic_sequence\n200144e8 00000060 b s_start_diagnostics\n1000a7f0 00000100 b s_start_log\n2000a2ba 00000001 b s_start_request_pending\n2001454b 00000001 b s_start_request_pending\n2001454a 00000001 b s_start_transaction_active\n200144e0 00000001 b s_started\n20013938 00000001 b s_started\n200097b0 00000001 b s_startup_phase\n200097b8 000002d8 b s_startup_report\n20009e90 00000008 b s_state_start_us\n20007e04 00000014 b s_stats\n20003198 00000010 b s_stats\n20014698 00000110 b s_status\n20009b30 00000350 b s_status\n20009f38 000000f4 b s_status\n2000a2c2 00000001 b s_status_head\n1000b818 00000330 b s_status_queue\n2000a2c1 00000001 b s_status_tail\n20010f30 00000560 b s_streams\n08053590 00000028 r s_supported_candidates\n08053788 00000050 r s_supported_candidates\n080531d0 00000014 r s_system_profile\n200096d9 00000001 b s_system_profile_frozen\n200031ea 00000002 b s_tail\n20007e1e 00000002 b s_tail\n20000000 00000070 d s_tasks\n2000a088 0000003c b s_telemetry\n2000a111 00000001 b s_telemetry_mode\n10000000 00001000 b s_telemetry_stack\n20002f84 0000004c b s_telemetry_task_control\n2000a198 00000038 b s_telemetry_task_timing\n20012038 00000008 b s_tick_epoch_ms\n08053d98 00000010 r s_time_resources\n20009ac0 00000001 b s_time_source_ready\n20012048 00000010 b s_timebase\n2000a200 00000008 b s_tm_cutover_deadline_us\n2000a1ea 00000001 b s_tm_cutover_requested\n2000a208 00000008 b s_tm_guard_until_us\n2000a1e9 00000001 b s_tm_mode_transmit_only\n2000a1d0 00000008 b s_tm_next_ack_us\n2000a1f0 00000008 b s_tm_next_health_us\n2000a1f8 00000008 b s_tm_next_position_us\n2000a218 00000004 b s_tm_pending_id\n2000a210 00000008 b s_tm_pending_since_us\n2000a1ef 00000001 b s_tm_pending_start_ack\n2000a1ee 00000001 b s_tm_pending_start_event\n2000a1e8 00000001 b s_tm_preflight_slot\n20015658 00000001 b s_tm_profile\n2000a1d8 00000004 b s_tm_stage_observed\n2000a1ed 00000001 b s_tm_start_ack_attempts\n2000a1eb 00000001 b s_tm_start_ack_completed\n2000a1ec 00000001 b s_tm_start_event_attempts\n2000a1dc 0000000c b s_tm_start_observed\n2000a2bc 00000002 b s_tx_sequence\n20000080 00000378 d s_uart\n08054120 00000018 r s_uart_handles\n20002cc0 00000080 b s_uart1_rx_dma\n20011d40 00000200 b s_uart1_rx_ring\n20002b40 000000c0 b s_uart1_tx_priority_ring\n20002c00 000000c0 b s_uart1_tx_ring\n20002ac0 00000080 b s_uart2_rx_dma\n20011940 00000400 b s_uart2_rx_ring\n20002940 000000c0 b s_uart2_tx_priority_ring\n20002a00 000000c0 b s_uart2_tx_ring\n200028c0 00000080 b s_uart3_rx_dma\n20011540 00000400 b s_uart3_rx_ring\n200014c0 00000400 b s_uart3_tx_priority_ring\n200018c0 00001000 b s_uart3_tx_ring\n200014b8 00000001 b s_uart4_rx_dma\n2001153c 00000001 b s_uart4_rx_ring\n200014a8 00000001 b s_uart4_tx_priority_ring\n200014b0 00000001 b s_uart4_tx_ring\n200014a0 00000001 b s_uart5_rx_dma\n20011538 00000001 b s_uart5_rx_ring\n20001490 00000001 b s_uart5_tx_priority_ring\n20001498 00000001 b s_uart5_tx_ring\n20001488 00000001 b s_uart6_rx_dma\n20011534 00000001 b s_uart6_rx_ring\n20001478 00000001 b s_uart6_tx_priority_ring\n20001480 00000001 b s_uart6_tx_ring\n08053104 00000011 r s_upper_digits.1\n20009a90 00000018 b s_utc_mapping\n1000b3e8 0000001c b s_worker\n0804bb48 00000114 T scalbn\n0804bcd8 000000dc T scalbnf\n00000000 a sd_diskio.c\n08020190 0000006c t SD_DMAError\n0801fbc8 00000046 t SD_DMAReceiveCplt\n08020490 00000004 t SD_DMARxAbort\n0801f87c 0000000e t SD_DMATransmitCplt\n080201fc 00000042 t SD_DMATxAbort\n08053d84 00000014 R SD_Driver\n0801f88c 000000da t SD_FindSCR.constprop.0\n08047894 000000a4 T SD_initialize\n08047bc4 000000ec T SD_ioctl\n08047a84 00000140 T SD_read\n080477d0 0000001c T SD_status\n08047938 0000014c T SD_write\n080477ec 000000a8 t SdDiskIo_CompletionWait\n20015c48 00000234 B SDFatFS\n00000000 a sdio.c\n080204f8 0000002a T SDIO_ConfigData\n080204e8 00000008 T SDIO_GetPowerState\n080204f0 00000006 T SDIO_GetResponse\n08020494 00000038 T SDIO_Init\n08047224 0000000c T SDIO_IRQHandler\n080204e0 00000008 T SDIO_PowerState_ON\n080204cc 00000006 T SDIO_ReadFIFO\n080204d4 0000000a T SDIO_WriteFIFO\n080207c4 0000001c T SDMMC_CmdAppCommand\n0802056c 0000006c T SDMMC_CmdAppOperCommand\n08020704 00000018 T SDMMC_CmdBlockLength\n080207e0 0000001c T SDMMC_CmdBusWidth\n08020524 00000048 T SDMMC_CmdGoIdleState\n080209c0 00000016 T SDMMC_CmdOperCond\n08020738 0000001c T SDMMC_CmdReadMultiBlock\n0802071c 0000001c T SDMMC_CmdReadSingleBlock\n080207a8 0000001c T SDMMC_CmdSelDesel\n0802088c 00000018 T SDMMC_CmdSendCID\n080208a4 00000016 T SDMMC_CmdSendCSD\n080207fc 0000001e T SDMMC_CmdSendSCR\n0802081c 0000001c T SDMMC_CmdSendStatus\n08020948 0000001c T SDMMC_CmdSetRelAdd\n08020788 00000020 T SDMMC_CmdStopTransfer\n0802076c 0000001c T SDMMC_CmdWriteMultiBlock\n08020754 00000018 T SDMMC_CmdWriteSingleBlock\n080205d8 0000012c T SDMMC_GetCmdResp1\n08020838 00000054 T SDMMC_GetCmdResp2\n080208bc 0000008c T SDMMC_GetCmdResp6\n08020964 0000005c T SDMMC_GetCmdResp7\n20015e7c 00000004 B SDPath\n00000000 a serial_task.c\n00000000 a sf_atan.c\n00000000 a sf_ceil.c\n00000000 a sf_cos.c\n00000000 a sf_fabs.c\n00000000 a sf_finite.c\n00000000 a sf_floor.c\n00000000 a sf_fmax.c\n00000000 a sf_fmin.c\n00000000 a sf_fpclassify.c\n00000000 a sf_lround.c\n00000000 a sf_nan.c\n00000000 a sf_scalbn.c\n00000000 a sf_sin.c\n00000000 a silverstar_assert.c\n00000000 a silverstar_flight_cycle.c\n00000000 a silverstar_flight_recovery.c\n0800b1e4 00000018 T SilverStarAssert_Check\n0800b1b4 00000030 T SilverStarAssert_Fail\n0800b22c 0000000c T SilverStarAssert_FaultedGet\n0800b1fc 0000002e T SilverStarAssert_ObjectCheck\n0800b160 00000054 T SilverStarAssert_StackOverflowContextSet\n0802f2d8 000001b4 t SilverStarStorageService_ObjectPathBuild\n08048cc0 00000090 T sin\n08048f7c 00000074 T sinf\n00000000 a spi.c\n0801ed70 00000088 t SPI_EndRxTxTransaction\n0801ec88 000000e8 t SPI_WaitFlagStateUntilTimeout\n080489e4 00000002 W SPI1_IRQHandler\n080489e4 00000002 W SPI2_IRQHandler\n080489e4 00000002 W SPI3_IRQHandler\n08048bd0 00000066 T sqrt\n08048eb8 00000044 T sqrtf\n00000000 a ss_tm_legacy.c\n00000000 a ss_tm_protocol.c\n00000000 a sslog_protocol.c\n00000000 a sslog_records.c\n0803c610 00000214 t SslogRecords_AlignmentResultSerialize\n0803c37c 00000294 t SslogRecords_BaroMeasurementSerialize\n0803b98c 00000184 t SslogRecords_BaroNativeSerialize\n0803bb10 00000168 t SslogRecords_CalibrationResultSerialize\n0803bc78 000000f8 t SslogRecords_Eskf15CovariancePartSerialize\n0803c824 00000170 t SslogRecords_Eskf15StateSerialize\n0803c994 0000029c t SslogRecords_EstimatorSerialize\n0803cea8 000004d8 t SslogRecords_GnssMeasurementSerialize\n0803cc30 00000278 t SslogRecords_GnssNativeSerialize\n0803d380 0000029c t SslogRecords_GnssRecoverySerialize\n0803b6ac 00000184 t SslogRecords_ImuCorrectedSerialize\n0803c164 00000218 t SslogRecords_InitialStateSerialize\n0803bd70 000001c0 t SslogRecords_Kf6DiagnosticSerialize\n0803b830 0000015c t SslogRecords_LandingDiagnosticSerialize\n0803b3c8 0000018c t SslogRecords_MagNativeSerialize\n0803d61c 00000028 T SslogRecords_MetadataGet\n0803d644 000019e0 T SslogRecords_PayloadSerialize\n0803b554 00000158 t SslogRecords_PowerSerialize\n0803b298 00000130 t SslogRecords_PureInsSerialize\n0803bf30 00000234 t SslogRecords_SystemConfigSerialize\n0803b1d8 00000054 t SslogRecords_WriteReserve\n0803b23c 00000010 t SslogRecords_WriterF32Put\n0803b284 00000012 t SslogRecords_WriterU16Put\n0803b22c 0000000e t SslogRecords_WriterU32Put\n0803b24c 00000038 t SslogRecords_WriterU64Put\n08045d88 00000178 T SsTm_EventBuild\n080459ac 00000014 T SsTm_EventIdNext\n08045974 00000030 T SsTm_FrameSequenceGet\n080459a4 00000008 T SsTm_FrameTypeGet\n080456b4 0000010c t SsTm_HeaderBuild\n08046024 000000f0 T SsTm_HealthBuild\n08045878 000000ac t SsTm_HealthValidate\n08045f00 00000124 T SsTm_PositionBuild\n0804559c 00000118 t SsTm_PositionValidate\n08045be8 0000003c T SsTm_SequenceRefresh\n08045924 00000044 T SsTm_SessionSet\n08045968 0000000c T SsTm_TimeSet\n080457c0 000000b8 t SsTm_Wrap\n00000000 a startup_stm32f407xx.o\n20002f79 00000001 b state_known.5\n20002f68 00000008 b stats_log_state.1\n00000000 a stm32f4xx_hal.c\n00000000 a stm32f4xx_hal_adc.c\n00000000 a stm32f4xx_hal_cortex.c\n00000000 a stm32f4xx_hal_dma.c\n00000000 a stm32f4xx_hal_gpio.c\n00000000 a stm32f4xx_hal_msp.c\n00000000 a stm32f4xx_hal_rcc.c\n00000000 a stm32f4xx_hal_sd.c\n00000000 a stm32f4xx_hal_spi.c\n00000000 a stm32f4xx_hal_tim.c\n00000000 a stm32f4xx_hal_tim_ex.c\n00000000 a stm32f4xx_hal_timebase_tim.c\n00000000 a stm32f4xx_hal_uart.c\n00000000 a stm32f4xx_it.c\n00000000 a stm32f4xx_ll_sdmmc.c\n00000000 a storage_service.c\n08000190 00000014 T strcmp\n08000250 00000010 T strlen\n08048a48 00000024 T strncmp\n00000000 a strncmp.c\n08024e8c 00000020 T SVC_Handler\n00000000 a sx1278_chip.c\n00000000 a sx1278_device.c\n0802e1b0 000000cc t Sx1278_Fault\n0802e2c8 000000b8 T Sx1278_Init\n0802e44c 00000088 T Sx1278_ModeSet\n0802e4d4 000004d0 T Sx1278_Process\n0802dcc0 00000068 t Sx1278_Publish\n0802e010 000000b4 t Sx1278_ReceiptFinish\n0802ea90 00000128 T Sx1278_ReceiptGet\n0802ebb8 00000114 T Sx1278_Receive\n0802dd9c 000000a0 t Sx1278_RequestsGet\n0802df48 000000c8 t Sx1278_RxStart\n0802e9a4 000000ec T Sx1278_Send\n0802e380 00000034 T Sx1278_Start\n0802eccc 00000044 T Sx1278_StatsGet\n0802e3b4 00000060 T Sx1278_Stop\n0802e27c 0000004c t Sx1278_StopProcess\n0802e414 00000038 T Sx1278_StopStatusGet\n00000000 a sx1278_telemetry_adapter.c\n0802e0c4 000000ec t Sx1278_TxScheduledStart\n0802de3c 0000010c t Sx1278_TxTake\n0802dc00 000000c0 T Sx1278Chip_Configure\n0802dba0 00000060 T Sx1278Chip_Dio4Set\n0802db44 0000005c T Sx1278Chip_ModeSet\n0802dad4 00000020 T Sx1278Chip_Read\n0802db18 0000002c T Sx1278Chip_RegisterWrite\n0802d9c4 000000b8 t Sx1278Chip_Transfer\n0802da7c 00000056 t Sx1278Chip_Verify\n0802daf4 00000022 T Sx1278Chip_Write\n0802dd28 00000074 t Sx1278Queue_Check\n0802ee04 00000022 T Sx1278TelemetryInstance_CapabilitiesGet\n0802ee64 00000086 T Sx1278TelemetryInstance_HealthGet\n0802ee28 0000003c T Sx1278TelemetryInstance_InfoGet\n0802ed10 0000001c T Sx1278TelemetryInstance_Init\n0802eeec 0000004c T Sx1278TelemetryInstance_IoDiagnosticsGet\n0802ed68 00000020 T Sx1278TelemetryInstance_ModeSet\n0802edec 00000018 T Sx1278TelemetryInstance_Process\n0802edd4 00000018 T Sx1278TelemetryInstance_Receive\n0802ed88 00000034 T Sx1278TelemetryInstance_SendControl\n0802ed2c 00000018 T Sx1278TelemetryInstance_Start\n0802ed44 00000024 T Sx1278TelemetryInstance_Stop\n0802edbc 00000018 T Sx1278TelemetryInstance_TxResultGet\n08020ddc 00000078 t sync_fs\n08020c1c 00000050 t sync_window\n00000000 a system_alignment.c\n00000000 a system_alignment_source.c\n00000000 a system_barometer.c\n00000000 a system_calibration.c\n00000000 a system_calibration_correction.c\n00000000 a system_capabilities.c\n00000000 a system_console.c\n00000000 a system_console_dispatch.c\n00000000 a system_device_startup.c\n00000000 a system_estimator_diagnostics.c\n00000000 a system_estimator_profile.c\n00000000 a system_gnss_quality.c\n00000000 a system_health.c\n00000000 a system_indicator.c\n00000000 a system_inertial.c\n00000000 a system_log_file.c\n00000000 a system_log_policy.c\n00000000 a system_mag_calibration.c\n00000000 a system_mission_process.c\n00000000 a system_mission_process_runtime.c\n00000000 a system_navigation_health.c\n00000000 a system_navigation_profile.c\n00000000 a system_profile.c\n00000000 a system_sensor_status.c\n00000000 a system_source_selector.c\n00000000 a system_startup.c\n00000000 a system_stm32f4xx.c\n00000000 a system_time.c\n00000000 a system_user_inertial_config.c\n080105f0 0000001c T SystemAlignment_AttitudeSourceText\n08010070 00000006 T SystemAlignment_CalibrationInvalidate\n0800f2e0 000000dc t SystemAlignment_CalibrationInvalidateRun\n080105c0 00000018 T SystemAlignment_ComponentStateText\n080105d8 00000018 T SystemAlignment_ConfigResultText\n0800fb68 0000003c T SystemAlignment_DetailGet\n0800f930 0000014c T SystemAlignment_Init\n0801026c 00000034 T SystemAlignment_IsCollecting\n0800fc4c 00000024 T SystemAlignment_IsReady\n080101fc 00000070 T SystemAlignment_MissionPreparationAbort\n08010130 000000cc T SystemAlignment_OriginsFreeze\n0800fc70 00000130 T SystemAlignment_PreflightQuaternionGet\n08010078 000000b8 T SystemAlignment_PrepareMission\n0800fa7c 000000b0 T SystemAlignment_Process\n0800f3bc 00000574 t SystemAlignment_Process.part.0\n0800f22c 000000b4 t SystemAlignment_QuaternionNormalize\n0800ff88 000000e8 T SystemAlignment_Reset\n080102a0 00000018 T SystemAlignment_SourceDescriptorGet\n080102b8 000002dc T SystemAlignment_SourceDetailFormat\n080105ac 00000014 T SystemAlignment_StaleReasonText\n0800fda0 00000130 T SystemAlignment_Start\n0800f1e4 00000046 t SystemAlignment_StartupDeviceAvailable\n08010594 00000018 T SystemAlignment_StateText\n0800fb2c 0000003c T SystemAlignment_StatusGet\n0800f0cc 00000118 t SystemAlignment_StatusReset\n0800fed0 000000b8 T SystemAlignment_Stop\n0800fba4 000000a8 T SystemAlignment_SummaryGet\n08006e04 00000004 T SystemAlignmentBackend_FreezeSources\n08006e08 000000a0 T SystemAlignmentBackend_GuardSampleGet\n08006ea8 0000000e T SystemAlignmentBackend_MissionPreparationAbort\n08006e00 00000004 T SystemAlignmentBackend_PrepareMission\n08006dec 00000014 T SystemAlignmentBackend_Reset\n08006eb8 0000005a T SystemAlignmentBackend_SourceStatusGet\n0800b308 000000dc T SystemBarometer_AltitudeResolve\n08015278 00000022 T SystemBarometer_CapabilitiesGet\n080152e4 00000028 T SystemBarometer_ConfigApply\n0801529c 00000022 T SystemBarometer_HealthGet\n08015254 00000022 T SystemBarometer_InfoGet\n08015200 00000006 T SystemBarometer_Init\n080152c0 00000022 T SystemBarometer_LatestSampleGet\n080151d0 00000030 T SystemBarometer_NameGet\n08015210 00000044 T SystemBarometer_Process\n08015208 00000006 T SystemBarometer_Start\n08011ad0 00000004 T SystemCalibration_CapabilityMaskGet\n08011328 000002e0 T SystemCalibration_FaceCollect\n0801195c 00000020 T SystemCalibration_FaceResultText\n0801192c 00000018 T SystemCalibration_FaceText\n08011798 00000018 T SystemCalibration_GenerationGet\n0801197c 00000154 T SystemCalibration_ImuCorrectionApply\n08011820 0000009c T SystemCalibration_ImuCorrectionGet\n08010c18 000005bc T SystemCalibration_ImuSampleProcess\n080109b0 00000068 T SystemCalibration_Init\n080118bc 00000040 T SystemCalibration_IsReady\n080118fc 00000018 T SystemCalibration_ModeText\n08010920 00000090 t SystemCalibration_NoneReadySet\n08010a18 00000200 T SystemCalibration_Process\n080116ec 000000ac T SystemCalibration_Reset\n080111d4 00000154 T SystemCalibration_Start\n08011914 00000018 T SystemCalibration_StateText\n0801065c 000001e0 t SystemCalibration_StaticSampleCheck\n080117b0 00000070 T SystemCalibration_StatusGet\n08010840 000000e0 t SystemCalibration_StatusReset\n08011608 000000e4 T SystemCalibration_Stop\n08011944 00000018 T SystemCalibration_WaitReasonText\n0801060c 00000050 t SystemCalibration_WindowReset\n0800b60c 00000024 T SystemCapabilities_Get\n0800b3e4 00000228 T SystemCapabilities_Refresh\n08046d44 000000a4 T SystemClock_Config\n08040538 000000ac t SystemConsole_AlignmentCompletionAsyncWrite\n080404c8 00000070 t SystemConsole_AlignmentSourcesAppend.part.0.constprop.0\n0803fd88 000000f0 t SystemConsole_AlignmentStartExecute\n08040250 000000a0 t SystemConsole_AsyncWrite\n0803f65c 0000072c t SystemConsole_CalibrationExecute\n0803f218 00000204 t SystemConsole_CommandAllowedInFlight\n08041c88 00002784 T SystemConsole_CommandsExecute\n0803ff84 00000220 t SystemConsole_ConfigShowExecute\n0803f41c 00000060 t SystemConsole_DeviceErrorText\n08044ad4 0000003c T SystemConsole_ExecuteLine\n080401a4 00000064 t SystemConsole_FieldFloatFormat.constprop.0\n0803f47c 00000064 t SystemConsole_GnssTransactionDetailText\n08040b6c 000001e8 t SystemConsole_HealthExecute\n08041b28 0000015c T SystemConsole_Init\n0804068c 0000013c t SystemConsole_IoClearExecute\n080405e4 000000a8 t SystemConsole_IoDiagnosticsRawGet\n080407c8 000003a4 t SystemConsole_IoExecute\n0803fe78 0000010c t SystemConsole_MagCalStatusExecute\n0803f0dc 0000013c t SystemConsole_ModuleParse\n0804440c 000006c8 T SystemConsole_Process\n08040208 00000048 t SystemConsole_ResponseWrite\n08040d54 00000dd4 t SystemConsole_SystemExecute\n0803f4e0 0000017c t SystemConsole_SystemFlightExecute\n08040338 00000190 t SystemConsole_SystemReadyExecute\n080402f0 00000048 t SystemConsole_TextAppend\n0803f024 000000b8 t SystemConsole_TokenNext\n0802f1b4 0000003c T SystemConsoleDevice_HealthGet\n0802f184 00000030 T SystemConsoleDevice_InfoGet\n0802f0d8 00000050 T SystemConsoleDevice_Init\n0802f1f0 0000008c T SystemConsoleDevice_IoDiagnosticsGet\n0802f0d0 00000008 T SystemConsoleDevice_NameGet\n0802f168 0000001c T SystemConsoleDevice_Process\n0802f27c 00000030 T SystemConsoleDevice_Read\n0802f128 00000040 T SystemConsoleDevice_Start\n0802f2ac 0000002c T SystemConsoleDevice_Write\n2000041c 00000004 D SystemCoreClock\n080487c8 00000004 T SystemDescriptor_AlgorithmCountGet\n080487cc 00000020 T SystemDescriptor_AlgorithmGet\n080487ec 00000008 T SystemDescriptor_ConfigDigestGet\n08048724 00000028 T SystemDescriptor_DeviceClassInstanceCountGet\n08048694 00000020 T SystemDescriptor_DeviceCountGet\n0804874c 0000007c T SystemDescriptor_DeviceFind\n080486b4 00000070 T SystemDescriptor_DeviceGet\n0800cca0 0000005c t SystemDeviceStartup_CandidateAdd\n0800ccfc 0000010c T SystemDeviceStartup_Init\n0800ce08 00000298 T SystemDeviceStartup_Tick\n0800b630 000000a4 T SystemEstimatorBaroDiagnostics_EventPending\n0800b798 000000cc T SystemEstimatorBaroDiagnostics_Get\n0800b764 00000034 T SystemEstimatorBaroDiagnostics_Publish\n0800b6d4 0000002c T SystemEstimatorBaroDiagnostics_Reset\n0800b700 00000064 T SystemEstimatorBaroDiagnostics_UpdateRecord\n0800b96c 00000098 T SystemEstimatorGnssDiagnostics_Get\n0800b938 00000034 T SystemEstimatorGnssDiagnostics_Publish\n0800b90c 0000002c T SystemEstimatorGnssDiagnostics_Reset\n0800bc34 00000180 T SystemEstimatorProfile_BuildP0\n0800bb68 0000000c T SystemEstimatorProfile_Freeze\n0800bb60 00000008 T SystemEstimatorProfile_Get\n0800bb80 000000b4 T SystemEstimatorProfile_GnssStdResolve\n0800bb74 0000000c T SystemEstimatorProfile_UnfreezeForRollback\n0800b8c8 00000044 T SystemEstimatorStatusDiagnostics_Get\n0800b890 00000038 T SystemEstimatorStatusDiagnostics_Publish\n0800b864 0000002c T SystemEstimatorStatusDiagnostics_Reset\n080354dc 00000020 T SystemFlightRecovery_ActionText\n0803544c 00000048 T SystemFlightRecovery_FinalStatusGet\n080352b8 0000012c T SystemFlightRecovery_Init\n08035494 00000018 T SystemFlightRecovery_LandingModeText\n080354ac 00000030 T SystemFlightRecovery_LandingStateText\n080353e4 0000003c T SystemFlightRecovery_Process\n080352b4 00000004 T SystemFlightRecovery_StageRecoveryRequest\n08035420 0000002c T SystemFlightRecovery_StatusGet\n08014974 0000001c T SystemGnss_CapabilitiesGet\n08014a28 000000c8 T SystemGnss_ConfigApply\n08014af0 000000c8 T SystemGnss_ConfigVerify\n08014990 0000001c T SystemGnss_HealthGet\n08014958 0000001c T SystemGnss_InfoGet\n080142d4 00000128 T SystemGnss_Init\n08014bb8 0000001c T SystemGnss_LastConfigReportGet\n08014bf0 0000001c T SystemGnss_LatestRfDiagnosticsGet\n080149ac 00000060 T SystemGnss_LatestSampleGet\n08014bd4 0000001c T SystemGnss_LatestSatelliteDiagnosticsGet\n080142a0 00000034 T SystemGnss_NameGet\n080145c0 00000396 T SystemGnss_Process\n0801457c 00000044 T SystemGnss_RuntimeOwnerActivate\n080143fc 00000180 T SystemGnss_Start\n08014a0c 0000001c T SystemGnss_TimeGet\n0800bdb4 000000e8 t SystemGnssQuality_AccuracyCheck\n0800be9c 0000037a T SystemGnssQuality_Evaluate\n08015548 00000028 T SystemHardwareQuaternion_ConfigApply\n08015500 00000022 T SystemHardwareQuaternion_HealthGet\n080154dc 00000022 T SystemHardwareQuaternion_InfoGet\n080154cc 00000006 T SystemHardwareQuaternion_Init\n08015524 00000022 T SystemHardwareQuaternion_LatestSampleGet\n0801549c 00000030 T SystemHardwareQuaternion_NameGet\n080154d4 00000006 T SystemHardwareQuaternion_Start\n0800c4a4 0000001c T SystemHealth_AttitudeStatusText\n0800c458 00000034 T SystemHealth_GetSnapshot\n0800c218 00000034 T SystemHealth_Init\n0800c48c 00000018 T SystemHealth_IsReady\n0800c274 000001e4 T SystemHealth_Process\n0800c24c 00000028 T SystemHealth_SetAttitudeState\n080140c0 0000001c T SystemImu_CapabilitiesGet\n08014148 000000ac T SystemImu_ConfigApply\n080141f4 000000ac T SystemImu_ConfigVerify\n080140dc 0000001c T SystemImu_HealthGet\n080140a4 0000001c T SystemImu_InfoGet\n08013e28 00000114 T SystemImu_Init\n080140f8 00000034 T SystemImu_LatestSampleGet\n08013df4 00000034 T SystemImu_NameGet\n0801412c 0000001c T SystemImu_NextSampleGet\n08014060 00000044 T SystemImu_Process\n08014020 00000040 T SystemImu_RuntimeOwnerActivate\n08013f3c 000000e4 T SystemImu_Start\n08012e60 0000001c T SystemIndicator_Init\n08012e7c 00000250 T SystemIndicator_Process\n08012d8c 0000004c t SystemIndicator_SystemConfirmNotify\n08012dd8 00000088 T SystemIndicator_SystemModeResolve\n080359b4 0000001a T SystemIndicatorDevice_Set\n080130cc 00000028 T SystemInertial_Init\n080130f4 000000c4 T SystemInertial_LatestGet\n080131b8 000000c4 T SystemInertial_NextGet\n08047260 00000014 T SystemInit\n0800bb1c 00000044 T SystemInsDiagnostics_Get\n0800bae4 00000038 T SystemInsDiagnostics_Publish\n0800bab8 0000002c T SystemInsDiagnostics_Reset\n0800ba70 00000048 T SystemKfDiagnostics_Get\n0800ba30 00000040 T SystemKfDiagnostics_Publish\n0800ba04 0000002c T SystemKfDiagnostics_Reset\n08034a08 0000006c t SystemLifecycle_AttitudeReasonGet\n08034e98 0000004c T SystemLifecycle_EnterFault\n08034e38 00000020 T SystemLifecycle_EnterPreflight\n08034e58 00000040 T SystemLifecycle_EnterReady\n08034e20 00000018 T SystemLifecycle_EnterSelfTest\n08034ee4 0000000c T SystemLifecycle_GetFaultReason\n08035088 0000003c T SystemLifecycle_GetLastStartDiagnostic\n08034cf0 0000000c T SystemLifecycle_GetState\n08034c8c 00000064 T SystemLifecycle_Init\n0803528c 00000028 T SystemLifecycle_IsConfigurationLocked\n08034da4 0000007c T SystemLifecycle_MaintenanceComplete\n08034d98 0000000c T SystemLifecycle_MaintenanceGet\n08034cfc 0000009c T SystemLifecycle_MaintenanceRequest\n080350c4 0000017c T SystemLifecycle_Process\n08034b74 00000118 t SystemLifecycle_StartExecute\n08034a74 00000100 t SystemLifecycle_StartPreconditionsGet\n08034ef0 00000048 T SystemLifecycle_StartReadinessGet\n08035258 00000034 T SystemLifecycle_StartReasonText\n08035240 00000018 T SystemLifecycle_StartResultText\n08034f38 000000fc T SystemLifecycle_SubmitStart\n08035034 00000054 T SystemLifecycle_TryGetStartResponse\n08007078 00000012 T SystemLifecycleBackend_AbortStart\n08006f18 00000004 T SystemLifecycleBackend_FreezeOrigins\n08006f1c 00000026 T SystemLifecycleBackend_InitializeNavigation\n08006f14 00000004 T SystemLifecycleBackend_PrepareStart\n08006f44 0000000e T SystemLifecycleBackend_ResetFlightQueues\n08006f54 00000124 T SystemLifecycleBackend_StorageReadyGet\n08016b18 00000110 T SystemLogFile_BatchResponseGet\n08016c28 000000cc T SystemLogFile_BatchResponseSent\n08016a24 000000f4 T SystemLogFile_BinaryResponseGet\n08015ff8 00000a2c T SystemLogFile_ExecuteLine\n080173fc 00000038 T SystemLogFile_IsActive\n08016cf4 00000708 T SystemLogFile_Process\n08015fc4 00000034 T SystemLogFile_StatusGet\n08015f58 0000006c T SystemLogFile_StatusPublish\n08031bb4 00000016 T SystemLogFileStorage_BlockRead\n08031574 00000068 T SystemLogFileStorage_Check\n08031878 000000d4 T SystemLogFileStorage_HashBegin\n08031af4 000000ac T SystemLogFileStorage_HashRead\n080316b0 000001c8 T SystemLogFileStorage_List\n08031ba0 00000014 T SystemLogFileStorage_Read\n080315dc 000000d4 T SystemLogFileStorage_Reset\n0801cf24 00000028 T SystemLogPolicy_EmissionReset\n0801d02c 00000040 T SystemLogPolicy_EmissionTimeRecord\n0801d06c 0000001c T SystemLogPolicy_Freeze\n0801cdc8 00000098 T SystemLogPolicy_Init\n0801cf00 00000024 T SystemLogPolicy_IsEnabled\n0801cf4c 000000e0 T SystemLogPolicy_ShouldEmitAt\n0801ce6c 00000040 T SystemLogPolicy_SnapshotCopy\n0801ce60 0000000a T SystemLogPolicy_StreamCountGet\n0801ceac 00000054 T SystemLogPolicy_StreamGet\n0801d088 0000001c T SystemLogPolicy_UnfreezeForRollback\n08031e88 0000003c T SystemLogSink_Flush\n08031f0c 00000038 T SystemLogSink_HealthGet\n08031bcc 00000048 T SystemLogSink_Init\n08031c14 000001ec T SystemLogSink_SessionBegin\n08031ec4 00000048 T SystemLogSink_SessionEnd\n08031e00 00000088 T SystemLogSink_Write\n080122f8 00000184 T SystemMagCalibration_ClearRequest\n08011ebc 0000004a t SystemMagCalibration_DescriptorGet\n08011de8 000000d4 t SystemMagCalibration_EntrySet\n08011fec 00000068 T SystemMagCalibration_GenerationHashGet\n08011f78 00000020 T SystemMagCalibration_Init\n08012a44 00000084 T SystemMagCalibration_LoadFaultSet\n08012054 00000178 T SystemMagCalibration_PacketApply\n08011ad4 00000314 t SystemMagCalibration_PacketValidate\n0801247c 000000d0 T SystemMagCalibration_PendingGet\n0801272c 00000134 T SystemMagCalibration_PendingRecordGet\n08011f08 00000070 t SystemMagCalibration_ProviderGet\n08011f98 00000054 T SystemMagCalibration_ReadyForMissionGet\n08012860 000001e4 T SystemMagCalibration_RecordLoadOwned\n08012b60 0000022c T SystemMagCalibration_SampleApply\n0801254c 000001e0 T SystemMagCalibration_SaveComplete\n080121cc 0000012c T SystemMagCalibration_SaveRequest\n08012ac8 00000098 T SystemMagCalibration_StatusGet\n080313e0 00000010 T SystemMagCalibrationStorage_LoadCompleteGet\n080313f0 00000168 T SystemMagCalibrationStorage_Service\n08015474 00000028 T SystemMagnetometer_ConfigApply\n080153b4 00000022 T SystemMagnetometer_HealthGet\n08015390 00000022 T SystemMagnetometer_InfoGet\n0801533c 00000006 T SystemMagnetometer_Init\n080153d8 0000009c T SystemMagnetometer_LatestSampleGet\n0801530c 00000030 T SystemMagnetometer_NameGet\n0801534c 00000044 T SystemMagnetometer_Process\n08015344 00000006 T SystemMagnetometer_Start\n08035720 00000014 T SystemMissionAction_Init\n0800e87c 00000060 t SystemMissionProcess_BoundaryReached\n0800ee30 00000004 T SystemMissionProcess_ControlWindowGet\n0800ee28 00000006 T SystemMissionProcess_EstimatorStoppedGet\n0800ecac 00000164 T SystemMissionProcess_EventGet\n0800e938 000000e4 t SystemMissionProcess_FunctionActiveGet\n0800e80c 00000070 t SystemMissionProcess_FunctionValidate\n0800ea1c 00000020 T SystemMissionProcess_Init\n0800ee20 00000006 T SystemMissionProcess_InsStoppedGet\n0800ee18 00000006 T SystemMissionProcess_LoggingActiveGet\n0800e8dc 0000005c t SystemMissionProcess_NavigationStoppedGet\n0800ee34 00000298 T SystemMissionProcess_RuntimeProcess\n0800e74c 000000c0 t SystemMissionProcess_StateValidate\n0800ea3c 00000270 T SystemMissionProcess_Step\n0800ee10 00000006 T SystemMissionProcess_TelemetryActiveGet\n0800e5f0 0000015c t SystemMissionProcess_Transition\n0803088c 000009a8 T SystemMissionSnapshot_Create\n08031234 000001ac T SystemMissionSnapshot_FinalStatusWrite\n08015abc 00000058 T SystemNavigationHealth_ChangesGet\n08015a40 00000052 T SystemNavigationHealth_DegradedGet\n08015a2c 00000012 T SystemNavigationHealth_GroupGet\n080155cc 000001b0 t SystemNavigationHealth_GroupGet.part.0\n08015570 0000005c t SystemNavigationHealth_GroupValidate\n08015a94 00000028 T SystemNavigationHealth_ImuQualityRecord\n080157e4 00000248 T SystemNavigationHealth_Observe\n08015b14 00000148 T SystemNavigationHealth_OverallGet\n0801577c 00000068 T SystemNavigationHealth_Reset\n0800c4c8 0000000c T SystemNavigationProfile_Freeze\n0800c4c0 00000008 T SystemNavigationProfile_Get\n0800c4d4 0000000c T SystemNavigationProfile_UnfreezeForRollback\n0803573c 000000d8 T SystemOutput_Init\n08035734 00000008 T SystemOutput_NameGet\n08035938 0000007c T SystemOutput_Process\n08035814 00000068 T SystemOutput_SafeSet\n0803587c 000000bc T SystemOutput_StatusGet\n08032218 0000000e T SystemPower_CapabilitiesGet\n080322c8 00000030 T SystemPower_EffectiveConfigGet\n08032228 00000038 T SystemPower_HealthGet\n080321e8 00000030 T SystemPower_InfoGet\n08031f4c 00000050 T SystemPower_Init\n08032260 00000068 T SystemPower_LatestSampleGet\n08031f44 00000008 T SystemPower_NameGet\n08031fdc 0000020c T SystemPower_Process\n08031f9c 00000040 T SystemPower_Start\n0800c4f4 0000000c T SystemProfile_Freeze\n0800c4e0 00000008 T SystemProfile_Get\n0800c4e8 0000000c T SystemProfile_IsFrozen\n0800c500 0000000c T SystemProfile_UnfreezeForRollback\n080487f4 00000004 T SystemProjectParameter_CountGet\n080487f8 00000054 T SystemProjectParameter_Get\n0800c50c 00000174 t SystemSensorStatus_DescriptorsRefresh\n0800c680 00000448 T SystemSensorStatus_Get\n0800cb3c 000000f0 T SystemSensorStatus_SnapshotCapture\n0800cc5c 00000044 T SystemSensorStatus_SnapshotGet\n0800cc2c 00000030 T SystemSensorStatus_SnapshotInfoGet\n0800cac8 00000074 T SystemSensorStatus_SummaryFlagsGet\n0801338c 00000094 t SystemSourceSelector_EventRecord\n08013320 0000006a t SystemSourceSelector_EventWrite\n08013da8 0000004c T SystemSourceSelector_GnssActiveInstanceGet\n08013284 0000009c t SystemSourceSelector_GnssSelectionPublish\n08013d8c 0000001c T SystemSourceSelector_ImuActiveInstanceGet\n08013420 00000160 t SystemSourceSelector_ImuFreshSelect\n08013d04 00000088 T SystemSourceSelector_ImuSelectAndLock\n0801381c 00000078 t SystemSourceSelector_OrderBuild.part.0.constprop.0\n080136e4 0000009c t SystemSourceSelector_PassiveInit\n08013780 0000009c t SystemSourceSelector_PassiveStart\n08013c18 000000ec T SystemSourceSelector_PendingEventsFlush\n08013668 0000007c t SystemSourceSelector_PrimaryInstanceGet\n08013580 000000e8 t SystemSourceSelector_TelemetryCandidateStart\n08013894 0000013c t SystemSourceSelector_TelemetryNextStart\n080139d0 000001a0 t SystemSourceSelector_TelemetryRecoveryTry\n08013b70 000000a8 t SystemSourceSelector_TelemetrySwitchIfAvailable\n0800d280 00000084 t SystemStartup_CommunicationProcess\n0800d10c 00000070 t SystemStartup_ConfigCapture\n0800d17c 00000068 t SystemStartup_DeviceFailed\n0800d0a0 0000006c t SystemStartup_DeviceReset\n0800d5d4 00000014 T SystemStartup_GetDeviceReport\n0800d5cc 00000008 T SystemStartup_GetReport\n0800d5e8 00000c64 T SystemStartup_ProcessDevices\n0800d1e4 0000009c t SystemStartup_ReportFinalize\n0800d5c0 0000000c T SystemStartup_ResultIsFatal\n0800d3dc 000001e4 T SystemStartup_Run\n0800d304 000000d8 t SystemStartup_SensorCommunicationEvaluate\n0802f890 000000c4 T SystemStorage_Close\n0802f954 0000002c T SystemStorage_HealthGet\n0802f494 00000060 T SystemStorage_Init\n0802f980 00000140 T SystemStorage_MissionDirectoryReserve\n0802fcfc 00000038 T SystemStorage_MissionIdGet\n0802fac0 0000023c T SystemStorage_MissionManifestCreate\n0802f4f4 0000010c T SystemStorage_Mount\n0802f48c 00000008 T SystemStorage_NameGet\n0802fd34 0000013c T SystemStorage_ObjectSlotRead\n0802fe70 00000148 T SystemStorage_ObjectSlotWrite\n0802f600 000000cc T SystemStorage_Open\n0802f7c4 000000cc T SystemStorage_Sync\n0802f6cc 000000f8 T SystemStorage_Write\n080016ac 0000008c T SystemTaskStack_OverflowContextSet\n08001638 00000074 T SystemTaskStack_SnapshotGet\n08015188 00000048 T SystemTelemetry_HealthGet\n0801516c 0000001c T SystemTelemetry_InfoGet\n08014c40 00000160 T SystemTelemetry_Init\n08014ee0 00000048 T SystemTelemetry_ModeSet\n08014c0c 00000034 T SystemTelemetry_NameGet\n08014fd0 0000019c T SystemTelemetry_Process\n08014f78 00000058 T SystemTelemetry_Receive\n08014e88 00000058 T SystemTelemetry_SendControl\n08014da0 000000e8 T SystemTelemetry_Start\n08014f28 00000050 T SystemTelemetry_TxResultGet\n0800e4f8 000000a8 T SystemTime_GetMissionUs\n0800e458 000000a0 T SystemTime_GetMissionUsAt\n0800e33c 00000014 T SystemTime_GetMonotonicUs\n0800e24c 000000f0 T SystemTime_Init\n0800e438 00000020 T SystemTime_IsMissionStarted\n0800e5a0 00000050 T SystemTime_MeasurementTimestampResolve\n0800e3f4 00000044 T SystemTime_MissionReset\n0800e350 0000004c T SystemTime_MissionStart\n0800e39c 00000058 T SystemTime_MissionStop\n0801327c 00000008 T SystemUserInertial_ConfigGet\n08023f80 00000014 T SysTick_Handler\n080489e4 00000002 W TAMP_STAMP_IRQHandler\n08053074 0000001c r task_names.0\n00000000 a tasks.c\n2000a190 00000008 b telemetry_log_state.0\n00000000 a telemetry_service.c\n00000000 a telemetry_task.c\n00000000 a telemetry_tm.c\n08017694 000000b4 t TelemetryService_AckFrameQueue\n08017748 00000108 t TelemetryService_AckQueue\n08017c98 000000e8 t TelemetryService_AckSend\n08018024 00000058 t TelemetryService_AirStartBlockReasonGet\n0801807c 000001a0 t TelemetryService_AuxiliarySend\n08017604 00000090 t TelemetryService_CapabilityAdvertised\n080175a8 0000005c t TelemetryService_CommandEqual\n08017940 000000a0 t TelemetryService_FlightRecoveryStateProcess\n080179e0 0000009c t TelemetryService_ImuQuantizedGet\n080183b0 000002c0 T TelemetryService_Init\n0801821c 00000080 t TelemetryService_LockCommand\n0801829c 00000114 t TelemetryService_PreflightStatusPayloadGet\n08018670 000017d8 T TelemetryService_Process\n0801752c 0000007c t TelemetryService_StartAckSelect\n08017f98 0000008c t TelemetryService_StartResultMap\n08017850 000000f0 t TelemetryService_StatusQueueAt\n08017d80 00000218 t TelemetryService_StatusSend\n08017b38 00000160 t TelemetryService_StreamSend\n08017a7c 000000bc t TelemetryService_TrackedSend\n080462e4 000000a4 t TelemetryTm_DeviceState\n08046290 00000054 t TelemetryTm_HealthBit\n080468c4 00000138 T TelemetryTm_HealthBuild\n080465ac 00000010 T TelemetryTm_Init\n080465bc 000001cc T TelemetryTm_Observe\n08046788 0000013c T TelemetryTm_PositionBuild\n08046388 00000224 t TelemetryTm_ServiceHealth\n0801f738 000000e0 T TIM_Base_SetConfig\n080489e4 00000002 W TIM1_BRK_TIM9_IRQHandler\n080489e4 00000002 W TIM1_CC_IRQHandler\n080489e4 00000002 W TIM1_TRG_COM_TIM11_IRQHandler\n080471f4 0000000c T TIM1_UP_TIM10_IRQHandler\n080489e4 00000002 W TIM2_IRQHandler\n080489e4 00000002 W TIM3_IRQHandler\n080489e4 00000002 W TIM4_IRQHandler\n080489e4 00000002 W TIM5_IRQHandler\n080489e4 00000002 W TIM6_DAC_IRQHandler\n080489e4 00000002 W TIM7_IRQHandler\n080489e4 00000002 W TIM8_BRK_TIM12_IRQHandler\n080489e4 00000002 W TIM8_CC_IRQHandler\n080489e4 00000002 W TIM8_TRG_COM_TIM14_IRQHandler\n080489e4 00000002 W TIM8_UP_TIM13_IRQHandler\n08054720 00000008 r tiny\n08054950 00000318 r two_over_pi\n080547b0 00000108 r two_over_pi\n00000000 a uart_console_adapter.c\n0801e6b8 0000000e t UART_DMAAbortOnError\n0801e650 00000066 t UART_DMAError\n0801e6e8 00000098 t UART_DMAReceiveCplt\n0801e6c8 0000001e t UART_DMARxHalfCplt\n0801e5ec 0000004a t UART_DMATransmitCplt\n0801e63c 0000000a t UART_DMATxHalfCplt\n0801e1fc 0000005e t UART_EndRxTransfer\n0801e780 000000c2 t UART_Receive_IT.isra.0\n0801e25c 000000cc t UART_SetConfig\n0801eb80 000000ac T UART_Start_Receive_DMA\n080489e4 00000002 W UART4_IRQHandler\n080489e4 00000002 W UART5_IRQHandler\n0802effc 000000d4 t UartConsoleAdapter_HealthRefresh\n200121b8 00000001 b ucMaxSysCallPriority\n200121b4 00000004 b ulMaxPRIGROUPValue\n080471a8 00000002 T UsageFault_Handler\n00000000 a usart.c\n08047200 0000000c T USART1_IRQHandler\n0804720c 0000000c T USART2_IRQHandler\n08047218 0000000c T USART3_IRQHandler\n080489e4 00000002 W USART6_IRQHandler\n20011494 00000004 B uwTick\n20000078 00000001 D uwTickFreq\n2000007c 00000004 D uwTickPrio\n200003f8 00000004 d uxCriticalNesting\n200120c8 00000004 b uxCurrentNumberOfTasks\n08023fe4 00000026 T uxListRemove\n200120a4 00000004 b uxSchedulerSuspended\n08024b84 0000000c T uxTaskGetNumberOfTasks\n08024e28 00000044 T uxTaskGetStackHighWaterMark\n200120ac 00000004 b uxTaskNumber\n200120c0 00000004 b uxTopReadyPriority\n0805352c 00000004 r uxTopUsedPriority\n08020bec 00000030 t validate\n080537d8 00000017 r values.0\n08023f08 00000024 T vApplicationGetIdleTaskMemory\n08023f2c 00000054 T vApplicationStackOverflowHook\n00000000 a vector_constraints.c\n080339f8 000000e0 t VectorConstraints_BasisComplete\n08033908 00000080 t VectorConstraints_ColumnsRotate\n08033ad8 0000005e t VectorConstraints_Determinant\n08033988 00000070 t VectorConstraints_Normalize\n08033b38 00000cac T VectorConstraints_Solve\n08053098 00000003 r velocity_axis_mask.2\n08023f94 00000016 T vListInitialise\n08023fac 00000006 T vListInitialiseItem\n08023fb4 00000030 T vListInsert\n08024f30 00000014 t vPortEnableVFP\n08024fac 00000044 T vPortEnterCritical\n08024ff0 00000028 T vPortExitCritical\n08025044 00000028 W vPortSetupTimerInterrupt\n080251e8 0000005c T vPortValidateInterruptPriority\n08024a58 00000068 T vTaskDelay\n08024d84 00000018 T vTaskInternalSetTimeOutState\n08024e1c 0000000c T vTaskMissedYield\n08024c70 00000030 T vTaskPlaceOnEventList\n08024ac0 0000007c T vTaskStartScheduler\n08024b3c 00000010 T vTaskSuspendAll\n08024bb0 000000c0 T vTaskSwitchContext\n00000000 a w_pow.c\n00000000 a w_sqrt.c\n08053444 00000044 r warning.0\n00000000 a wf_acos.c\n00000000 a wf_atan2.c\n00000000 a wf_hypot.c\n00000000 a wf_pow.c\n00000000 a wf_sqrt.c\n08032c60 000000f0 t Window_Integrate\n08032d50 000000c0 t Window_PositionAt\n0804bc5c 00000024 t with_errno\n0804bdb4 0000001c t with_errnof\n080489e4 00000002 W WWDG_IRQHandler\n200120fc 00000014 b xDelayedTaskList1\n200120e8 00000014 b xDelayedTaskList2\n0804bc80 00000034 t xflow\n0804bdd0 0000001e t xflowf\n200120a8 00000004 b xNextTaskUnblockTime\n200120b0 00000004 b xNumOfOverflows\n200120b8 00000004 b xPendedTicks\n200120cc 00000014 b xPendingReadyList\n0802506c 0000017c T xPortStartScheduler\n08025018 0000002c T xPortSysTickHandler\n08024198 00000086 T xQueueGenericCreateStatic\n080240f8 000000a0 T xQueueGenericReset\n08024220 000000d4 T xQueueGenericSendFromISR\n080242f4 00000172 T xQueueReceive\n200120bc 00000004 b xSchedulerRunning\n08024d9c 00000080 T xTaskCheckForTimeOut\n08024834 00000224 T xTaskCreateStatic\n08024e6c 00000020 T xTaskGetSchedulerState\n08024b78 0000000c T xTaskGetTickCount\n08024b90 00000020 T xTaskIncrementTick\n080244ec 000001bc t xTaskIncrementTick.part.0\n08024ca0 000000e4 T xTaskRemoveFromEventList\n08024b4c 0000002c T xTaskResumeAll\n080246a8 0000018c t xTaskResumeAll.part.0\n200120c4 00000004 b xTickCount\n200120b4 00000004 b xYieldPendings\n",
+  "tables": {
+    "134565144": "c10f0008"
+  }
+}

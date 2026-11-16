@@ -1,0 +1,40 @@
+{
+  "format_version": 1,
+  "resources": {
+    "USART2": {
+      "physical": "USART2",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    },
+    "SPI1": {
+      "physical": "SPI1",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_RESET": {
+      "physical": "RADIO_RESET",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_BUSY": {
+      "physical": "RADIO_BUSY",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_NSS": {
+      "physical": "RADIO_NSS",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_DIO1": {
+      "physical": "RADIO_DIO1",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    },
+    "SYSTEM_TIME": {
+      "physical": "SYSTEM_TIME",
+      "fixed": true,
+      "purpose": "SSGS1.0 candidate allocation; PCB unverified"
+    }
+  }
+}

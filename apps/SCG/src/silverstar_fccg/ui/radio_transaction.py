@@ -3,17 +3,32 @@ from copy import deepcopy
 from dataclasses import asdict, replace
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QCheckBox, QDialogButtonBox,
-    QFormLayout, QGroupBox, QHBoxLayout, QLabel, QPushButton, QScrollArea,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QDialogButtonBox,
+    QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
-from silverstar_fccg.project.model import ProtocolSelection
 from silverstar_fccg.project.air_link import AirLinkDefaults_Get
+from silverstar_fccg.project.model import ProtocolSelection
 from silverstar_fccg.project.radio_transaction import (
-    RadioTransaction_Commit, RadioTransaction_EndpointSet, RadioTransaction_IssuesGet)
+    RadioTransaction_BandSet,
+    RadioTransaction_ChoicesGet,
+    RadioTransaction_Commit,
+    RadioTransaction_EndpointClear,
+    RadioTransaction_EndpointSet,
+    RadioTransaction_IssuesGet,
+)
 from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get
-from silverstar_fccg.ui.pages.targets import AirLinkPage
 from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
+from silverstar_fccg.ui.pages.targets import AirLinkPage
 from silverstar_fccg.ui.widgets import StandardComboBox
 from silverstar_fccg.ui.window_geometry import PropertyDialog
 
@@ -45,6 +60,23 @@ class RadioTransactionDialog(PropertyDialog):
         root.addWidget(scroll, 1)
         self.endpoints = {}
         self.endpoint_details = {}
+        preset_row = QHBoxLayout()
+        preset_row.addWidget(QLabel(text('radio.transaction.band'), content))
+        self.preset = StandardComboBox(content)
+        self.preset.addItem('2.4 GHz · LoRa · 2473 MHz', 'sx128x')
+        self.preset.addItem('433 MHz · LoRa · 433 MHz', 'sx127x')
+        self.preset.setCurrentIndex(self.preset.findData(model.air_link.radio_family))
+        self.defaults_button = QPushButton(text('radio.transaction.restore'), content)
+        self.defaults_button.setAutoDefault(False)
+        self.defaults_button.setDefault(False)
+        self.defaults_button.setObjectName('radioRestoreDefaults')
+        self.defaults_button.clicked.connect(self._Preset_Apply)
+        preset_row.addWidget(self.preset, 1)
+        preset_row.addWidget(self.defaults_button)
+        body.addLayout(preset_row)
+        self.preset_note = QLabel(text('radio.transaction.preset_hint'), content)
+        self.preset_note.setWordWrap(True)
+        body.addWidget(self.preset_note)
         endpoint_layout = QHBoxLayout()
         body.addLayout(endpoint_layout)
         for endpoint in ('flight', 'ground'):
@@ -53,11 +85,13 @@ class RadioTransactionDialog(PropertyDialog):
             form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
             combo, power = StandardComboBox(group), StandardComboBox(group)
             combo.addItem(text('radio.transaction.unselected'), None)
-            combo.model().item(0).setEnabled(False)
+            choices = set(RadioTransaction_ChoicesGet(model.air_link, catalog))
             for manifest in catalog.Type_Get('device'):
                 if manifest.radio is None or manifest.radio.technology != 'lora' or 'lora' not in manifest.radio.phy_modes:
                     continue
                 for module_id, module in manifest.radio.modules.items():
+                    if (manifest.component_id, module_id) not in choices:
+                        continue
                     title = str(module.get('display_name', module.get('model', module_id)))
                     combo.addItem(title, (manifest.component_id, module_id))
                     combo.setItemData(combo.count() - 1, text('radio.transaction.reconfigure'), Qt.ItemDataRole.ToolTipRole)
@@ -77,29 +111,15 @@ class RadioTransactionDialog(PropertyDialog):
             else:
                 selected = (model.ground_target.radio_plugin, model.ground_target.module_variant) if model.ground_target.radio_plugin else None
                 selected_power = model.ground_target.tx_power_dbm
+            if selected is not None and combo.findData(selected) < 0:
+                combo.addItem(text('radio.transaction.incompatible_selection', module=selected[1]), selected)
+                combo.model().item(combo.count() - 1).setEnabled(False)
             combo.setCurrentIndex(max(0, combo.findData(selected)))
             self._Powers_Refresh(endpoint)
             power.setCurrentIndex(power.findData(selected_power))
             combo.currentIndexChanged.connect(lambda _index, selected=endpoint: self._Endpoint_Change(selected))
             power.currentIndexChanged.connect(lambda _index, selected=endpoint: self._Endpoint_Change(selected, refresh_power=False))
-        preset_row = QHBoxLayout()
-        self.preset = StandardComboBox(content)
-        for family in ('sx128x', 'sx127x'):
-            defaults = AirLinkDefaults_Get(model.air_link, family)
-            self.preset.addItem(f'{family.upper()} · LoRa · {defaults.frequency_hz / 1000000:g} MHz / '
-                f'SF{defaults.spreading_factor} / BW{defaults.bandwidth_hz / 1000:g} / CR{defaults.coding_rate}', family)
-        self.preset.setCurrentIndex(max(0, self.preset.findData(model.air_link.radio_family)))
-        self.defaults_button = QPushButton(text('radio.transaction.restore'), content)
-        self.defaults_button.setAutoDefault(False)
-        self.defaults_button.setDefault(False)
-        self.defaults_button.setObjectName('radioRestoreDefaults')
-        self.defaults_button.clicked.connect(self._Preset_Apply)
-        preset_row.addWidget(self.preset, 1)
-        preset_row.addWidget(self.defaults_button)
-        body.addLayout(preset_row)
-        self.preset_note = QLabel(text('radio.transaction.preset_hint'), content)
-        self.preset_note.setWordWrap(True)
-        body.addWidget(self.preset_note)
+        self.preset.currentIndexChanged.connect(self._Band_Change)
         self.editor = AirLinkPage(translator)
         self.editor.Language_Apply(translator)
         self.editor._air_form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
@@ -130,6 +150,41 @@ class RadioTransactionDialog(PropertyDialog):
         root.addWidget(buttons)
         self._Refresh()
 
+    def _Selections_Refresh(self):
+        choices = RadioTransaction_ChoicesGet(self._draft.air_link, self._catalog)
+        for endpoint, (combo, power) in self.endpoints.items():
+            if endpoint == 'flight':
+                instance = self._draft.DeviceInstance_Get(self._draft.air_link.flight_radio_instance)
+                module, output = FlightRadioConfiguration_Get(self._draft, instance) if instance else ('', None)
+                selected = (instance.plugin, module) if instance else None
+            else:
+                ground = self._draft.ground_target
+                selected = (ground.radio_plugin, ground.module_variant) if ground.radio_plugin else None
+                output = ground.tx_power_dbm
+            combo.blockSignals(True)
+            combo.clear()
+            combo.addItem(self._translator.Text_Get('radio.transaction.unselected'), None)
+            for plugin, module_id in choices:
+                module = self._catalog.Component_Get(plugin).radio.modules[module_id]
+                combo.addItem(str(module.get('display_name', module.get('model', module_id))), (plugin, module_id))
+            if selected is not None and combo.findData(selected) < 0:
+                combo.addItem(self._translator.Text_Get('radio.transaction.incompatible_selection', module=selected[1]), selected)
+                combo.model().item(combo.count() - 1).setEnabled(False)
+            combo.setCurrentIndex(max(0, combo.findData(selected)))
+            combo.blockSignals(False)
+            self._Powers_Refresh(endpoint)
+            power.blockSignals(True)
+            power.setCurrentIndex(power.findData(output))
+            power.blockSignals(False)
+
+    def _Band_Change(self):
+        self._draft, removed = RadioTransaction_BandSet(self._draft, self._catalog, self.preset.currentData())
+        self._Preset_Apply()
+        if removed:
+            targets = ' / '.join(self._translator.Text_Get('workspace.hardware.' + endpoint)
+                for endpoint in ('flight', 'ground') if any(item.startswith(endpoint + ':') for item in removed))
+            self.preset_note.setText(self._translator.Text_Get('radio.transaction.band_cleared', targets=targets))
+
     def _Powers_Refresh(self, endpoint):
         combo, power = self.endpoints[endpoint]
         previous = power.currentData()
@@ -148,8 +203,7 @@ class RadioTransactionDialog(PropertyDialog):
             self._Powers_Refresh(endpoint)
         combo, power = self.endpoints[endpoint]
         if combo.currentData() is None:
-            # Existing endpoint removal belongs to its device editor. An empty
-            # previously unconfigured peer is valid for single-target projects.
+            self._draft = RadioTransaction_EndpointClear(self._draft, self._catalog, endpoint)
             self._Refresh()
             return
         plugin, module = combo.currentData()
@@ -165,11 +219,11 @@ class RadioTransactionDialog(PropertyDialog):
         family = self.preset.currentData()
         restored = AirLinkDefaults_Get(self._draft.air_link, family)
         changes = asdict(restored)
-        labels = dict(radio_family='field.air_family', radio_technology='field.air_technology',
-            phy_mode='field.air_phy', frequency_hz='field.air_frequency', spreading_factor='field.air_sf',
-            bandwidth_hz='field.air_bandwidth', coding_rate='field.air_coding_rate',
-            preamble_symbols='field.air_preamble', header_mode='field.air_header',
-            crc_enabled='field.air_crc', iq_mode='field.air_iq', packet_mtu='field.air_mtu')
+        labels = {'radio_family':'field.air_family', 'radio_technology':'field.air_technology',
+            'phy_mode':'field.air_phy', 'frequency_hz':'field.air_frequency', 'spreading_factor':'field.air_sf',
+            'bandwidth_hz':'field.air_bandwidth', 'coding_rate':'field.air_coding_rate',
+            'preamble_symbols':'field.air_preamble', 'header_mode':'field.air_header',
+            'crc_enabled':'field.air_crc', 'iq_mode':'field.air_iq', 'packet_mtu':'field.air_mtu'}
         differences = []
         for key, value in changes.items():
             if key not in labels or value == getattr(self._draft.air_link, key):
@@ -192,6 +246,9 @@ class RadioTransactionDialog(PropertyDialog):
     def _Refresh(self):
         if not hasattr(self, 'editor'):
             return
+        # Every edit and restore uses the draft as the sole selection owner.
+        # Unsupported saved selections remain visible until explicitly cleared.
+        self._Selections_Refresh()
         issues = RadioTransaction_IssuesGet(self._draft, self._catalog)
         self.editor.Configuration_Set(self._draft.air_link, issues)
         text = self._translator.Text_Get

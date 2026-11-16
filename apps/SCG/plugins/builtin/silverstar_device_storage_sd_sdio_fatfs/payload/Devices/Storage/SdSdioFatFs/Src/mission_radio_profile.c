@@ -33,7 +33,8 @@ static MissionRadioProfileResult MissionRadioProfile_TypedRead(const uint8_t *da
     if ((data[2] != candidate->length) || (data[3] != 0U) || (length < 4U + candidate->length))
     { return MissionRadioProfileResult_Invalid; }
     if (((data[0] == 1U) && (MissionRadioProfile_NrfValid(&data[4]) == 0U)) ||
-        ((data[0] == 2U) && (memcmp(&data[4], sx1278, sizeof(sx1278)) != 0)))
+        ((data[0] == 2U) && (((data[4] != 1U) && (data[4] != 2U)) ||
+         (memcmp(&data[5], &sx1278[1], sizeof(sx1278) - 1U) != 0))))
     { return MissionRadioProfileResult_Invalid; }
     return MissionRadioProfileResult_Ok;
 }

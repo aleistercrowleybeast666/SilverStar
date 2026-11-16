@@ -4451,7 +4451,8 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         details: str = "",
         check_box=None,
     ) -> QMessageBox:
-        box = QMessageBox(self)
+        from silverstar_fccg.ui.window_geometry import CenteredMessageBox
+        box = CenteredMessageBox(self)
         box.setIcon(icon)
         box.setWindowTitle(title)
         box.setText(text)

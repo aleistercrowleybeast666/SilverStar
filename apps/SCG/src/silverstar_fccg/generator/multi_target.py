@@ -123,6 +123,15 @@ def _Main_Integrate(content: bytes) -> bytes:
 
 
 def _VerifiedBoardMain_Prepare(content: bytes, board) -> bytes:
+    if (board.component_id == "silverstar.board.ssgs_1_0"
+            and board.source == "builtin" and board.board is not None
+            and not board.board.verified
+            and board.board.compatible_mcus == ("silverstar.mcu.stm32c071fbp6",)
+            and board.metadata.get("ground_entry") == "clean_cubemx_main"
+            and board.metadata.get("hardware_maturity") == "software_candidate"):
+        # A checked-in clean entry is a software input, not a PCB validation.
+        # _Main_Integrate still requires the exact empty application sections.
+        return content
     if (
         board.source == "builtin"
         and board.board is not None
@@ -247,9 +256,17 @@ SIZE := {toolchain_prefix}size
 PYTHON ?= python
 HOST_CC ?= gcc
 ANALYZE ?= 0
+CONFIG ?= Release
 BUILD_DIR := build
+OPTIMIZATION := -Os -g3
+ifeq ($(CONFIG),Debug)
+BUILD_DIR := build/Debug
+OPTIMIZATION := -Og -g3
+else ifneq ($(CONFIG),Release)
+$(error CONFIG must be Release or Debug)
+endif
 ifeq ($(ANALYZE),1)
-BUILD_DIR := build/analysis
+BUILD_DIR := $(BUILD_DIR)/analysis
 ANALYZER_FLAGS := -fanalyzer
 endif
 C_SOURCES := {source_lines}
@@ -267,7 +284,7 @@ FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror \\
   -Wmissing-prototypes -Wswitch-enum -Wvla $(ANALYZER_FLAGS)
 VENDOR_WARNINGS := -Wall -Werror=implicit-function-declaration \\
   -Werror=incompatible-pointer-types -Werror=return-type
-CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections -fstack-usage -Wvla -Werror=vla {flags} {include_flags} {define_flags}
+CFLAGS := -std=c11 $(OPTIMIZATION) "-fdebug-prefix-map=$(CURDIR)=." -ffunction-sections -fdata-sections -fstack-usage -Wvla -Werror=vla {flags} {include_flags} {define_flags}
 LDFLAGS := {flags} -Wl,--gc-sections,-Map=$(BUILD_DIR)/ground.map -T{linker} -specs=nano.specs -lc -lm -lnosys
 
 ifeq ($(OS),Windows_NT)
@@ -278,7 +295,7 @@ endif
 
 all: $(BUILD_DIR)/ground.elf $(BUILD_DIR)/ground.bin $(BUILD_DIR)/ground.size
 
-.PHONY: all architecture-check host-tests artifact-check power10-check static-analysis dependency-check
+.PHONY: all architecture-check host-tests artifact-check power10-check static-analysis dependency-check stack-report
 .DELETE_ON_ERROR:
 
 $(OBJECTS): Makefile Generated/ground_source_graph.json Tools/ground_artifact_contract.py Tools/check_ground.py
@@ -288,7 +305,7 @@ dependency-check: $(OBJECTS)
 
 static-analysis:
 \t$(MAKE) ANALYZE=1 all
-\t$(PYTHON) Tools/check_ground.py dependencies --build-dir build/analysis --compiler "$(CC)"
+\t$(PYTHON) Tools/check_ground.py dependencies --build-dir $(BUILD_DIR)/analysis --compiler "$(CC)"
 
 architecture-check:
 \t$(PYTHON) Tools/check_ground.py architecture
@@ -297,12 +314,15 @@ host-tests:
 \t$(PYTHON) Tools/check_ground.py host --host-cc "$(HOST_CC)"
 
 artifact-check: all
-\t$(PYTHON) Tools/check_ground.py artifact --prefix "{toolchain_prefix}"
+\t$(PYTHON) Tools/check_ground.py artifact --prefix "{toolchain_prefix}" --build-dir $(BUILD_DIR)
 \t$(PYTHON) Generated/memory_audit.py --elf $(BUILD_DIR)/ground.elf --map $(BUILD_DIR)/ground.map --linker {linker} --contract Generated/memory_contract.json --output $(BUILD_DIR)/memory-report.json --prefix "{toolchain_prefix}"
 \t@echo "FIRMWARE_MEMORY_REPORT|$(BUILD_DIR)/memory-report.json"
 
 power10-check:
 \tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1 -TargetKind Ground
+
+stack-report: all
+\t$(PYTHON) Tools/check_ground_stacks.py --config $(CONFIG) --prefix "{toolchain_prefix}"
 
 $(BUILD_DIR)/ground.elf: $(OBJECTS) | dependency-check
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
@@ -322,7 +342,7 @@ $(BUILD_DIR)/%.o: %.c
 
 $(BUILD_DIR)/%.o: %.s
 \t@$(MKDIR_P)
-\t$(CC) $(CFLAGS) -save-temps=obj -MD -MP -Wa,--MD,$(@:.o=.gas.d) -x assembler-with-cpp -c $< -o $@
+\t$(CC) $(CFLAGS) -fno-working-directory -save-temps=obj -MD -MP -Wa,--MD,$(@:.o=.gas.d) -x assembler-with-cpp -c $< -o $@
 \t$(PYTHON) Tools/check_ground.py dependencies --build-dir $(BUILD_DIR) --compiler "$(CC)" --source $<
 
 # Only gate-produced prerequisites enter Make; raw compiler/GAS manifests are data.
@@ -381,6 +401,8 @@ def GroundFiles_Render(
         "Common/Src/silverstar_assert.c", "Interfaces/Inc/system_device_types.h",
         "Interfaces/Inc/system_navigation_provenance.h",
         "Tools/check_power_of_ten.ps1",
+        "Tools/check_task_stacks.py", "Tools/stack_arm.py", "Tools/stack_runtime.py",
+        "Tools/stack_review.py", "Tools/stack_manifest.py",
     ):
         files[relative] = (flight_core.payload_root / relative).read_bytes()
     if ground.hardware.mode == "board_plugin":
@@ -456,6 +478,10 @@ def GroundFiles_Render(
     if missing_sources:
         raise ValueError("Ground source graph has missing files: " + ", ".join(missing_sources))
     required_irqs = ground.hardware.inventory.get("ground_cubemx_base", {}).get("required_irq_handlers", [])
+    if ground.board == "silverstar.board.ssgs_1_0" and ground.hardware.mode == "board_plugin":
+        required_irqs = catalog.Component_Get(ground.board).metadata.get("required_irq_handlers", [])
+        if not required_irqs:
+            raise ValueError("SSGS1.0 board must declare its complete compiled IRQ contract")
     graph = {
         "sources": sources, "asm_sources": base_graph.asm_sources,
         "include_dirs": includes, "defines": defines,

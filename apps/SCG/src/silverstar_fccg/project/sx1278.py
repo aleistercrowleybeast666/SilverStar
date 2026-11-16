@@ -1,11 +1,43 @@
-"""Deliberately narrow E32-400M20S experimental profile; no SX128x defaults."""
+"""Narrow Ebyte SX1278 module profiles; no inferred PA or SX128x settings."""
+from copy import deepcopy
+from dataclasses import replace
+
 SX1278_PLUGIN = "silverstar.device.telemetry.sx1278"
 SX1278_MODULE = "e32_400m20s"
+SX1278_DIO4_MODULE = "e19_433m20s2"
 
 
 def Sx1278Module_Validate(module, power):
-    if module != SX1278_MODULE or type(power) is not int or power != 17:
-        raise ValueError("Experimental E32-400M20S requires its explicit module and +17 dBm chip setting")
+    if module not in (SX1278_MODULE, SX1278_DIO4_MODULE) or type(power) is not int or power != 17:
+        raise ValueError("Experimental SX1278 requires a registered module and +17 dBm chip setting")
+
+
+def Sx1278Manifest_Resolve(manifest, module, power):
+    Sx1278Module_Validate(module, power)
+    if module == SX1278_MODULE:
+        return manifest
+    removed = {'radio_rx_en', 'radio_tx_en'}
+    requirements = []
+    for requirement in manifest.resource_requirements:
+        if requirement.name in removed:
+            continue
+        if requirement.name == 'radio_bus':
+            constraints = deepcopy(requirement.constraints)
+            constraints['spi']['maximum_clock_hz'] = 1_000_000
+            requirement = replace(requirement, constraints=constraints)
+        requirements.append(requirement)
+    metadata = deepcopy(manifest.metadata)
+    metadata['sx1278_module_profile'] = deepcopy(metadata['sx1278_module_profiles'][module])
+    metadata['instance_resource_binding']['fields'] = [
+        field for field in metadata['instance_resource_binding']['fields']
+        if field['requirement'] not in removed]
+    for descriptor in metadata.get('device_descriptors', ()):
+        descriptor['physical_device_id'] = 'PROJECT_PHYSICAL_DEVICE_ID_E19_SX1278'
+        descriptor['name_hash'] = '0xE1943320UL'
+    binding = replace(manifest.instance_resource_binding, fields=tuple(
+        field for field in manifest.instance_resource_binding.fields if field.requirement not in removed))
+    return replace(manifest, resource_requirements=tuple(requirements), instance_resource_binding=binding,
+        physical_device=replace(manifest.physical_device, model='E19-433M20S2'), metadata=metadata)
 
 
 def Sx1278LinkDefaults_Get():
@@ -44,9 +76,12 @@ def Sx1278Header_Render(model, target="flight"):
     if target not in ("flight", "ground"):
         raise ValueError("SX1278 target must be Flight or Ground")
     Sx1278Model_Validate(model, target)
-    return '''#ifndef __AIR_LINK_CONFIG_H
+    module = (model.DeviceInstance_Get(model.air_link.flight_radio_instance).module_variant
+              if target == 'flight' else model.ground_target.module_variant)
+    return f'''#ifndef __AIR_LINK_CONFIG_H
 #define __AIR_LINK_CONFIG_H
-/* Experimental E32-400M20S. 3.3 V only. HARDWARE_UNVERIFIED. */
+/* Experimental {module}. 3.3 V only. HARDWARE_UNVERIFIED. */
+#define AIR_LINK_SX1278_DIO4_FRONTEND {int(module == SX1278_DIO4_MODULE)}U
 #define AIR_LINK_FREQUENCY_HZ 433000000UL
 #define AIR_LINK_TX_POWER_DBM 17
 #define AIR_LINK_SPREADING_FACTOR 7U

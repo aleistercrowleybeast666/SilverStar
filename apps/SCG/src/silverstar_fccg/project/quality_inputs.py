@@ -102,7 +102,7 @@ def QualityInputHash_Get(root: Path, target: str, task: str, command: tuple[str,
                 artifact_suffixes = {".elf", ".bin", ".hex", ".map"}
                 if task == "stack_report":
                     artifact_suffixes.update((".su", ".d"))
-                if path.suffix not in artifact_suffixes and not (task == "stack_report" and name == "stack-budget.json"):
+                if path.suffix not in artifact_suffixes and not (task == "stack_report" and name in {"stack-budget.json", "ground-stack-budget.json"}):
                     continue
             checked = policy.Path_Resolve(relative, allow_root=False)
             with checked.open("rb") as stream:

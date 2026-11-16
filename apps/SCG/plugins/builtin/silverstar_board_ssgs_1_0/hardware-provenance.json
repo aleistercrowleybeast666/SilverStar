@@ -1,0 +1,51 @@
+{
+  "source_kind": "task_derived_vendor_generated",
+  "hardware_tested": false,
+  "source_ioc_sha256": "01305e81e603c236cfda8990132a8e3b8353a867b67ca255ed6fd76add7f32e7",
+  "original_generated_files": {
+    "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+    "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+    "Core/Inc/main.h": "dae2cfd8218b539716cf18c4ba486b8ca756e7e292658889393cd0a6c366ecd2",
+    "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+    "Core/Inc/stm32c0xx_hal_conf.h": "faa0afd17d3fc8160d9f4b8d6a45b04631fa21bcdca37dd8a19abb4c15106abf",
+    "Core/Inc/stm32c0xx_it.h": "5e72ad0bd163a201845a5d5e7ce7d7985fe8271cfd7a75d6fcbd61d34fe23716",
+    "Core/Inc/usart.h": "2ddd1eaf81e3750b46df7222f4c34ae295bcdaaaa1152e4be4933d3a0ca90181",
+    "Core/Src/dma.c": "be15a83f6248396d52c8ede6eb03c24dae15978184251c31e1da70b841ea1add",
+    "Core/Src/gpio.c": "81911e888f66c1a902bb0f6eef21b1837556e4b68f9fd0829b32e4f3f35e90ad",
+    "Core/Src/main.c": "3136d14a3ea1937706e0337ad95a6dfa0fc5965492cde300706532c790288dd9",
+    "Core/Src/spi.c": "d9f62283f8ae476a834906e265b8d8738271d303c12174ec81398e9c5349f085",
+    "Core/Src/stm32c0xx_hal_msp.c": "4c85e35fa612969b5c41922cdd7262d627a8aa355b19956b349b15a7e4c4ba12",
+    "Core/Src/stm32c0xx_it.c": "3f3c714c4c37163e676b5088541b4b0bc7660c90a6bcab074997f3c02316941d",
+    "Core/Src/system_stm32c0xx.c": "ef7b2cb68648a83b658e6d7471e862d71701e63d640468c2d2930211f6ed490e",
+    "Core/Src/usart.c": "06f0d7ed64061181f3feac3524492a1a613065b7b1a2e463db99e8220b5ad722"
+  },
+  "changes": [
+    "Excluded CubeMX sysmem.c/syscalls.c; no heap used"
+  ],
+  "vendor_package": "STM32Cube FW_C0 V1.4.1",
+  "package_license": {
+    "source": "STM32Cube_FW_C0_V1.4.1/Package_license.md",
+    "copied_to": "payload/LICENSE.txt",
+    "sha256": "4f98568563fcb6da220e8c4ebe21a96aaed6fcdc811eb39ab02032f93eac160b",
+    "scope": "Verbatim installed ST package license; selected HAL/CMSIS retain their own licenses."
+  },
+  "owned_payload_sha256": {
+    "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+    "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+    "Core/Inc/main.h": "dae2cfd8218b539716cf18c4ba486b8ca756e7e292658889393cd0a6c366ecd2",
+    "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+    "Core/Inc/stm32c0xx_hal_conf.h": "faa0afd17d3fc8160d9f4b8d6a45b04631fa21bcdca37dd8a19abb4c15106abf",
+    "Core/Inc/stm32c0xx_it.h": "5e72ad0bd163a201845a5d5e7ce7d7985fe8271cfd7a75d6fcbd61d34fe23716",
+    "Core/Inc/usart.h": "2ddd1eaf81e3750b46df7222f4c34ae295bcdaaaa1152e4be4933d3a0ca90181",
+    "Core/Src/dma.c": "be15a83f6248396d52c8ede6eb03c24dae15978184251c31e1da70b841ea1add",
+    "Core/Src/gpio.c": "81911e888f66c1a902bb0f6eef21b1837556e4b68f9fd0829b32e4f3f35e90ad",
+    "Core/Src/main.c": "3136d14a3ea1937706e0337ad95a6dfa0fc5965492cde300706532c790288dd9",
+    "Core/Src/spi.c": "d9f62283f8ae476a834906e265b8d8738271d303c12174ec81398e9c5349f085",
+    "Core/Src/stm32c0xx_hal_msp.c": "4c85e35fa612969b5c41922cdd7262d627a8aa355b19956b349b15a7e4c4ba12",
+    "Core/Src/stm32c0xx_it.c": "3f3c714c4c37163e676b5088541b4b0bc7660c90a6bcab074997f3c02316941d",
+    "Core/Src/system_stm32c0xx.c": "ef7b2cb68648a83b658e6d7471e862d71701e63d640468c2d2930211f6ed490e",
+    "Core/Src/usart.c": "06f0d7ed64061181f3feac3524492a1a613065b7b1a2e463db99e8220b5ad722",
+    "LICENSE.txt": "4f98568563fcb6da220e8c4ebe21a96aaed6fcdc811eb39ab02032f93eac160b",
+    "SSGS1_0.ioc": "01305e81e603c236cfda8990132a8e3b8353a867b67ca255ed6fd76add7f32e7"
+  }
+}

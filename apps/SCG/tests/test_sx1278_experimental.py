@@ -65,11 +65,18 @@ def test_sx1278_rejects_implicit_or_other_modules(module, power):
 
 @pytest.fixture(scope="module")
 def sx1278_host(tmp_path_factory, builtin_catalog):
+    return Sx1278Host_Build(tmp_path_factory, builtin_catalog, 'e32_400m20s')
+
+
+def Sx1278Host_Build(tmp_path_factory, builtin_catalog, module):
     root = Path(__file__).resolve().parents[1]
     work = tmp_path_factory.mktemp("sx1278-host")
     core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
     radio = root / "plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278"
-    (work / "air_link_config.h").write_text(Sx1278Header_Render(Sx1278Model_Get(builtin_catalog)), encoding="utf8")
+    model = Sx1278Model_Get(builtin_catalog)
+    model.device_instances = [replace(item, module_variant=module) if item.plugin == SX1278_PLUGIN else item
+                              for item in model.device_instances]
+    (work / "air_link_config.h").write_text(Sx1278Header_Render(model), encoding="utf8")
     (work / "project_resources.h").write_text('''#ifndef __PROJECT_RESOURCES_H
 #define __PROJECT_RESOURCES_H
 #include "platform_gpio.h"
@@ -105,7 +112,7 @@ SystemDeviceResult ProjectSx1278Resources_Get(uint8_t instance, ProjectSx1278Res
     return work/"host.exe", work, includes, radio
 
 
-@pytest.mark.parametrize("scenario", ["tx", "rx", "timeout", "absent", "readback", "boundaries",
+@pytest.mark.parametrize("scenario", ["identity", "tx", "rx", "timeout", "absent", "readback", "boundaries",
     "gpio_fault", "resources", "wrap", "adapter", "queue_corrupt", "state_corrupt",
     "queue_expiry", "continuous_rx", "conflicting_irq", "chip_bounds", "ground_adapter", "crc_race", "deadline_during_spi",
     "stop_restart", "stop_during_config", "stop_receive", "stop_gpio_error", "ignored_standby",

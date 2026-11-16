@@ -412,8 +412,9 @@ def MissionRadioProfileMacros_Render(model: ProjectModel) -> str:
     elif link.radio_family == "sx127x":
         from silverstar_fccg.project.sx1278 import Sx1278Model_Validate
         Sx1278Model_Validate(model)
-        # SSMS schema3 typed backend2/version1, exact module1=E32-400M20S.
-        profile = bytes([2, 1, 16, 0, 1]) + struct.pack("<IBIBHHb", link.frequency_hz,
+        # SSMS typed backend2/version1; module1=E32, module2=E19-S2.
+        module_code = {"e32_400m20s": 1, "e19_433m20s2": 2}[active.module_variant]
+        profile = bytes([2, 1, 16, 0, module_code]) + struct.pack("<IBIBHHb", link.frequency_hz,
             link.spreading_factor, link.bandwidth_hz, int(link.coding_rate[-1]),
             link.preamble_symbols, link.packet_mtu, power)
         schema = 3
@@ -1017,10 +1018,12 @@ def _FlightConfigHeader_Render(
     if model.mcu_family == "silverstar.mcu_family.stm32f4":
         definitions.append(("SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT",
                             f"{_PlatformGpioContextCount_Get(model, catalog)}U"))
-    elif model.hardware.mode == "custom" and model.mcu_family in (
+    elif model.hardware.mode in ("custom", "board_plugin") and model.mcu_family in (
             "silverstar.mcu_family.stm32f1_flight", "silverstar.mcu_family.stm32h7"):
+        gpio_resources = (BoardResourceProvisions_Get(catalog.Component_Get(model.board))
+                          if model.hardware.mode == "board_plugin" else model.hardware.resources)
         gpio_indices = [int(resource.metadata["logical_index"])
-                        for resource in model.hardware.resources
+                        for resource in gpio_resources
                         if resource.kind.startswith("gpio_")]
         definitions.append(("SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT",
                             f"{max(gpio_indices, default=0) + 1}U"))
@@ -1408,7 +1411,7 @@ def _InstanceResourceDeclarations_Render(
                     f"Platform has no typed resource binding for {requirement.kind}"
                 )
             fields.append(f"    {platform_binding.id_type} {field.member};")
-        if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
+        if binding.accessor in ("ProjectSx1281Resources_Get", "ProjectSx1278Resources_Get") and not any(field.member == "rx_en" for field in binding.fields):
             fields.extend(("    PlatformGpioId rx_en;", "    PlatformGpioId tx_en;"))
         if binding.accessor == "ProjectJy901bResources_Get":
             fields.append("    uint16_t installation_orientation;")
@@ -1478,7 +1481,7 @@ def _InstanceResourcesSource_Render(
                         f"Instance resource C identifier is unsafe: {c_id}"
                     )
                 values.append(f".{field.member} = {c_id}")
-            if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
+            if binding.accessor in ("ProjectSx1281Resources_Get", "ProjectSx1278Resources_Get") and not any(field.member == "rx_en" for field in binding.fields):
                 values.extend((".rx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT", ".tx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT"))
             if binding.accessor == "ProjectJy901bResources_Get":
                 orientation = {"horizontal": 0, "vertical": 1}[instance.installation_orientation]

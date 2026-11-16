@@ -128,6 +128,7 @@ class BoardCompatibilityView:
     compatible: bool
     missing_text: str = ""
     detail: str = ""
+    selectable: bool = True
 
 
 @dataclass(frozen=True, slots=True)

@@ -50,12 +50,12 @@ def test_dialog_cancel_and_pair_apply_are_atomic(qapp, workspace_root):
     for cancel in (True, False):
         dialog = RadioTransactionDialog(Translator('zh_CN'), model, service.catalog)
         dialog.show()
+        dialog.preset.setCurrentIndex(dialog.preset.findData('sx127x'))
         for endpoint in ('flight', 'ground'):
             combo = dialog.endpoints[endpoint][0]
             index = combo.findData(('silverstar.device.telemetry.sx1278', 'e32_400m20s'))
             assert index >= 0 and combo.model().item(index).isEnabled()
             combo.setCurrentIndex(index)
-        dialog.preset.setCurrentIndex(dialog.preset.findData('sx127x'))
         dialog._Preset_Apply()
         if cancel:
             dialog.reject()

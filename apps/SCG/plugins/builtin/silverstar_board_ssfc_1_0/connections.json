@@ -1,0 +1,85 @@
+{
+  "format_version": 1,
+  "resources": {
+    "USART1": {
+      "physical": "USART1",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "USART2": {
+      "physical": "USART2",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "SPI1": {
+      "physical": "SPI1",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "I2C1": {
+      "physical": "I2C1",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_NSS": {
+      "physical": "RADIO_NSS",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_RESET": {
+      "physical": "RADIO_RESET",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "STATUS_LED": {
+      "physical": "STATUS_LED",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_BUSY": {
+      "physical": "RADIO_BUSY",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_DIO1": {
+      "physical": "RADIO_DIO1",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "GNSS_RESET": {
+      "physical": "GNSS_RESET",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_TX_EN": {
+      "physical": "RADIO_TX_EN",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "RADIO_RX_EN": {
+      "physical": "RADIO_RX_EN",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "GNSS_PPS": {
+      "physical": "GNSS_PPS",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "SD_DETECT": {
+      "physical": "SD_DETECT",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "SDMMC1": {
+      "physical": "SDMMC1",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    },
+    "SYSTEM_TIME": {
+      "physical": "SYSTEM_TIME",
+      "fixed": true,
+      "purpose": "SSFC1.0 candidate allocation; PCB unverified"
+    }
+  }
+}

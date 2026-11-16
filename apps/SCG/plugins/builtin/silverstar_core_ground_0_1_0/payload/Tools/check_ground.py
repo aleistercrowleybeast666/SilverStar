@@ -164,19 +164,22 @@ def Host_Check(root: Path, compiler: str, *, extra_bridge_sources: tuple[str, ..
     print(f'PASS {len(cases)} generated-source host executables; HAL/radio are mocks, no MCU recovery proof')
 
 
-def Artifact_Check(root: Path, prefix: str) -> None:
+def Artifact_Check(root: Path, prefix: str, build_dir: str = 'build') -> None:
     graph = Architecture_Check(root)
-    elf = root / 'build/ground.elf'
-    binary = root / 'build/ground.bin'
+    from ground_artifact_contract import BuildDirectory_Validate
+    BuildDirectory_Validate(build_dir)
+    build = root / build_dir
+    elf = build / 'ground.elf'
+    binary = build / 'ground.bin'
     header = Command_Run([prefix + 'readelf', '-h', str(elf)], root)
     if not re.search(r'Machine:\s+ARM\b', header):
         raise ValueError('ELF is not ARM')
     symbols = Command_Run([prefix + 'nm', '-g', str(elf)], root)
     from ground_artifact_contract import InterruptVectors_Validate, DependencyClosure_Validate, EffectiveMacros_Validate
-    vector_path = root / 'build/ground-vector.bin'
+    vector_path = build / 'ground-vector.bin'
     Command_Run([prefix + 'objcopy', '-j', '.isr_vector', '-O', 'binary', str(elf), str(vector_path)], root)
     InterruptVectors_Validate(root, graph, symbols, vector_path.read_bytes())
-    DependencyClosure_Validate(root, graph, prefix + 'gcc')
+    DependencyClosure_Validate(root, graph, prefix + 'gcc', build_dir=build_dir)
     EffectiveMacros_Validate(root, graph, prefix + 'gcc')
     for symbol in ('Reset_Handler', 'main', 'GroundBridge_Init', 'GroundBridge_Process',
                    'PcByteStream_Init', 'GroundRadio_Process'):
@@ -205,14 +208,14 @@ def Artifact_Check(root: Path, prefix: str) -> None:
                 raise ValueError('linked section outside declared regions: ' + name)
     if found == 0:
         raise ValueError('no allocated sections parsed')
-    map_text = (root / 'build/ground.map').read_text(encoding='utf-8')
+    map_text = (build / 'ground.map').read_text(encoding='utf-8')
     for source in graph['sources'] + graph['asm_sources']:
-        object_path = 'build/' + str(Path(source).with_suffix('.o')).replace('\\', '/')
+        object_path = build_dir + '/' + str(Path(source).with_suffix('.o')).replace('\\', '/')
         if object_path not in map_text or not (root / object_path).is_file():
             raise ValueError('declared object absent from link map: ' + object_path)
         if elf.stat().st_mtime_ns < (root / source).stat().st_mtime_ns:
             raise ValueError('ELF older than source: ' + source)
-    reproduced = root / 'build/ground-artifact.bin'
+    reproduced = build / 'ground-artifact.bin'
     Command_Run([prefix + 'objcopy', '-O', 'binary', str(elf), str(reproduced)], root)
     if binary.read_bytes() != reproduced.read_bytes():
         raise ValueError('BIN does not match linked ELF')
@@ -229,7 +232,7 @@ def Main_Run() -> None:
     parser.add_argument('--host-cc', default='gcc')
     parser.add_argument('--prefix', default='arm-none-eabi-')
     parser.add_argument('--compiler')
-    parser.add_argument('--build-dir', choices=('build', 'build/analysis'), default='build')
+    parser.add_argument('--build-dir', default='build')
     parser.add_argument('--source')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
@@ -246,7 +249,7 @@ def Main_Run() -> None:
             DependencyClosure_Validate(root, graph, args.compiler or args.prefix + 'gcc',
                                        build_dir=args.build_dir, source=args.source)
     else:
-        Artifact_Check(root, args.prefix)
+        Artifact_Check(root, args.prefix, args.build_dir)
 
 
 if __name__ == '__main__':

@@ -69,6 +69,7 @@ from silverstar_flp.plugins.container_packages import TrustedContainerPluginMana
 from silverstar_flp.plugins.registry import PluginRegistry
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
 from silverstar_flp.ui.new_project import NewProjectDialog
+from silverstar_flp.ui.message_box_placement import MessageBox_Show
 from silverstar_flp.ui.pages import (
     DataExplorerPage,
     ExportDialog,
@@ -419,7 +420,7 @@ class MainWindow(QMainWindow):
         )
         if not source_name:
             return
-        answer = QMessageBox.warning(
+        answer = MessageBox_Show(QMessageBox.warning,
             self,
             self._translator.Text_Get("dialog.plugin_trust.title"),
             self._translator.Text_Get("dialog.plugin_trust.message").format(path=source_name),
@@ -431,13 +432,13 @@ class MainWindow(QMainWindow):
         try:
             self.Plugin_Install(Path(source_name), explicitly_trusted=True)
         except DecoderProfileError as exc:
-            QMessageBox.critical(
+            MessageBox_Show(QMessageBox.critical,
                 self,
                 self._translator.Text_Get("error.title"),
                 self._translator.Text_Get("plugin.install.rejected").format(reason=str(exc)),
             )
             return
-        QMessageBox.information(
+        MessageBox_Show(QMessageBox.information,
             self,
             self._translator.Text_Get("dialog.plugin_install.title"),
             self._translator.Text_Get("plugin.install.success_restart"),
@@ -1029,7 +1030,7 @@ class MainWindow(QMainWindow):
         entry = self._replay_store.Entry_Get(result_id)
         if entry is None:
             return
-        answer = QMessageBox.warning(self, self._translator.Text_Get("replay.run_delete"),
+        answer = MessageBox_Show(QMessageBox.warning, self, self._translator.Text_Get("replay.run_delete"),
             self._translator.Text_Get("replay.run_delete_confirm", result_id=result_id),
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
             QMessageBox.StandardButton.Cancel)
@@ -1469,7 +1470,7 @@ class MainWindow(QMainWindow):
     def _Overwrite_Confirm(self, path: Path) -> bool:
         if not path.exists():
             return True
-        answer = QMessageBox.question(
+        answer = MessageBox_Show(QMessageBox.question,
             self,
             self._translator.Text_Get("dialog.overwrite.title"),
             self._translator.Text_Get("dialog.overwrite.message", path=path),
@@ -1506,7 +1507,7 @@ class MainWindow(QMainWindow):
             return
         if message.partition(":")[0].strip() == "calibration_selection_boundary_missing":
             self.status_label.setText(self._translator.Text_Get("import.startup_fragment"))
-            QMessageBox.information(
+            MessageBox_Show(QMessageBox.information,
                 self,
                 self._translator.Text_Get("dialog.import.title"),
                 self._translator.Text_Get("import.startup_fragment"),
@@ -1715,7 +1716,7 @@ class MainWindow(QMainWindow):
     def _ProjectChanges_Confirm(self) -> bool:
         if not self._project_dirty:
             return True
-        answer = QMessageBox.warning(
+        answer = MessageBox_Show(QMessageBox.warning,
             self,
             self._translator.Text_Get("dialog.unsaved.title"),
             self._translator.Text_Get("dialog.unsaved.message"),
@@ -1752,7 +1753,7 @@ class MainWindow(QMainWindow):
             if translated != translation_key
             else message
         )
-        QMessageBox.critical(
+        MessageBox_Show(QMessageBox.critical,
             self,
             self._translator.Text_Get("error.title"),
             f"{display_message}\n\n{self._translator.Text_Get('error.detail_saved')}",

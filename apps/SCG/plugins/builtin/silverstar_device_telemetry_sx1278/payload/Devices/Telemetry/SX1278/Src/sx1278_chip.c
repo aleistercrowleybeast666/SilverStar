@@ -93,6 +93,23 @@ static Sx1278Result Sx1278Chip_DetectionConfigure(const Sx1278ChipBus *bus)
     return Sx1278Chip_Verify(bus, 0x31U, (uint8_t)((actual & 0x78U) | 0x03U));
 }
 
+Sx1278Result Sx1278Chip_Dio4Set(const Sx1278ChipBus *bus, uint8_t receiving)
+{
+    uint8_t mapping = 0U;
+    Sx1278Result result;
+    if (receiving > 1U) { return Sx1278Result_Invalid; }
+    /* E19-433M20S2 connects chip DIO4 internally to its RF switch.
+     * Semtech Rev7 table18: mapping 01 = PllLock (high during RX),
+     * mapping 00 = CadDetected. CAD is never started; clear its latch so
+     * TX/standby select low. Preserve DIO5/reserved mapping bits. */
+    result = Sx1278Chip_Read(bus, 0x41U, &mapping, 1U);
+    if (result != Sx1278Result_Ok) { return result; }
+    result = Sx1278Chip_RegisterWrite(bus, 0x12U, 0x01U);
+    if (result != Sx1278Result_Ok) { return result; }
+    mapping = (uint8_t)((mapping & 0x3FU) | ((receiving != 0U) ? 0x40U : 0U));
+    return Sx1278Chip_Verify(bus, 0x41U, mapping);
+}
+
 Sx1278Result Sx1278Chip_Configure(const Sx1278ChipBus *bus)
 {
     /* FRF = 433000000 * 2^19 / 32000000 = 0x6C4000.

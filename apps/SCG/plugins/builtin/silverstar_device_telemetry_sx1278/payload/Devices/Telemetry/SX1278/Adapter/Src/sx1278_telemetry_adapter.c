@@ -23,7 +23,9 @@ static SystemDeviceResult Sx1278Telemetry_Result(Sx1278Result result)
 
 const char *Sx1278TelemetryInstance_NameGet(uint8_t instance)
 {
-    (void)instance; return "E32-400M20S experimental transport";
+    (void)instance;
+    return (AIR_LINK_SX1278_DIO4_FRONTEND != 0U) ?
+        "E19-433M20S2 experimental transport" : "E32-400M20S experimental transport";
 }
 
 SystemDeviceResult Sx1278TelemetryInstance_Init(uint8_t instance)
@@ -104,7 +106,9 @@ SystemDeviceResult Sx1278TelemetryInstance_InfoGet(uint8_t instance, SystemDevic
     if (info == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     result = Sx1278TelemetryInstance_CapabilitiesGet(instance, &info->capability_mask);
     if (result != SYSTEM_DEVICE_OK) { return result; }
-    info->device_name = "E32-400M20S"; info->model_name = "E32-400M20S HARDWARE_UNVERIFIED";
+    info->device_name = (AIR_LINK_SX1278_DIO4_FRONTEND != 0U) ? "E19-433M20S2" : "E32-400M20S";
+    info->model_name = (AIR_LINK_SX1278_DIO4_FRONTEND != 0U) ?
+        "E19-433M20S2 HARDWARE_UNVERIFIED" : "E32-400M20S HARDWARE_UNVERIFIED";
     info->driver_version = "0.1.0"; info->configuration_mask = 0U;
     return SYSTEM_DEVICE_OK;
 }

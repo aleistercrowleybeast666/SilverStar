@@ -53,3 +53,23 @@ apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_revi
 apps/SCG/tests/fixtures/stack_logger_review_20261101/** -text
 docs/evidence/gui_convergence_20261110/scg/** -text
 docs/evidence/software_completion_20261101/** -text whitespace=cr-at-eol
+
+# November 2026 exact software stack review documents preserve their sealed bytes.
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_logger_review_20261116.md -text
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_platform_review_20261116.md -text
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_ssfc_review_20261116.md -text
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_catalog_review_20261116.md -text
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_e19_review_20261116.md -text
+
+# Ground sealed reviews and vendor/board input hashes retain exact checkout bytes.
+apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/ground_stack_inputs.json -text
+apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/software_stack_cases/*.json -text
+apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/software_stack_ssgs_review_20261117.md -text
+apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/software_stack_f103_ground_review_20261117.md -text
+apps/SCG/plugins/builtin/silverstar_mcu_family_stm32c0/payload/Drivers/** -text
+apps/SCG/plugins/builtin/silverstar_board_ssfc_1_0/** -text
+apps/SCG/plugins/builtin/silverstar_board_ssgs_1_0/** -text
+apps/SCG/plugins/builtin/silverstar_mcu_stm32f103c8t6/payload/STM32F103XX_FLASH.ld -text
+docs/evidence/platform_finish_20261116/boards/** -text
+apps/SCG/tests/fixtures/c071_runtime_20261117.json -text
+apps/SCG/tests/fixtures/f103_runtime_20261117.json -text

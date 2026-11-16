@@ -1,5 +1,3 @@
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from silverstar_flp.core.horizontal_trajectory import (
@@ -12,14 +10,36 @@ from silverstar_flp.core.horizontal_trajectory import (
 class HorizontalTrajectoryWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.figure = Figure(figsize=(7, 5))
-        self.canvas = FigureCanvasQTAgg(self.figure)
+        self._figure = None
+        self._canvas = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.canvas)
         self.trajectory = HorizontalTrajectory_Build([], [])
         self.labels = {}
         self.theme = "light"
+
+    def _Canvas_Ensure(self):
+        if self._canvas is None:
+            # This tab starts hidden. Keep its renderer out of the startup path;
+            # plugins, data contracts and the numerical runtime still initialize
+            # normally. Import failures retain the existing exception path.
+            from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+            from matplotlib.figure import Figure
+
+            figure = Figure(figsize=(7, 5))
+            canvas = FigureCanvasQTAgg(figure)
+            self.layout().addWidget(canvas)
+            self._figure, self._canvas = figure, canvas
+
+    @property
+    def figure(self):
+        self._Canvas_Ensure()
+        return self._figure
+
+    @property
+    def canvas(self):
+        self._Canvas_Ensure()
+        return self._canvas
 
     def Presentation_Set(self, translate, theme):
         self.labels = {key: translate("horizontal." + key) for key in LABEL_IDS}

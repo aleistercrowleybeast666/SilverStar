@@ -1,0 +1,17 @@
+{
+  "previous_split_index_sha256": "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96",
+  "current_index_sha256": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f",
+  "reviewed_added_case_canonical_sha256": {
+    "logger-20261116-f4-Release": "e4d016ec4764a46c99d5dab52217c47feaeb0159be6776a291303ee087390048",
+    "logger-20261116-f4-Debug": "f9a8eaebf8965118c504150459a1973cd90231867372d76658a20444d291ef00",
+    "platform-20261116-f4-Release": "05f452d2225653d8192a72e9ec16672f82016a66b9c785fd66f69ed5f0077a7e",
+    "platform-20261116-f4-Debug": "39c22afb30502aea9dc85e7e9d9924c1c006c6e767d13b0612f811fa161fc7cc",
+    "platform-catalog-20261116-f4-Release": "23e90a3ca5909f1387f39318e01d927b3c550d90954428726afc16c1186e0cd4",
+    "platform-catalog-20261116-f4-Debug": "cf52291686e9dd7160ad018ce838ce9521df3dd5831cb971659c103f75fa7a49",
+    "platform-ssfc1-20261116-Release": "daf59070e95274d39b43812f52d3fd5c70b05f67c93fadb13edd29eaed0122cc",
+    "platform-ssfc1-20261116-Debug": "66d6f27dd5cec3c02af5a1b878e1f0a0ed2f7e157dbf43502676a26e4277dffd",
+    "platform-e19-20261116-f4-Release": "24d0c1fd1e4d59caf6224481661f8d63e2483d5e3e1322df2a1728111ccd39af",
+    "platform-e19-20261116-f4-Debug": "a2d75960fd736fad2687d2415942a5d3714736fc2fdb285f123ca7760cf89fdc"
+  },
+  "review_evidence": "docs/evidence/platform_finish_20261116/contracts/ and boards/; original twenty raw/canonical cases unchanged. Manual finite review: logger A, reader C, catalog D, SSFC N, final-identity E19 A; independent normal-generation reproduction recorded separately without rewriting earlier refusals."
+}

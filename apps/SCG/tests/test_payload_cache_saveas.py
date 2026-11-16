@@ -17,15 +17,16 @@ def _PollutedService_Create(workspace_root, root):
     service = FccgService(workspace_root)
     core = service.catalog.Component_Get("silverstar.core.0_1_0")
     package = root / "core"
-    shutil.copytree(core.package_root, package)
+    shutil.copytree(core.package_root, package,
+                    ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
     tools = package / "payload/Tools"
     cache = root / "import_cache"
-    code = ("import sys,importlib.util,shutil; from pathlib import Path; "
+    code = ("import sys,importlib.util,shutil,py_compile; from pathlib import Path; "
             "sys.pycache_prefix="+repr(str(cache))+"; sys.dont_write_bytecode=False; "
             "sys.path.insert(0,"+repr(str(tools))+"); import auto_memory_layout,check_task_stacks; "
             "out=Path("+repr(str(tools/"__pycache__"))+"); out.mkdir(); "
-            "[shutil.copyfile(importlib.util.cache_from_source(module.__file__),"
-            "out/(module.__name__+'.cpython-test.pyc')) for module in (auto_memory_layout,check_task_stacks)]")
+            "[py_compile.compile(module.__file__,cfile=str("
+            "out/(module.__name__+'.cpython-test.pyc')),doraise=True) for module in (auto_memory_layout,check_task_stacks)]")
     # Every Python cache, including stdlib imports, is directed into this isolated fixture.
     result = subprocess.run([sys.executable,"-I","-S","-c",code],capture_output=True,text=True,timeout=30)
     assert result.returncode == 0, result.stdout+result.stderr

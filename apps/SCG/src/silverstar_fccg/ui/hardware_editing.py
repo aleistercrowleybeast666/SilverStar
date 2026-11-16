@@ -399,6 +399,13 @@ class HardwareEditingActions:
         )
 
     def _BoardSelection_Change(self, board_id: str) -> None:
+        if board_id == "__unselected__":
+            def clear(candidate: ProjectModel) -> None:
+                candidate.board = ""
+                candidate.hardware = HardwareConfiguration()
+                candidate.resource_assignments = {}
+            self._ProjectConfiguration_Change(clear, logging_availability_changed=True)
+            return
         board = self._service.Plugin_Get(board_id)
         def change(candidate: ProjectModel) -> None:
             candidate.board = board_id
@@ -479,7 +486,8 @@ class HardwareEditingActions:
             and (manifest.metadata.get("target_role") == "ground_station" or manifest.component_class == "ground_station_board")
             and any(identity in {item.component_id for item in self._service.catalog.Type_Get("mcu")}
                     for identity in manifest.board.compatible_mcus)
-            and (manifest.board.verified or manifest.source == "installed")
+            and (manifest.board.verified or manifest.source == "installed"
+                 or manifest.metadata.get("hardware_maturity") == "software_candidate")
         )
         selected = model.ground_target.radio_plugin
         try:
@@ -677,6 +685,11 @@ class HardwareEditingActions:
         self._ProjectConfiguration_Change(change)
 
     def _GroundBoard_Change(self, board_id: str) -> None:
+        if board_id == "__unselected__":
+            self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "ground_target",
+                replace(candidate.ground_target, board="", mcu="", hardware=HardwareConfiguration(),
+                        resource_assignments={}, pc_resource="")))
+            return
         if not board_id:
             self._ProjectConfiguration_Change(
                 lambda candidate: setattr(

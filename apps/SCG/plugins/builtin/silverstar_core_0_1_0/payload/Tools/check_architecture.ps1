@@ -361,14 +361,27 @@ $iocPath = 'Flight_Controller0.5.ioc'
 $fatfsConfigurationPath = 'FATFS\Target\ffconf.h'
 $manifestDirectories = @('BuildSystem', 'Targets', 'Platform', 'Devices',
     'Board', 'FlightLogic', 'Generated')
-if ($hardwareMode -eq 'custom') {
+$ownedH743Board = ($hardwareMode -eq 'board_plugin') -and
+    ([string]$projectConfiguration.components.board -ceq 'silverstar.board.ssfc_1_0')
+if (($hardwareMode -eq 'custom') -or $ownedH743Board) {
     $cubeRoot = 'HardwareGenerated\STM32CubeMX'
+    if ($ownedH743Board) {
+        Assert-ArchitectureCondition `
+            -Condition (([string]$projectConfiguration.components.mcu -ceq 'silverstar.mcu.stm32h743zit6') -and
+                ([string]$projectConfiguration.hardware.platform_component -ceq 'silverstar.mcu.stm32h743zit6') -and
+                ([string]$projectConfiguration.hardware.snapshot_id -ceq '') -and
+                (Test-Path -LiteralPath (Join-Path $repoRoot $cubeRoot) -PathType Container)) `
+            -Message 'SSFC1.0 requires its owned H743 payload, without an imported snapshot.'
+        $importedIocName = 'SSFC1_0.ioc'
+    }
+    else {
     Assert-ArchitectureCondition `
         -Condition (([string]$projectConfiguration.components.board -eq '') -and
             ([string]$projectConfiguration.hardware.snapshot_id -cmatch '^[a-f0-9]{64}$') -and
             (Test-Path -LiteralPath (Join-Path $repoRoot $cubeRoot) -PathType Container)) `
         -Message 'Custom hardware requires an imported snapshot and no selected Board plugin.'
     $importedIocName = [string]$projectConfiguration.hardware.ioc_file
+    }
     $validIocName = ($importedIocName -match '^[^\\/:*?"<>|]+\.ioc$') -and
         ($importedIocName -notin @('.', '..'))
     Assert-ArchitectureCondition -Condition $validIocName `
@@ -444,14 +457,27 @@ try {
         $owner = [string]$projectConfiguration.air_link.flight_radio_instance
         Assert-ArchitectureCondition -Condition (($savedRadios.Count -eq 1) -and
             ($savedRadios[0].instance_id -eq $owner)) -Message 'SX1278 requires exactly one paired owner.'
-        foreach ($slot in @('radio_bus', 'radio_nss', 'radio_reset', 'radio_dio0', 'time', 'radio_rx_en', 'radio_tx_en')) {
+        $module = [string]$savedRadios[0].module_variant
+        Assert-ArchitectureCondition -Condition ($module -in @('e32_400m20s', 'e19_433m20s2')) `
+            -Message 'SX1278 module must have an explicitly reviewed frontend profile.'
+        $internalFrontend = $module -eq 'e19_433m20s2'
+        $frontendDeclarations = [regex]::Matches($airConfiguration,
+            '(?m)^\s*#\s*define\s+AIR_LINK_SX1278_DIO4_FRONTEND\s+([01])U\s*$')
+        $allFrontendDeclarations = [regex]::Matches($airConfiguration,
+            '(?m)^\s*#\s*define\s+AIR_LINK_SX1278_DIO4_FRONTEND\b[^\r\n]*$')
+        Assert-ArchitectureCondition -Condition (($frontendDeclarations.Count -eq 1) -and ($allFrontendDeclarations.Count -eq 1) -and
+            ([int]$frontendDeclarations[0].Groups[1].Value -eq [int]$internalFrontend)) `
+            -Message 'SX1278 generated frontend differs from the saved module.'
+        $pinSlots = @('radio_nss','radio_reset','radio_dio0')
+        if (-not $internalFrontend) { $pinSlots += @('radio_rx_en','radio_tx_en') }
+        foreach ($slot in (@('radio_bus','time') + $pinSlots)) {
             $binding = $projectConfiguration.resources.PSObject.Properties[$owner + ':' + $slot]
             Assert-ArchitectureCondition -Condition (($null -ne $binding) -and ($binding.Value -is [string]) -and
                 ($binding.Value.Length -gt 0)) -Message ('SX1278 resource binding is missing: ' + $slot)
         }
-        $pins = @('radio_nss','radio_reset','radio_dio0','radio_rx_en','radio_tx_en') | ForEach-Object {
+        $pins = $pinSlots | ForEach-Object {
             [string]$projectConfiguration.resources.PSObject.Properties[$owner + ':' + $_].Value }
-        Assert-ArchitectureCondition -Condition ((@($pins | Sort-Object -Unique).Count) -eq 5) `
+        Assert-ArchitectureCondition -Condition ((@($pins | Sort-Object -Unique).Count) -eq $pinSlots.Count) `
             -Message 'SX1278 frontend, reset, NSS and DIO0 must bind distinct pins.'
         foreach ($pattern in @('PROJECT_SX1278_INSTANCE_COUNT\s+1U', 'PROJECT_SX1278_INSTANCE_COUNT_MAX\s+1U',
             'PlatformSpiId\s+spi\s*;', 'PlatformGpioId\s+nss\s*;', 'PlatformGpioId\s+reset\s*;', 'PlatformGpioId\s+dio0\s*;', 'PlatformGpioId\s+rx_en\s*;', 'PlatformGpioId\s+tx_en\s*;',
@@ -468,6 +494,15 @@ try {
         $memberSlots = @{ spi = 'radio_bus'; nss = 'radio_nss'; reset = 'radio_reset'; dio0 = 'radio_dio0'; time = 'time'; rx_en = 'radio_rx_en'; tx_en = 'radio_tx_en' }
         $memberTypes = @{ spi = 'Spi'; nss = 'Gpio'; reset = 'Gpio'; dio0 = 'Gpio'; time = 'Time'; rx_en = 'Gpio'; tx_en = 'Gpio' }
         foreach ($member in @('spi','nss','reset','dio0','time','rx_en','tx_en')) {
+            if ($internalFrontend -and ($member -in @('rx_en','tx_en'))) {
+                $binding = $projectConfiguration.resources.PSObject.Properties[$owner + ':' + $memberSlots[$member]]
+                $sentinels = [regex]::Matches($publication, '\.' + $member + '\s*=\s*\(PlatformGpioId\)PLATFORM_GPIO_COUNT(?=\s*[,}])')
+                $allMembers = [regex]::Matches($publication, '\.' + $member + '\s*=')
+                Assert-ArchitectureCondition -Condition (($null -eq $binding) -and
+                    ($sentinels.Count -eq 1) -and ($allMembers.Count -eq 1)) `
+                    -Message ('E19 internal frontend must publish exactly one unused GPIO sentinel: ' + $member)
+                continue
+            }
             $resourceId = [string]$projectConfiguration.resources.PSObject.Properties[$owner + ':' + $memberSlots[$member]].Value
             $expected = $resourceId
             if ($hardwareMode -eq 'custom') {
@@ -630,7 +665,7 @@ $legacyPaths = @(
     'Protocol\SSLOG\generated',
     'Tools\generate_sslog.py'
 )
-if ($hardwareMode -eq 'custom') {
+if (($hardwareMode -eq 'custom') -or $ownedH743Board) {
     $legacyPaths += @(($cubeCorePath + '\Src\freertos.c'), ($cubeCorePath + '\Inc\FreeRTOSConfig.h'))
 }
 foreach ($legacyPath in $legacyPaths) {

@@ -17,6 +17,7 @@ from silverstar_fccg.project.algorithm_parameters import AlgorithmParameters_Res
 from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
+    LoggingOperationJournal_ErrorGet,
     LogPolicyLevel,
     ProtocolLogDefinitions_Get,
 )
@@ -817,6 +818,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         return ProjectValidationResult(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
+    journal_error = LoggingOperationJournal_ErrorGet(model)
+    if journal_error is not None:
+        issues.append(ValidationIssue("error", "AUGMENTED_OPERATION_JOURNAL_REQUIRES_SSLOG", journal_error))
     # Boot broadcasts one SystemGnssConfig to all configurable receivers.
     # Mixing saved profiles would overwrite the secondary target or reject
     # its readback; surface the actual instance ids before generation.

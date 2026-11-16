@@ -1,4 +1,5 @@
 """Third-page recovery display and explicit TXT export, independent of log access."""
+from ui.message_box_placement import MessageBox_Show
 from pathlib import Path
 import time
 from PySide6.QtCore import QUrl
@@ -163,5 +164,5 @@ class RecoveryPanel(QGroupBox):
         try:
             Recovery_Export(Path(selected), snapshot)
         except (OSError, ValueError) as exc:
-            QMessageBox.warning(self, "寻回导出 / Recovery export",
+            MessageBox_Show(QMessageBox.warning, self, "寻回导出 / Recovery export",
                                 f"未写入；请为历史输出选择新文件名。 / Not written; choose a new filename.\n{exc}")

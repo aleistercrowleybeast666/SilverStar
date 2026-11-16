@@ -52,6 +52,8 @@ SystemDeviceResult ProjectSx1278Resources_Get(uint8_t instance, ProjectSx1278Res
     if (instance != 0U) { return SYSTEM_DEVICE_NOT_PRESENT; }
     *r = (ProjectSx1278Resources){PLATFORM_SPI_1, PLATFORM_GPIO_0, PLATFORM_GPIO_1,
         PLATFORM_GPIO_2, PLATFORM_TIME_1, PLATFORM_GPIO_3, PLATFORM_GPIO_4};
+    if (AIR_LINK_SX1278_DIO4_FRONTEND != 0U)
+    { r->rx_en = PLATFORM_GPIO_COUNT; r->tx_en = PLATFORM_GPIO_COUNT; }
     if (resource_invalid != 0U) { r->tx_en = r->rx_en; }
     return SYSTEM_DEVICE_OK;
 }
@@ -133,7 +135,10 @@ static void Boot(void)
     CHECK(registers[0x1D] == 0x72U && registers[0x1E] == 0x74U);
     CHECK(registers[0x26] == 4U && registers[0x40] == 0U);
     CHECK(registers[0x31] == 0x43U);
-    CHECK(gpio[3] == 1U && gpio[4] == 0U && gpio[0] == 1U);
+    if (AIR_LINK_SX1278_DIO4_FRONTEND != 0U)
+    { CHECK(gpio[3] == 0U && gpio[4] == 0U && (registers[0x41] & 0xC0U) == 0x40U); }
+    else { CHECK(gpio[3] == 1U && gpio[4] == 0U); }
+    CHECK(gpio[0] == 1U);
 }
 
 static void RxInject(uint8_t flags, uint8_t length, uint8_t crc)
@@ -152,11 +157,16 @@ static void ScenarioTx(void)
     CHECK(Sx1278_ReceiptGet(0U, id, &age) == Sx1278Result_Busy);
     ProcessAt(157U); CHECK((registers[1] & 7U) == 5U);
     ProcessAt(158U); CHECK((registers[1] & 7U) == 3U);
-    CHECK(gpio[3] == 0U && gpio[4] == 1U && registers[0x40] == 0x40U);
+    if (AIR_LINK_SX1278_DIO4_FRONTEND != 0U)
+    { CHECK(gpio[3] == 0U && gpio[4] == 0U && (registers[0x41] & 0xC0U) == 0U); }
+    else { CHECK(gpio[3] == 0U && gpio[4] == 1U); }
+    CHECK(registers[0x40] == 0x40U);
     CHECK(registers[0x22] == 61U && fifo[0] == 0x10U);
     registers[0x12] = 8U; ProcessAt(159U);
     CHECK(Sx1278_ReceiptGet(0U, id, &age) == Sx1278Result_Ok && age == 151U);
-    CHECK(gpio[3] == 1U && gpio[4] == 0U);
+    if (AIR_LINK_SX1278_DIO4_FRONTEND != 0U)
+    { CHECK(gpio[3] == 0U && gpio[4] == 0U && (registers[0x41] & 0xC0U) == 0x40U); }
+    else { CHECK(gpio[3] == 1U && gpio[4] == 0U); }
 }
 
 static void ScenarioRx(void)
@@ -204,7 +214,58 @@ int main(int argc, char **argv)
 {
     uint8_t data[61]={1U}; uint32_t id,age; uint16_t length;
     CHECK(argc >= 2); (void)memset(gpio,0,sizeof(gpio));
-    if (strcmp(argv[1],"tx")==0) { ScenarioTx(); }
+    if (strcmp(argv[1],"identity")==0)
+    {
+        SystemDeviceInfo info, before;
+        const char *name = (AIR_LINK_SX1278_DIO4_FRONTEND != 0U) ? "E19-433M20S2" : "E32-400M20S";
+        (void)memset(&info,0xA5,sizeof(info)); before=info;
+        CHECK(Sx1278TelemetryInstance_InfoGet(1U,&info)==SYSTEM_DEVICE_INVALID_ARGUMENT);
+        CHECK(memcmp(&info,&before,sizeof(info))==0);
+        CHECK(Sx1278TelemetryInstance_InfoGet(0U,NULL)==SYSTEM_DEVICE_INVALID_ARGUMENT);
+        CHECK(Sx1278_Init(0U)==Sx1278Result_Ok);
+        CHECK(Sx1278TelemetryInstance_InfoGet(0U,&info)==SYSTEM_DEVICE_OK);
+        CHECK(strcmp(info.device_name,name)==0);
+        CHECK(strncmp(info.model_name,name,strlen(name))==0);
+        CHECK(strstr(info.model_name,"HARDWARE_UNVERIFIED")!=NULL);
+        CHECK(strncmp(Sx1278TelemetryInstance_NameGet(0U),name,strlen(name))==0);
+        CHECK(spi_calls==0U && gpio_calls==0U);
+    }
+    else if (strcmp(argv[1],"e19_dio4")==0)
+    {
+        Boot(); CHECK(AIR_LINK_SX1278_DIO4_FRONTEND == 1U);
+        registers[0x41] = 0x6DU;
+        CHECK(Sx1278_Send(0U,data,1U,1U,&id)==Sx1278Result_Ok); ProcessAt(158U);
+        CHECK(registers[0x41]==0x2DU && (registers[0x12]&1U)==0U);
+        registers[0x12]=8U; ProcessAt(159U);
+        CHECK(registers[0x41]==0x6DU && gpio[3]==0U && gpio[4]==0U);
+        CHECK(Sx1278Chip_ModeSet(&s_context.chip,1U)==Sx1278Result_Ok);
+        registers[0x12]=0x01U;
+        CHECK(Sx1278Frontend_Set(0U,1U)==Sx1278Result_Ok);
+        CHECK(registers[0x41]==0x2DU && (registers[0x12]&1U)==0U);
+        CHECK(Sx1278_Stop(0U)==Sx1278Result_Ok); now_ms=160U;
+        CHECK(Sx1278_Process(0U)==Sx1278Result_Offline);
+        CHECK(gpio[1]==0U && Sx1278_StopStatusGet(0U)==Sx1278Result_Ok);
+    }
+    else if (strcmp(argv[1],"e19_readback")==0)
+    {
+        Boot(); bad_readback=0x41U;
+        CHECK(Sx1278_Send(0U,data,1U,1U,&id)==Sx1278Result_Ok); now_ms=158U;
+        CHECK(Sx1278_Process(0U)==Sx1278Result_Io);
+        CHECK(s_published.ready==0U && gpio[1]==0U && gpio[0]==1U);
+        CHECK(Sx1278_ReceiptGet(0U,id,&age)!=Sx1278Result_Ok);
+    }
+    else if (strcmp(argv[1],"e19_resources")==0)
+    {
+        ProjectSx1278Resources resources;
+        CHECK(ProjectSx1278Resources_Get(0U,&resources)==SYSTEM_DEVICE_OK);
+        CHECK(Sx1278_ResourcesValidate(&resources)==Sx1278Result_Ok);
+        resources.dio0=resources.nss;
+        CHECK(Sx1278_ResourcesValidate(&resources)==Sx1278Result_Invalid);
+        resources.dio0=PLATFORM_GPIO_COUNT;
+        CHECK(Sx1278_ResourcesValidate(&resources)==Sx1278Result_Invalid);
+        CHECK(gpio_calls==0U && spi_calls==0U);
+    }
+    else if (strcmp(argv[1],"tx")==0) { ScenarioTx(); }
     else if ((strcmp(argv[1],"transmit_only")==0) || (strcmp(argv[1],"mode_stop_start")==0))
     {
         Boot(); CHECK(Sx1278_ModeSet(0U,Sx1278OperatingMode_TransmitOnly)==Sx1278Result_Busy);
@@ -218,7 +279,10 @@ int main(int argc, char **argv)
             CHECK((registers[1]&7U)==1U && gpio[3]==0U);
         }
         CHECK(Sx1278_Send(0U,data,61U,1U,&id)==Sx1278Result_Ok); ProcessAt(20U);
-        CHECK((registers[1]&7U)==3U && gpio[3]==0U && gpio[4]==1U);
+        CHECK((registers[1]&7U)==3U && gpio[3]==0U);
+        if (AIR_LINK_SX1278_DIO4_FRONTEND != 0U)
+        { CHECK(gpio[4]==0U && (registers[0x41]&0xC0U)==0U); }
+        else { CHECK(gpio[4]==1U); }
         registers[0x12]=8U; ProcessAt(21U);
         CHECK(Sx1278_ReceiptGet(0U,id,&age)==Sx1278Result_Ok);
         CHECK((registers[1]&7U)==1U && gpio[3]==0U && gpio[4]==0U);
@@ -488,6 +552,7 @@ int main(int argc, char **argv)
         CHECK(Sx1278Chip_Read(&bus,0x7FU,data,2U)==Sx1278Result_Invalid);
         CHECK(Sx1278Chip_Read(&bus,0U,data,62U)==Sx1278Result_Invalid);
         CHECK(Sx1278Chip_Write(&bus,0x80U,data,1U)==Sx1278Result_Invalid);
+        CHECK(Sx1278Chip_Dio4Set(&bus,2U)==Sx1278Result_Invalid);
         CHECK(spi_calls==0U && gpio_calls==0U);
     }
     else if (strcmp(argv[1],"resources")==0)

@@ -1,22 +1,35 @@
-from dataclasses import replace
-from pathlib import Path
+import json
 import re
 import shutil
 import subprocess
+from dataclasses import replace
+from pathlib import Path
 
 import pytest
-
-from silverstar_fccg.project.radio_variants import (
-    EBYTE_VARIANTS, RADIO_PLUGIN, RadioVariant_Get, FlightRadioConfiguration_Get, FlightRadioConfiguration_Apply,
-)
 from silverstar_fccg.generator.ground_radio import GroundRadioAirHeader_Render
-from silverstar_fccg.generator.render import AirLinkHeader_Render, _ResourceHeader_Render, _InstanceResourcesSource_Render
-from silverstar_fccg.project.model import (
-    DeviceInstance, HardwareResource, GroundRadioConfiguration, GroundRadioSelection_Apply, ProjectModel_Parse,
+from silverstar_fccg.generator.render import (
+    AirLinkHeader_Render,
+    _InstanceResourcesSource_Render,
+    _ResourceHeader_Render,
 )
 from silverstar_fccg.project.air_link import AirLinkIssues_Get, GroundTargetIssues_Get
-from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+from silverstar_fccg.project.model import (
+    PROJECT_TARGET_SCOPE_FORMAT_VERSION,
+    DeviceInstance,
+    GroundRadioConfiguration,
+    GroundRadioSelection_Apply,
+    HardwareResource,
+    ProjectModel_Parse,
+)
+from silverstar_fccg.project.radio_variants import (
+    EBYTE_VARIANTS,
+    RADIO_PLUGIN,
+    FlightRadioConfiguration_Apply,
+    FlightRadioConfiguration_Get,
+    RadioVariant_Get,
+)
 from silverstar_fccg.project.reference import ReferenceProject_Create
+from silverstar_fccg.project.resources import ResourceAssignments_Resolve
 
 
 @pytest.mark.parametrize("module", EBYTE_VARIANTS)
@@ -45,7 +58,7 @@ def test_documented_capability_and_both_power_renderers(builtin_catalog, module)
     assert not AirLinkIssues_Get(model, builtin_catalog)
     restored = ProjectModel_Parse(model.Dictionary_Get())
     assert restored.Dictionary_Get() == model.Dictionary_Get()
-    assert restored.format_version == 16
+    assert restored.format_version == PROJECT_TARGET_SCOPE_FORMAT_VERSION
     with pytest.raises(ValueError): RadioVariant_Get(module, cap.nominal_output_dbm - 1)
 
 
@@ -53,7 +66,7 @@ def test_original_serialization_and_resource_contract(builtin_catalog):
     model = ReferenceProject_Create("OriginalM12", catalog=builtin_catalog)
     instance = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
     assert FlightRadioConfiguration_Get(model, instance) == ("e28_2g4m12sx", 12)
-    assert model.Dictionary_Get()["format_version"] == 14
+    assert model.Dictionary_Get()["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION
     entry = next(entry for entry in model.Dictionary_Get()["components"]["devices"] if entry["instance_id"] == instance.instance_id)
     assert set(entry) == {"instance_id", "plugin", "interface", "profile"}
     header = _ResourceHeader_Render(model, builtin_catalog)
@@ -91,8 +104,13 @@ def test_edit_copy_and_old_format_rejection(builtin_catalog):
     edited = FlightRadioConfiguration_Apply(model, "telemetry0", "e28_2g4m27sx", 27)
     assert model.DeviceInstance_Get("telemetry0").module_variant == ""
     assert edited.DeviceInstance_Get("telemetry0").tx_power_dbm == 27
-    descriptor = edited.Dictionary_Get()
-    descriptor["format_version"] = 14
+    # Use a genuine v14 document. Relabelling a modern v24 document first
+    # rejects its mission_process, never reaching the radio-version contract.
+    descriptor = json.loads((Path(__file__).parent / 'fixtures/radio_handshake.ssproject').read_text(encoding='utf8'))
+    assert descriptor['format_version'] == 14
+    ProjectModel_Parse(descriptor)
+    radio = next(item for item in descriptor['components']['devices'] if item['instance_id'] == 'telemetry0')
+    radio.update(module_variant='e28_2g4m27sx', tx_power_dbm=27)
     with pytest.raises(ValueError, match="format 16"): ProjectModel_Parse(descriptor)
     edited.resource_assignments["telemetry0:radio_rx_en"] = "extra"
     reverted = FlightRadioConfiguration_Apply(edited, "telemetry0", "e28_2g4m12sx", 12)

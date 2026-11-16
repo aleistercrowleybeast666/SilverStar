@@ -26,7 +26,7 @@ _review_spec.loader.exec_module(_review)
 _runtime_spec = importlib.util.spec_from_file_location("silverstar_stack_runtime", Path(__file__).with_name("stack_runtime.py"))
 _runtime = importlib.util.module_from_spec(_runtime_spec)
 _runtime_spec.loader.exec_module(_runtime)
-SOFTWARE_REVIEW_SHA256 = "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96"
+SOFTWARE_REVIEW_SHA256 = "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f"
 
 TASKS = {
     "Device": ("AppTask_Device", "s_device_stack"),
@@ -5209,8 +5209,40 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
     build = root / "build/FCCG" / target / config
     if memory_layout != "legacy":
         build = build / memory_layout
-    build = build.resolve()
-    build.relative_to(root.resolve())
+    # Flight retains its authoritative generated manifest and target selector.
+    manifest = (root / "Generated/project_sources.mk").read_text(encoding="utf-8")
+    block = re.search(r"(?ms)^C_SOURCES \+= \\\n(.*?)(?:\n\n|\Z)", manifest)
+    if block is None:
+        raise ValueError("Missing resolved C source graph")
+    sources = [line.strip().removesuffix("\\").strip() for line in block[1].splitlines()]
+    return StackGraph_LoadInputs(root, build, prefix, sources)
+
+
+def StackGraph_LoadInputs(root: Path, build: Path, prefix: str, sources: list[str]) -> dict:
+    """Read actual linked frames; this helper does not grant proof acceptance.
+
+    Each caller must bind its complete source/build declarations separately.
+    The Flight entry above and the Ground adapter own those distinct contracts.
+    """
+    root = root.resolve(strict=True)
+    build = build.resolve(strict=True)
+    build.relative_to(root / "build")
+    if not build.is_dir():
+        raise ValueError("Expected a selected build directory")
+    if (not isinstance(sources, list) or not sources or
+            any(not isinstance(source, str) for source in sources) or
+            len(sources) != len(set(sources))):
+        raise ValueError("Missing or duplicate selected C source inputs")
+    for source in sources:
+        if (Path(source).is_absolute() or ".." in Path(source).parts or
+                source != Path(source).as_posix() or not source.endswith(".c")):
+            raise ValueError("Unsafe selected C source input: " + source)
+        _review.InputPath_Get(root, source)
+    su_paths = [build / Path(source).with_suffix(".su") for source in sources]
+    for source, path in zip(sources, su_paths):
+        path.resolve().relative_to(build)
+        if not path.is_file():
+            raise ValueError("Missing source stack report; rebuild: " + source)
     elfs = list(build.glob("*.elf"))
     if len(elfs) != 1:
         raise ValueError("Expected exactly one linked ELF in the selected configuration")
@@ -5225,16 +5257,6 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
     # Consume the resolved generator graph, not stale objects left by an earlier
     # configuration. Every compiled C source must supply GCC's own frame report;
     # disassembly fallback is reserved for linked assembly/runtime libraries.
-    manifest = (root / "Generated/project_sources.mk").read_text(encoding="utf-8")
-    block = re.search(r"(?ms)^C_SOURCES \+= \\\n(.*?)(?:\n\n|\Z)", manifest)
-    if block is None:
-        raise ValueError("Missing resolved C source graph")
-    sources = [line.strip().removesuffix("\\").strip() for line in block[1].splitlines()]
-    su_paths = [build / Path(source).with_suffix(".su") for source in sources]
-    for source, path in zip(sources, su_paths):
-        path.resolve().relative_to(build)
-        if not source.endswith(".c") or not path.is_file():
-            raise ValueError("Missing source stack report; rebuild: " + source)
     for path in su_paths:
         for line in path.read_text(encoding="utf-8").splitlines():
             location, count, kind = line.split("\t")
@@ -5242,7 +5264,10 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
             frames[name] = max(frames.get(name, 0), int(count))
             if kind not in ("static", "dynamic,bounded"):
                 unbounded.add(name)
-    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+    readonly_data = _arm.ReadOnlyData_Parse(
+        Command_Read([prefix + "objdump", "-s", str(elf)], root),
+        Command_Read([prefix + "objdump", "-h", str(elf)], root))
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table, readonly_data)
     instructions = {name: [(row[2], row[3]) for row in entry["rows"]] + entry["literals"]
                     for name, entry in function_entries.items()}
     edges: dict[str, set[str]] = {}

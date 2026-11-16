@@ -1,5 +1,6 @@
 """Background file operations and their explicit destructive confirmation."""
 from __future__ import annotations
+from ui.message_box_placement import MessageBox_Show, MessageBox_Watch
 
 import logging
 import hashlib
@@ -918,7 +919,7 @@ class FileTransferManager(QObject):
             self._failed(self._tr('transfer.copy_only'))
             return
         if not self._available():
-            QMessageBox.information(c.window, self._tr("transfer.title"), self._tr("transfer.busy"))
+            MessageBox_Show(QMessageBox.information, c.window, self._tr("transfer.title"), self._tr("transfer.busy"))
             return
         sources, _ = QFileDialog.getOpenFileNames(c.window,
             self._tr("transfer.sources"), str(c.log_dir),
@@ -966,7 +967,7 @@ class FileTransferManager(QObject):
             self._failed(self._tr("transfer.download_delete"))
             return
         if not self._available(maintenance=True) or self.owner is None or not self.owner.connected.is_set():
-            QMessageBox.information(c.window, self._tr("transfer.title"), self._tr("transfer.busy"))
+            MessageBox_Show(QMessageBox.information, c.window, self._tr("transfer.title"), self._tr("transfer.busy"))
             return
         page = c.window.maintenance_page
         self._Declaration_Refresh()
@@ -1136,7 +1137,7 @@ class FileTransferManager(QObject):
         self.controller.window.maintenance_page.status.setText(self._tr("transfer.completed", output=output))
         self.controller.window.maintenance_page.progress.setValue(1000)
         if not self.stopping and self.worker is not None:
-            QMessageBox.information(self.controller.window, self._tr("transfer.title"), self._tr("transfer.completed", output=output))
+            MessageBox_Show(QMessageBox.information, self.controller.window, self._tr("transfer.title"), self._tr("transfer.completed", output=output))
 
     def _failed(self, error: str) -> None:
         if self.sender() is not None and self.sender() not in (self.owner,self.worker):return
@@ -1160,6 +1161,7 @@ class FileTransferManager(QObject):
         notice = self._error_notice
         if notice is None:
             notice = QMessageBox(QMessageBox.Warning,self._tr('transfer.title'),'',QMessageBox.Ok,self.controller.window)
+            MessageBox_Watch(notice)
             notice.setTextFormat(Qt.PlainText)
             notice.setWindowModality(Qt.WindowModal)
             self._error_notice = notice

@@ -1,0 +1,439 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.board.ssfc_1_0",
+  "name": "SSFC1.0",
+  "type": "board",
+  "class": "flight_controller_board",
+  "version": "0.1.0",
+  "description": "SSFC1.0 fixed software candidate; package, clock and wiring assumptions require PCB confirmation.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.mcu.stm32h743zit6",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [
+      {
+        "id": "USART1",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "((PlatformUartId)0U)",
+          "header": "platform_uart.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "USART2",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "((PlatformUartId)1U)",
+          "header": "platform_uart.h",
+          "logical_index": 1
+        }
+      },
+      {
+        "id": "SPI1",
+        "kind": "spi",
+        "metadata": {
+          "c_id": "((PlatformSpiId)0U)",
+          "header": "platform_spi.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "I2C1",
+        "kind": "i2c",
+        "metadata": {
+          "c_id": "((PlatformI2cId)0U)",
+          "header": "platform_i2c.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "RADIO_NSS",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)0U)",
+          "header": "platform_gpio.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "RADIO_RESET",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)1U)",
+          "header": "platform_gpio.h",
+          "logical_index": 1
+        }
+      },
+      {
+        "id": "STATUS_LED",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)2U)",
+          "header": "platform_gpio.h",
+          "logical_index": 2
+        }
+      },
+      {
+        "id": "RADIO_BUSY",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "((PlatformGpioId)3U)",
+          "header": "platform_gpio.h",
+          "logical_index": 3
+        }
+      },
+      {
+        "id": "RADIO_DIO1",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "((PlatformGpioId)4U)",
+          "header": "platform_gpio.h",
+          "logical_index": 4
+        }
+      },
+      {
+        "id": "GNSS_RESET",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)5U)",
+          "header": "platform_gpio.h",
+          "logical_index": 5
+        }
+      },
+      {
+        "id": "RADIO_TX_EN",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)6U)",
+          "header": "platform_gpio.h",
+          "logical_index": 6
+        }
+      },
+      {
+        "id": "RADIO_RX_EN",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)7U)",
+          "header": "platform_gpio.h",
+          "logical_index": 7
+        }
+      },
+      {
+        "id": "GNSS_PPS",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "((PlatformGpioId)8U)",
+          "header": "platform_gpio.h",
+          "logical_index": 8
+        }
+      },
+      {
+        "id": "SD_DETECT",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "((PlatformGpioId)9U)",
+          "header": "platform_gpio.h",
+          "logical_index": 9
+        }
+      },
+      {
+        "id": "SDMMC1",
+        "kind": "sdio",
+        "metadata": {
+          "c_id": "PLATFORM_SDIO_1",
+          "header": "sdmmc.h"
+        }
+      },
+      {
+        "id": "SYSTEM_TIME",
+        "kind": "time",
+        "metadata": {
+          "c_id": "((PlatformTimeId)0U)",
+          "header": "platform_time.h",
+          "logical_index": 0
+        }
+      }
+    ],
+    "roles": [
+      {
+        "key": "imu:data",
+        "kind": "i2c",
+        "default": "I2C1",
+        "candidates": [
+          "I2C1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "imu:gyro",
+        "kind": "i2c",
+        "default": "I2C1",
+        "candidates": [
+          "I2C1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "imu:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:data",
+        "kind": "uart",
+        "default": "USART1",
+        "candidates": [
+          "USART1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:reset",
+        "kind": "gpio_output",
+        "default": "GNSS_RESET",
+        "candidates": [
+          "GNSS_RESET"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:timepulse",
+        "kind": "gpio_interrupt",
+        "default": "GNSS_PPS",
+        "candidates": [
+          "GNSS_PPS"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "magnetometer:data",
+        "kind": "i2c",
+        "default": "I2C1",
+        "candidates": [
+          "I2C1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "magnetometer:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "maintenance:console",
+        "kind": "uart",
+        "default": "USART2",
+        "candidates": [
+          "USART2"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_bus",
+        "kind": "spi",
+        "default": "SPI1",
+        "candidates": [
+          "SPI1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_nss",
+        "kind": "gpio_output",
+        "default": "RADIO_NSS",
+        "candidates": [
+          "RADIO_NSS"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_reset",
+        "kind": "gpio_output",
+        "default": "RADIO_RESET",
+        "candidates": [
+          "RADIO_RESET"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_busy",
+        "kind": "gpio_input",
+        "default": "RADIO_BUSY",
+        "candidates": [
+          "RADIO_BUSY"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_dio1",
+        "kind": "gpio_interrupt",
+        "default": "RADIO_DIO1",
+        "candidates": [
+          "RADIO_DIO1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_tx_en",
+        "kind": "gpio_output",
+        "default": "RADIO_TX_EN",
+        "candidates": [
+          "RADIO_TX_EN"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_rx_en",
+        "kind": "gpio_output",
+        "default": "RADIO_RX_EN",
+        "candidates": [
+          "RADIO_RX_EN"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "storage:storage",
+        "kind": "sdio",
+        "default": "SDMMC1",
+        "candidates": [
+          "SDMMC1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "storage:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "launch_ignition:output",
+        "kind": "gpio_output",
+        "default": "STATUS_LED",
+        "candidates": [
+          "STATUS_LED"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "launch_ignition:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      }
+    ],
+    "conflicts": []
+  },
+  "provides": [
+    "board.ssfc_1_0",
+    "hardware.stm32.generated"
+  ],
+  "build": {
+    "sources": [
+      "HardwareGenerated/STM32CubeMX/Core/Src/dma.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/gpio.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/i2c.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/main.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/sdmmc.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/spi.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_hal_msp.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_hal_timebase_tim.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/system_stm32h7xx.c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+      "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.c",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/fatfs_platform.c",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c"
+    ],
+    "include_dirs": [
+      "HardwareGenerated/STM32CubeMX/Core/Inc",
+      "HardwareGenerated/STM32CubeMX/FATFS/App",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "HardwareGenerated/STM32CubeMX",
+      "LICENSE.txt"
+    ]
+  },
+  "metadata": {
+    "target_role": "flight_controller",
+    "hardware_maturity": "software_candidate",
+    "display_names": {
+      "zh_CN": "SSFC1.0\uff08\u8f6f\u4ef6\u5019\u9009\uff0c\u5f85\u4e0a\u677f\uff09",
+      "en_US": "SSFC1.0 (software candidate, board untested)"
+    },
+    "reference": {
+      "vendor_package": "STM32Cube FW_H7 V1.12.1",
+      "cubemx": "6.15.0",
+      "hardware_tested": false,
+      "allocation": "Owned fixed allocation; not a claim about the user PCB"
+    },
+    "h7_storage_input_sha256": {
+      "HardwareGenerated/STM32CubeMX/Core/Inc/sdmmc.h": "4f305afb18498ed76211b6f080fe2d61677788056d48a5989fd29691bfab528b",
+      "HardwareGenerated/STM32CubeMX/Core/Src/sdmmc.c": "ba8073d6989129e3f8170fc140415e452250298385f86e33d4914a347b212b4c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c": "4468e5db792048cffac3735902c8e64237ad6ac476cb258aa6cd88bc2c457223",
+      "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.c": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+      "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.h": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c": "fdecbb877585404b94ebb29859fd1a3ea363cf174765baae68fa9b30a6203bd1",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.h": "18943f4fc3d0a59dcf8e91a3b2fa602563aca0ae56c78d0ce68126e6c6eea6f2",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h": "37be582f6049706c20a53e28bc669cb939d1be9564e0f1d8b1f4fd9e61cc5a6d",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c": "792645700767fb5af67dc3d1f2688cfbb234196eef0befb948660ec69526604a",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.h": "020f370c23b29f44a41711582aa5b86db7500870f32b6d0768c711c8fe01bda7"
+    }
+  },
+  "board": {
+    "source_kind": "manual_import",
+    "compatible_mcus": [
+      "silverstar.mcu.stm32h743zit6"
+    ],
+    "vendor": "STM32",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "verified": false,
+    "hardware_root": "HardwareGenerated/STM32CubeMX",
+    "ioc_file": "payload/HardwareGenerated/STM32CubeMX/SSFC1_0.ioc",
+    "connections_file": "connections.json"
+  }
+}

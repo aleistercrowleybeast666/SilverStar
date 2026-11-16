@@ -3,6 +3,7 @@
 #include "platform_time.h"
 #include "project_resources.h"
 #include "silverstar_assert.h"
+#include "air_link_config.h"
 #include <stddef.h>
 #include <string.h>
 
@@ -93,6 +94,8 @@ static void Sx1278_Publish(void)
 
 static Sx1278Result Sx1278Frontend_Set(uint8_t rx, uint8_t tx)
 {
+    if (AIR_LINK_SX1278_DIO4_FRONTEND != 0U)
+    { return Sx1278Chip_Dio4Set(&s_context.chip, rx); }
     PlatformResult rx_off = PlatformGpio_Write(s_context.resources.rx_en, 0U);
     PlatformResult tx_off = PlatformGpio_Write(s_context.resources.tx_en, 0U);
     if ((rx_off != PLATFORM_OK) || (tx_off != PLATFORM_OK)) { return Sx1278Result_Io; }
@@ -133,7 +136,11 @@ static void Sx1278_ReceiptFinish(Sx1278Result result)
 
 static Sx1278Result Sx1278_Quiesce(void)
 {
-    Sx1278Result frontend = Sx1278Frontend_Set(0U, 0U);
+    /* The internal-switch module is stopped by holding its chip in reset,
+     * including before SPI initialization and after a bus fault. No unused
+     * GPIO is written and a failed reset still prevents stop acknowledgement. */
+    Sx1278Result frontend = (AIR_LINK_SX1278_DIO4_FRONTEND != 0U) ?
+        Sx1278Result_Ok : Sx1278Frontend_Set(0U, 0U);
     PlatformResult reset = PlatformGpio_Write(s_context.resources.reset, 0U);
     PlatformResult nss = PlatformGpio_Write(s_context.resources.nss, 1U);
     return ((frontend == Sx1278Result_Ok) && (reset == PLATFORM_OK) &&
@@ -210,6 +217,7 @@ static Sx1278Result Sx1278_ResourcesValidate(const ProjectSx1278Resources *resou
     { return Sx1278Result_Invalid; }
     for (index = 0U; index < 5U; index++)
     {
+        if ((AIR_LINK_SX1278_DIO4_FRONTEND != 0U) && (index >= 3U)) { continue; }
         if (pins[index] >= PLATFORM_GPIO_COUNT) { return Sx1278Result_Invalid; }
         for (other = 0U; other < index; other++)
         { if (pins[index] == pins[other]) { return Sx1278Result_Invalid; } }

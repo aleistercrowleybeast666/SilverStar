@@ -20,6 +20,24 @@ class LogMetadataError(FccgError):
     pass
 
 
+def LoggingOperationJournal_ErrorGet(model: ProjectModel) -> str | None:
+    """The selected augmented journal directly consumes the SSLOG logger ABI."""
+    augmented = {
+        "silverstar.algorithm.augmented.common",
+        "silverstar.algorithm.estimator.eskf20",
+        "silverstar.algorithm.estimator.inekf15",
+        "silverstar.algorithm.estimator.inekf20",
+    }
+    if not augmented.intersection(model.ComponentIds_Get()):
+        return None
+    selection = model.protocols.get("logging")
+    if selection is not None and selection.component == "silverstar.protocol.logging.sslog_0_0":
+        return None
+    return ("AUGMENTED_OPERATION_JOURNAL_REQUIRES_SSLOG: "
+            "The ESKF20 / InEKF operation journal requires SSLOG. Enable SSLOG "
+            "before generation; this backend does not support logging-disabled builds.")
+
+
 class LogPolicyLevel(StrEnum):
     REQUIRED = "required"
     RECOMMENDED = "recommended"

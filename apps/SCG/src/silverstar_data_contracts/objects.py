@@ -192,9 +192,9 @@ def MissionRadioProfile_Decode(snapshot):
                     'tx_power_dbm':struct.unpack('b',body[2:3])[0], 'address':body[3:8].hex(),
                     'retry_delay':body[8], 'retry_count':body[9], 'crc_bytes':body[10],
                     'physical_mtu':body[11], 'packet_mtu':body[12], 'fragment_version':body[13]}
-        if body != bytes.fromhex('01400ecf190748e801000510003d0011'):
+        if body[0] not in (1, 2) or body[1:] != bytes.fromhex('400ecf190748e801000510003d0011'):
             raise ValueError('mission_radio_sx1278_profile')
-        family, module, body = 'sx127x', 'e32_400m20s', body[1:]
+        family, module, body = 'sx127x', {1: 'e32_400m20s', 2: 'e19_433m20s2'}[body[0]], body[1:]
     else:
         raise ValueError('mission_radio_snapshot_schema')
     if len(body) != 15:

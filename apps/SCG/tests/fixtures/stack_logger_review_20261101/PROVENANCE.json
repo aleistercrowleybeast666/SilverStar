@@ -13,6 +13,13 @@
       "owner_path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
       "sha256": "cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082",
       "normalized_binding_sha256": "cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082"
+    },
+    {
+      "path": "APP/Src/logger_task.c",
+      "owner_path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c",
+      "source_commit": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+      "sha256": "c20d0b12b355abd3a8a95ec6fe319feffee95d59044ee1125c1b8f59b5a63009",
+      "normalized_binding_sha256": "c20d0b12b355abd3a8a95ec6fe319feffee95d59044ee1125c1b8f59b5a63009"
     }
   ]
 }

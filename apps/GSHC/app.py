@@ -1,4 +1,5 @@
 from __future__ import annotations
+from ui.message_box_placement import MessageBox_Show
 
 import json
 import os
@@ -1155,7 +1156,7 @@ class Controller(QObject):
         if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
             return
         if self.data_migration_thread is not None:
-            QMessageBox.information(
+            MessageBox_Show(QMessageBox.information,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.data_root_busy"),
@@ -1164,16 +1165,16 @@ class Controller(QObject):
         port = self.window.current_port()
         baud = self.window.current_baudrate()
         if not port:
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window, self._tr("app.title"), self._tr("message.select_port")
             )
             return
         transfer = getattr(self, "file_transfer", None)
         if isinstance(transfer, FileTransferManager) and transfer.owner is not None and normalize_port(transfer.owner.port) == normalize_port(port):
-            QMessageBox.warning(self.window, self._tr("app.title"), self._tr("maintenance.same_port"))
+            MessageBox_Show(QMessageBox.warning, self.window, self._tr("app.title"), self._tr("maintenance.same_port"))
             return
         if not baud:
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window, self._tr("app.title"), self._tr("message.invalid_baudrate")
             )
             return
@@ -1184,7 +1185,7 @@ class Controller(QObject):
             or self.protocol_worker is not None
             or self.logger.session_active
         ):
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.previous_session_stopping"),
@@ -1207,7 +1208,7 @@ class Controller(QObject):
         except Exception as exc:
             self._set_connection_message("connection.error", detail=str(exc))
             self.state.touch()
-            QMessageBox.critical(
+            MessageBox_Show(QMessageBox.critical,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.log_open_failed", error=exc),
@@ -1505,7 +1506,7 @@ class Controller(QObject):
         if (cmd_id & 0xFF) == int(AirCmdId.CAL_START) and not self._cal_start_allowed(param0):
             return False
         if self.worker is None or not self.state.connected:
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.connect_ground_station_first"),
@@ -2902,7 +2903,7 @@ class Controller(QObject):
             self.log_dir.mkdir(parents=True, exist_ok=True)
             self.data_dir.mkdir(parents=True, exist_ok=True)
         except OSError as exc:
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window, self._tr("app.title"),
                 self._tr("message.data_root_failed", error=exc),
             )
@@ -2912,7 +2913,7 @@ class Controller(QObject):
     def _open_folder(self, folder: Path) -> None:
         folder.mkdir(parents=True, exist_ok=True)
         if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(folder.resolve()))):
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.open_folder_failed", folder=folder),
@@ -2934,7 +2935,7 @@ class Controller(QObject):
             or self.processing_thread is not None
             or self.data_migration_thread is not None
         ):
-            QMessageBox.information(
+            MessageBox_Show(QMessageBox.information,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.data_root_busy"),
@@ -2963,7 +2964,7 @@ class Controller(QObject):
                 migration_conflict_policy=selection.conflict_policy,
             )
         except Exception as exc:
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.data_root_failed", error=exc),
@@ -3149,7 +3150,7 @@ class Controller(QObject):
         if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
             return
         if self.state.mission_started:
-            QMessageBox.information(
+            MessageBox_Show(QMessageBox.information,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.mission_sim_disabled"),
@@ -3281,7 +3282,7 @@ class Controller(QObject):
         if self.data_migration_thread is not None:
             return
         if self.state.mission_started:
-            QMessageBox.information(
+            MessageBox_Show(QMessageBox.information,
                 self.window,
                 self._tr("app.title"),
                 self._tr("message.mission_processing_disabled"),
@@ -3299,7 +3300,7 @@ class Controller(QObject):
             return
         log_path = Path(log_path_text)
         if log_path.suffix.lower() != ".jsonl" or not log_path.is_file() or log_path.stat().st_size <= 0:
-            QMessageBox.warning(
+            MessageBox_Show(QMessageBox.warning,
                 self.window, self._tr("app.title"), self._tr("message.invalid_log")
             )
             return
@@ -3322,7 +3323,7 @@ class Controller(QObject):
             or self.simulation_thread is not None
             or self.data_migration_thread is not None
         ):
-            QMessageBox.information(
+            MessageBox_Show(QMessageBox.information,
                 self.window, self._tr("app.title"), self._tr("message.processing_running")
             )
             return

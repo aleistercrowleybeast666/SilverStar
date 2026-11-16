@@ -1,4 +1,4 @@
-# E32-400M20S / SX1278 experimental SPI payload
+# E32-400M20S / E19-433M20S2 experimental SPI payload
 
 Status: **EXPERIMENTAL / HARDWARE_UNVERIFIED / shared generation integration pending**.
 This is independently authored SilverStar code. No Ebyte or Semtech driver source
@@ -8,11 +8,11 @@ vendor code license. No vendor example ZIP is included.
 
 ## Admitted profile
 
-One explicit `e32_400m20s` instance, 433 MHz, 32 MHz reference, SF7, BW125 kHz,
+One explicit `e32_400m20s` or `e19_433m20s2` instance, 433 MHz, 32 MHz reference, SF7, BW125 kHz,
 CR4/5, 16-symbol preamble, explicit header, payload CRC, private sync word 0x12,
 ordinary IQ, 61-byte packet bound, normal PA_BOOST +17 dBm chip setting.
 The module's marketed +20 dBm capability is not enabled. No UART E32, SX1276
-868/915 MHz, E19, M30S/M33S, hopping, CAD, FSK, ranging, mixed-family failover,
+868/915 MHz, other E19 models, M30S/M33S, hopping, CAD, FSK, ranging, mixed-family failover,
 multiple instances or arbitrary radio combinations are admitted.
 
 The generated catalog uses the existing `validated_frequency_*` schema fields to
@@ -20,6 +20,27 @@ express this software-admitted interval. These field names do **not** mean this
 new profile has been measured or hardware validated.
 
 ## Module wiring boundary
+
+The following external RXEN/TXEN description applies to E32. E19-S2 instead uses
+an internal DIO4 RF switch: its NC pin 9 is not a host GPIO. The independent
+profile removes both external enable resources and limits actual SPI to
+0.5–1 MHz. Use 3.3 V supply/IO; pins DIO0=5, VCC=13, SCK=14, MISO=15, MOSI=16,
+NSS=17, reset=18, antenna=21. It retains the same bounded reset/queue/error paths.
+RegDioMapping2 preserves its lower six bits; DIO4 maps to PllLock for RX and
+CadDetected for TX/standby, with the CAD latch explicitly cleared. CAD is never
+started. Both mapping writes and readback failures revoke READY. Reset is the
+quiescence mechanism even when SPI fails; a failed reset cannot acknowledge Stop.
+The E19 host tests cover 68 initialization, 20 RX, 15 TX-start and 23 RX→TX SPI
+transactions, including switch errors. These are software bounds, not hardware
+timing, RF or power-output measurements. SSMS module code 2 records E19-S2;
+code 1 continues to mean E32. Readers reject every other code and changed PHY byte.
+
+Source: [Ebyte E19-433M20S2 manual, §3/4.2](https://www.cdebyte.com/pdf-down.aspx?id=885),
+retrieved 2026-11-16, SHA256 `81390835a218d63a75c633bc6803e8e0d9fa5b805202ff555681e54b2784882c`;
+Semtech Rev7 table18 (linked below), SHA256
+`330745f933df00015d2de3efd582608339350ba3a21001d11b9d449839ce016b`.
+This narrow implementation does not admit the manual's entire frequency or
+marketed power range. Actual RF switching and reset behavior require bench tests.
 
 Use a regulated **3.3 V supply and 3.3 V IO**. Never use 5 V supply or TTL for this
 profile. Module pins: RXEN 6, TXEN 7, VCC 9, DIO0 18, active-low RST 19, MISO 20,

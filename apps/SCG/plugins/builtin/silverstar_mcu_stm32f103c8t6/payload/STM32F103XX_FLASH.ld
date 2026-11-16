@@ -56,7 +56,7 @@ ENTRY(Reset_Handler)
 _estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x0;        /* SilverStar does not use a runtime heap. */
-_Min_Stack_Size = 0x400; /* required amount of stack */
+_Min_Stack_Size = 0x2000; /* MSP: main + all 16 IRQ priority levels + NMI/HardFault */
 
 /* Specify the memory areas */
 MEMORY

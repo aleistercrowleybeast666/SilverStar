@@ -18,7 +18,10 @@ REQUIRED = {PREFIX + name for name in (
 def H7StorageContract_Get(model, catalog):
     if OWNER not in model.ComponentIds_Get():
         return None
-    if (model.mcu != "silverstar.mcu.stm32h743zit6" or model.hardware.mode != "custom"
+    board_candidate = (model.hardware.mode == "board_plugin"
+                       and model.board == "silverstar.board.ssfc_1_0"
+                       and catalog.Component_Get(model.board).source == "builtin")
+    if (model.mcu != "silverstar.mcu.stm32h743zit6" or (model.hardware.mode != "custom" and not board_candidate)
             or model.hardware.hal_cmsis_source_policy != "plugin_payload_authoritative"):
         raise ValueError("H7 SDMMC replacement requires the exact imported H743 candidate")
     owner = catalog.Component_Get(OWNER)
@@ -27,6 +30,9 @@ def H7StorageContract_Get(model, catalog):
             or contract["schema_id"] != "silverstar.h7-storage-replacement/1"
             or contract["replacements"] != REPLACEMENTS):
         raise ValueError("H7 storage replacement contract is missing or incompatible")
+    if board_candidate:
+        contract = {**contract, "required_input_sha256":
+                    catalog.Component_Get(model.board).metadata.get("h7_storage_input_sha256")}
     hashes = contract["required_input_sha256"]
     if type(hashes) is not dict or set(hashes) != REQUIRED or any(
             type(value) is not str or not re.fullmatch("[0-9a-f]{64}", value) for value in hashes.values()):
@@ -52,6 +58,10 @@ def H7StorageInputs_Validate(model, catalog, hardware_files: dict[str, bytes], p
     contract = H7StorageContract_Get(model, catalog)
     if contract is None:
         return None
+    if model.hardware.mode == "board_plugin":
+        board = catalog.Component_Get(model.board)
+        hardware_files = {source.relative_to(board.payload_root).as_posix(): source.read_bytes()
+                          for source in board.PayloadFiles_Get()}
     actual = {}
     root = project_root.resolve()
     owner = catalog.Component_Get(OWNER)

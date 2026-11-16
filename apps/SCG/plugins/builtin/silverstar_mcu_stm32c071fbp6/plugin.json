@@ -4,8 +4,8 @@
   "name": "STM32C071FBP6",
   "type": "mcu",
   "class": "stm32c0",
-  "version": "0.1.0",
-  "description": "STM32C071FBP6 TSSOP20 device identity and memory metadata; no integrated Ground transport profile.",
+  "version": "0.1.1",
+  "description": "STM32C071FBP6 TSSOP20 GP, exact SSGS1.0 UART software candidate; historical USB remains retired.",
   "requires": {
     "components": [
       {
@@ -27,7 +27,9 @@
   ],
   "build": {
     "sources": [],
-    "asm_sources": [],
+    "asm_sources": [
+      "startup_stm32c071xx.s"
+    ],
     "include_dirs": [],
     "defines": [
       "USE_HAL_DRIVER",
@@ -46,12 +48,14 @@
       "-lm",
       "-lnosys"
     ],
-    "linker_script": "",
+    "linker_script": "STM32C071XX_FLASH.ld",
     "toolchain_prefix": "arm-none-eabi-"
   },
   "payload": {
     "roots": [
-      "Platform/STM32C0/README_C071.md"
+      "Platform/STM32C0/README_C071.md",
+      "startup_stm32c071xx.s",
+      "STM32C071XX_FLASH.ld"
     ]
   },
   "metadata": {
@@ -87,7 +91,8 @@
     "resource_capacities": {
       "spis": 1,
       "gpios": 4,
-      "timebases": 1
+      "timebases": 1,
+      "uarts": 2
     }
   },
   "platform": {

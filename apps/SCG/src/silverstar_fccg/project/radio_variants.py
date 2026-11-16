@@ -54,11 +54,17 @@ def FlightRadioConfiguration_Apply(model, instance_id: str, module_id: str, powe
     from copy import deepcopy
     selected = model.DeviceInstance_Get(instance_id)
     if selected is not None and selected.plugin == "silverstar.device.telemetry.sx1278":
-        from silverstar_fccg.project.sx1278 import Sx1278Module_Validate
+        from silverstar_fccg.project.sx1278 import (
+            SX1278_DIO4_MODULE,
+            Sx1278Module_Validate,
+        )
         Sx1278Module_Validate(module_id, power_dbm)
         candidate = deepcopy(model)
         candidate.device_instances = [replace(instance, module_variant=module_id, tx_power_dbm=power_dbm)
             if instance.instance_id == instance_id else instance for instance in candidate.device_instances]
+        if module_id == SX1278_DIO4_MODULE:
+            for requirement in FRONTEND_RESOURCES:
+                candidate.resource_assignments.pop(instance_id + ":" + requirement, None)
         return candidate
     capability = RadioVariant_Get(module_id, power_dbm)
     if selected is None or selected.plugin != RADIO_PLUGIN:
@@ -74,9 +80,8 @@ def FlightRadioConfiguration_Apply(model, instance_id: str, module_id: str, powe
 
 def RadioManifest_Resolve(manifest, instance):
     if manifest.component_id == "silverstar.device.telemetry.sx1278":
-        from silverstar_fccg.project.sx1278 import Sx1278Module_Validate
-        Sx1278Module_Validate(instance.module_variant, instance.tx_power_dbm)
-        return manifest
+        from silverstar_fccg.project.sx1278 import Sx1278Manifest_Resolve
+        return Sx1278Manifest_Resolve(manifest, instance.module_variant, instance.tx_power_dbm)
     if manifest.component_id != RADIO_PLUGIN:
         if instance.module_variant or instance.tx_power_dbm is not None:
             raise ValueError("Radio module/power settings require an Ebyte SX128x instance")

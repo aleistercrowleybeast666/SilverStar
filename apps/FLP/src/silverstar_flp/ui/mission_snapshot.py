@@ -97,8 +97,8 @@ class MissionSnapshotDialog(QDialog):
                 for key, child in item.items():
                     if key == 'value_bits':
                         continue
-                    if key == 'module' and child == 'e32_400m20s':
-                        child = 'E32-400M20S'
+                    if key == 'module' and isinstance(child, str):
+                        child = {'e32_400m20s':'E32-400M20S', 'e19_433m20s2':'E19-433M20S2'}.get(child, child)
                     field = _LABELS.get(key, key.replace('_', ' ')) if self._zh else key.replace('_', ' ')
                     visit(child, (path + ' / ' if path else '') + field, depth + 1)
             elif isinstance(item, (list, tuple)):

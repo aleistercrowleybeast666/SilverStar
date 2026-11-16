@@ -3,7 +3,9 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import re
+import stat
 from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -503,27 +505,38 @@ class PluginManifest:
 
     def PayloadFiles_Get(self) -> tuple[Path, ...]:
         files: list[Path] = []
+        payload_root = self.payload_root
         for root_name in self.payload_roots:
-            root = self.payload_root.joinpath(*root_name.split("/"))
-            if root.is_symlink():
+            root = payload_root.joinpath(*root_name.split("/"))
+            if root.is_symlink() or (os.name == 'nt' and root.exists() and
+                    getattr(root.lstat(), 'st_reparse_tag', 0) == stat.IO_REPARSE_TAG_MOUNT_POINT):
                 raise PluginManifestError(
-                    f"Plugin payload root is a symlink: {root_name}"
+                    f"Plugin payload root is a symlink or junction: {root_name}"
                 )
             if root.is_file():
-                if not PayloadCachePath_Is(root.relative_to(self.payload_root)):
+                if not PayloadCachePath_Is(root.relative_to(payload_root)):
                     files.append(root)
             elif root.is_dir():
-                for path in sorted(root.rglob("*")):
-                    if path.is_symlink():
-                        raise PluginManifestError(
-                            f"Plugin payload contains a symlink: {path}"
-                        )
-                    if path.is_file() and not PayloadCachePath_Is(path.relative_to(self.payload_root)):
-                        files.append(path)
+                # Directory entries already carry file/link metadata on Windows.
+                # Inspect every entry afresh, including ignored caches: no stale
+                # inventory or skipped link/integrity checks between operations.
+                pending = [root]
+                while pending:
+                    with os.scandir(pending.pop()) as entries:
+                        for entry in entries:
+                            if entry.is_symlink() or (os.name == 'nt' and
+                                    getattr(entry.stat(follow_symlinks=False), 'st_reparse_tag', 0) == stat.IO_REPARSE_TAG_MOUNT_POINT):
+                                raise PluginManifestError(f"Plugin payload contains a symlink or junction: {entry.path}")
+                            if entry.is_dir(follow_symlinks=False):
+                                pending.append(Path(entry.path))
+                            elif entry.is_file(follow_symlinks=False):
+                                path = Path(entry.path)
+                                if not PayloadCachePath_Is(path.relative_to(payload_root)):
+                                    files.append(path)
             else:
                 raise PluginManifestError(f"Missing payload root: {root_name}")
         unique = {
-            path.relative_to(self.payload_root).as_posix(): path for path in files
+            path.relative_to(payload_root).as_posix(): path for path in files
         }
         return tuple(unique[name] for name in sorted(unique))
 

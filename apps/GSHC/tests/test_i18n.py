@@ -7,8 +7,9 @@ from tempfile import TemporaryDirectory
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QCoreApplication, QEvent, QSettings
 from PySide6.QtWidgets import QApplication
+from shiboken6 import isValid
 
 from protocol.common import AirStatusId, GspType
 from protocol.gsp_min import build_gsp_frame
@@ -22,6 +23,15 @@ def capability_gsp() -> bytes:
     air = struct.pack("<BBBBBBBH", 0x12, 7, 0, 1, 7, 7, 16, 2000)
     payload = bytes([(-70) & 0xFF, 20, len(air)]) + air
     return build_gsp_frame(int(GspType.AIR_RX), payload)
+
+
+def test_i18n_fixture_releases_its_native_window(qapp):
+    case = RuntimeI18nTests('test_translation_tables_have_identical_keys')
+    case.setUp()
+    window = case.window
+    case.tearDown()
+    QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+    assert not isValid(window)
 
 
 class RuntimeI18nTests(unittest.TestCase):
@@ -39,6 +49,9 @@ class RuntimeI18nTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.window.calibration_dialog.close()
         self.window.close()
+        # The test QApplication outlives each case. Ordinary GSHC close hides
+        # the window; release this fixture's native tree and owned render timer.
+        self.window.deleteLater()
         self.temporary_directory.cleanup()
 
     def test_translation_tables_have_identical_keys(self) -> None:

@@ -4,21 +4,38 @@ from dataclasses import replace
 from types import SimpleNamespace
 
 from PySide6.QtCore import QObject, Qt
-from PySide6.QtWidgets import (QCheckBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QPushButton,
-    QLabel, QScrollArea, QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QDialog,
+    QDialogButtonBox,
+    QFileDialog,
+    QFormLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 from silverstar_fccg.core.view_models import ComponentType
-from silverstar_fccg.project.retired_cdc import NativeCdcHardware_Is, NativeCdcMigration_Required
-from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
-from silverstar_fccg.ui.widgets import CollapsibleSection
-from silverstar_fccg.ui.window_geometry import PropertyDialog
 from silverstar_fccg.project.logging import LoggingProfile_AvailabilityTransitionApply
 from silverstar_fccg.project.mission_functions import FunctionsStrategies_Synchronize
-from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get, RADIO_PLUGIN
+from silverstar_fccg.project.radio_variants import (
+    RADIO_PLUGIN,
+    FlightRadioConfiguration_Get,
+)
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+from silverstar_fccg.project.retired_cdc import (
+    NativeCdcHardware_Is,
+    NativeCdcMigration_Required,
+)
+from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
 from silverstar_fccg.ui.hardware_editing import HardwareEditingActions
 from silverstar_fccg.ui.pages.components import BoardHardwarePage, DevicesPage
 from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
+from silverstar_fccg.ui.widgets import CollapsibleSection
+from silverstar_fccg.ui.window_geometry import PropertyDialog
 
 
 class HardwareDraftController(HardwareEditingActions, QObject):
@@ -275,12 +292,20 @@ class HardwareTransactionDialog(PropertyDialog):
         if not hasattr(self, 'owner'):
             return
         hardware = model.hardware if self.target == 'flight' else model.ground_target.hardware
+        if hardware.mode != 'custom':
+            self._import_path = None
+            self.pending_import.clear()
+        self.owner.custom_widget.setVisible(hardware.mode == 'custom')
         missing = not hardware.inventory and not hardware.resources
         self.owner.advanced_section.setVisible(not missing)
         self.owner.platform_group.setVisible(not missing)
         self.resource_hint.setVisible(missing)
 
     def _Import_Select(self, directory):
+        model = self.controller._model
+        hardware = model.hardware if self.target == 'flight' else model.ground_target.hardware
+        if hardware.mode != 'custom':
+            return
         if directory:
             selected = QFileDialog.getExistingDirectory(self, self._translator.Text_Get('dialog.import_cubemx_directory'))
         else:
@@ -328,7 +353,9 @@ class HardwareTransactionDialog(PropertyDialog):
                 candidate.base_components.remove(optional)
             if optional in candidate.base_components:
                 try:
-                    from silverstar_fccg.project.mag_rotation import MagRotationConfiguration_Validate
+                    from silverstar_fccg.project.mag_rotation import (
+                        MagRotationConfiguration_Validate,
+                    )
                     MagRotationConfiguration_Validate(candidate, self.controller._service.catalog)
                 except ValueError as error:
                     self.controller.status_label.setText(str(error))

@@ -118,7 +118,7 @@ def PortStackPointers_Resolve(root, graph):
             "boot_stack_top": hex(top), "pxCurrentTCB": hex(tcb)}
 
 
-def CrtCallbacks_Resolve(root, graph, prefix, table_read):
+def CrtWeakCallbacks_Resolve(graph):
     result = []
     for name in ("deregister_tm_clones", "register_tm_clones"):
         if name not in graph["indirect"]:
@@ -143,6 +143,11 @@ def CrtCallbacks_Resolve(root, graph, prefix, table_read):
                 raise ValueError("CRT weak NULL guard can be bypassed")
         graph["indirect"].remove(name)
         result.append({"caller": name, "linked_weak_pointer": 0, "guard": "PC-relative NULL load, CBZ to BX LR; no guard bypass"})
+    return result
+
+
+def CrtCallbacks_Resolve(root, graph, prefix, table_read):
+    result = CrtWeakCallbacks_Resolve(graph)
     name = "__libc_init_array"
     if name not in graph["indirect"]:
         return result

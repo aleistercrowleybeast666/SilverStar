@@ -1,0 +1,1327 @@
+{
+  "provenance": {
+    "kind": "actual linked ARM runtime regression input, not hardware validation",
+    "elf_sha256": "9213cf0c2614efa07a487c54b3ee42bb3d82ca73460f1be143fb8dd45c924c71",
+    "configuration": "Release",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-b\\Ground_Station",
+    "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623"
+  },
+  "nm": "200010fc B __bss_end__\r\n20000010 B __bss_start__\r\n0800014c t __do_global_dtors_aux\r\n0800458c r __do_global_dtors_aux_fini_array_entry\r\n080040c8 t __EH_FRAME_BEGIN__\r\n08004588 N __exidx_end\r\n08004588 N __exidx_start\r\n08004588 r __frame_dummy_init_array_entry\r\n0800458c r __init_array_end\r\n08004588 r __init_array_start\r\n08004064 00000048 T __libc_init_array\r\n08004588 d __preinit_array_end\r\n08004588 d __preinit_array_start\r\n2000000c D __TMC_END__\r\n200010fc B _ebss\r\n2000000c D _edata\r\n20005000 R _estack\r\n080040e0 T _etext\r\n080040d4 T _fini\r\n080040c8 T _init\r\n00000000 A _Min_Heap_Size\r\n00000400 A _Min_Stack_Size\r\n20000010 B _sbss\r\n20000000 D _sdata\r\n08004590 A _sidata\r\n08004050 00000002 W ADC1_2_IRQHandler\r\n08004203 00000010 R AHBPrescTable\r\n080041fb 00000008 R APBPrescTable\r\n080041bd 00000010 r aPLLMULFactorTable.1\r\n080041bb 00000002 r aPredivFactorTable.0\r\nf108f85f a BootRAM\r\n08003a0a 00000002 T BusFault_Handler\r\n08004050 00000002 W CAN1_RX1_IRQHandler\r\n08004050 00000002 W CAN1_SCE_IRQHandler\r\n20000010 b completed.1\r\n08004016 t CopyDataInit\r\n08003a10 00000002 T DebugMon_Handler\r\n08004050 00000002 T Default_Handler\r\n0800010c t deregister_tm_clones\r\n08004050 00000002 W DMA1_Channel1_IRQHandler\r\n08004050 00000002 W DMA1_Channel2_IRQHandler\r\n08004050 00000002 W DMA1_Channel3_IRQHandler\r\n08003a20 0000000c T DMA1_Channel4_IRQHandler\r\n08003a2c 0000000c T DMA1_Channel5_IRQHandler\r\n08004050 00000002 W DMA1_Channel6_IRQHandler\r\n08004050 00000002 W DMA1_Channel7_IRQHandler\r\n20001100 B end\r\n08003900 00000004 T Error_Handler\r\n08003a18 00000006 T EXTI0_IRQHandler\r\n08004050 00000002 W EXTI1_IRQHandler\r\n08004050 00000002 W EXTI15_10_IRQHandler\r\n08004050 00000002 W EXTI2_IRQHandler\r\n08004050 00000002 W EXTI3_IRQHandler\r\n08004050 00000002 W EXTI4_IRQHandler\r\n08004050 00000002 W EXTI9_5_IRQHandler\r\n0800402a t FillZerobss\r\n08004050 00000002 W FLASH_IRQHandler\r\n08000174 t frame_dummy\r\n08000000 R g_pfnVectors\r\n08000350 0000001c t GroundBridge_AckSend\r\n080001cc 00000088 t GroundBridge_FrameWrite\r\n0800045c 00000094 T GroundBridge_Init\r\n0800036c 000000f0 t GroundBridge_PcFlush\r\n08000198 00000034 T GroundBridge_PcReset\r\n080004f0 000002c8 T GroundBridge_Process\r\n08000254 000000fc t GroundBridge_StatusSend\r\n08003b6c 00000030 T GroundRadio_Init\r\n08003b68 00000004 T GroundRadio_MetricsSupportedGet\r\n08003b9c 00000026 T GroundRadio_Process\r\n08003bf0 00000040 T GroundRadio_RxDequeue\r\n08003c30 00000042 T GroundRadio_StatsGet\r\n08000b38 00000050 t GroundRadio_TmUnsignedGet\r\n08003bc2 0000002e T GroundRadio_TxEnqueue\r\n08000b88 000002c4 T GroundRadioTm_Observe\r\n08000e4c 00000010 T GroundRadioTm_PassiveGet\r\n080009b8 00000024 T GspMin_BuildAckFrame\r\n08000a2c 00000070 T GspMin_BuildAirRxFrame\r\n08000938 00000080 T GspMin_BuildFrame\r\n080009dc 0000004e T GspMin_BuildGsStatusFrame\r\n08000a9c 00000040 T GspMin_BuildNrf24AirRxFrame\r\n080007d0 00000006 T GspMinParser_GetCrcErrorCount\r\n080007b8 00000018 T GspMinParser_Init\r\n080007d8 00000160 T GspMinParser_InputByte\r\n08001764 0000003e T HAL_DMA_Abort\r\n080017a4 0000008c T HAL_DMA_Abort_IT\r\n08001958 00000004 T HAL_DMA_GetError\r\n0800168c 00000060 T HAL_DMA_Init\r\n08001830 00000128 T HAL_DMA_IRQHandler\r\n080016ec 00000078 T HAL_DMA_Start_IT\r\n08000ef0 0000000c W HAL_GetTick\r\n08002622 00000026 T HAL_GPIO_EXTI_Callback\r\n08001674 00000018 T HAL_GPIO_EXTI_IRQHandler\r\n080014c0 000001a8 T HAL_GPIO_Init\r\n08001668 0000000a T HAL_GPIO_WritePin\r\n08000ed8 00000018 W HAL_IncTick\r\n08000eb4 00000024 T HAL_Init\r\n08000e6c 00000048 W HAL_InitTick\r\n080039c0 00000044 T HAL_MspInit\r\n08000f80 0000001c T HAL_NVIC_EnableIRQ\r\n08000f20 00000060 T HAL_NVIC_SetPriority\r\n08000efc 00000024 T HAL_NVIC_SetPriorityGrouping\r\n08001348 00000138 T HAL_RCC_ClockConfig\r\n08001480 00000020 T HAL_RCC_GetPCLK1Freq\r\n080014a0 00000020 T HAL_RCC_GetPCLK2Freq\r\n080012fc 0000004c T HAL_RCC_GetSysClockFreq\r\n08000fc4 00000338 T HAL_RCC_OscConfig\r\n08002244 000000b0 T HAL_SPI_Init\r\n0800394c 00000074 T HAL_SPI_MspInit\r\n080022f4 000001f8 T HAL_SPI_TransmitReceive\r\n08000f9c 00000028 T HAL_SYSTICK_Config\r\n08001b00 0000009e T HAL_UART_AbortReceive\r\n08003ec4 00000020 T HAL_UART_ErrorCallback\r\n08001a2c 0000005e T HAL_UART_Init\r\n08001dd0 00000294 T HAL_UART_IRQHandler\r\n08003a80 000000e8 T HAL_UART_MspInit\r\n08001bf6 00000002 W HAL_UART_RxCpltCallback\r\n08001bf8 00000002 W HAL_UART_RxHalfCpltCallback\r\n08001a8c 00000074 T HAL_UART_Transmit_DMA\r\n08003eac 00000018 T HAL_UART_TxCpltCallback\r\n08001bea 00000002 W HAL_UART_TxHalfCpltCallback\r\n080020fc 00000056 T HAL_UARTEx_ReceiveToIdle_DMA\r\n08003de8 000000c4 T HAL_UARTEx_RxEventCallback\r\n08003a06 00000002 T HardFault_Handler\r\n20000d54 00000044 B hdma_usart1_rx\r\n20000d10 00000044 B hdma_usart1_tx\r\n20000cb8 00000058 B hspi1\r\n20000d98 00000048 B huart1\r\n08004050 00000002 W I2C1_ER_IRQHandler\r\n08004050 00000002 W I2C1_EV_IRQHandler\r\n08004050 00000002 W I2C2_ER_IRQHandler\r\n08004050 00000002 W I2C2_EV_IRQHandler\r\n08004050 t Infinite_Loop\r\n0800401c t LoopCopyDataInit\r\n0800402e t LoopFillZerobss\r\n080038d2 0000002e T main\r\n080040ac 0000001c T memcpy\r\n08003a08 00000002 T MemManage_Handler\r\n08004052 00000010 T memset\r\n080036dc 00000040 T MX_DMA_Init\r\n0800371c 00000158 T MX_GPIO_Init\r\n08003904 00000048 T MX_SPI1_Init\r\n08003a48 00000038 T MX_USART1_UART_Init\r\n08003a04 00000002 T NMI_Handler\r\n20000014 b object.0\r\n08003d70 00000038 t PcByteStream_DmaReceiveStart\r\n08003da8 00000040 T PcByteStream_Init\r\n08003ee4 0000006c T PcByteStream_Read\r\n08003ff0 0000000e T PcByteStream_ReadSession\r\n08003fd4 00000008 T PcByteStream_Session_Check\r\n08003fdc 00000012 T PcByteStream_Session_Enter\r\n08003fee 00000002 T PcByteStream_Session_Exit\r\n08003fd0 00000004 T PcByteStream_Session_Get\r\n08003f50 00000080 T PcByteStream_Write\r\n08003ffe 0000000a T PcByteStream_WriteSession\r\n08003a12 00000002 T PendSV_Handler\r\n08000e5c 00000008 T PlatformCritical_Enter\r\n08000e64 00000006 T PlatformCritical_Exit\r\n08002588 0000004c t PlatformGpio_ContextGet\r\n080025f4 0000002e T PlatformGpio_IrqConsume\r\n080025d4 00000020 T PlatformGpio_Write\r\n08002576 00000012 T PlatformSpi_Transfer\r\n080024ec 0000008a T PlatformSpi_TransferObserved\r\n08003d3c 00000034 T PlatformStm32f1Resource_GpioGet\r\n08003d28 00000014 T PlatformStm32f1Resource_SpiHandleGet\r\n08002648 00000004 T PlatformTime_Ms\r\n0800264c 00000058 T PlatformTime_Us\r\n08003d08 00000020 T ProjectSx1278Resources_Get\r\n08000adc 0000005c T ProtocolCrc16_CcittFalse\r\n08004050 00000002 W PVD_IRQHandler\r\n08004050 00000002 W RCC_IRQHandler\r\n08000128 t register_tm_clones\r\n080041e4 00000017 r registers.1\r\n08004008 00000034 W Reset_Handler\r\n08004050 00000002 W RTC_Alarm_IRQHandler\r\n08004050 00000002 W RTC_IRQHandler\r\n20000de0 00000048 b s_assert_fault\r\n20000168 00000004 b s_bridge_crc_error_count\r\n20000a20 00000298 b s_context\r\n2000107a 00000080 b s_dma_rx\r\n2000024c 00000780 b s_gpio\r\n0800427c 00000300 r s_gpio_resources\r\n0800421a 00000060 r s_gpio_resources_valid\r\n20000170 00000090 b s_gsp_parser\r\n20000154 00000001 b s_initialized\r\n2000016c 00000004 b s_last_status_ms\r\n200009d8 00000004 b s_last_tick_ms\r\n20000030 00000001 b s_pc_frame_count\r\n20000032 00000001 b s_pc_frame_head\r\n20000034 00000008 b s_pc_frame_lengths\r\n20000031 00000001 b s_pc_frame_tail\r\n2000003c 00000118 b s_pc_frames\r\n2000015c 00000004 b s_pc_input_backpressure_count\r\n2000002c 00000004 b s_pc_session\r\n20000158 00000004 b s_pc_status_deferred_count\r\n20000160 00000004 b s_pc_write_busy_count\r\n20000164 00000004 b s_pc_write_error_count\r\n08004213 00000007 r s_ProjectSx1278Resources\r\n200009e0 00000040 b s_published\r\n20000e29 00000001 b s_rx_armed\r\n20000e7a 00000200 b s_rx_buffer\r\n20000e32 00000002 b s_rx_head\r\n20000e2c 00000004 b s_rx_overflow_count\r\n20000e30 00000002 b s_rx_tail\r\n0800457c 0000000c r s_spi_handles\r\n200009d0 00000008 b s_tick_epoch_ms\r\n200009cc 00000001 b s_tick_seen\r\n20000200 00000001 b s_tm_direction\r\n20000204 00000040 b s_tm_retired\r\n20000201 00000001 b s_tm_retired_next\r\n20000244 00000004 b s_tm_session\r\n20000e34 00000046 b s_tx_buffer\r\n20000e28 00000001 b s_tx_busy\r\n08003ca4 00000016 T SilverStarAssert_Check\r\n08003c74 00000030 T SilverStarAssert_Fail\r\n08003cba 0000004c T SilverStarAssert_ObjectCheck\r\n0800220c 00000038 t SPI_EndRxTxTransaction\r\n08002154 000000b8 t SPI_WaitFlagStateUntilTimeout\r\n08004050 00000002 W SPI1_IRQHandler\r\n08004050 00000002 W SPI2_IRQHandler\r\n08003a0e 00000002 T SVC_Handler\r\n08002d28 000000b8 t Sx1278_Fault\r\n08002f00 000000b8 T Sx1278_Init\r\n08002fec 00000084 T Sx1278_ModeSet\r\n08003070 0000045c T Sx1278_Process\r\n08002930 00000068 t Sx1278_Publish\r\n08002c4c 00000028 t Sx1278_Quiesce\r\n08002c74 000000b4 t Sx1278_ReceiptFinish\r\n080035b8 000000ec T Sx1278_Receive\r\n08002a04 000000a0 t Sx1278_RequestsGet\r\n08002b94 000000b8 t Sx1278_RxStart\r\n080034cc 000000ec T Sx1278_Send\r\n08002fb8 00000034 T Sx1278_Start\r\n080036a4 00000038 T Sx1278_StatsGet\r\n08002de0 00000044 t Sx1278_StopProcess\r\n08002e24 000000dc t Sx1278_TxScheduledStart\r\n08002aa4 000000f0 t Sx1278_TxTake\r\n0800287c 000000b4 T Sx1278Chip_Configure\r\n0800282c 0000004e T Sx1278Chip_Dio4Set\r\n080027e2 0000004a T Sx1278Chip_ModeSet\r\n0800275e 0000001c T Sx1278Chip_Read\r\n0800279a 00000016 T Sx1278Chip_RegisterWrite\r\n080026a4 000000ba t Sx1278Chip_Transfer\r\n080027b0 00000032 t Sx1278Chip_Verify\r\n0800277a 00000020 T Sx1278Chip_Write\r\n08002998 0000006c t Sx1278Queue_Check\r\n08003874 0000005e T SystemClock_Config\r\n20000008 00000004 D SystemCoreClock\r\n08003a44 00000002 T SystemInit\r\n08003a14 00000004 T SysTick_Handler\r\n08004050 00000002 W TAMPER_IRQHandler\r\n08004050 00000002 W TIM1_BRK_IRQHandler\r\n08004050 00000002 W TIM1_CC_IRQHandler\r\n08004050 00000002 W TIM1_TRG_COM_IRQHandler\r\n08004050 00000002 W TIM1_UP_IRQHandler\r\n08004050 00000002 W TIM2_IRQHandler\r\n08004050 00000002 W TIM3_IRQHandler\r\n08004050 00000002 W TIM4_IRQHandler\r\n08001c54 00000010 t UART_DMAAbortOnError\r\n08001bfa 0000005a t UART_DMAError\r\n08001c82 00000098 t UART_DMAReceiveCplt\r\n08001c64 0000001e t UART_DMARxHalfCplt\r\n08001b9e 0000004c t UART_DMATransmitCplt\r\n08001bec 0000000a t UART_DMATxHalfCplt\r\n0800195c 0000005c t UART_EndRxTransfer\r\n08001d1a 000000b6 t UART_Receive_IT.isra.0\r\n080019b8 00000074 t UART_SetConfig\r\n08002064 00000098 T UART_Start_Receive_DMA\r\n08003a0c 00000002 T UsageFault_Handler\r\n08003a38 0000000c T USART1_IRQHandler\r\n08004050 00000002 W USART2_IRQHandler\r\n08004050 00000002 W USART3_IRQHandler\r\n08004050 00000002 W USB_HP_CAN1_TX_IRQHandler\r\n08004050 00000002 W USB_LP_CAN1_RX0_IRQHandler\r\n08004050 00000002 W USBWakeUp_IRQHandler\r\n20000248 00000004 B uwTick\r\n20000000 00000001 D uwTickFreq\r\n20000004 00000004 D uwTickPrio\r\n080041cd 00000017 r values.0\r\n08004050 00000002 W WWDG_IRQHandler\r\n",
+  "function_entries": {
+    "deregister_tm_clones": {
+      "start": 134217996,
+      "rows": [
+        [
+          134217996,
+          2,
+          "ldr",
+          "r0, [pc, #12]\t@ (800011c <deregister_tm_clones+0x10>)"
+        ],
+        [
+          134217998,
+          2,
+          "ldr",
+          "r3, [pc, #16]\t@ (8000120 <deregister_tm_clones+0x14>)"
+        ],
+        [
+          134218000,
+          2,
+          "cmp",
+          "r3, r0"
+        ],
+        [
+          134218002,
+          2,
+          "beq.n",
+          "800011a <deregister_tm_clones+0xe>"
+        ],
+        [
+          134218004,
+          2,
+          "ldr",
+          "r3, [pc, #12]\t@ (8000124 <deregister_tm_clones+0x18>)"
+        ],
+        [
+          134218006,
+          2,
+          "cbz",
+          "r3, 800011a <deregister_tm_clones+0xe>"
+        ],
+        [
+          134218008,
+          2,
+          "bx",
+          "r3"
+        ],
+        [
+          134218010,
+          2,
+          "bx",
+          "lr"
+        ]
+      ],
+      "memory": {
+        "134218012": 12,
+        "134218013": 0,
+        "134218014": 0,
+        "134218015": 32,
+        "134218016": 12,
+        "134218017": 0,
+        "134218018": 0,
+        "134218019": 32,
+        "134218020": 0,
+        "134218021": 0,
+        "134218022": 0,
+        "134218023": 0
+      }
+    },
+    "register_tm_clones": {
+      "start": 134218024,
+      "rows": [
+        [
+          134218024,
+          2,
+          "ldr",
+          "r0, [pc, #20]\t@ (8000140 <register_tm_clones+0x18>)"
+        ],
+        [
+          134218026,
+          2,
+          "ldr",
+          "r3, [pc, #24]\t@ (8000144 <register_tm_clones+0x1c>)"
+        ],
+        [
+          134218028,
+          2,
+          "subs",
+          "r3, r3, r0"
+        ],
+        [
+          134218030,
+          2,
+          "lsrs",
+          "r1, r3, #31"
+        ],
+        [
+          134218032,
+          4,
+          "add.w",
+          "r1, r1, r3, asr #2"
+        ],
+        [
+          134218036,
+          2,
+          "asrs",
+          "r1, r1, #1"
+        ],
+        [
+          134218038,
+          2,
+          "beq.n",
+          "800013e <register_tm_clones+0x16>"
+        ],
+        [
+          134218040,
+          2,
+          "ldr",
+          "r3, [pc, #12]\t@ (8000148 <register_tm_clones+0x20>)"
+        ],
+        [
+          134218042,
+          2,
+          "cbz",
+          "r3, 800013e <register_tm_clones+0x16>"
+        ],
+        [
+          134218044,
+          2,
+          "bx",
+          "r3"
+        ],
+        [
+          134218046,
+          2,
+          "bx",
+          "lr"
+        ]
+      ],
+      "memory": {
+        "134218048": 12,
+        "134218049": 0,
+        "134218050": 0,
+        "134218051": 32,
+        "134218052": 12,
+        "134218053": 0,
+        "134218054": 0,
+        "134218055": 32,
+        "134218056": 0,
+        "134218057": 0,
+        "134218058": 0,
+        "134218059": 0
+      }
+    },
+    "__do_global_dtors_aux": {
+      "start": 134218060
+    },
+    "frame_dummy": {
+      "start": 134218100
+    },
+    "GroundBridge_FrameWrite": {
+      "start": 134218188
+    },
+    "GroundBridge_StatusSend": {
+      "start": 134218324
+    },
+    "GroundBridge_AckSend": {
+      "start": 134218576
+    },
+    "GroundBridge_PcFlush": {
+      "start": 134218604
+    },
+    "GroundRadio_TmUnsignedGet": {
+      "start": 134220600
+    },
+    "UART_EndRxTransfer": {
+      "start": 134224220
+    },
+    "UART_SetConfig": {
+      "start": 134224312
+    },
+    "UART_DMATransmitCplt": {
+      "start": 134224798
+    },
+    "UART_DMATxHalfCplt": {
+      "start": 134224876
+    },
+    "UART_DMAError": {
+      "start": 134224890
+    },
+    "UART_DMAAbortOnError": {
+      "start": 134224980
+    },
+    "UART_DMARxHalfCplt": {
+      "start": 134224996
+    },
+    "UART_DMAReceiveCplt": {
+      "start": 134225026
+    },
+    "UART_Receive_IT.isra.0": {
+      "start": 134225178
+    },
+    "SPI_WaitFlagStateUntilTimeout": {
+      "start": 134226260
+    },
+    "SPI_EndRxTxTransaction": {
+      "start": 134226444
+    },
+    "PlatformGpio_ContextGet": {
+      "start": 134227336
+    },
+    "Sx1278Chip_Transfer": {
+      "start": 134227620
+    },
+    "Sx1278Chip_Verify": {
+      "start": 134227888
+    },
+    "Sx1278_Publish": {
+      "start": 134228272
+    },
+    "Sx1278Queue_Check": {
+      "start": 134228376
+    },
+    "Sx1278_RequestsGet": {
+      "start": 134228484
+    },
+    "Sx1278_TxTake": {
+      "start": 134228644
+    },
+    "Sx1278_RxStart": {
+      "start": 134228884
+    },
+    "Sx1278_Quiesce": {
+      "start": 134229068
+    },
+    "Sx1278_ReceiptFinish": {
+      "start": 134229108
+    },
+    "Sx1278_Fault": {
+      "start": 134229288
+    },
+    "Sx1278_StopProcess": {
+      "start": 134229472
+    },
+    "Sx1278_TxScheduledStart": {
+      "start": 134229540
+    },
+    "PcByteStream_DmaReceiveStart": {
+      "start": 134233456
+    },
+    "RTC_Alarm_IRQHandler": {
+      "start": 134234192
+    },
+    "EXTI2_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_UART_AbortReceive": {
+      "start": 134224640
+    },
+    "DebugMon_Handler": {
+      "start": 134232592
+    },
+    "HAL_UART_TxCpltCallback": {
+      "start": 134233772
+    },
+    "MX_GPIO_Init": {
+      "start": 134231836
+    },
+    "HAL_DMA_Init": {
+      "start": 134223500
+    },
+    "PcByteStream_WriteSession": {
+      "start": 134234110
+    },
+    "PlatformTime_Us": {
+      "start": 134227532
+    },
+    "HAL_RCC_GetPCLK1Freq": {
+      "start": 134222976
+    },
+    "TIM1_CC_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_NVIC_SetPriority": {
+      "start": 134221600
+    },
+    "HAL_RCC_GetPCLK2Freq": {
+      "start": 134223008
+    },
+    "HardFault_Handler": {
+      "start": 134232582
+    },
+    "PlatformStm32f1Resource_GpioGet": {
+      "start": 134233404
+    },
+    "SysTick_Handler": {
+      "start": 134232596
+    },
+    "HAL_GPIO_WritePin": {
+      "start": 134223464
+    },
+    "PVD_IRQHandler": {
+      "start": 134234192
+    },
+    "Sx1278_ModeSet": {
+      "start": 134229996
+    },
+    "PendSV_Handler": {
+      "start": 134232594
+    },
+    "NMI_Handler": {
+      "start": 134232580
+    },
+    "HAL_NVIC_EnableIRQ": {
+      "start": 134221696
+    },
+    "EXTI3_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_RCC_GetSysClockFreq": {
+      "start": 134222588
+    },
+    "HAL_UART_RxHalfCpltCallback": {
+      "start": 134224888
+    },
+    "HAL_GPIO_EXTI_IRQHandler": {
+      "start": 134223476
+    },
+    "HAL_MspInit": {
+      "start": 134232512
+    },
+    "GroundRadio_Process": {
+      "start": 134232988
+    },
+    "Sx1278_Init": {
+      "start": 134229760
+    },
+    "HAL_UART_IRQHandler": {
+      "start": 134225360
+    },
+    "HAL_DMA_Start_IT": {
+      "start": 134223596
+    },
+    "HAL_GPIO_Init": {
+      "start": 134223040
+    },
+    "memcpy": {
+      "start": 134234284
+    },
+    "EXTI0_IRQHandler": {
+      "start": 134232600
+    },
+    "I2C2_EV_IRQHandler": {
+      "start": 134234192
+    },
+    "GroundRadio_TxEnqueue": {
+      "start": 134233026
+    },
+    "PcByteStream_Session_Exit": {
+      "start": 134234094
+    },
+    "GspMin_BuildAirRxFrame": {
+      "start": 134220332
+    },
+    "UsageFault_Handler": {
+      "start": 134232588
+    },
+    "ADC1_2_IRQHandler": {
+      "start": 134234192
+    },
+    "GroundRadio_MetricsSupportedGet": {
+      "start": 134232936
+    },
+    "SPI1_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_UART_RxCpltCallback": {
+      "start": 134224886
+    },
+    "TAMPER_IRQHandler": {
+      "start": 134234192
+    },
+    "SystemClock_Config": {
+      "start": 134232180
+    },
+    "Sx1278Chip_RegisterWrite": {
+      "start": 134227866
+    },
+    "GroundRadioTm_PassiveGet": {
+      "start": 134221388
+    },
+    "HAL_SYSTICK_Config": {
+      "start": 134221724
+    },
+    "ProjectSx1278Resources_Get": {
+      "start": 134233352
+    },
+    "__libc_init_array": {
+      "start": 134234212,
+      "rows": [
+        [
+          134234212,
+          2,
+          "push",
+          "{r4, r5, r6, lr}"
+        ],
+        [
+          134234214,
+          2,
+          "movs",
+          "r6, #0"
+        ],
+        [
+          134234216,
+          2,
+          "ldr",
+          "r5, [pc, #48]\t@ (800409c <__libc_init_array+0x38>)"
+        ],
+        [
+          134234218,
+          2,
+          "ldr",
+          "r3, [pc, #52]\t@ (80040a0 <__libc_init_array+0x3c>)"
+        ],
+        [
+          134234220,
+          2,
+          "subs",
+          "r3, r3, r5"
+        ],
+        [
+          134234222,
+          2,
+          "asrs",
+          "r4, r3, #2"
+        ],
+        [
+          134234224,
+          2,
+          "cmp",
+          "r6, r4"
+        ],
+        [
+          134234226,
+          2,
+          "bne.n",
+          "8004088 <__libc_init_array+0x24>"
+        ],
+        [
+          134234228,
+          2,
+          "movs",
+          "r6, #0"
+        ],
+        [
+          134234230,
+          4,
+          "bl",
+          "80040c8 <_init>"
+        ],
+        [
+          134234234,
+          2,
+          "ldr",
+          "r5, [pc, #40]\t@ (80040a4 <__libc_init_array+0x40>)"
+        ],
+        [
+          134234236,
+          2,
+          "ldr",
+          "r3, [pc, #40]\t@ (80040a8 <__libc_init_array+0x44>)"
+        ],
+        [
+          134234238,
+          2,
+          "subs",
+          "r3, r3, r5"
+        ],
+        [
+          134234240,
+          2,
+          "asrs",
+          "r4, r3, #2"
+        ],
+        [
+          134234242,
+          2,
+          "cmp",
+          "r6, r4"
+        ],
+        [
+          134234244,
+          2,
+          "bne.n",
+          "8004092 <__libc_init_array+0x2e>"
+        ],
+        [
+          134234246,
+          2,
+          "pop",
+          "{r4, r5, r6, pc}"
+        ],
+        [
+          134234248,
+          4,
+          "ldr.w",
+          "r3, [r5], #4"
+        ],
+        [
+          134234252,
+          2,
+          "blx",
+          "r3"
+        ],
+        [
+          134234254,
+          2,
+          "adds",
+          "r6, #1"
+        ],
+        [
+          134234256,
+          2,
+          "b.n",
+          "8004070 <__libc_init_array+0xc>"
+        ],
+        [
+          134234258,
+          4,
+          "ldr.w",
+          "r3, [r5], #4"
+        ],
+        [
+          134234262,
+          2,
+          "blx",
+          "r3"
+        ],
+        [
+          134234264,
+          2,
+          "adds",
+          "r6, #1"
+        ],
+        [
+          134234266,
+          2,
+          "b.n",
+          "8004082 <__libc_init_array+0x1e>"
+        ]
+      ],
+      "memory": {
+        "134234268": 136,
+        "134234269": 69,
+        "134234270": 0,
+        "134234271": 8,
+        "134234272": 136,
+        "134234273": 69,
+        "134234274": 0,
+        "134234275": 8,
+        "134234276": 136,
+        "134234277": 69,
+        "134234278": 0,
+        "134234279": 8,
+        "134234280": 140,
+        "134234281": 69,
+        "134234282": 0,
+        "134234283": 8
+      }
+    },
+    "DMA1_Channel4_IRQHandler": {
+      "start": 134232608
+    },
+    "ProtocolCrc16_CcittFalse": {
+      "start": 134220508
+    },
+    "GspMin_BuildGsStatusFrame": {
+      "start": 134220252
+    },
+    "UART_Start_Receive_DMA": {
+      "start": 134226020
+    },
+    "HAL_SPI_Init": {
+      "start": 134226500
+    },
+    "GroundRadioTm_Observe": {
+      "start": 134220680
+    },
+    "_init": {
+      "start": 134234312
+    },
+    "GspMinParser_InputByte": {
+      "start": 134219736
+    },
+    "HAL_SPI_MspInit": {
+      "start": 134232396
+    },
+    "USART3_IRQHandler": {
+      "start": 134234192
+    },
+    "RTC_IRQHandler": {
+      "start": 134234192
+    },
+    "DMA1_Channel7_IRQHandler": {
+      "start": 134234192
+    },
+    "Reset_Handler": {
+      "start": 134234120,
+      "rows": [
+        [
+          134234120,
+          4,
+          "bl",
+          "8003a44 <SystemInit>"
+        ],
+        [
+          134234124,
+          2,
+          "ldr",
+          "r0, [pc, #44]\t@ (800403c <LoopFillZerobss+0xe>)"
+        ],
+        [
+          134234126,
+          2,
+          "ldr",
+          "r1, [pc, #48]\t@ (8004040 <LoopFillZerobss+0x12>)"
+        ],
+        [
+          134234128,
+          2,
+          "ldr",
+          "r2, [pc, #48]\t@ (8004044 <LoopFillZerobss+0x16>)"
+        ],
+        [
+          134234130,
+          2,
+          "movs",
+          "r3, #0"
+        ],
+        [
+          134234132,
+          2,
+          "b.n",
+          "800401c <LoopCopyDataInit>"
+        ],
+        [
+          134234134,
+          2,
+          "ldr",
+          "r4, [r2, r3]"
+        ],
+        [
+          134234136,
+          2,
+          "str",
+          "r4, [r0, r3]"
+        ],
+        [
+          134234138,
+          2,
+          "adds",
+          "r3, #4"
+        ],
+        [
+          134234140,
+          2,
+          "adds",
+          "r4, r0, r3"
+        ],
+        [
+          134234142,
+          2,
+          "cmp",
+          "r4, r1"
+        ],
+        [
+          134234144,
+          2,
+          "bcc.n",
+          "8004016 <CopyDataInit>"
+        ],
+        [
+          134234146,
+          2,
+          "ldr",
+          "r2, [pc, #36]\t@ (8004048 <LoopFillZerobss+0x1a>)"
+        ],
+        [
+          134234148,
+          2,
+          "ldr",
+          "r4, [pc, #36]\t@ (800404c <LoopFillZerobss+0x1e>)"
+        ],
+        [
+          134234150,
+          2,
+          "movs",
+          "r3, #0"
+        ],
+        [
+          134234152,
+          2,
+          "b.n",
+          "800402e <LoopFillZerobss>"
+        ],
+        [
+          134234154,
+          2,
+          "str",
+          "r3, [r2, #0]"
+        ],
+        [
+          134234156,
+          2,
+          "adds",
+          "r2, #4"
+        ],
+        [
+          134234158,
+          2,
+          "cmp",
+          "r2, r4"
+        ],
+        [
+          134234160,
+          2,
+          "bcc.n",
+          "800402a <FillZerobss>"
+        ],
+        [
+          134234162,
+          4,
+          "bl",
+          "8004064 <__libc_init_array>"
+        ],
+        [
+          134234166,
+          4,
+          "bl",
+          "80038d2 <main>"
+        ],
+        [
+          134234170,
+          2,
+          "bx",
+          "lr"
+        ]
+      ],
+      "memory": {
+        "134234172": 0,
+        "134234173": 0,
+        "134234174": 0,
+        "134234175": 32,
+        "134234176": 12,
+        "134234177": 0,
+        "134234178": 0,
+        "134234179": 32,
+        "134234180": 144,
+        "134234181": 69,
+        "134234182": 0,
+        "134234183": 8,
+        "134234184": 16,
+        "134234185": 0,
+        "134234186": 0,
+        "134234187": 32,
+        "134234188": 252,
+        "134234189": 16,
+        "134234190": 0,
+        "134234191": 32
+      }
+    },
+    "CAN1_RX1_IRQHandler": {
+      "start": 134234192
+    },
+    "Sx1278Chip_ModeSet": {
+      "start": 134227938
+    },
+    "HAL_UART_ErrorCallback": {
+      "start": 134233796
+    },
+    "HAL_Init": {
+      "start": 134221492
+    },
+    "PlatformCritical_Exit": {
+      "start": 134221412
+    },
+    "PlatformCritical_Enter": {
+      "start": 134221404
+    },
+    "TIM4_IRQHandler": {
+      "start": 134234192
+    },
+    "Sx1278Chip_Configure": {
+      "start": 134228092
+    },
+    "HAL_GPIO_EXTI_Callback": {
+      "start": 134227490
+    },
+    "Sx1278_Start": {
+      "start": 134229944
+    },
+    "HAL_UARTEx_ReceiveToIdle_DMA": {
+      "start": 134226172
+    },
+    "I2C1_EV_IRQHandler": {
+      "start": 134234192
+    },
+    "PcByteStream_Init": {
+      "start": 134233512
+    },
+    "GspMinParser_GetCrcErrorCount": {
+      "start": 134219728
+    },
+    "PlatformStm32f1Resource_SpiHandleGet": {
+      "start": 134233384
+    },
+    "DMA1_Channel6_IRQHandler": {
+      "start": 134234192
+    },
+    "TIM3_IRQHandler": {
+      "start": 134234192
+    },
+    "RCC_IRQHandler": {
+      "start": 134234192
+    },
+    "TIM1_TRG_COM_IRQHandler": {
+      "start": 134234192
+    },
+    "DMA1_Channel1_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_DMA_Abort": {
+      "start": 134223716
+    },
+    "EXTI15_10_IRQHandler": {
+      "start": 134234192
+    },
+    "GroundRadio_StatsGet": {
+      "start": 134233136
+    },
+    "PcByteStream_Write": {
+      "start": 134233936
+    },
+    "HAL_RCC_ClockConfig": {
+      "start": 134222664
+    },
+    "HAL_NVIC_SetPriorityGrouping": {
+      "start": 134221564
+    },
+    "PlatformSpi_Transfer": {
+      "start": 134227318
+    },
+    "GspMinParser_Init": {
+      "start": 134219704
+    },
+    "PlatformTime_Ms": {
+      "start": 134227528
+    },
+    "EXTI9_5_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_GetTick": {
+      "start": 134221552
+    },
+    "PcByteStream_Session_Check": {
+      "start": 134234068
+    },
+    "HAL_UART_TxHalfCpltCallback": {
+      "start": 134224874
+    },
+    "GroundBridge_Process": {
+      "start": 134218992
+    },
+    "SPI2_IRQHandler": {
+      "start": 134234192
+    },
+    "memset": {
+      "start": 134234194
+    },
+    "MemManage_Handler": {
+      "start": 134232584
+    },
+    "main": {
+      "start": 134232274
+    },
+    "PlatformGpio_IrqConsume": {
+      "start": 134227444
+    },
+    "HAL_SPI_TransmitReceive": {
+      "start": 134226676
+    },
+    "SVC_Handler": {
+      "start": 134232590
+    },
+    "PlatformGpio_Write": {
+      "start": 134227412
+    },
+    "DMA1_Channel5_IRQHandler": {
+      "start": 134232620
+    },
+    "EXTI4_IRQHandler": {
+      "start": 134234192
+    },
+    "USB_LP_CAN1_RX0_IRQHandler": {
+      "start": 134234192
+    },
+    "SilverStarAssert_Check": {
+      "start": 134233252
+    },
+    "SystemInit": {
+      "start": 134232644
+    },
+    "GroundRadio_Init": {
+      "start": 134232940
+    },
+    "Sx1278_StatsGet": {
+      "start": 134231716
+    },
+    "_fini": {
+      "start": 134234324
+    },
+    "HAL_UART_MspInit": {
+      "start": 134232704
+    },
+    "USB_HP_CAN1_TX_IRQHandler": {
+      "start": 134234192
+    },
+    "DMA1_Channel3_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_InitTick": {
+      "start": 134221420
+    },
+    "TIM1_UP_IRQHandler": {
+      "start": 134234192
+    },
+    "MX_DMA_Init": {
+      "start": 134231772
+    },
+    "HAL_IncTick": {
+      "start": 134221528
+    },
+    "HAL_DMA_IRQHandler": {
+      "start": 134223920
+    },
+    "PcByteStream_Session_Enter": {
+      "start": 134234076
+    },
+    "WWDG_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_DMA_GetError": {
+      "start": 134224216
+    },
+    "TIM2_IRQHandler": {
+      "start": 134234192
+    },
+    "MX_USART1_UART_Init": {
+      "start": 134232648
+    },
+    "Sx1278Chip_Read": {
+      "start": 134227806
+    },
+    "Sx1278Chip_Write": {
+      "start": 134227834
+    },
+    "TIM1_BRK_IRQHandler": {
+      "start": 134234192
+    },
+    "EXTI1_IRQHandler": {
+      "start": 134234192
+    },
+    "GroundBridge_PcReset": {
+      "start": 134218136
+    },
+    "PcByteStream_Read": {
+      "start": 134233828
+    },
+    "HAL_UART_Transmit_DMA": {
+      "start": 134224524
+    },
+    "GroundBridge_Init": {
+      "start": 134218844
+    },
+    "GspMin_BuildNrf24AirRxFrame": {
+      "start": 134220444
+    },
+    "USART2_IRQHandler": {
+      "start": 134234192
+    },
+    "HAL_RCC_OscConfig": {
+      "start": 134221764
+    },
+    "PlatformSpi_TransferObserved": {
+      "start": 134227180
+    },
+    "I2C2_ER_IRQHandler": {
+      "start": 134234192
+    },
+    "DMA1_Channel2_IRQHandler": {
+      "start": 134234192
+    },
+    "Sx1278_Receive": {
+      "start": 134231480
+    },
+    "CAN1_SCE_IRQHandler": {
+      "start": 134234192
+    },
+    "GroundRadio_RxDequeue": {
+      "start": 134233072
+    },
+    "FLASH_IRQHandler": {
+      "start": 134234192
+    },
+    "PcByteStream_ReadSession": {
+      "start": 134234096
+    },
+    "BusFault_Handler": {
+      "start": 134232586
+    },
+    "USART1_IRQHandler": {
+      "start": 134232632
+    },
+    "SilverStarAssert_Fail": {
+      "start": 134233204
+    },
+    "HAL_UARTEx_RxEventCallback": {
+      "start": 134233576
+    },
+    "HAL_UART_Init": {
+      "start": 134224428
+    },
+    "GspMin_BuildFrame": {
+      "start": 134220088
+    },
+    "I2C1_ER_IRQHandler": {
+      "start": 134234192
+    },
+    "Sx1278Chip_Dio4Set": {
+      "start": 134228012
+    },
+    "Sx1278_Send": {
+      "start": 134231244
+    },
+    "GspMin_BuildAckFrame": {
+      "start": 134220216
+    },
+    "MX_SPI1_Init": {
+      "start": 134232324
+    },
+    "SilverStarAssert_ObjectCheck": {
+      "start": 134233274
+    },
+    "Sx1278_Process": {
+      "start": 134230128
+    },
+    "HAL_DMA_Abort_IT": {
+      "start": 134223780
+    },
+    "USBWakeUp_IRQHandler": {
+      "start": 134234192
+    },
+    "PcByteStream_Session_Get": {
+      "start": 134234064
+    },
+    "Error_Handler": {
+      "start": 134232320
+    }
+  },
+  "assembly_proofs": {
+    "Reset_Handler": {
+      "indirect": [],
+      "unknown_sp": [],
+      "successors": {
+        "134234120": [
+          134234124
+        ],
+        "134234124": [
+          134234126
+        ],
+        "134234126": [
+          134234128
+        ],
+        "134234128": [
+          134234130
+        ],
+        "134234130": [
+          134234132
+        ],
+        "134234132": [
+          134234140
+        ],
+        "134234134": [
+          134234136
+        ],
+        "134234136": [
+          134234138
+        ],
+        "134234138": [
+          134234140
+        ],
+        "134234140": [
+          134234142
+        ],
+        "134234142": [
+          134234144
+        ],
+        "134234144": [
+          134234134,
+          134234146
+        ],
+        "134234146": [
+          134234148
+        ],
+        "134234148": [
+          134234150
+        ],
+        "134234150": [
+          134234152
+        ],
+        "134234152": [
+          134234158
+        ],
+        "134234154": [
+          134234156
+        ],
+        "134234156": [
+          134234158
+        ],
+        "134234158": [
+          134234160
+        ],
+        "134234160": [
+          134234154,
+          134234162
+        ],
+        "134234162": [
+          134234166
+        ],
+        "134234166": [],
+        "134234170": []
+      }
+    },
+    "deregister_tm_clones": {
+      "indirect": [
+        [
+          134218008,
+          "bx",
+          "r3"
+        ]
+      ],
+      "unknown_sp": [],
+      "successors": {
+        "134217996": [
+          134217998
+        ],
+        "134217998": [
+          134218000
+        ],
+        "134218000": [
+          134218002
+        ],
+        "134218002": [
+          134218010,
+          134218004
+        ],
+        "134218004": [
+          134218006
+        ],
+        "134218006": [
+          134218010,
+          134218008
+        ],
+        "134218008": [],
+        "134218010": []
+      }
+    },
+    "register_tm_clones": {
+      "indirect": [
+        [
+          134218044,
+          "bx",
+          "r3"
+        ]
+      ],
+      "unknown_sp": [],
+      "successors": {
+        "134218024": [
+          134218026
+        ],
+        "134218026": [
+          134218028
+        ],
+        "134218028": [
+          134218030
+        ],
+        "134218030": [
+          134218032
+        ],
+        "134218032": [
+          134218036
+        ],
+        "134218036": [
+          134218038
+        ],
+        "134218038": [
+          134218046,
+          134218040
+        ],
+        "134218040": [
+          134218042
+        ],
+        "134218042": [
+          134218046,
+          134218044
+        ],
+        "134218044": [],
+        "134218046": []
+      }
+    },
+    "__libc_init_array": {
+      "indirect": [
+        [
+          134234252,
+          "blx",
+          "r3"
+        ],
+        [
+          134234262,
+          "blx",
+          "r3"
+        ]
+      ],
+      "unknown_sp": [],
+      "successors": {
+        "134234212": [
+          134234214
+        ],
+        "134234214": [
+          134234216
+        ],
+        "134234216": [
+          134234218
+        ],
+        "134234218": [
+          134234220
+        ],
+        "134234220": [
+          134234222
+        ],
+        "134234222": [
+          134234224
+        ],
+        "134234224": [
+          134234226
+        ],
+        "134234226": [
+          134234248,
+          134234228
+        ],
+        "134234228": [
+          134234230
+        ],
+        "134234230": [
+          134234234
+        ],
+        "134234234": [
+          134234236
+        ],
+        "134234236": [
+          134234238
+        ],
+        "134234238": [
+          134234240
+        ],
+        "134234240": [
+          134234242
+        ],
+        "134234242": [
+          134234244
+        ],
+        "134234244": [
+          134234258,
+          134234246
+        ],
+        "134234246": [],
+        "134234248": [
+          134234252
+        ],
+        "134234252": [
+          134234254
+        ],
+        "134234254": [
+          134234256
+        ],
+        "134234256": [
+          134234224
+        ],
+        "134234258": [
+          134234262
+        ],
+        "134234262": [
+          134234264
+        ],
+        "134234264": [
+          134234266
+        ],
+        "134234266": [
+          134234242
+        ]
+      }
+    }
+  },
+  "tables": {
+    "134235528": "75010008",
+    "134217728": "0050002009400008053a0008073a0008093a00080b3a00080d3a0008000000000000000000000000000000000f3a0008113a000800000000133a0008153a0008514000085140000851400008514000085140000851400008193a000851400008514000085140000851400008514000085140000851400008213a00082d3a0008514000085140000851400008514000085140000851400008514000085140000851400008514000085140000851400008514000085140000851400008514000085140000851400008514000085140000851400008393a00085140000851400008514000085140000851400008000000000000000000000000000000000000000000000000000000005ff808f1"
+  },
+  "sections": "\r\nD:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-b\\Ground_Station\\build\\ground.elf:     file format elf32-littlearm\r\n\r\nSections:\r\nIdx Name          Size      VMA       LMA       File off  Algn\r\n  0 .isr_vector   0000010c  08000000  08000000  00001000  2**0\r\n                  CONTENTS, ALLOC, LOAD, READONLY, DATA\r\n  1 .text         00003fd4  0800010c  0800010c  0000110c  2**2\r\n                  CONTENTS, ALLOC, LOAD, READONLY, CODE\r\n  2 .rodata       000004a8  080040e0  080040e0  000050e0  2**2\r\n                  CONTENTS, ALLOC, LOAD, READONLY, DATA\r\n  3 .ARM.extab    00000000  08004588  08004588  0000600c  2**0\r\n                  CONTENTS, READONLY\r\n  4 .ARM          00000000  08004588  08004588  0000600c  2**0\r\n                  CONTENTS, READONLY\r\n  5 .preinit_array 00000000  08004588  08004588  0000600c  2**0\r\n                  CONTENTS, ALLOC, LOAD, DATA\r\n  6 .init_array   00000004  08004588  08004588  00005588  2**2\r\n                  CONTENTS, ALLOC, LOAD, READONLY, DATA\r\n  7 .fini_array   00000004  0800458c  0800458c  0000558c  2**2\r\n                  CONTENTS, ALLOC, LOAD, READONLY, DATA\r\n  8 .data         0000000c  20000000  08004590  00006000  2**2\r\n                  CONTENTS, ALLOC, LOAD, DATA\r\n  9 .bss          000010ec  20000010  0800459c  00006010  2**3\r\n                  ALLOC\r\n 10 ._user_heap_stack 00000404  200010fc  0800459c  000060fc  2**0\r\n                  ALLOC\r\n 11 .ARM.attributes 00000029  00000000  00000000  0000600c  2**0\r\n                  CONTENTS, READONLY\r\n 12 .comment      00000046  00000000  00000000  00006035  2**0\r\n                  CONTENTS, READONLY\r\n 13 .debug_info   00014a87  00000000  00000000  0000607b  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 14 .debug_abbrev 00004283  00000000  00000000  0001ab02  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 15 .debug_loclists 00007ae1  00000000  00000000  0001ed85  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 16 .debug_aranges 00000ca8  00000000  00000000  00026868  2**3\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 17 .debug_rnglists 00000d4b  00000000  00000000  00027510  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 18 .debug_macro  00018998  00000000  00000000  0002825b  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 19 .debug_line   00012c76  00000000  00000000  00040bf3  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 20 .debug_str    00086784  00000000  00000000  00053869  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 21 .debug_frame  00002038  00000000  00000000  000d9ff0  2**2\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n 22 .debug_line_str 00000018  00000000  00000000  000dc028  2**0\r\n                  CONTENTS, READONLY, DEBUGGING, OCTETS\r\n"
+}

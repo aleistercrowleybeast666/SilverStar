@@ -1,12 +1,17 @@
+import json
 from copy import deepcopy
 from dataclasses import replace
-import json
 
 import pytest
-
-from silverstar_fccg.project.model import ProjectModel_Save
+from silverstar_fccg.project.model import (
+    PROJECT_TARGET_SCOPE_FORMAT_VERSION,
+    ProjectModel_Save,
+)
 from silverstar_fccg.project.radio_variants import (
-    EBYTE_VARIANTS, LEGACY_MODULE, RADIO_PLUGIN, FlightRadioConfiguration_Get,
+    EBYTE_VARIANTS,
+    LEGACY_MODULE,
+    RADIO_PLUGIN,
+    FlightRadioConfiguration_Get,
 )
 from test_f103_ground_reference import _GroundF103Model_Get
 from test_ground_radio_editor import _Wait
@@ -60,7 +65,7 @@ def test_flight_all_variants_selector_add_delete_save_power_and_bindings(qapp, w
     assert {power.itemData(i) for i in range(power.count()) if power.model().item(i).isEnabled()} == {nominal}
     assert power.currentData() == nominal
     if module != LEGACY_MODULE:
-        assert window._model.Dictionary_Get()["format_version"] == 16
+        assert window._model.Dictionary_Get()["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION
     # Loading a stale saved output retains it; the folded control repairs only its owner.
     window._model.device_instances = [replace(item, module_variant=module, tx_power_dbm=nominal-1)
         if item.instance_id == "telemetry0" else item for item in window._model.device_instances]
@@ -168,7 +173,7 @@ def test_ground_all_variants_selector_add_delete_save_power_and_requirements(qap
 def test_legacy_m12_refresh_language_save_reopen_does_not_promote(window, tmp_path):
     _Configure(window)
     before = window._model.Dictionary_Get()
-    assert before["format_version"] == 14
+    assert before["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION
     for language in ("en_US", "zh_CN"):
         window.Language_Apply(language)
         assert window._model.Dictionary_Get() == before

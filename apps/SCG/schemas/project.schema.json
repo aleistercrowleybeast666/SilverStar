@@ -107,7 +107,7 @@
         "pc_resource": {"type": "string"},
         "baudrate": {"type": "integer", "minimum": 1},
         "tx_power_dbm": {"type": "integer"},
-        "radio_instances": {"type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/groundRadio"}},
+        "radio_instances": {"type": "array", "minItems": 0, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/groundRadio"}},
         "active_radio_instance": {"$ref": "#/$defs/instanceId"},
         "tx_led_resource": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
         "rx_led_resource": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
@@ -370,6 +370,10 @@
       ]}}}}
     },
     {"properties": {"ground_target": {"dependentRequired": {"radio_instances": ["active_radio_instance"], "active_radio_instance": ["radio_instances"]}}}},
+    {"properties": {"ground_target": {
+      "if": {"required": ["radio_instances"], "properties": {"radio_instances": {"maxItems": 0}}},
+      "then": {"properties": {"radio_plugin": {"const": ""}, "module_variant": {"const": ""}, "active_radio_instance": {"const": "radio0"}}}
+    }}},
     {
       "if": {"properties": {"format_version": {"maximum": 15}}},
       "then": {"properties": {"components": {"properties": {"devices": {"items": {"properties": {"module_variant": {"const": ""}, "tx_power_dbm": {"type": "null"}}}}}}}}

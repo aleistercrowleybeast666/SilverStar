@@ -520,6 +520,12 @@ static uint8_t LoggerTask_StartupReportWrite(void)
     if ((report == NULL) || (report->completed == 0U)) { return 0U; }
     SILVERSTAR_ASSERT_OBJECT(report, SystemStartupReport,
                              SILVERSTAR_ASSERT_MODULE_APP);
+    /* DeviceTask owns construction and leaves a completed report immutable.
+     * Reject corrupt metadata before the first event or any device indexing. */
+    SILVERSTAR_ASSERT(report->device_count <= SYSTEM_STARTUP_DEVICE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    SILVERSTAR_ASSERT((report->completed == 1U) && (report->passed <= 1U),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (LoggerTask_StartupEventAppend(report->timestamp_us,
             FLIGHT_LOG_EVENT_SELF_TEST_COMPLETE, report->passed,
             ((report->required_failure_mask & 0xFFFFUL) << 16U) |

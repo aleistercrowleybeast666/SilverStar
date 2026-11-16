@@ -4,8 +4,8 @@
   "class": "telemetry",
   "version": "0.1.0",
   "id": "silverstar.device.telemetry.sx1278",
-  "name": "E32-400M20S (SX1278, experimental)",
-  "description": "Independent SX1278 SPI driver; single E32-400M20S, fixed experimental PHY, HARDWARE_UNVERIFIED.",
+  "name": "E32 / E19 (SX1278, experimental)",
+  "description": "Independent SX1278 SPI driver; E32-400M20S or E19-433M20S2, fixed experimental PHY, HARDWARE_UNVERIFIED.",
   "requires": {
     "components": [],
     "resources": [
@@ -227,6 +227,21 @@
       "hardware_status": "HARDWARE_UNVERIFIED",
       "note": "Fixed experimental configuration; +20 dBm high-power PA mode is not admitted."
     },
+    "sx1278_module_profiles": {
+      "e19_433m20s2": {
+        "module": "e19_433m20s2",
+        "manual_url": "https://www.cdebyte.com/pdf-down.aspx?id=885",
+        "manual_sha256": "81390835a218d63a75c633bc6803e8e0d9fa5b805202ff555681e54b2784882c",
+        "supply_mv": 3300,
+        "io_mv": 3300,
+        "maximum_spi_clock_hz": 1000000,
+        "module_pins": {"dio0": 5, "vcc": 13, "sck": 14, "miso": 15, "mosi": 16, "nss": 17, "reset": 18, "antenna": 21},
+        "frontend": "internal_dio4_low_tx_high_rx",
+        "chip_drive_dbm": 17,
+        "hardware_status": "HARDWARE_UNVERIFIED",
+        "note": "Only the fixed 433 MHz profile is admitted; chip +17 dBm is not a measured module output."
+      }
+    },
     "sx1278_ground_backend": "Ground/Radio/Src/ground_radio_sx1278.c"
   },
   "instance_policy": {
@@ -273,6 +288,13 @@
         "supported_tx_powers_dbm": [
           17
         ],
+        "validated_frequency_min_hz": 433000000,
+        "validated_frequency_max_hz": 433000000
+      },
+      "e19_433m20s2": {
+        "model": "E19-433M20S2 (EXPERIMENTAL, HARDWARE_UNVERIFIED)",
+        "tx_power_limit_dbm": 17,
+        "supported_tx_powers_dbm": [17],
         "validated_frequency_min_hz": 433000000,
         "validated_frequency_max_hz": 433000000
       }

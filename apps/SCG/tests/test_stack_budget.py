@@ -63,6 +63,10 @@ def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
     (tmp_path / "test.c").write_text("", encoding="utf8")
     # Explicit fixture-only reviewed empty source, not a production exemption.
     monkeypatch.setitem(stacks.BINDING_SOURCE_V2, "test.c", [stacks.BindingSourceHash_Get("")])
+    # These arithmetic fixtures inject objdump/nm and have no Makefile or real
+    # compiled artifact seal. Whole-input acceptance has separate negative tests.
+    # Keep the legacy task-only path explicit; never claim whole-stack proof.
+    monkeypatch.setattr(stacks._review, "Inputs_Verify", lambda *args: None)
     (tmp_path / "SilverStar.ssproject").write_text(
         json.dumps({"build": {"target_profile": "SilverStar_F407"}}), encoding="utf-8")
     build = tmp_path / "build/FCCG/SilverStar_F407/Release"
@@ -170,6 +174,7 @@ def test_stack_budget_reads_selected_layout_elf_and_frames(tmp_path, monkeypatch
 
 def test_stack_budget_rejects_missing_source_frame_report(tmp_path, monkeypatch):
     root = _ElfFixture_Create(tmp_path, monkeypatch)
+    (root / "missing.c").write_text("/* selected source without a compiler frame report */\n")
     (root / "Generated/project_sources.mk").write_text(
         "C_SOURCES += \\\n  test.c \\\n  missing.c\n\n", encoding="utf-8")
     with pytest.raises(ValueError, match="Missing source stack report; rebuild: missing.c"):
@@ -426,7 +431,7 @@ def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_
         owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
     else:
         owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
-    if relative in ('APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c'):
+    if relative in ('APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c', 'APP/Src/logger_task.c'):
         text = (base / 'tests/fixtures/stack_logger_review_20261101' / relative).read_text(encoding='utf8')
     elif relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
                     'System/Src/system_console.c'):

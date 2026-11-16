@@ -5,11 +5,12 @@ extents, not those headings, own instructions. Overlapping libgcc entries each
 include their shared suffix. All cross-function branches are conservatively
 charged as calls; a local non-link branch is an intra-function CFG edge.
 """
-from collections import deque
-from bisect import bisect_left
-from functools import lru_cache
-from math import factorial
 import re
+from bisect import bisect_left
+from collections import deque
+from functools import lru_cache
+from itertools import pairwise
+from math import factorial
 
 CONDITIONS = "(?:eq|ne|cs|hs|cc|lo|mi|pl|vs|vc|hi|ls|ge|lt|gt|le|al)"
 
@@ -97,7 +98,32 @@ def StackDelta_Get(op, args):
     return 0
 
 
-def Assembly_Parse(disassembly, symbols):
+def ReadOnlyData_Parse(contents, section_headers):
+    """Only actual allocated read-only ELF .rodata may supply absolute tables."""
+    section = None
+    memory = {}
+    for line in contents.splitlines():
+        if match := re.match(r"Contents of section (\S+):", line):
+            section = match[1]
+        elif section == ".rodata" and (match := re.match(r"\s*([0-9a-f]+)\s+(.+)", line)):
+            raw = match[2][:35].replace(" ", "")
+            if not re.fullmatch(r"[0-9a-f]+", raw) or len(raw) % 2:
+                raise ValueError("Malformed linked read-only section bytes")
+            address = int(match[1], 16)
+            memory.update({address + offset: byte for offset, byte in enumerate(bytes.fromhex(raw))})
+    if memory:
+        declaration = re.search(r"^\s*\d+\s+\.rodata\s+([0-9a-f]+)\s+([0-9a-f]+)[^\n]*\n([^\n]+)",
+                                section_headers, re.MULTILINE)
+        if not declaration or not {"CONTENTS", "ALLOC", "LOAD", "READONLY", "DATA"}.issubset(
+                set(declaration[3].strip().split(", "))):
+            raise ValueError("Unproved immutable linked switch table section")
+        start, size = int(declaration[2], 16), int(declaration[1], 16)
+        if set(memory) != set(range(start, start + size)):
+            raise ValueError("Incomplete linked read-only section bytes")
+    return memory
+
+
+def Assembly_Parse(disassembly, symbols, readonly_data=None):
     declarations = {}
     for line in symbols.splitlines():
         match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
@@ -116,7 +142,7 @@ def Assembly_Parse(disassembly, symbols):
             symbol_names[key] = name
     if not functions:
         raise ValueError("Missing ELF FUNC symbol extents")
-    rows, memory, literals = {}, {}, {}
+    rows, memory, literals = {}, dict(readonly_data or {}), {}
     section = None
     for line in disassembly.splitlines():
         if match := re.match(r"Disassembly of section (\S+):", line):
@@ -124,6 +150,8 @@ def Assembly_Parse(disassembly, symbols):
         if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
             address = int(match[1], 16)
             raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+            if any(address + offset in memory and memory[address + offset] != value for offset, value in enumerate(raw)):
+                raise ValueError("Conflicting linked instruction and table bytes")
             memory.update({address + offset: value for offset, value in enumerate(raw)})
             if match[3].startswith("."):
                 literals[address] = (match[3], match[4], section)
@@ -210,6 +238,175 @@ def SwitchTargets_Get(index, rows, entry):
     return targets, [row[0] for row in rows[guard:index + 1]]
 
 
+def Thumb1Guard_Get(first, register, rows):
+    """Both emitted Thumb-1 forms must dominate the entire address sequence."""
+    guard = first - 2
+    if first >= 3 and rows[first - 1][2] in ("b", "b.n", "b.w"):
+        guard = first - 3
+    if guard < 0:
+        raise ValueError("Missing Thumb1 switch guard")
+    compare, branch = rows[guard], rows[guard + 1]
+    limit = re.fullmatch(re.escape(register) + r",\s*#(0x[0-9a-f]+|\d+)",
+                         compare[3].split("@")[0].strip())
+    branch_op = branch[2].removesuffix(".n").removesuffix(".w")
+    destination = re.match(r"([0-9a-f]+)\s+<", branch[3])
+    if not Opcode_Is(compare[2], "cmp") or not limit or not destination:
+        raise ValueError("Unreviewed Thumb1 switch comparison")
+    if guard == first - 3:
+        default = re.match(r"([0-9a-f]+)\s+<", rows[first - 1][3])
+        if branch_op != "bls" or int(destination[1], 16) != rows[first][0] or not default:
+            raise ValueError("Unreviewed Thumb1 switch range branch")
+        default_address = int(default[1], 16)
+        count = int(limit[1], 0) + 1
+    else:
+        if branch_op not in ("bhi", "bcs", "bhs"):
+            raise ValueError("Unreviewed Thumb1 switch default branch")
+        default_address = int(destination[1], 16)
+        count = int(limit[1], 0) + (branch_op == "bhi")
+    if count <= 0 or count > 256 or default_address not in {row[0] for row in rows}:
+        raise ValueError("Invalid Thumb1 switch bound or default")
+    return count, [compare[0], branch[0]], default_address
+
+
+def Thumb1TableTargets_Get(base, count, width, entry, *, relative):
+    memory, instructions = entry["memory"], {row[0] for row in entry["rows"]}
+    targets = []
+    for item in range(count):
+        addresses = range(base + item * width, base + (item + 1) * width)
+        if any(address not in memory for address in addresses):
+            raise ValueError("Missing linked Thumb1 switch table bytes")
+        value = int.from_bytes(bytes(memory[address] for address in addresses), "little")
+        # MOV PC forces bit zero low; unlike BX it does not select ARM state.
+        target = base + 2 * value if relative else value & ~1
+        if target not in instructions:
+            raise ValueError("Thumb1 switch target outside function instructions")
+        targets.append(target)
+    return targets
+
+
+def Thumb1SwitchTargets_Get(index, rows, entry, entries):
+    address, width, op, args = rows[index]
+    operands = args.split("@")[0].strip()
+    if Opcode_Is(op, "bl"):
+        helper = entries.get("__gnu_thumb1_case_uqi")
+        target = re.match(r"([0-9a-f]+)\s+<__gnu_thumb1_case_uqi>", args)
+        expected = [("push", "{r1}"), ("mov", "r1, lr"), ("lsrs", "r1, r1, #1"),
+                    ("lsls", "r1, r1, #1"), ("ldrb", "r1, [r1, r0]"),
+                    ("lsls", "r1, r1, #1"), ("add", "lr, r1"),
+                    ("pop", "{r1}"), ("bx", "lr")]
+        if not helper or not target or int(target[1], 16) != helper["start"] or width != 4:
+            raise ValueError("Unknown Thumb1 table helper")
+        actual = [(row[2], row[3].split("@")[0].strip()) for row in helper["rows"]]
+        if actual != expected or any(row[1] != 2 or row[0] != helper["start"] + 2 * i
+                                     for i, row in enumerate(helper["rows"])):
+            raise ValueError("Changed linked Thumb1 table helper")
+        first, register, base = index, "r0", address + width
+        count, guard, default = Thumb1Guard_Get(first, register, rows)
+        targets = Thumb1TableTargets_Get(base, count, 1, entry, relative=True)
+    else:
+        match = re.fullmatch(r"pc,\s*(r[0-7])", operands)
+        if not Opcode_Is(op, "mov") or not match or index < 3:
+            raise ValueError("Unreviewed Thumb1 absolute switch")
+        target_register = match[1]
+        load = re.fullmatch(re.escape(target_register) + r",\s*\[(r[0-7]),\s*(r[0-7])\]",
+                            rows[index - 1][3].split("@")[0].strip())
+        if not Opcode_Is(rows[index - 1][2], "ldr") or not load or load[1] == load[2]:
+            raise ValueError("Unreviewed Thumb1 indexed table load")
+        base_register, index_register = load[1], load[2]
+        first, parts = index - 3, rows[index - 3:index - 1]
+        shifts = [row for row in parts if row[2] == "lsls"]
+        loads = [row for row in parts if Opcode_Is(row[2], "ldr")]
+        if len(shifts) != 1 or len(loads) != 1:
+            raise ValueError("Unreviewed Thumb1 table address sequence")
+        shift = re.fullmatch(re.escape(index_register) + r",\s*(r[0-7]),\s*#2",
+                             shifts[0][3].split("@")[0].strip())
+        literal = re.fullmatch(re.escape(base_register) + r",\s*\[pc,\s*#(0x[0-9a-f]+|\d+)\]",
+                               loads[0][3].split("@")[0].strip())
+        if not shift or not literal or (loads[0][0] < shifts[0][0] and base_register == shift[1]):
+            raise ValueError("Changed Thumb1 switch index or base")
+        location = ((loads[0][0] + 4) & ~3) + int(literal[1], 0)
+        if any(location + offset not in entry["memory"] for offset in range(4)):
+            raise ValueError("Missing linked Thumb1 table pointer")
+        base = int.from_bytes(bytes(entry["memory"][location + offset] for offset in range(4)), "little")
+        count, guard, default = Thumb1Guard_Get(first, shift[1], rows)
+        targets = Thumb1TableTargets_Get(base, count, 4, entry, relative=False)
+    chain = guard + [row[0] for row in rows[first:index + 1]]
+    if default in chain or any(target in chain[1:] for target in targets):
+        raise ValueError("Thumb1 switch bypasses its range guard")
+    return targets, chain
+
+
+def SavedLinkReturns_Get(rows, successors, reachable, local_calls):
+    """Prove the Thumb1 split POP/BX ABI return from its saved LR stack slot.
+
+    Like POP {pc}, this establishes control/stack shape, not arbitrary memory
+    safety. No name grant, unknown SP write, ambiguous stack height, bypass or
+    direct overwrite of the saved slot can earn this interpretation.
+    """
+    if local_calls or not rows:
+        return set()
+    push_index, prefix = 0, 0
+    if rows[0][2] in ("sub", "sub.n", "sub.w") and rows[0][3].startswith("sp,"):
+        prefix = StackDelta_Get(rows[0][2], rows[0][3])
+        push_index = 1
+    if prefix is None or push_index >= len(rows):
+        return set()
+    push = rows[push_index]
+    if push[2] != "push" or not re.search(r"\blr\b", push[3]):
+        return set()
+    saved_depth = prefix + 4
+    by_address = {row[0]: row for row in rows}
+    incoming = {address: {origin for origin, values in successors.items() if address in values}
+                for address in reachable}
+    depths, queue = {rows[0][0]: 0}, deque([rows[0][0]])
+    while queue:
+        address = queue.popleft()
+        row = by_address[address]
+        delta = StackDelta_Get(row[2], row[3])
+        if delta is None or (delta and Instruction_IsConditional(row[2])):
+            return set()
+        after = depths[address] + delta
+        for target in successors[address]:
+            if target in depths and depths[target] != after:
+                return set()
+            if target not in depths:
+                depths[target] = after
+                queue.append(target)
+    if any(incoming.get(rows[i][0], set()) != {rows[i - 1][0]} for i in range(1, push_index + 1)):
+        return set()
+    # Direct SP stores that overlap the saved LR invalidate the return proof.
+    for address in reachable:
+        _, _, op, args = by_address[address]
+        store = re.fullmatch(r"\w+,\s*\[sp(?:,\s*#(\d+))?\]", args.split("@")[0].strip())
+        if ((op.startswith("str") and "[sp" in args and not store) or
+                (op.startswith("stm") and args.startswith("sp"))):
+            return set()
+        if op.startswith("str") and store:
+            size = 1 if op.startswith("strb") else 2 if op.startswith("strh") else 8 if op.startswith("strd") else 4
+            start = int(store[1] or 0) - depths[address]
+            if start < -saved_depth + 4 and start + size > -saved_depth:
+                return set()
+        if address != push[0] and op == "push":
+            start, end = -depths[address] - Registers_Count(args, 4), -depths[address]
+            if start < -saved_depth + 4 and end > -saved_depth:
+                return set()
+    result = set()
+    for index, row in enumerate(rows):
+        if row[0] not in reachable or row[2] != "bx" or not re.fullmatch(r"r[0-7]", row[3].strip()):
+            continue
+        first = index - 1
+        if first >= 0 and rows[first][2] in ("add", "add.n", "add.w") and rows[first][3].startswith("sp,"):
+            first -= 1
+        if first < 0 or rows[first][2] != "pop" or rows[first][3].strip() != "{" + row[3].strip() + "}":
+            continue
+        chain = rows[first:index + 1]
+        if (depths.get(chain[0][0]) != saved_depth or depths.get(row[0]) != 0 or
+                any(incoming.get(current[0], set()) != {previous[0]} for previous, current in pairwise(chain))):
+            continue
+        result.add(row[0])
+    return result
+
+
 def Function_Analyze(name, entry, entries, no_return=()):
     rows = entry["rows"]
     by_address = {row[0]: row for row in rows}
@@ -228,13 +425,16 @@ def Function_Analyze(name, entry, entries, no_return=()):
         next_addresses = []
         table_branch = (Opcode_Is(op, "tbb") or Opcode_Is(op, "tbh") or
                         (Opcode_Is(op, "ldr") and re.match(r"pc,\s*\[\w+,\s*\w+,\s*lsl #2\]", args)))
+        thumb1_table = ((Opcode_Is(op, "bl") and target and target[2].startswith("__gnu_thumb1_case_")) or
+                        (Opcode_Is(op, "mov") and re.match(r"pc,\s*r[0-7](?:\s|$)", args)))
         terminal = (Instruction_IsReturn(op, args) or Opcode_Is(op, "udf") or
                     (Instruction_IsIndirect(op, args) and kind != "blx"))
-        if Instruction_IsIndirect(op, args) and not table_branch:
+        if Instruction_IsIndirect(op, args) and not (table_branch or thumb1_table):
             unknown.append((address, op, args))
-        if table_branch:
+        if table_branch or thumb1_table:
             try:
-                switch_targets, guard = SwitchTargets_Get(index, rows, entry)
+                switch_targets, guard = (Thumb1SwitchTargets_Get(index, rows, entry, entries)
+                                         if thumb1_table else SwitchTargets_Get(index, rows, entry))
                 next_addresses.extend(switch_targets)
                 switches[address] = guard
             except ValueError as error:
@@ -325,12 +525,15 @@ def Function_Analyze(name, entry, entries, no_return=()):
                     queue.append(target)
                     queued.add(target)
     reachable = {state[0] for state in depths}
+    saved_link_returns = SavedLinkReturns_Get(rows, successors, reachable, local_calls)
     return {"edges": set().union(*(edges_by_address[address] for address in reachable)),
-            "indirect": [row for row in unknown if row[0] in reachable], "frame_bytes": maximum,
+            "indirect": [row for row in unknown if row[0] in reachable and row[0] not in saved_link_returns], "frame_bytes": maximum,
             "unknown_sp": sorted(set(unknown_sp)), "reachable_addresses": sorted(reachable),
             "successors": successors,
-            "returns": [address for address, context in depths if not context and Instruction_IsReturn(by_address[address][2], by_address[address][3])],
+            "returns": [address for address, context in depths if not context and
+                        (Instruction_IsReturn(by_address[address][2], by_address[address][3]) or address in saved_link_returns)],
             "tail_returns": sorted(set().union(*(tail_returns[address] for address in reachable))),
             "local_link_calls": {hex(address): {"target": hex(value[0]), "continuation": hex(value[1])}
                                  for address, value in local_calls.items() if address in reachable},
-            "switches": {address: guard for address, guard in switches.items() if address in reachable}}
+            "switches": {address: guard for address, guard in switches.items() if address in reachable},
+            "saved_link_returns": sorted(saved_link_returns)}

@@ -28,6 +28,10 @@ def ArtifactStackReportSummary_Encode(output: str, expected_root: Path) -> str:
             return ""
         raw = path.read_bytes()
         report = json.loads(raw)
+        if report['schema'] == 'silverstar.ground-stack-budget/1':
+            from silverstar_fccg.project.artifact_ground_stack import GroundStackReportSummary_Read
+            value = GroundStackReportSummary_Read(path, expected_root)
+            return _PREFIX + json.dumps(value, ensure_ascii=False, separators=(',', ':')) if value else ''
         if report["schema"] != "silverstar.stack-budget/1":
             return ""
         relative = PurePosixPath(report["elf"].replace("\\", "/"))
@@ -94,6 +98,11 @@ def ArtifactStackReportSummary_Decode(summary: str) -> dict | None:
         return None
     try:
         value = json.loads(summary[len(_PREFIX):])
+        if type(value) is not dict:
+            return None
+        if value.get('target') == 'ground':
+            from silverstar_fccg.project.artifact_ground_stack import GroundStackReportSummary_Validate
+            return GroundStackReportSummary_Validate(value)
         if value["target"] != "flight" or type(value["passes"]) is not bool:
             return None
         scope = value["whole_program_stack_acceptance"]

@@ -4,7 +4,7 @@
   "name": "STM32F103C8T6",
   "type": "mcu",
   "class": "stm32f1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Official 64 KiB Flash / 20 KiB SRAM STM32F103C8T6 exact MCU contract.",
   "requires": {
     "components": [

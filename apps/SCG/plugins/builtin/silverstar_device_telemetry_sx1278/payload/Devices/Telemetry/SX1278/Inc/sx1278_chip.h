@@ -28,5 +28,6 @@ Sx1278Result Sx1278Chip_RegisterWrite(const Sx1278ChipBus *bus,
     uint8_t address, uint8_t value);
 Sx1278Result Sx1278Chip_ModeSet(const Sx1278ChipBus *bus, uint8_t mode);
 Sx1278Result Sx1278Chip_Configure(const Sx1278ChipBus *bus);
+Sx1278Result Sx1278Chip_Dio4Set(const Sx1278ChipBus *bus, uint8_t receiving);
 
 #endif /* __SX1278_CHIP_H */

@@ -1,6 +1,30 @@
 """Fit initial native frames once; never resize an editor during refresh."""
 from PySide6.QtCore import QRect, QTimer
-from PySide6.QtWidgets import QDialog, QWidget
+from PySide6.QtWidgets import QDialog, QMessageBox, QWidget
+
+
+def Dialog_CenterOnOwner(dialog: QWidget) -> None:
+    owner = dialog.parentWidget()
+    if owner is None:
+        Window_ConstrainInitialGeometry(dialog)
+        return
+    owner = owner.window()
+    screen = owner.screen()
+    if screen is None:
+        return
+    available = screen.availableGeometry()
+    Window_ConstrainInitialGeometry(dialog, available)
+    frame = dialog.frameGeometry()
+    frame.moveCenter(owner.frameGeometry().center())
+    dialog.move(frame.topLeft())
+    Window_ConstrainInitialGeometry(dialog, available)
+
+
+class CenteredMessageBox(QMessageBox):
+    def showEvent(self, event):
+        super().showEvent(event)
+        Dialog_CenterOnOwner(self)
+        QTimer.singleShot(0, self, lambda: Dialog_CenterOnOwner(self))
 
 
 def Window_ConstrainInitialGeometry(window: QWidget, available: QRect | None = None) -> None:
@@ -32,4 +56,4 @@ class PropertyDialog(QDialog):
         super().showEvent(event)
         if not getattr(self, '_initial_geometry_constrained', False):
             self._initial_geometry_constrained = True
-            QTimer.singleShot(0, lambda: Window_ConstrainInitialGeometry(self))
+            QTimer.singleShot(0, self, lambda: Dialog_CenterOnOwner(self))

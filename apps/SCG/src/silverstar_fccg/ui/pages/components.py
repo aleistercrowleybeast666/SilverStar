@@ -1162,6 +1162,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         self._assignment_confirmed = assignment_confirmed
         self.board_combo.blockSignals(True)
         self.board_combo.clear()
+        self.board_combo.addItem(self._translator.Text_Get("selection.unselected"), "")
         if custom_available:
             self.board_combo.addItem(
                 self._translator.Text_Get("board.custom_hardware"), "__custom__"
@@ -1173,7 +1174,10 @@ class BoardHardwarePage(ScrollableLocalizedPage):
             self.board_combo.addItem(board.name + suffix, board.component_id)
             item = self.board_combo.model().item(self.board_combo.count() - 1)
             if item is not None:
-                item.setEnabled(board.compatible)
+                # A board can be chosen before its devices are configured.
+                # Resource compatibility still blocks generation, not editing.
+                item.setEnabled(board.selectable)
+                item.setToolTip(board.detail or board.missing_text)
         current_data = (
             "__custom__"
             if custom_selected
@@ -1182,9 +1186,8 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         index = self.board_combo.findData(current_data)
         self.board_combo.setCurrentIndex(index)
         self.board_combo.blockSignals(False)
-        # The consolidated workspace always exposes complete-project import:
-        # its MCU comes from the imported project, not the current selection.
-        self.custom_widget.setVisible(custom_available or hasattr(self, '_hardware_workspace_owner'))
+        self.custom_widget.setVisible(hardware_mode == "custom")
+        self.import_directory_button.setEnabled(hardware_mode == "custom")
         self.export_button.setEnabled(custom_ready)
         board_selected = hardware_mode == "board_plugin"
         self.preparation_label.setVisible(False)
@@ -1415,6 +1418,8 @@ class BoardHardwarePage(ScrollableLocalizedPage):
             self.customSelected.emit()
         elif value:
             self.boardChanged.emit(value)
+        else:
+            self.boardChanged.emit("__unselected__")
 
 
 class CadenceEditor(QWidget):

@@ -1,5 +1,10 @@
 # 飞前日志策略
 
+当前 ESKF20、InEKF15、InEKF20 后端的操作日志是其生成依赖，必须启用 SSLOG。
+关闭 SSLOG 的组合会在工程校验和源图生成入口报告
+`AUGMENTED_OPERATION_JOURNAL_REQUIRES_SSLOG`，并在写出文件前拒绝；不会自动改回日志开关。
+该限制不把 KF6 的日志开关改成强制开启，也不修改任何算法数学。
+
 正常飞行工程默认 `SYSTEM_LOG_PREFLIGHT_NATIVE_ENABLE=0U`、
 `SYSTEM_LOG_PREFLIGHT_CORRECTED_IMU_ENABLE=0U`。Logger 从启动阶段持续运行；
 这两个开关只控制连续传感器记录的生产者，不暂停设备采样。

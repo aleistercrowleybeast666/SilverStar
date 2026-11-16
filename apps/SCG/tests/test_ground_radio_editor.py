@@ -1,11 +1,16 @@
-from dataclasses import replace
 import time
+from dataclasses import replace
 
 import pytest
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.project.air_link import GroundTargetIssues_Get
 from silverstar_fccg.project.ground_radios import GroundRadiosConfiguration_Apply
-from silverstar_fccg.project.model import GroundRadioConfigurations_Get, ProjectModel_Parse, ProjectModelError
-from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+from silverstar_fccg.project.model import (
+    PROJECT_TARGET_SCOPE_FORMAT_VERSION,
+    GroundRadioConfigurations_Get,
+    ProjectModel_Parse,
+    ProjectModelError,
+)
 from test_f103_ground_reference import _GroundF103Model_Get
 from test_scg_ui_metadata_hotfix import window
 
@@ -28,7 +33,7 @@ def test_legacy_single_ground_refresh_does_not_promote_or_rebind(window):
         assert not window._model.ground_target.radio_instances
         assert tuple(window.ground_target_page.radio_instances_editor.rows["radio0"]["selection"].currentData()) == (window._model.ground_target.radio_plugin, window._model.ground_target.module_variant)
         assert window.ground_target_page.radio_instances_editor.initial_instance.isHidden()
-    assert window._model.Dictionary_Get()["format_version"] == 14
+    assert window._model.Dictionary_Get()["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION
 
 
 def test_ground_editor_order_initial_binding_and_reopen(qapp, window, monkeypatch):
@@ -54,7 +59,7 @@ def test_ground_editor_order_initial_binding_and_reopen(qapp, window, monkeypatc
     assert all("up" not in row and "down" not in row for row in editor.rows.values())
     assert window._model.ground_target.resource_assignments == before
     data = window._model.Dictionary_Get()
-    assert data["format_version"] == 15
+    assert data["format_version"] == PROJECT_TARGET_SCOPE_FORMAT_VERSION
     assert ProjectModel_Parse(data).Dictionary_Get() == data
     window.Language_Apply("en_US")
     assert window._model.Dictionary_Get() == data

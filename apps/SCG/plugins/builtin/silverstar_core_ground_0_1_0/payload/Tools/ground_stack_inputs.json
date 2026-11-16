@@ -1,0 +1,26 @@
+{
+  "schema": "silverstar.software-stack-inputs/2",
+  "review_revision": "ground-c071-f103-20261117",
+  "cases": [
+    {
+      "name": "ssgs1-Release",
+      "path": "Tools/software_stack_cases/ssgs1-Release.json",
+      "sha256": "66c76967ff15557eaf064229e5d443a9679670922cfa25cfdaba6af53e669fb0"
+    },
+    {
+      "name": "ssgs1-Debug",
+      "path": "Tools/software_stack_cases/ssgs1-Debug.json",
+      "sha256": "001190a908e86d1a2ce53252347b9d416aa7b4d2cc4ed936c9690cdb14bcf8b9"
+    },
+    {
+      "name": "f103-e19-Release",
+      "path": "Tools/software_stack_cases/f103-e19-Release.json",
+      "sha256": "d6608586f4ebabe5adf39540b22b2404224fe419a4b52add7986bcc51a62b41d"
+    },
+    {
+      "name": "f103-e19-Debug",
+      "path": "Tools/software_stack_cases/f103-e19-Debug.json",
+      "sha256": "12f0a006190958569a8b48058306935b1f51236b7422d9c8ebd52761dd4bae83"
+    }
+  ]
+}

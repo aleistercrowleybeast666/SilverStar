@@ -73,7 +73,7 @@ def test_radio_restore_clears_unentered_draft_without_changing_endpoints(qapp, w
         reopened.reject()
 
 
-def test_radio_non_lora_options_are_unavailable_and_conflicts_explain_bands(qapp, workspace_root):
+def test_radio_non_lora_and_opposite_band_options_are_unavailable(qapp, workspace_root):
     service = FccgService(workspace_root)
     model = service.ReferenceProject_Create('LoRa only')
     dialog = RadioTransactionDialog(Translator('zh_CN'), model, service.catalog)
@@ -82,13 +82,13 @@ def test_radio_non_lora_options_are_unavailable_and_conflicts_explain_bands(qapp
         widget = dialog.editor.fields[name]
         assert [widget.itemData(i) for i in range(widget.count()) if widget.model().item(i).isEnabled()] == ['lora']
     ground = dialog.endpoints['ground'][0]
-    ground.setCurrentIndex(ground.findData(('silverstar.device.telemetry.sx1278', 'e32_400m20s')))
-    assert '433' in dialog.endpoint_details['ground'].text()
+    assert ground.findData(('silverstar.device.telemetry.sx1278', 'e32_400m20s')) == -1
     assert '2473' in dialog.endpoint_details['flight'].text()
-    assert '双端' in dialog.error.text()
-    dialog.accept()
-    assert dialog.result() != QDialog.DialogCode.Accepted
-    assert dialog.Configuration_Get() is None
+    dialog.preset.setCurrentIndex(dialog.preset.findData('sx127x'))
+    assert dialog.endpoints['flight'][0].currentData() is None
+    assert '飞控' in dialog.preset_note.text()
+    assert ground.findData(('silverstar.device.telemetry.sx1278', 'e32_400m20s')) > 0
+    assert ground.findData(('silverstar.device.telemetry.sx1281', 'e28_2g4m12sx')) == -1
     dialog.reject()
 
 

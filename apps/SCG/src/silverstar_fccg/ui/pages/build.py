@@ -616,7 +616,8 @@ class BuildPage(ScrollableLocalizedPage):
                     stack = ArtifactStackReportSummary_Decode(raw_summary)
                     software = stack and stack['whole_program_stack_acceptance'] == 'SOFTWARE BOUND PASS'
                     label.setText(self._translator.Text_Get(
-                        ('stack.software_passed' if software else 'stack.tasks_passed')
+                        (('stack.ground_passed' if target == 'ground' else 'stack.software_passed')
+                         if software else 'stack.tasks_passed')
                         if passed and stack and stack['passes'] else 'stack.unverified'))
                     label.setProperty('statusLevel', 'warning' if passed and stack and stack['passes'] else 'error')
                 label.setToolTip(
@@ -636,7 +637,7 @@ class BuildPage(ScrollableLocalizedPage):
         label = self.target_stack_values[target]
         section = self.target_stack_sections[target]
         detail = self.target_stack_details[target]
-        section.Title_Set(self._translator.Text_Get('stack.details'))
+        section.Title_Set(self._translator.Text_Get('stack.ground_details' if target == 'ground' else 'stack.details'))
         report = ArtifactStackReportSummary_Decode(str(getattr(record, 'summary', '')))
         visible = selected and not state and report is not None and report['target'] == target
         section.setVisible(visible)
@@ -651,11 +652,12 @@ class BuildPage(ScrollableLocalizedPage):
         passed = getattr(record, 'result', '') == 'passed' and report['passes']
         software = report['whole_program_stack_acceptance'] in ('SOFTWARE BOUND PASS', 'SOFTWARE BOUND FAIL')
         label.setText(self._translator.Text_Get(
-            ('stack.software_passed' if passed else 'stack.software_failed') if software else
+            (('stack.ground_passed' if passed else 'stack.ground_failed') if target == 'ground' else
+             ('stack.software_passed' if passed else 'stack.software_failed')) if software else
             ('stack.tasks_passed' if passed else 'stack.tasks_failed')))
         label.setProperty('statusLevel', 'warning' if passed else 'error')
         headers = [self._translator.Text_Get('stack.column.' + key)
-                   for key in ('task', 'known', 'configured', 'margin')]
+                   for key in (('scope' if target == 'ground' else 'task'), 'known', 'configured', 'margin')]
         rows = ['<tr>' + ''.join('<th align="left">' + html.escape(text) + '</th>' for text in headers) + '</tr>']
         budgets = list(report['tasks'])
         if software:
@@ -665,8 +667,11 @@ class BuildPage(ScrollableLocalizedPage):
                      f"{task['margin_bytes']:,} ({task['margin_bytes'] / task['configured_bytes'] * 100:.1f}%)")
             rows.append('<tr>' + ''.join('<td>' + html.escape(text) + '</td>' for text in cells) + '</tr>')
         detail.setText('<table cellspacing="8">' + ''.join(rows) + '</table><p>' +
-            html.escape(self._translator.Text_Get('stack.software_scope' if software else 'stack.scope',
-                                                 minimum=report['minimum_margin_bytes'])) + '</p>')
+            html.escape(self._translator.Text_Get(('stack.ground_scope' if target == 'ground' else
+                                                  'stack.software_scope') if software else 'stack.scope',
+                                                 minimum=report['minimum_margin_bytes'],
+                                                 levels=report.get('main_msp_exceptions', {}).get('priority_levels', 0),
+                                                 frame=report.get('main_msp_exceptions', {}).get('exception_frame_bytes', 0))) + '</p>')
         detail.setToolTip(json.dumps(report['tasks'], ensure_ascii=False, indent=2))
         label.setToolTip(report['report_path'] + '\nSHA256 ' + report['report_sha256'] + '\n' +
                          json.dumps(report['artifacts'], ensure_ascii=False, indent=2))

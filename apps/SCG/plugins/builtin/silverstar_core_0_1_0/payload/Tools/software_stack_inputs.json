@@ -1,6 +1,6 @@
 {
   "schema": "silverstar.software-stack-inputs/2",
-  "review_revision": "gui_convergence_current_20261110_A_reviewed",
+  "review_revision": "platform_finish_e19_20261116_A_reviewed",
   "cases": [
     {
       "name": "f407-Release",
@@ -101,6 +101,56 @@
       "name": "convergence-current-20261110-research-Debug",
       "path": "Tools/software_stack_cases/convergence-current-20261110-research-Debug.json",
       "sha256": "5fd9a5db91fc80eb065debdd04a35d3b58a5b2e843ce308f390467db209616f9"
+    },
+    {
+      "name": "logger-20261116-f4-Release",
+      "path": "Tools/software_stack_cases/logger-20261116-f4-Release.json",
+      "sha256": "e48821c5359001ccf23799a5954e3173dde65b97a5cb58eab21ded5884761811"
+    },
+    {
+      "name": "logger-20261116-f4-Debug",
+      "path": "Tools/software_stack_cases/logger-20261116-f4-Debug.json",
+      "sha256": "75940ad718568e2c486058154b446fa092d60a30af5d9b22b580cd61c99bfd12"
+    },
+    {
+      "name": "platform-20261116-f4-Release",
+      "path": "Tools/software_stack_cases/platform-20261116-f4-Release.json",
+      "sha256": "7753e854f0b7de7a13b1efda6be404b725cb5e79cd41b4a8012efe6f617d5b3e"
+    },
+    {
+      "name": "platform-20261116-f4-Debug",
+      "path": "Tools/software_stack_cases/platform-20261116-f4-Debug.json",
+      "sha256": "6a6ea91596bd7fb6504185748958984ca301c7eb9a06b851ff7fd96e44160d6b"
+    },
+    {
+      "name": "platform-catalog-20261116-f4-Release",
+      "path": "Tools/software_stack_cases/platform-catalog-20261116-f4-Release.json",
+      "sha256": "1934dfb8147973ed03a7e8c2847560e286420fcc3c479c739fd59d07029c064d"
+    },
+    {
+      "name": "platform-catalog-20261116-f4-Debug",
+      "path": "Tools/software_stack_cases/platform-catalog-20261116-f4-Debug.json",
+      "sha256": "9aad259b76e1b0c2e2105a35a54bb28b7a2af1bb898030fe18908d2a97aa1a89"
+    },
+    {
+      "name": "platform-ssfc1-20261116-Release",
+      "path": "Tools/software_stack_cases/platform-ssfc1-20261116-Release.json",
+      "sha256": "3f8e35dddf01fb1fa20a63e653ff69f619ad79eafb2f609cb62b225e948c0600"
+    },
+    {
+      "name": "platform-ssfc1-20261116-Debug",
+      "path": "Tools/software_stack_cases/platform-ssfc1-20261116-Debug.json",
+      "sha256": "ebc36f09aa4054cb7359d083381193c6e3cb72a1fedd3e8ebbc6c7621ac2f57b"
+    },
+    {
+      "name": "platform-e19-20261116-f4-Release",
+      "path": "Tools/software_stack_cases/platform-e19-20261116-f4-Release.json",
+      "sha256": "090d6716ea6586fc3c2b47cc93ecde62b68caad1609dab95d209f1efcf8a96be"
+    },
+    {
+      "name": "platform-e19-20261116-f4-Debug",
+      "path": "Tools/software_stack_cases/platform-e19-20261116-f4-Debug.json",
+      "sha256": "5d8be21e419c85d52cfd00b5610b55c6fe4af31aecc908089f871486321769f8"
     }
   ]
 }

@@ -1,7 +1,15 @@
 {
   "schema": "silverstar.ssms.radio-profile.v3",
   "ssms_schema": 3,
-  "scope": "NRF snapshots only; historical SX SSMS schema2 and all its bytes remain supported and unchanged",
+  "scope": "Typed NRF historical and SX1278 snapshots; historical SX SSMS schema2 and all its bytes remain supported and unchanged",
+  "sx1278_backend": {
+    "backend": 2,
+    "version": 1,
+    "length": 16,
+    "module_byte": {"1": "E32-400M20S", "2": "E19-433M20S2"},
+    "phy_bytes_hex": "400ecf190748e801000510003d0011",
+    "qualification": "Fixed software profile only, HARDWARE_UNVERIFIED. Unknown module codes and any changed PHY byte are rejected; old module1 retains its meaning."
+  },
   "location": {
     "section": 0,
     "offset": 66

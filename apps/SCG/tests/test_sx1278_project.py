@@ -33,4 +33,4 @@ def test_sx1278_normal_project_configuration_and_recorded_identity(builtin_catal
     assert profile['bandwidth_hz']==125000 and profile['tx_power_dbm']==17
     for end in range(66,len(snapshot)):
         with pytest.raises(ValueError): MissionRadioProfile_Decode(snapshot[:end])
-    with pytest.raises(ValueError): MissionRadioProfile_Decode(snapshot[:70]+b'\x02'+snapshot[71:])
+    with pytest.raises(ValueError): MissionRadioProfile_Decode(snapshot[:70]+b'\x03'+snapshot[71:])

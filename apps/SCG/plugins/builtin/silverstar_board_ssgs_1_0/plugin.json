@@ -1,0 +1,203 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.board.ssgs_1_0",
+  "name": "SSGS1.0",
+  "type": "board",
+  "class": "ground_station_board",
+  "version": "0.1.0",
+  "description": "SSGS1.0 fixed software candidate; package, clock and wiring assumptions require PCB confirmation.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.mcu.stm32c071fbp6",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [
+      {
+        "id": "USART2",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "((PlatformUartId)0U)",
+          "header": "platform_uart.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "SPI1",
+        "kind": "spi",
+        "metadata": {
+          "c_id": "((PlatformSpiId)0U)",
+          "header": "platform_spi.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "RADIO_RESET",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)0U)",
+          "header": "platform_gpio.h",
+          "logical_index": 0
+        }
+      },
+      {
+        "id": "RADIO_BUSY",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "((PlatformGpioId)1U)",
+          "header": "platform_gpio.h",
+          "logical_index": 1
+        }
+      },
+      {
+        "id": "RADIO_NSS",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "((PlatformGpioId)2U)",
+          "header": "platform_gpio.h",
+          "logical_index": 2
+        }
+      },
+      {
+        "id": "RADIO_DIO1",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "((PlatformGpioId)3U)",
+          "header": "platform_gpio.h",
+          "logical_index": 3
+        }
+      },
+      {
+        "id": "SYSTEM_TIME",
+        "kind": "time",
+        "metadata": {
+          "c_id": "((PlatformTimeId)0U)",
+          "header": "platform_time.h",
+          "logical_index": 0
+        }
+      }
+    ],
+    "roles": [
+      {
+        "key": "telemetry:radio_bus",
+        "kind": "spi",
+        "default": "SPI1",
+        "candidates": [
+          "SPI1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_nss",
+        "kind": "gpio_output",
+        "default": "RADIO_NSS",
+        "candidates": [
+          "RADIO_NSS"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_reset",
+        "kind": "gpio_output",
+        "default": "RADIO_RESET",
+        "candidates": [
+          "RADIO_RESET"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_busy",
+        "kind": "gpio_input",
+        "default": "RADIO_BUSY",
+        "candidates": [
+          "RADIO_BUSY"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_dio1",
+        "kind": "gpio_interrupt",
+        "default": "RADIO_DIO1",
+        "candidates": [
+          "RADIO_DIO1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      }
+    ],
+    "conflicts": []
+  },
+  "provides": [
+    "board.ssgs_1_0",
+    "hardware.stm32.generated"
+  ],
+  "build": {
+    "sources": [
+      "Core/Src/dma.c",
+      "Core/Src/gpio.c",
+      "Core/Src/main.c",
+      "Core/Src/spi.c",
+      "Core/Src/stm32c0xx_hal_msp.c",
+      "Core/Src/stm32c0xx_it.c",
+      "Core/Src/system_stm32c0xx.c",
+      "Core/Src/usart.c"
+    ],
+    "include_dirs": [
+      "Core/Inc"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Core",
+      "SSGS1_0.ioc",
+      "LICENSE.txt"
+    ]
+  },
+  "metadata": {
+    "target_role": "ground_station",
+    "hardware_maturity": "software_candidate",
+    "display_names": {
+      "zh_CN": "SSGS1.0（软件候选，待上板）",
+      "en_US": "SSGS1.0 (software candidate, board untested)"
+    },
+    "reference": {
+      "vendor_package": "STM32Cube FW_C0 V1.4.1",
+      "cubemx": "6.15.0",
+      "hardware_tested": false,
+      "allocation": "Owned fixed allocation; not a claim about the user PCB"
+    },
+    "ground_entry": "clean_cubemx_main",
+    "required_irq_handlers": [
+      "SysTick_Handler",
+      "EXTI2_3_IRQHandler",
+      "DMA1_Channel1_IRQHandler",
+      "DMA1_Channel2_3_IRQHandler",
+      "USART2_IRQHandler"
+    ]
+  },
+  "board": {
+    "source_kind": "manual_import",
+    "compatible_mcus": [
+      "silverstar.mcu.stm32c071fbp6"
+    ],
+    "vendor": "STM32",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "verified": false,
+    "hardware_root": "Core",
+    "ioc_file": "payload/SSGS1_0.ioc",
+    "connections_file": "connections.json"
+  }
+}

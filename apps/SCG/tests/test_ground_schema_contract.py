@@ -21,21 +21,21 @@ def schema():
     return json.loads((Path(__file__).resolve().parents[1] / "schemas/project.schema.json").read_text(encoding="utf8"))
 
 
-def test_schema_and_parser_keep_format14_without_optional_fields(schema, document):
+def test_schema_and_parser_keep_current_format_without_optional_fields(schema, document):
     ground = schema["properties"]["ground_target"]
     optional = {"radio_instances", "active_radio_instance", "tx_led_resource", "rx_led_resource",
                 "tx_led_active_high", "rx_led_active_high", "activity_led_pulse_ms",
                 "activity_led_enabled"}
     assert optional <= ground["properties"].keys()
     assert not optional & set(ground["required"])
-    assert document["format_version"] == 14
+    assert document["format_version"] == 24
     assert not optional & document["ground_target"].keys()
     assert ProjectModel_Parse(document).Dictionary_Get() == document
     assert ground["additionalProperties"] is False
-    condition = schema["allOf"][0]
+    condition = next(rule for rule in schema['allOf'] if rule.get('if', {}).get('properties', {}).get('format_version') == {'const': 15})
     assert condition["if"]["properties"]["format_version"]["const"] == 15
     assert set(condition["then"]["properties"]["ground_target"]["required"]) == {"radio_instances", "active_radio_instance"}
-    prohibition = schema["allOf"][1]
+    prohibition = next(rule for rule in schema['allOf'] if rule.get('if', {}).get('properties', {}).get('format_version') == {'const': 14})
     assert prohibition["if"]["properties"]["format_version"]["const"] == 14
     assert prohibition["then"]["properties"]["ground_target"]["not"]["anyOf"] == [
         {"required": ["radio_instances"]}, {"required": ["active_radio_instance"]}]
@@ -43,18 +43,18 @@ def test_schema_and_parser_keep_format14_without_optional_fields(schema, documen
 
 
 @pytest.mark.parametrize("count", [1, 4])
-def test_schema_and_parser_support_bounded_format15_radios(schema, document, count):
+def test_schema_and_parser_support_bounded_current_radios(schema, document, count):
     model = ProjectModel_Parse(document)
     ground = model.ground_target
     model.ground_target = replace(ground, radio_instances=tuple(GroundRadioConfiguration(
         f"radio{index}", ground.radio_plugin, ground.module_variant, ground.tx_power_dbm)
         for index in range(count)))
     data = model.Dictionary_Get()
-    assert data["format_version"] == 15
+    assert data["format_version"] == 24
     reopened = ProjectModel_Parse(data)
     assert reopened.Dictionary_Get() == data
     field = schema["properties"]["ground_target"]["properties"]["radio_instances"]
-    assert (field["minItems"], field["maxItems"]) == (1, 4)
+    assert (field["minItems"], field["maxItems"]) == (0, 4)
     item = schema["$defs"]["groundRadio"]
     assert set(item["required"]) == {"instance_id", "plugin", "module_variant", "tx_power_dbm"}
     assert item["additionalProperties"] is False
@@ -64,13 +64,31 @@ def test_schema_and_parser_support_bounded_format15_radios(schema, document, cou
 @pytest.mark.parametrize("count", [0, 5])
 def test_parser_rejects_radio_counts_outside_schema_bounds(schema, document, count):
     ground = document["ground_target"]
-    document["format_version"] = 15
     ground["radio_instances"] = [dict(instance_id=f"radio{i}", plugin=ground["radio_plugin"],
          module_variant=ground["module_variant"], tx_power_dbm=ground["tx_power_dbm"]) for i in range(count)]
     ground["active_radio_instance"] = "radio0"
     assert not Draft202012Validator(schema).is_valid(document)
     with pytest.raises(ProjectModelError, match="1..4"):
         ProjectModel_Parse(document)
+
+
+@pytest.mark.parametrize('version', [14, 15])
+def test_legacy_radio_formats_migrate_without_changing_hardware(schema, document, version):
+    legacy = deepcopy(document)
+    legacy['format_version'] = version
+    legacy.pop('mission_process', None)
+    legacy.pop('mission_functions', None)
+    legacy['ground_target']['enabled'] = False
+    if version == 15:
+        ground = legacy['ground_target']
+        ground['radio_instances'] = [dict(instance_id='radio0', plugin=ground['radio_plugin'],
+            module_variant=ground['module_variant'], tx_power_dbm=ground['tx_power_dbm'])]
+        ground['active_radio_instance'] = 'radio0'
+    Draft202012Validator(schema).validate(legacy)
+    result = ProjectModel_Parse(legacy).Dictionary_Get()
+    assert result['format_version'] == 24
+    assert result['ground_target']['hardware'] == document['ground_target']['hardware']
+    assert result['ground_target']['radio_plugin'] == document['ground_target']['radio_plugin']
 
 
 @pytest.mark.parametrize("key,bad", [("tx_led_resource", "bad/pin"), ("rx_led_resource", None),

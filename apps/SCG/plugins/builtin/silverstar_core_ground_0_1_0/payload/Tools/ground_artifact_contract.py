@@ -8,6 +8,11 @@ import subprocess
 import json
 
 
+def BuildDirectory_Validate(build_dir: str) -> None:
+    if build_dir not in {"build", "build/analysis", "build/Debug", "build/Debug/analysis"}:
+        raise ValueError("invalid Ground configuration build directory: " + str(build_dir))
+
+
 def InterruptVectors_Validate(root: Path, graph: dict, symbols: str, vector: bytes) -> None:
     if not graph["required_irq_handlers"]:
         print("Legacy Ground IRQ contract: NOT PROVEN (no complete-import IRQ inventory)")
@@ -71,7 +76,8 @@ def AssemblerSource_Prepare(root: Path, graph: dict, source: str, build_dir: str
     GAS includes .file labels in --MD output, although it does not read them.
     Normalize only GCC's first source label; never discard a GAS dependency.
     """
-    if build_dir not in {"build", "build/analysis"} or source not in graph["sources"]:
+    BuildDirectory_Validate(build_dir)
+    if source not in graph["sources"]:
         raise ValueError("assembler input is not a declared C compilation")
     root = root.resolve()
     assembly = _BuildFile_Get(root, Path(build_dir) / Path(source).with_suffix(".s"))
@@ -143,8 +149,7 @@ def _MakePath_Render(root: Path, path: Path) -> str:
 
 def DependencyClosure_Validate(root: Path, graph: dict, compiler: str | None = None,
                                *, build_dir: str = "build", source: str | None = None) -> None:
-    if build_dir not in {"build", "build/analysis"}:
-        raise ValueError("unsupported dependency build directory")
+    BuildDirectory_Validate(build_dir)
     root = root.resolve()
     approved = _ToolchainHeaderRoots_Get(compiler, root) if compiler else ()
     sources = (*graph["sources"], *graph.get("asm_sources", ()))

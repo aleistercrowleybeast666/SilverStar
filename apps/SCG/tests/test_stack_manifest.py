@@ -36,11 +36,16 @@ def test_all_twenty_cases_equal_reviewed_pre_split_values_and_gui_uses_same_pars
     mirror = SCG/'src/silverstar_fccg/project/stack_manifest.py'
     assert mirror.read_bytes() == (TOOLS/'stack_manifest.py').read_bytes()
     proof = json.loads((SCG/'tests/fixtures/stack_manifest_review_20261110.json').read_bytes())
-    loaded = Manifest_Load(TOOLS.parent, TOOLS/'software_stack_inputs.json', proof['split_index_sha256'])
+    additions = json.loads((SCG/'tests/fixtures/stack_manifest_review_20261116.json').read_bytes())
+    assert additions['previous_split_index_sha256'] == proof['split_index_sha256']
+    loaded = Manifest_Load(TOOLS.parent, TOOLS/'software_stack_inputs.json', additions['current_index_sha256'])
     actual = {case['name']: hashlib.sha256(json.dumps(case, sort_keys=True,
               separators=(',', ':')).encode()).hexdigest() for case in loaded['cases']}
-    assert actual == proof['unchanged_case_canonical_sha256']
-    assert len(actual) == proof['case_count'] == 20
+    historical = proof['unchanged_case_canonical_sha256']
+    assert {name: actual[name] for name in historical} == historical
+    assert len(historical) == proof['case_count'] == 20
+    assert not set(historical).intersection(additions['reviewed_added_case_canonical_sha256'])
+    assert actual == historical | additions['reviewed_added_case_canonical_sha256']
     assert {name+'-'+config for name in ('f407', 'installation', 'h743', 'pid', 'lqr')
             for config in ('Release', 'Debug')} <= set(actual)
     assert all((TOOLS.parent/row['path']).stat().st_size < 2*1024*1024

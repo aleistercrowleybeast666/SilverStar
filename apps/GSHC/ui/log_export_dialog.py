@@ -1,4 +1,5 @@
 """Explicit TF copy selection. No serial I/O or remote deletion in this view."""
+from ui.message_box_placement import MessageBox_Show
 from pathlib import Path
 from PySide6.QtCore import Qt,Signal
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QLineEdit,QPushButton,QCheckBox,QTreeWidget,QTreeWidgetItem,QFileDialog,QProgressBar,QMessageBox,QAbstractItemView
@@ -118,7 +119,7 @@ class LogExportDialog(QDialog):
         if self._confirming:return False
         self._confirming=True;self._buttons()
         try:
-            return QMessageBox.question(self,Text(self.i18n,'确认进入日志维护模式','Confirm log maintenance mode'),self.explanation.text(),QMessageBox.Yes|QMessageBox.No,QMessageBox.No)==QMessageBox.Yes
+            return MessageBox_Show(QMessageBox.question, self,Text(self.i18n,'确认进入日志维护模式','Confirm log maintenance mode'),self.explanation.text(),QMessageBox.Yes|QMessageBox.No,QMessageBox.No)==QMessageBox.Yes
         finally:
             self._confirming=False;self._buttons()
 

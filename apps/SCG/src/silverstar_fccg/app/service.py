@@ -1123,6 +1123,7 @@ class FccgService:
         self, model: ProjectModel, *, language: str = "zh_CN"
     ) -> tuple[BoardCompatibilityView, ...]:
         views: list[BoardCompatibilityView] = []
+        installed_mcus = {item.component_id for item in self.catalog.Type_Get('mcu')}
         for board in self.catalog.Type_Get("board"):
             if board.metadata.get("target_role") == "ground_station" or board.component_class == "ground_station_board":
                 continue
@@ -1137,6 +1138,7 @@ class FccgService:
                     compatible=result.compatible,
                     missing_text=missing,
                     detail="; ".join(result.errors),
+                    selectable=board.board is not None and bool(installed_mcus.intersection(board.board.compatible_mcus)),
                 )
             )
         return tuple(sorted(views, key=lambda view: (not view.compatible, view.name)))
