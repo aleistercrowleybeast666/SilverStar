@@ -1,0 +1,7 @@
+{
+  "deleted_files": 9145,
+  "deleted_bytes": 831475551,
+  "preserved_files": 573,
+  "preserved_bytes": 72689122,
+  "result": "PASS: every eligible file absent; every unique/report file and protected archive hash unchanged"
+}

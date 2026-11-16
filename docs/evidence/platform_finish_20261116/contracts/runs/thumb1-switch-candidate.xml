@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="36" time="1.662" timestamp="2026-11-16T23:56:45.331543+08:00" hostname="CHD"><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-GspMinParser_InputByte]" time="0.064" /><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-HAL_RCC_ClockConfig]" time="0.017"><failure message="AssertionError: assert [(134223914, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134223914, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Release', name = 'HAL_RCC_ClockConfig'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134223914, ... comparison')] == []
+E         
+E         Left contains one more item: (134223914, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-SX1280GetPacketStatus]" time="0.024"><failure message="AssertionError: assert [(134243272, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134243272, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Release', name = 'SX1280GetPacketStatus'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134243272, ... comparison')] == []
+E         
+E         Left contains one more item: (134243272, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-SX1280SetModulationParams]" time="0.016"><failure message="AssertionError: assert [(134242850, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134242850, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Release', name = 'SX1280SetModulationParams'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134242850, ... comparison')] == []
+E         
+E         Left contains one more item: (134242850, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-SX1280SetPacketParams]" time="0.011"><failure message="AssertionError: assert [(134242986, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134242986, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Release', name = 'SX1280SetPacketParams'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134242986, ... comparison')] == []
+E         
+E         Left contains one more item: (134242986, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-UART_SetConfig]" time="0.022"><failure message="AssertionError: assert [(134227606, ... comparison')] == []&#10;  &#10;  Left contains 2 more items, first extra item: (134227606, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Release', name = 'UART_SetConfig'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134227606, ... comparison')] == []
+E         
+E         Left contains 2 more items, first extra item: (134227606, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Release-__aeabi_ddiv]" time="0.050"><failure message="AssertionError: assert [(134247066, ...table bytes')] == []&#10;  &#10;  Left contains one more item: (134247066, 'unresolved-switch', 'Missing linked Thumb1 switch table bytes')&#10;  Use -v to get more diff">configuration = 'Release', name = '__aeabi_ddiv'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134247066, ...table bytes')] == []
+E         
+E         Left contains one more item: (134247066, 'unresolved-switch', 'Missing linked Thumb1 switch table bytes')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Debug-GspMinParser_InputByte]" time="0.015"><failure message="AssertionError: assert [(134221314, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134221314, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Debug', name = 'GspMinParser_InputByte'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134221314, ... comparison')] == []
+E         
+E         Left contains one more item: (134221314, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Debug-SX1280GetPacketStatus]" time="0.037"><failure message="AssertionError: assert [(134248864, ...table bytes')] == []&#10;  &#10;  Left contains one more item: (134248864, 'unresolved-switch', 'Missing linked Thumb1 switch table bytes')&#10;  Use -v to get more diff">configuration = 'Debug', name = 'SX1280GetPacketStatus'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134248864, ...table bytes')] == []
+E         
+E         Left contains one more item: (134248864, 'unresolved-switch', 'Missing linked Thumb1 switch table bytes')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Debug-SX1280SetModulationParams]" time="0.012"><failure message="AssertionError: assert [(134248392, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134248392, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Debug', name = 'SX1280SetModulationParams'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134248392, ... comparison')] == []
+E         
+E         Left contains one more item: (134248392, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Debug-SX1280SetPacketParams]" time="0.013"><failure message="AssertionError: assert [(134248544, ... comparison')] == []&#10;  &#10;  Left contains one more item: (134248544, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')&#10;  Use -v to get more diff">configuration = 'Debug', name = 'SX1280SetPacketParams'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134248544, ... comparison')] == []
+E         
+E         Left contains one more item: (134248544, 'unresolved-switch', 'Unreviewed Thumb1 switch comparison')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Debug-__aeabi_ddiv]" time="0.052"><failure message="AssertionError: assert [(134253374, ...table bytes')] == []&#10;  &#10;  Left contains one more item: (134253374, 'unresolved-switch', 'Missing linked Thumb1 switch table bytes')&#10;  Use -v to get more diff">configuration = 'Debug', name = '__aeabi_ddiv'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134253374, ...table bytes')] == []
+E         
+E         Left contains one more item: (134253374, 'unresolved-switch', 'Missing linked Thumb1 switch table bytes')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_thumb1" name="test_actual_thumb1_switches_and_saved_lr_have_bounded_graph[Debug-Lora_BusReadSucceeded]" time="0.012"><failure message="AssertionError: assert [(134235910, 'bx', 'r3')] == []&#10;  &#10;  Left contains one more item: (134235910, 'bx', 'r3')&#10;  Use -v to get more diff">configuration = 'Debug', name = 'Lora_BusReadSucceeded'
+
+    @pytest.mark.parametrize("configuration,name", [
+        ("Release", "GspMinParser_InputByte"),
+        ("Release", "HAL_RCC_ClockConfig"),
+        ("Release", "SX1280GetPacketStatus"),
+        ("Release", "SX1280SetModulationParams"),
+        ("Release", "SX1280SetPacketParams"),
+        ("Release", "UART_SetConfig"),
+        ("Release", "__aeabi_ddiv"),
+        ("Debug", "GspMinParser_InputByte"),
+        ("Debug", "SX1280GetPacketStatus"),
+        ("Debug", "SX1280SetModulationParams"),
+        ("Debug", "SX1280SetPacketParams"),
+        ("Debug", "__aeabi_ddiv"),
+        ("Debug", "Lora_BusReadSucceeded"),
+    ])
+    def test_actual_thumb1_switches_and_saved_lr_have_bounded_graph(configuration, name):
+        entries = Fixture_Load(configuration)
+        proof = arm.Function_Analyze(name, entries[name], entries)
+&gt;       assert proof["indirect"] == []
+E       AssertionError: assert [(134235910, 'bx', 'r3')] == []
+E         
+E         Left contains one more item: (134235910, 'bx', 'r3')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_thumb1.py:43: AssertionError</failure></testcase><testcase classname="tests.test_stack_arm" name="test_notype_startup_loop_labels_do_not_hide_main_call" time="0.004" /><testcase classname="tests.test_stack_arm" name="test_overlapping_libgcc_entry_includes_shared_suffix_stack_frame" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_positive_stack_growth_cycle_has_no_finite_one_push_bound" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_balanced_loop_has_finite_stack_peak" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_local_link_subroutine_is_not_function_entry_recursion" time="0.003" /><testcase classname="tests.test_stack_arm" name="test_recursive_local_link_subroutine_is_rejected_even_with_zero_frame" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_tail_branch_to_returning_function_cannot_prove_noreturn" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_conditional_link_is_distinct_from_bls[blne-8000000 &lt;entry&gt;-bl]" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_conditional_link_is_distinct_from_bls[bls.n-8000000 &lt;entry&gt;-b]" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_conditional_link_is_distinct_from_bls[blxne-r3-blx]" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_conditional_link_is_distinct_from_bls[bxne-lr-bx]" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_unknown_sp_write_never_acquires_zero_bound[add sp, r3]" time="0.003" /><testcase classname="tests.test_stack_arm" name="test_unknown_sp_write_never_acquires_zero_bound[mov sp, r3]" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_unknown_sp_write_never_acquires_zero_bound[bic sp, sp, #7]" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_unknown_sp_write_never_acquires_zero_bound[msr MSP, r0]" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_non_stack_stmdb_and_non_writeback_stack_load_do_not_change_sp" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_return_and_unreachable_literal_pool_padding_are_not_indirect_calls" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_same_named_local_symbols_keep_distinct_address_qualified_frames" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_same_name_and_address_with_conflicting_extents_is_rejected" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_linked_thumb_switch_requires_bound_and_every_target[none]" time="0.002" /><testcase classname="tests.test_stack_arm" name="test_linked_thumb_switch_requires_bound_and_every_target[missing_guard]" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_linked_thumb_switch_requires_bound_and_every_target[out_of_function]" time="0.001" /><testcase classname="tests.test_stack_arm" name="test_linked_thumb_switch_requires_bound_and_every_target[missing_bytes]" time="0.001" /></testsuite></testsuites>

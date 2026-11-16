@@ -1,0 +1,10 @@
+{
+  "elf": ".work/pf1117/contract-e19-b/Flight_Controller/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf",
+  "elf_sha256": "4b70eb604cccc264a4a78b90fe4dc1cbf0f487e60d739819d0d6b30806bb4b0d",
+  "objdump_d_sha256": "e34036e7e002ecab7deca762eb8fb0d1d0448de9404130452998fbfea6378bd4",
+  "objdump_t_sha256": "c8484234f6e50798f303d07faab53920c03a6486d86335f3fbba5835347d033e",
+  "compiler": "Arm GNU Toolchain 14.3.Rel1",
+  "scope": "Actual linked final E19 B Release Cortex-M4 CRT; exact entry rows and PC literal bytes plus full nm and actual init arrays. Not synthetic MCU acceptance.",
+  "fixture_sha256": "ca90e35d7b849fe352b0b432aa5d4f2e5321a137eece416ea071cce6ae1db6cd",
+  "original_runtime_sha256": "eb9d7a9d51c2855dd0b256a3f76908aea75de8656eb743ec8a6be98eed7497dd"
+}

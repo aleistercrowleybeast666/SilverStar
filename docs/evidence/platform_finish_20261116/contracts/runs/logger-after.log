@@ -1,0 +1,15 @@
+normal: result=1 serialized=52 writes=1 flushes=1 fault=0
+PASS
+.device-failure: result=1 serialized=52 writes=1 flushes=1 fault=0
+PASS
+.incomplete: result=0 serialized=0 writes=0 flushes=0 fault=0
+PASS
+.null: result=0 serialized=0 writes=0 flushes=0 fault=0
+PASS
+.io-failure: result=0 serialized=1 writes=1 flushes=0 fault=0
+PASS
+.oversized: actual fail-stop before serialization/I/O PASS
+.completed-domain: actual fail-stop before serialization/I/O PASS
+.passed-domain: actual fail-stop before serialization/I/O PASS
+.
+8 passed in 8.56s

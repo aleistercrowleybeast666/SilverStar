@@ -1,0 +1,223 @@
+{
+  "baseline_head": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+  "scope": "Finite contracts/logger/dependency/shared stack parser/F407 cases; SSFC cases reviewed jointly. Source graph contains board-owned C0 changes; SSFC document belongs to board agent. No staging or commit.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "4dd010deaa45f167953d8a1efe2917f2cb4d26af6c15de5b14d0853ca2701458",
+      "bytes": 4491,
+      "shared_file": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c",
+      "sha256": "45e775385a8b7ef687e2c65a38611b459d3e19a6fa6d45cc2dd992aa0694245a",
+      "bytes": 37146,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py",
+      "sha256": "e9161bcf0956a673ffd9210765f17dbc5db386dd8de096373f79cb4e992e2010",
+      "bytes": 589232,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/logger-20261116-f4-Debug.json",
+      "sha256": "75940ad718568e2c486058154b446fa092d60a30af5d9b22b580cd61c99bfd12",
+      "bytes": 469822,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/logger-20261116-f4-Release.json",
+      "sha256": "e48821c5359001ccf23799a5954e3173dde65b97a5cb58eab21ded5884761811",
+      "bytes": 469164,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-20261116-f4-Debug.json",
+      "sha256": "6a6ea91596bd7fb6504185748958984ca301c7eb9a06b851ff7fd96e44160d6b",
+      "bytes": 469826,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-20261116-f4-Release.json",
+      "sha256": "7753e854f0b7de7a13b1efda6be404b725cb5e79cd41b4a8012efe6f617d5b3e",
+      "bytes": 469168,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-catalog-20261116-f4-Debug.json",
+      "sha256": "9aad259b76e1b0c2e2105a35a54bb28b7a2af1bb898030fe18908d2a97aa1a89",
+      "bytes": 469833,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-catalog-20261116-f4-Release.json",
+      "sha256": "1934dfb8147973ed03a7e8c2847560e286420fcc3c479c739fd59d07029c064d",
+      "bytes": 469175,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-e19-20261116-f4-Debug.json",
+      "sha256": "5d8be21e419c85d52cfd00b5610b55c6fe4af31aecc908089f871486321769f8",
+      "bytes": 479360,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-e19-20261116-f4-Release.json",
+      "sha256": "090d6716ea6586fc3c2b47cc93ecde62b68caad1609dab95d209f1efcf8a96be",
+      "bytes": 478702,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-ssfc1-20261116-Debug.json",
+      "sha256": "ebc36f09aa4054cb7359d083381193c6e3cb72a1fedd3e8ebbc6c7621ac2f57b",
+      "bytes": 478732,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/platform-ssfc1-20261116-Release.json",
+      "sha256": "3f8e35dddf01fb1fa20a63e653ff69f619ad79eafb2f609cb62b225e948c0600",
+      "bytes": 477546,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_catalog_review_20261116.md",
+      "sha256": "c1a64c73069a595da1ed45348ded40f5c084822d817a3ff81ccedf67c751ca16",
+      "bytes": 17492,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_e19_review_20261116.md",
+      "sha256": "ba90f58a0e1cad4960fa46d7e412056fb94cbe262a3326ce53bb6d9ba3448423",
+      "bytes": 21535,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json",
+      "sha256": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f",
+      "bytes": 6598,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_logger_review_20261116.md",
+      "sha256": "01eb605c4d491af9c96055ab08ac6adee40fd7e66d2790bb3cd04fc4f34adda1",
+      "bytes": 14992,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_platform_review_20261116.md",
+      "sha256": "c1b5dbcf1b6723070233ebf16209c3736b40a63f00da50feb55f34f3601ac13d",
+      "bytes": 16342,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_ssfc_review_20261116.md",
+      "sha256": "8305ccfcc80cc90a8ae20b6170290a22a64f5b69796adfd1b2c383bd63c3778b",
+      "bytes": 5253,
+      "shared_file": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_arm.py",
+      "sha256": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+      "bytes": 28964,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/source_graph.py",
+      "sha256": "1665496f7a6212f7eb2bce749c4e9fa5d5ca00d4b9f9554730c310cacb418d87",
+      "bytes": 25617,
+      "shared_file": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/logging.py",
+      "sha256": "c17ad863003160e2a7303fcd3ea2b8a6564b467904c146fcacd5e415e9ed6c73",
+      "bytes": 25108,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/validation.py",
+      "sha256": "10b5739f1ce2962853253b6eeb2341ea47da9f190a597811602fd8bdcdb26cb4",
+      "bytes": 56994,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/logger_startup_contract.c",
+      "sha256": "73cf43149bea8142b1df5f1822b87a442a32e6f18fb362701f17ba8c30c510c9",
+      "bytes": 5023,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/stack_logger_review_20261101/APP/Src/logger_task.c",
+      "sha256": "c20d0b12b355abd3a8a95ec6fe319feffee95d59044ee1125c1b8f59b5a63009",
+      "bytes": 35765,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/stack_logger_review_20261101/PROVENANCE.json",
+      "sha256": "8a2bd90e60c98e383851ee1e56db71c27a60e99fcd3c85731002a7e8f702e857",
+      "bytes": 1273,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/stack_manifest_review_20261116.json",
+      "sha256": "edb668b62a0e40bf9b2d773b27f8a1f7f156f9043e632b7c3cb775448281f513",
+      "bytes": 1618,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/stack_thumb1_20261116/Debug.json",
+      "sha256": "cf1e5666c5943364d588b786e8abf682f31f5495c97e325a941ececf19f786eb",
+      "bytes": 340421,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/stack_thumb1_20261116/Release.json",
+      "sha256": "52ed65d654f4bcab2f43b5ae24ceb4f1c2f81295475b145bf6e2eafd3258fc3a",
+      "bytes": 291214,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/test_augmented_logging_contract.py",
+      "sha256": "84e388a63618181358562859bd81531144ae9ccccac9cb86e63fd98e1e1407e7",
+      "bytes": 2542,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/test_logger_startup_contract.py",
+      "sha256": "352fa57c1768ac60e6760e4c63f885ac7767e94ef1bbcdb6d58022979e77212c",
+      "bytes": 3600,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/test_stack_budget.py",
+      "sha256": "75eb8813788b8e37c03eef7c8705966ca789fdf97ee486a5534b94a29fa606ee",
+      "bytes": 30360,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/test_stack_graph_inputs.py",
+      "sha256": "b3a59f9272540818e77df5ce323613dabe916f32b4068ca6a65514ba9d82da92",
+      "bytes": 3027,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/test_stack_manifest.py",
+      "sha256": "0983f52668a93154688c2b140e518016e1acae5c8cc3d8714512ba168838dc0b",
+      "bytes": 5117,
+      "shared_file": false
+    },
+    {
+      "path": "apps/SCG/tests/test_stack_thumb1.py",
+      "sha256": "71f3b7bf4da77274e9bfacbc4e4c02a749521d432d755532af3697a7ed49ca54",
+      "bytes": 5446,
+      "shared_file": false
+    },
+    {
+      "path": "docs/public/SCG/PREFLIGHT_LOGGING.md",
+      "sha256": "73821bacaf726c164aa08cbbab1df42267a4d9bfaaf12a6314feca8a622d624c",
+      "bytes": 3967,
+      "shared_file": false
+    }
+  ],
+  "source_epoch_note": "Final source graph C0 nested condition style cleanup occurred after the complete 167 group; independent seven journal regression recorded. All generated C/ELF proof epochs stay immutable."
+}

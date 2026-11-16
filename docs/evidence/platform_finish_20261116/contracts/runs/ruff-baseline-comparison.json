@@ -1,0 +1,227 @@
+[
+  {
+    "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py",
+    "baseline": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "F841",
+          "line": 5557,
+          "message": "Local variable `nm` is assigned to but never used"
+        }
+      ]
+    },
+    "current": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "F841",
+          "line": 5582,
+          "message": "Local variable `nm` is assigned to but never used"
+        }
+      ]
+    }
+  },
+  {
+    "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_arm.py",
+    "baseline": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 8,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "SIM103",
+          "line": 39,
+          "message": "Return the condition directly"
+        },
+        {
+          "code": "SIM102",
+          "line": 90,
+          "message": "Use a single `if` statement instead of nested `if` statements"
+        },
+        {
+          "code": "FURB192",
+          "line": 255,
+          "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence"
+        },
+        {
+          "code": "FURB192",
+          "line": 268,
+          "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence"
+        },
+        {
+          "code": "RUF007",
+          "line": 280,
+          "message": "Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs"
+        }
+      ]
+    },
+    "current": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "SIM103",
+          "line": 40,
+          "message": "Return the condition directly"
+        },
+        {
+          "code": "SIM102",
+          "line": 91,
+          "message": "Use a single `if` statement instead of nested `if` statements"
+        },
+        {
+          "code": "FURB192",
+          "line": 455,
+          "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence"
+        },
+        {
+          "code": "FURB192",
+          "line": 468,
+          "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence"
+        },
+        {
+          "code": "RUF007",
+          "line": 480,
+          "message": "Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs"
+        }
+      ]
+    }
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/project/logging.py",
+    "baseline": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 1,
+          "message": "Import block is un-sorted or un-formatted"
+        }
+      ]
+    },
+    "current": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 1,
+          "message": "Import block is un-sorted or un-formatted"
+        }
+      ]
+    }
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/project/validation.py",
+    "baseline": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 1,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "I001",
+          "line": 835,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "I001",
+          "line": 1032,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "F401",
+          "line": 1199,
+          "message": "`silverstar_fccg.project.air_link.GroundTargetIssues_Get` imported but unused"
+        }
+      ]
+    },
+    "current": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 1,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "I001",
+          "line": 839,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "I001",
+          "line": 1036,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "F401",
+          "line": 1203,
+          "message": "`silverstar_fccg.project.air_link.GroundTargetIssues_Get` imported but unused"
+        }
+      ]
+    }
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/generator/source_graph.py",
+    "baseline": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 1,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "PIE810",
+          "line": 76,
+          "message": "Call `startswith` once with a `tuple`"
+        },
+        {
+          "code": "I001",
+          "line": 105,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "UP034",
+          "line": 396,
+          "message": "Avoid extraneous parentheses"
+        }
+      ]
+    },
+    "current": {
+      "exit": 1,
+      "diagnostics": [
+        {
+          "code": "I001",
+          "line": 1,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "PIE810",
+          "line": 76,
+          "message": "Call `startswith` once with a `tuple`"
+        },
+        {
+          "code": "I001",
+          "line": 109,
+          "message": "Import block is un-sorted or un-formatted"
+        },
+        {
+          "code": "SIM102",
+          "line": 112,
+          "message": "Use a single `if` statement instead of nested `if` statements"
+        },
+        {
+          "code": "UP034",
+          "line": 406,
+          "message": "Avoid extraneous parentheses"
+        }
+      ]
+    }
+  }
+]

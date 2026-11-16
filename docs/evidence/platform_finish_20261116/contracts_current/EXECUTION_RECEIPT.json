@@ -1,0 +1,128 @@
+{
+  "recorded_utc": "2026-11-16T17:59:08.232901+00:00",
+  "owner": "/root/silverstar_finish",
+  "source_epoch": "Auditable generation raw snapshots, no source edits in this batch",
+  "python": "3.14.0",
+  "source_head_at_recording": "6fed5b639d0835de7874a74db25a63ab0da814ad",
+  "commands": [
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs/evidence/platform_finish_20261116/contracts_current/generate_current.py",
+        "default"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs/evidence/platform_finish_20261116/contracts_current/generate_current.py",
+        "e19"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs/evidence/platform_finish_20261116/contracts/run_validation.py",
+        ".work/pf1117/current-f/Flight_Controller",
+        "docs/evidence/platform_finish_20261116/contracts_current/current-f-build",
+        "--replica",
+        "b"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs/evidence/platform_finish_20261116/contracts/run_validation.py",
+        ".work/pf1117/current-e19-c/Flight_Controller",
+        "docs/evidence/platform_finish_20261116/contracts_current/current-e19-c-build",
+        "--replica",
+        "b"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs/evidence/platform_finish_20261116/contracts_current/compare_current.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "docs/evidence/platform_finish_20261116/contracts_current",
+        "--output-format",
+        "concise"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "script_sha256": {
+    "docs\\evidence\\platform_finish_20261116\\contracts_current\\compare_current.py": "322e65265d7139bba1ccaf9b415fd2480ebd823550fef2bdff474c1ea3c4831e",
+    "docs\\evidence\\platform_finish_20261116\\contracts_current\\generate_current.py": "6ad1e64892517fb0cf4cca8623b7c3a1ae454764e51ef39bd4e4a330e9c64509",
+    "docs\\evidence\\platform_finish_20261116\\contracts\\run_validation.py": "90b45498a5e959861a7f0dcaa2cd113ceb44a2f4daaefae004eb199cc15584f2"
+  },
+  "report_copies": [
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "evidence": "reports/current-f-Release-stack-budget.json",
+      "bytes": 268780,
+      "sha256": "e0439721a30a87d50744c65b57b32b8e7efdfe5427d89c246081fbe3568e5a83"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "evidence": "reports/current-f-Release-memory-report.json",
+      "bytes": 5228,
+      "sha256": "161c2739c1d41748f135be5ecdcc15917a9fe50d1e29b3ae4aba8dc2ce2b15bc"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\stack-budget.json",
+      "evidence": "reports/current-f-Debug-stack-budget.json",
+      "bytes": 276570,
+      "sha256": "a2e54682f1f26820a22d82a7c73f799e388a0275bca1efee4607bc1bb18dd50e"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\memory-report.json",
+      "evidence": "reports/current-f-Debug-memory-report.json",
+      "bytes": 5224,
+      "sha256": "7279400e6c6a376ee6e5416797103f3d67ae4a1e9dea12c3606a2dfc4b8ef546"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-e19-c\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "evidence": "reports/current-e19-c-Release-stack-budget.json",
+      "bytes": 267910,
+      "sha256": "9fef893d281664ec35c306d10a73783d6d7deef0eaf967b53d83a6fd6c26a51b"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-e19-c\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "evidence": "reports/current-e19-c-Release-memory-report.json",
+      "bytes": 5243,
+      "sha256": "2b3a69827d1b75acbe2906d263af707777a986dd4617be22d15b89cc479bbe75"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-e19-c\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\stack-budget.json",
+      "evidence": "reports/current-e19-c-Debug-stack-budget.json",
+      "bytes": 275745,
+      "sha256": "54b7d7e44477f257997ea583205dfd7d8326513d919b8f3ae213ba9678aa2b8c"
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\current-e19-c\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\memory-report.json",
+      "evidence": "reports/current-e19-c-Debug-memory-report.json",
+      "bytes": 5239,
+      "sha256": "644ff795701ff0b30446ab7b1791dc223e81dd1312597265b39cfcbc7347286a"
+    }
+  ],
+  "new_actual_gates": 12,
+  "hardware_actions": false,
+  "gui_mouse_test_performed": false,
+  "case_admissions": 0,
+  "production_source_changes": 0,
+  "archive_overwrites": 0,
+  "cleanup_performed": false
+}

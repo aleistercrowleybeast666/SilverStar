@@ -1,0 +1,36 @@
+F...............                                                         [100%]
+================================== FAILURES ===================================
+_ test_all_twenty_cases_equal_reviewed_pre_split_values_and_gui_uses_same_parser _
+
+    def test_all_twenty_cases_equal_reviewed_pre_split_values_and_gui_uses_same_parser():
+        mirror = SCG/'src/silverstar_fccg/project/stack_manifest.py'
+        assert mirror.read_bytes() == (TOOLS/'stack_manifest.py').read_bytes()
+        proof = json.loads((SCG/'tests/fixtures/stack_manifest_review_20261110.json').read_bytes())
+>       loaded = Manifest_Load(TOOLS.parent, TOOLS/'software_stack_inputs.json', proof['split_index_sha256'])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_manifest.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload')
+manifest_path = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+manifest_sha256 = '79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96'
+
+    def Manifest_Load(root, manifest_path, manifest_sha256):
+        """Verify the complete index and every case, including unselected cases."""
+        root_path = Path(root).absolute()
+        relative = Path(manifest_path).absolute().relative_to(root_path)
+        root_path = root_path.resolve(strict=True)
+        # Legacy sealed reports remain readable; all new index/case files obey
+        # the repository's 2 MiB bound. No source or artifact hash is omitted.
+        raw = _File_Read(root_path, relative, 32 * 1024 * 1024)
+        if (not isinstance(manifest_sha256, str) or
+                re.fullmatch(r'[0-9a-f]{64}', manifest_sha256) is None or
+                hashlib.sha256(raw).hexdigest() != manifest_sha256):
+>           raise ValueError('Unreviewed software stack manifest')
+E           ValueError: Unreviewed software stack manifest
+
+apps\SCG\src\silverstar_fccg\project\stack_manifest.py:53: ValueError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_manifest.py::test_all_twenty_cases_equal_reviewed_pre_split_values_and_gui_uses_same_parser
+1 failed, 15 passed in 4.73s

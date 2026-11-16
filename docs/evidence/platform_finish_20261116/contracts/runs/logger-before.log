@@ -1,0 +1,828 @@
+EEEEEEEE
+=================================== ERRORS ====================================
+_____ ERROR at setup of test_logger_startup_publication_contract[normal] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+_ ERROR at setup of test_logger_startup_publication_contract[device-failure] __
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+___ ERROR at setup of test_logger_startup_publication_contract[incomplete] ____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+______ ERROR at setup of test_logger_startup_publication_contract[null] _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+___ ERROR at setup of test_logger_startup_publication_contract[io-failure] ____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+____ ERROR at setup of test_logger_startup_publication_contract[oversized] ____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+_ ERROR at setup of test_logger_startup_publication_contract[completed-domain] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+__ ERROR at setup of test_logger_startup_publication_contract[passed-domain] __
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/lo...tware/SilverStar/.work/platform-finish-20261116/contracts/logger-before'), _retention_count=3, _retention_policy='all')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    @pytest.fixture(scope="module")
+    def logger_startup_executable(tmp_path_factory, workspace_root):
+        build = tmp_path_factory.mktemp("logger-startup")
+        selected = os.environ.get("SCG_CRITICAL_PROJECT")
+        if selected:
+            project = Path(selected).resolve(strict=True)
+        else:
+            service = FccgService(workspace_root)
+            project = build / "project"
+            service.Project_Save(service.ReferenceProject_Create("StartupContract"), project,
+                                 confirm_dangerous=True)
+        source = Path(os.environ.get("SCG_CRITICAL_LOGGER_SOURCE", str(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c")))
+        # A single unchanged full translation unit is selected for pre/post evidence.
+        (build / "logger_task.c").write_bytes(source.read_bytes())
+        includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"',
+                             (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf8"))
+        profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
+        includes.insert(0, "Targets/" + profile + "/Inc")
+        includes.append("Common/Src")
+        compiler = shutil.which("gcc")
+        assert compiler, "Actual Host GCC required"
+        binary = build / "startup.exe"
+        fixture = Path(__file__).parent / "fixtures/logger_startup_contract.c"
+        sources = [project / "Protocol/SSLOG/Src/sslog_protocol.c",
+                   project / "Protocol/SSLOG/Src/sslog_records.c",
+                   project / "Generated/Src/project_log_decoder_profile.c"]
+        command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-fanalyzer",
+                   "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+                   "-I" + str(build), "-include", str(project / "Generated/Inc/project_flight_config.h")]
+        command += ["-I" + str(project / name.replace("\\", "/")) for name in includes]
+        command += [str(fixture), *map(str, sources), "-lm", "-o", str(binary)]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        receipt = {"command": command, "exit": compiled.returncode,
+                   "stdout": compiled.stdout, "stderr": compiled.stderr,
+                   "inputs": {str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in [source, fixture, *sources, project / "Common/Src/silverstar_assert.c"]},
+                   "scope": "Whole owning logger C, real SSLOG codec/assertion, explicit Host report/I/O ports; no MCU recovery"}
+        (build / "compile-receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf8")
+>       assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x5): undefined reference to `LoggerBus_StartFault'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_Close+0x39): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x31): undefined reference to `SystemMagCalibrationStorage_LoadCompleteGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x3a): undefined reference to `SystemMagCalibration_ReadyForMissionGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x52): undefined reference to `SystemCalibration_GenerationGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0x69): undefined reference to `SystemMissionSnapshot_Create'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$LoggerTask_SnapshotMaintain+0xd7): undefined reference to `SystemMagCalibration_GenerationHashGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xb2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0xfc): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x10f): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x15b): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x187): undefined reference to `SystemLifecycle_GetState'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1b7): undefined reference to `LoggerBus_FinalizationStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1ca): undefined reference to `SystemLogFile_StatusPublish'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1cf): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1dc): undefined reference to `SystemLogFile_Process'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1e1): undefined reference to `SystemMagCalibrationStorage_Service'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1eb): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x1f2): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x201): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x244): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x276): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x292): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x2b4): undefined reference to `LoggerBus_StartBarrierGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x301): undefined reference to `LoggerBus_StartDurable'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x344): undefined reference to `LoggerBus_NextPop'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x366): undefined reference to `LoggerBus_FinalizationProcess'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x393): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x3d0): undefined reference to `SystemLogSink_Init'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x411): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x424): undefined reference to `SystemLogFile_IsActive'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x485): undefined reference to `LoggerBus_MaintenanceDrainBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4a3): undefined reference to `SystemLifecycle_MaintenanceComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x4f1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x51b): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x548): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5ad): undefined reference to `LoggerBus_StreamingReady'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x5e1): undefined reference to `LoggerBus_StartupStateGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x63b): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x647): undefined reference to `SystemLifecycle_MaintenanceGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x69b): undefined reference to `SystemLogSink_SessionEnd'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6b8): undefined reference to `SystemMissionSnapshot_FinalStatusWrite'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x6d7): undefined reference to `LoggerBus_FinalizationComplete'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x706): undefined reference to `LoggerBus_SystemConfigPush'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x72e): undefined reference to `vTaskDelay'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x73d): undefined reference to `SystemStorage_HealthGet'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x766): undefined reference to `LoggerBus_DisableForBootNoStorage'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x786): undefined reference to `DebugLog_Write'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7a3): undefined reference to `SystemProfile_Get'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x7bf): undefined reference to `SystemLogSink_SessionBegin'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccPc9iGX.o:logger_startup_contract.c:(.text$AppTask_Logger+0x8a6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-fanalyzer'...6): undefined reference to `LoggerBus_DecoderProfileDescriptorPush'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:56: AssertionError
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[normal]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[device-failure]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[incomplete]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[null]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[io-failure]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[oversized]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[completed-domain]
+ERROR apps\SCG\tests\test_logger_startup_contract.py::test_logger_startup_publication_contract[passed-domain]
+8 errors in 6.83s

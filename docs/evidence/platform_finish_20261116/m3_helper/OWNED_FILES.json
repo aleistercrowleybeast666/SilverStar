@@ -1,0 +1,69 @@
+{
+  "scope": "Supplemental shared weak CRT extraction after original contracts freeze; no target C/index change",
+  "files": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_runtime.py",
+      "sha256": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9"
+    },
+    {
+      "path": "apps/SCG/tests/test_stack_crt_weak.py",
+      "sha256": "6b87904abc5a75ff3528c3d17138f883c7faf72e5dabe0510cb59b1843c1fabb"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/stack_crt_m4_20261117.json",
+      "sha256": "ca90e35d7b849fe352b0b432aa5d4f2e5321a137eece416ea071cce6ae1db6cd"
+    }
+  ],
+  "copied_evidence": [
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/contract-regression.exit",
+      "archive": "contract-regression.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/contract-regression.log",
+      "archive": "contract-regression.log",
+      "sha256": "77ca06b2a344df699f8246c0fc8cb88c4008c903feb28527496f72c7986653f6"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/contract-regression.xml",
+      "archive": "contract-regression.xml",
+      "sha256": "066038b4ce8e1660fbf85382dfa50ef2edcff15e3100a4e86d1e444873fec9cb"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/fixture-source.json",
+      "archive": "fixture-source.json",
+      "sha256": "2764b3c154bd7211fd1b924b18eb51f3c8ec7e6c603909b91413f58bdeb20a8c"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/m4-before.exit",
+      "archive": "m4-before.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/m4-before.log",
+      "archive": "m4-before.log",
+      "sha256": "ae013ca0ea18a10454ec32bd9e8be3004d26faae5e358adf566554b4efcbe2fd"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/m4-before.xml",
+      "archive": "m4-before.xml",
+      "sha256": "d468c5475f3706ea715f3b81507776fb71da8fd8aa0a6257764ff66949603255"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/runtime-after.exit",
+      "archive": "runtime-after.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/runtime-after.log",
+      "archive": "runtime-after.log",
+      "sha256": "c50af7e3700fdbf2efab68c9993fc59d98fffbeb4e832bfe41b48a4993d7e741"
+    },
+    {
+      "source": ".work/platform-finish-20261116/contracts/m3-helper/runtime-after.xml",
+      "archive": "runtime-after.xml",
+      "sha256": "5f997076a18c033adbeaead18f09b503cbc2587a9971a6233a892fc7ec573650"
+    }
+  ]
+}

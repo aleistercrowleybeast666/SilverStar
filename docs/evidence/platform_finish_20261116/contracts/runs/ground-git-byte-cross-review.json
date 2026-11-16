@@ -1,0 +1,7 @@
+{
+  "reviewed_source": ".work/platform-finish-20261116/boards/git-bytes-after.json",
+  "receipt_sha256": "66a332ea66ff18c00b801eb8274b54606dac055e6c19679d76ee0665318817c4",
+  "scope": "Independent read-only cross-check of all 136 current raw files against recorded actual Git blobs and current smudge filters; no index or production edit",
+  "checked": 136,
+  "failures": []
+}

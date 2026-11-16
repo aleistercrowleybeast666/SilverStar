@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "& './Tests/Host/run_tests.ps1' -HostCompiler 'D:/msys64/ucrt64/bin/gcc.exe' -Only @('logger','logger_snapshot_actual','logger_alignment_actual','logger_streaming_actual','lifecycle_logging','source_selector','system_startup')"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\post-generated-a\\f4\\Flight_Controller",
+  "start_unix": 1794843174.5779603,
+  "seconds": 202.46246910095215,
+  "exit": 0,
+  "log_sha256": "5fb65f6db8ebf763f87980ff5adf21d62a2f54f04576a22da285cd8c91522655",
+  "scope": "selected generated Host groups, plus emitted mandatory storage tail; not full Host suite"
+}

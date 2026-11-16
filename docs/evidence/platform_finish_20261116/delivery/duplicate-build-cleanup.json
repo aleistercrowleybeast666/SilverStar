@@ -1,0 +1,64 @@
+{
+  "scope": "Only current-task byte-identical archived compilation duplicates",
+  "authorization": "User requested verified workspace cleanup",
+  "preserved": "All source, inputs, formal logs, reports, unique epochs, protected archives, old work and other owners",
+  "directories": [
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\post-generated-a\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/default-a.json",
+      "inventory_sha256": "bd732d2dde5bc2e13be96b60d10331c33affb18e01852a45d152d499021d0eb2",
+      "deleted_files": 1515,
+      "deleted_bytes": 109708190,
+      "skipped": []
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\post-generated-b\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/default-b.json",
+      "inventory_sha256": "12ce2a5fc296742a76974d7fd7c8351b818f3dde3c660abc3c3f29023b1db5d9",
+      "deleted_files": 1010,
+      "deleted_bytes": 102259710,
+      "skipped": []
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-c\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/default-c.json",
+      "inventory_sha256": "364e223e5c36553bf074fa4421645063ec2217bfa308c3f8434e2a1b0794eaad",
+      "deleted_files": 1524,
+      "deleted_bytes": 116786349,
+      "skipped": []
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-d\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/default-d.json",
+      "inventory_sha256": "dcd16d4882c050a2c51d4790de5ce6b67048ee662e7a5e1ba57b0815b42699a5",
+      "deleted_files": 1536,
+      "deleted_bytes": 133414798,
+      "skipped": []
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/default-e.json",
+      "inventory_sha256": "8b21cf133abd0b20d14c7a16c7e48e1f0ff72a15391007852b9fc294a93fd859",
+      "deleted_files": 1536,
+      "deleted_bytes": 133414798,
+      "skipped": []
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/e19-a.json",
+      "inventory_sha256": "2ebf377801c488ce3fac658d320400a795eccfb59764ed39086d2834b0f185ee",
+      "deleted_files": 1012,
+      "deleted_bytes": 117945853,
+      "skipped": []
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-b\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "eligibility_inventory": "cleanup-eligibility/e19-b.json",
+      "inventory_sha256": "a3e411d417b479cd8fab18eb7491fdb0d6be5d66a5020b331e3be06e12087d9f",
+      "deleted_files": 1012,
+      "deleted_bytes": 117945853,
+      "skipped": []
+    }
+  ],
+  "utc": "2026-11-16T17:59:01.0171725Z"
+}

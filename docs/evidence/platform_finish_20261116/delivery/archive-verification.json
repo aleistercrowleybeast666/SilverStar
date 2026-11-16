@@ -1,0 +1,20 @@
+[
+  {
+    "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-evidence\\f407-default-e-20261117\\Flight_Controller.zip",
+    "sha256": "1f133705a4a3877b9093911a8190dd25248246e9c2f57518842a1c0ee0316acf",
+    "bytes": 49478485,
+    "files": 2283,
+    "root_independent_readback": "PASS",
+    "hardware_tested": false,
+    "preserve": "Formal immutable evidence, never temporary cleanup"
+  },
+  {
+    "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-evidence\\f407-e19-b-20261117\\Flight_Controller.zip",
+    "sha256": "f936e157bf51a137320099e8b407ed945bfbbb621dfeecc24bcf2ff08df46d7b",
+    "bytes": 45145077,
+    "files": 1843,
+    "root_independent_readback": "PASS",
+    "hardware_tested": false,
+    "preserve": "Formal immutable evidence, never temporary cleanup"
+  }
+]

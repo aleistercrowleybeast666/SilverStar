@@ -1,0 +1,14 @@
+[
+  {
+    "source": ".work/platform-finish-20261116/root/reader-prefail.log",
+    "archive": "docs/evidence/platform_finish_20261116/radio/reader-prefail.log",
+    "bytes": 7194,
+    "sha256": "393ac14f222dfce94c91ee844c74a8e1aa6dc0c22483db4ebb32d7095553dc66"
+  },
+  {
+    "source": ".work/platform-finish-20261116/root/e19-post.log",
+    "archive": "docs/evidence/platform_finish_20261116/radio/e19-post.log",
+    "bytes": 346,
+    "sha256": "32bf84c1355ba1efa4b63027f3d3ce0bce379a50f9dd1c4f8f7cc1c866c76766"
+  }
+]

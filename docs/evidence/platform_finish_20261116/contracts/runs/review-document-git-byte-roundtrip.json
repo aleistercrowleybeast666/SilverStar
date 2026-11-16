@@ -1,0 +1,26 @@
+{
+  "scope": "Actual Git clean/blob/smudge filter round-trip under repository path attributes; no index/stage/commit/worktree checkout.",
+  "files": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_logger_review_20261116.md",
+      "bytes": 14992,
+      "sha256": "01eb605c4d491af9c96055ab08ac6adee40fd7e66d2790bb3cd04fc4f34adda1",
+      "git_blob": "0680e838cb5160642eb2d41313a32545df430722",
+      "git_clean_smudge_raw_equal": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_platform_review_20261116.md",
+      "bytes": 16342,
+      "sha256": "c1b5dbcf1b6723070233ebf16209c3736b40a63f00da50feb55f34f3601ac13d",
+      "git_blob": "c2443ee3f222c291dccdaa946ba54e18223d5901",
+      "git_clean_smudge_raw_equal": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_ssfc_review_20261116.md",
+      "bytes": 4938,
+      "sha256": "58588bdad3963d8e19f1e5dcb4eee7647dfc545f3282214ae3814b60e479f037",
+      "git_blob": "930d44aa6562a25a1ccf9d440285075d7dcd306d",
+      "git_clean_smudge_raw_equal": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "original_sha256": "eb9d7a9d51c2855dd0b256a3f76908aea75de8656eb743ec8a6be98eed7497dd",
+  "current_sha256": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9",
+  "weak_original_statements_ast_equal": true,
+  "m4_initializer_tail_ast_equal": true,
+  "all_other_functions_ast_equal": true,
+  "helper_call_is_only_wrapper_change": true,
+  "note": "AST comparison checks this exact source extraction; runtime and mutation tests independently execute the actual recorded M4/M0 machine inputs."
+}

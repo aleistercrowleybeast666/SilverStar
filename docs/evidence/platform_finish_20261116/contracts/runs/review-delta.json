@@ -1,0 +1,62 @@
+{
+  "Release": {
+    "changes": {
+      "source_inputs": [
+        "APP/Src/logger_task.c"
+      ],
+      "build_declarations": [],
+      "compiled_artifacts": [
+        "APP/Src/logger_task.o",
+        "APP/Src/logger_task.su",
+        "SilverStar_0_1_3.elf",
+        "SilverStar_0_1_3.map"
+      ],
+      "toolchain_files": []
+    },
+    "task_margin_bytes": {
+      "Device": 392,
+      "INS": 628,
+      "Estimator": 1348,
+      "Flight": 392,
+      "Logger": 1208,
+      "Serial": 1092,
+      "Telemetry": 1828,
+      "Idle": 256
+    },
+    "msp_margin_bytes": 372,
+    "sources": 169,
+    "source_and_header_inputs": 506,
+    "compiled_artifacts": 510,
+    "toolchain_inputs": 1878
+  },
+  "Debug": {
+    "changes": {
+      "source_inputs": [
+        "APP/Src/logger_task.c"
+      ],
+      "build_declarations": [],
+      "compiled_artifacts": [
+        "APP/Src/logger_task.o",
+        "APP/Src/logger_task.su",
+        "SilverStar_0_1_3.elf",
+        "SilverStar_0_1_3.map"
+      ],
+      "toolchain_files": []
+    },
+    "task_margin_bytes": {
+      "Device": 760,
+      "INS": 812,
+      "Estimator": 1156,
+      "Flight": 1720,
+      "Logger": 1712,
+      "Serial": 3028,
+      "Telemetry": 2092,
+      "Idle": 256
+    },
+    "msp_margin_bytes": 372,
+    "sources": 169,
+    "source_and_header_inputs": 506,
+    "compiled_artifacts": 510,
+    "toolchain_inputs": 1878
+  }
+}

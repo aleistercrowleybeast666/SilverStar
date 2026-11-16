@@ -1,0 +1,146 @@
+[
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\code-commit.txt",
+    "stored": "first-license-witness-failure\\code-commit.txt.gz",
+    "original_bytes": 42,
+    "original_sha256": "f5fd74a5ad67c131a2781c840f163a00861d8185d756f61e0e0ded8ba3fa0463",
+    "stored_sha256": "b68ad7329c686e34f7cba0f138ff532c10fd4867d8db6db56817e3dd04d97d8e"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\first-party-pyz-removal.json",
+    "stored": "first-license-witness-failure\\first-party-pyz-removal.json.gz",
+    "original_bytes": 18006,
+    "original_sha256": "352ab8b336857999568321ad4663930828807bd3498b14a75eb8a8ff47a03627",
+    "stored_sha256": "2622677b8ff0501be427cb242571e98faa0afc5a13d34880c711f4639a455f82"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\first-party-resources.json",
+    "stored": "first-license-witness-failure\\first-party-resources.json.gz",
+    "original_bytes": 241798,
+    "original_sha256": "affe764c98b4d5f07484a7be8c0aa2e34c628e6daa174239940b99c33bc38c51",
+    "stored_sha256": "83ba79ff5514749945ca643992efd0058abac8bc0222b4fe0be80b28e5e233bf"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\pyinstaller.exit",
+    "stored": "first-license-witness-failure\\pyinstaller.exit.gz",
+    "original_bytes": 3,
+    "original_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "stored_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\pyinstaller.log",
+    "stored": "first-license-witness-failure\\pyinstaller.log.gz",
+    "original_bytes": 363116,
+    "original_sha256": "bf73f9418f3f4720d578a91a8f0bd09b11e50db6b8d54796e7793b8c96b3cf2d",
+    "stored_sha256": "ccefa0bccf91838b39a3271af0dd181c3e06e76d3f1d2ca504806cb4f9b8e8ed"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\resolved-runtime-inputs.json",
+    "stored": "first-license-witness-failure\\resolved-runtime-inputs.json.gz",
+    "original_bytes": 1505700,
+    "original_sha256": "0af1048c532859f4f00d57352923c2ca8faab4da2ac24bf8ab206afcfe81c554",
+    "stored_sha256": "702eae028fbea51c665be206b3dcb9e5edcc0f421b76cc9dfaa7e3940973806e"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\stage.exit",
+    "stored": "first-license-witness-failure\\stage.exit.gz",
+    "original_bytes": 3,
+    "original_sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "stored_sha256": "887ca0e03cc141d53e636c68bab887bc584f1549132343b716c5d00c8cef52c2"
+  },
+  {
+    "label": "first-license-witness-failure",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\evidence\\stage.log",
+    "stored": "first-license-witness-failure\\stage.log.gz",
+    "original_bytes": 531,
+    "original_sha256": "65a45ed68461a269e419ef5fc20e88b46754ef7bd99ba28769a3db07d3cd0e7b",
+    "stored_sha256": "223b4657274e51115956994d42c8151a74781208ce2fe79a1c3a55ff44204383"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\candidate.json",
+    "stored": "final\\candidate.json.gz",
+    "original_bytes": 759,
+    "original_sha256": "d7ab989c1c4b174df0e350ff397096293cab5138551491d407152e2dff5634cb",
+    "stored_sha256": "3b5293b3663cd450e9fd874fe20eeee5d6dd71acd34a88605f881a094f6beccd"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\code-commit.txt",
+    "stored": "final\\code-commit.txt.gz",
+    "original_bytes": 42,
+    "original_sha256": "f5fd74a5ad67c131a2781c840f163a00861d8185d756f61e0e0ded8ba3fa0463",
+    "stored_sha256": "b68ad7329c686e34f7cba0f138ff532c10fd4867d8db6db56817e3dd04d97d8e"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\first-party-pyz-removal.json",
+    "stored": "final\\first-party-pyz-removal.json.gz",
+    "original_bytes": 18006,
+    "original_sha256": "352ab8b336857999568321ad4663930828807bd3498b14a75eb8a8ff47a03627",
+    "stored_sha256": "2622677b8ff0501be427cb242571e98faa0afc5a13d34880c711f4639a455f82"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\first-party-resources.json",
+    "stored": "final\\first-party-resources.json.gz",
+    "original_bytes": 241798,
+    "original_sha256": "affe764c98b4d5f07484a7be8c0aa2e34c628e6daa174239940b99c33bc38c51",
+    "stored_sha256": "83ba79ff5514749945ca643992efd0058abac8bc0222b4fe0be80b28e5e233bf"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\pyinstaller.exit",
+    "stored": "final\\pyinstaller.exit.gz",
+    "original_bytes": 3,
+    "original_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "stored_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\pyinstaller.log",
+    "stored": "final\\pyinstaller.log.gz",
+    "original_bytes": 361777,
+    "original_sha256": "0b9704f80b2e517ce07aaf0bedddea5ebd5db3018b57244de3fa9e29300f14b8",
+    "stored_sha256": "2593bdbda470977531290282c1fc4517758152d2f75d12d2a5fa751d9359b3e8"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\resolved-runtime-inputs.json",
+    "stored": "final\\resolved-runtime-inputs.json.gz",
+    "original_bytes": 1505702,
+    "original_sha256": "e67981177514ffc1bc0cef35a9d98bf0262b6b4ee074a2b04bf74937cf88446d",
+    "stored_sha256": "d76e4930afc49298a34fe9de859be2bdb2adac8d0cfecea0eefee27e2876e1fa"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\stage.exit",
+    "stored": "final\\stage.exit.gz",
+    "original_bytes": 3,
+    "original_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "stored_sha256": "f0fecc48e63e2073c970070087f3b44e0e9e2940f4efdf918edb74710f5e4a72"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\stage.log",
+    "stored": "final\\stage.log.gz",
+    "original_bytes": 0,
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "label": "final",
+    "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\wheel-attribution.json",
+    "stored": "final\\wheel-attribution.json.gz",
+    "original_bytes": 1146,
+    "original_sha256": "1aa96108cc00dfc39f653521952e019a55190aaddc91f8b4bff4986806f4e85e",
+    "stored_sha256": "4fa372b80d9048e189c2f299b6d5c6555b205fdfb14e3cab5cccbacb45e12d4e"
+  }
+]

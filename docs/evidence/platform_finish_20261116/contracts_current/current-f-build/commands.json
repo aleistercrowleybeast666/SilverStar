@@ -1,0 +1,122 @@
+[
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794851574.3219583,
+    "seconds": 57.971,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "all",
+    "log": "Release-all.log",
+    "log_sha256": "2bb38b63ae40c1eaa229bcf7b3717c651f168ba24aef4f04ef7938d7fc71b074"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794851632.311321,
+    "seconds": 5.325,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "artifact-check",
+    "log": "Release-artifact-check.log",
+    "log_sha256": "eb9df5eb832761d055d1321b34637d29f0fab7f7a3862328035db36486dd1942"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794851637.6476638,
+    "seconds": 22.031,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "stack-report",
+    "log": "Release-stack-report.log",
+    "log_sha256": "b110124f751b02b27e03d1aadb28f8789a660306cd7be6cf8f290651a00cca0d"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794851659.69172,
+    "seconds": 78.433,
+    "exit": 0,
+    "configuration": "Debug",
+    "gate": "all",
+    "log": "Debug-all.log",
+    "log_sha256": "603a1d52a16afe2403607523b605a170d5fadab80d5c63510e4f107ffc3186c3"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794851738.140451,
+    "seconds": 6.349,
+    "exit": 0,
+    "configuration": "Debug",
+    "gate": "artifact-check",
+    "log": "Debug-artifact-check.log",
+    "log_sha256": "253d8d8ddf3a74d1e416fb637501aaba34c1626b750abbad3b9296b3b1c47a90"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\current-f\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794851744.4985633,
+    "seconds": 37.208,
+    "exit": 0,
+    "configuration": "Debug",
+    "gate": "stack-report",
+    "log": "Debug-stack-report.log",
+    "log_sha256": "5ae5a785c490be7b6d70f609e4b20cc6be9b9cc847bedae434affc651a649755"
+  }
+]

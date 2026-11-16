@@ -1,0 +1,64 @@
+"""Run the ten unchanged mission-runtime fault cases using a frozen project.
+
+This deliberately avoids a second catalog/generation epoch: includes, defines
+and runtime C come from the independently generated F407 B output. It is a
+separate ten-scenario execution, not an executed full pytest file/suite.
+"""
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+import re
+from pathlib import Path
+from types import SimpleNamespace
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("project", type=Path)
+    parser.add_argument("output", type=Path)
+    args = parser.parse_args()
+    root = Path(__file__).resolve().parents[4]
+    project = args.project.resolve(strict=True)
+    output = args.output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    os.environ["PATH"] = "D:/msys64/ucrt64/bin" + os.pathsep + os.environ["PATH"]
+    module_path = root / "apps/SCG/tests/test_mission_process_native.py"
+    spec = importlib.util.spec_from_file_location("original_mission_runtime_tests", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    make = project / "Generated/project_sources.mk"
+    declarations = make.read_text(encoding="utf8")
+
+    def values(name):
+        match = re.search(r"(?ms)^" + name + r" \+= \\\n(.*?)(?:\n\n|\Z)", declarations)
+        if match is None:
+            raise ValueError("Missing actual generated declaration " + name)
+        return [row.strip().removesuffix("\\").strip() for row in match[1].splitlines()]
+
+    class Factory:
+        @staticmethod
+        def mktemp(name):
+            directory = output / name
+            directory.mkdir(exist_ok=False)
+            return directory
+
+    graph = SimpleNamespace(include_dirs=values("C_INCLUDES"), defines=values("C_DEFS"))
+    executable = module.mission_runtime_contract_executable.__wrapped__((project, graph), Factory())
+    scenarios = ["normal", "no-events", "events-invalid", "action-error", "log-events-invalid",
+                 "log-bad-param", "log-full", "log-busy", "log-not-ready", "step-invalid"]
+    passed = []
+    for scenario in scenarios:
+        module.test_native_runtime_error_contract(executable, scenario)
+        passed.append(scenario)
+        print("PASS " + scenario, flush=True)
+    receipt = {"scope": __doc__, "passed": passed, "project": str(project),
+               "source_hashes": {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+                                 for path in (module_path, make, project / "System/Src/system_mission_process_runtime.c")}}
+    (output / "receipt.json").write_bytes((json.dumps(receipt, indent=2) + "\n").encode())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

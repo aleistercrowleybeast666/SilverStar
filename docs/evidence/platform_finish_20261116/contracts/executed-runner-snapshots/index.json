@@ -1,0 +1,20 @@
+[
+  {
+    "source": "docs\\evidence\\platform_finish_20261116\\contracts\\run_validation.py",
+    "archive": "run_validation.py.txt",
+    "sha256": "81097bc47dd6898f90d7959f657d7cdc2338b20333ff117884b7ed0814228d3b",
+    "scope": "Executed original A/B and started final C; formatting/check=False cleanup follows without command/expectation change."
+  },
+  {
+    "source": "docs\\evidence\\platform_finish_20261116\\contracts\\run_mission_runtime.py",
+    "archive": "run_mission_runtime.py.txt",
+    "sha256": "019771e0a5cee3717ff43058cadaef63e0a15e97f3b7224d1eb6b649eacc2cc9",
+    "scope": "Executed ten scenarios from B using unchanged original test bodies."
+  },
+  {
+    "source": "docs/evidence/platform_finish_20261116/contracts/generate_e19.py",
+    "archive": "generate_e19_a.py.txt",
+    "sha256": "8c9189a93b860e4a0703422843a0a039f6c077ae675246a8568dbe1d041841a7",
+    "scope": "Original successful E19 A generator before import sorting only; current formal replay .py passes Ruff."
+  }
+]

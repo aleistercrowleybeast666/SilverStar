@@ -1,0 +1,169 @@
+{
+  "source_head": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+  "source_scope": "Final changed source bytes and patch inside archive; Windows runtime byte hashes are not Git LF blob hashes.",
+  "archive": {
+    "file": "gui-evidence.zip",
+    "bytes": 5252064,
+    "sha256": "897aa9222cd993132e7be0fa5744f44cfbdf5ffe3370534df5b406567aa6d1f6",
+    "entry_count": 237,
+    "uncompressed_bytes": 16376868,
+    "all_entries_read_back_verified": true,
+    "absolute_path": "D:\\python_software\\SilverStar\\dist\\pf1117-evidence\\gui-evidence.zip",
+    "repository_relative_path": "dist/pf1117-evidence/gui-evidence.zip",
+    "tracked": false,
+    "retention": "Formal immutable evidence; excluded from generated/cache cleanup.",
+    "all_members_reverified_after_copy": true
+  },
+  "tests": {
+    "flp-modal-final": {
+      "exit_code": 0,
+      "junit": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "71",
+          "time": "101.843",
+          "timestamp": "2026-11-17T00:23:17.611303+08:00",
+          "hostname": "CHD"
+        }
+      ],
+      "source_changed": [],
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "pytest",
+        "-ra",
+        "tests\\test_message_box_placement.py",
+        "tests\\test_horizontal_trajectory_startup.py",
+        "tests\\test_main_window_disposal.py",
+        "tests\\test_horizontal_trajectory.py",
+        "tests\\test_measurement_plot_layout.py",
+        "tests\\test_project_save_lifecycle.py",
+        "tests\\test_startup_error_visibility.py",
+        "tests\\test_mission_trajectory.py",
+        "tests\\test_mission_snapshot_gui.py",
+        "tests\\test_mission_snapshot_view.py",
+        "--durations=8",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\t5",
+        "-o",
+        "cache_dir=D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\flp-modal-final-cache",
+        "-o",
+        "faulthandler_timeout=90",
+        "--junitxml=D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\flp-modal-final.xml"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\apps\\FLP",
+      "log_sha256": "a2eb2bfd643db87661c712196e15be2c4fc2bd11268ad4b231decb2ddb6a7d2b",
+      "xml_sha256": "18ef7a66d7a9b91f362b55e9bbaa333367814600f0c8ae4f7d01ae1efdd47316"
+    },
+    "gshc-verified-final": {
+      "exit_code": 0,
+      "junit": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "166",
+          "time": "544.509",
+          "timestamp": "2026-11-17T00:44:15.906048+08:00",
+          "hostname": "CHD"
+        }
+      ],
+      "source_changed": [],
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-u",
+        "-m",
+        "pytest",
+        "-ra",
+        "tests\\test_message_box_placement.py",
+        "tests\\test_defaults_toolbar.py",
+        "tests\\test_mission_profile.py",
+        "tests\\test_ui_workflow.py",
+        "tests\\test_time_exports.py",
+        "tests\\test_i18n.py",
+        "tests\\test_port_gui.py",
+        "tests\\test_file_transfer_ui.py",
+        "tests\\test_device_export_dialog.py",
+        "tests\\test_gui_maintenance_workflow.py",
+        "tests\\test_acceptance15_transactions.py",
+        "--durations=8",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\t8",
+        "-o",
+        "cache_dir=D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\gshc-verified-final-cache",
+        "-o",
+        "faulthandler_timeout=90",
+        "--junitxml=D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\gshc-verified-final.xml"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\apps\\GSHC",
+      "log_sha256": "7ca0bec8bbf13cce3f8a026d19cef13b7abae2b299715aec252d65fe9d1dc2a6",
+      "xml_sha256": "329d54f3eca0c74cdda6f1ad239a1ca6ae40354eebc165d207e678a2ace5e535"
+    }
+  },
+  "native": {
+    "dynamic-native-a": {
+      "exit_code": 0,
+      "errors": [],
+      "scope": "Recorded native sampling / Qt control state, not reliable physical-screen or fresh WGC acceptance",
+      "receipt": "raw/dynamic-native-a/receipt.json"
+    },
+    "dynamic-small-d": {
+      "exit_code": 0,
+      "errors": [],
+      "scope": "Recorded native sampling / Qt control state, not reliable physical-screen or fresh WGC acceptance",
+      "receipt": "raw/dynamic-small-d/receipt.json"
+    },
+    "dynamic-nativechild-e": {
+      "exit_code": 0,
+      "errors": [],
+      "scope": "Recorded native sampling / Qt control state, not reliable physical-screen or fresh WGC acceptance",
+      "receipt": "raw/dynamic-nativechild-e/receipt.json"
+    },
+    "flp-native-auto-a": {
+      "exit_code": 0,
+      "errors": [],
+      "scope": "Recorded native sampling / Qt control state, not reliable physical-screen or fresh WGC acceptance",
+      "receipt": "raw/flp-native-auto-a/receipt.json"
+    },
+    "flp-native-final": {
+      "exit_code": 0,
+      "errors": [],
+      "scope": "Recorded native sampling / Qt control state, not reliable physical-screen or fresh WGC acceptance",
+      "receipt": "raw/flp-native-final/receipt.json"
+    },
+    "gshc-native-final": {
+      "exit_code": 0,
+      "errors": [],
+      "scope": "Recorded native sampling / Qt control state, not reliable physical-screen or fresh WGC acceptance",
+      "receipt": "raw/gshc-native-final/receipt.json"
+    }
+  },
+  "remaining": [
+    "Fresh matching WGC/physical display verification is blocked by Computer Use helper active-request state.",
+    "Native GL white/stale samples have no proven product/driver/compositor/capture root cause; no renderer fix is claimed.",
+    "Actual final package native 3D/first transition and 125%/150% acceptance, plus comparable package cold/warm startup, require a working native capture path; the normal package and limited actual-EXE smoke are now complete.",
+    "No physical serial/probe/firmware/flight test was performed."
+  ],
+  "representative_png_count": 16,
+  "raw_omissions": "Only representative PNGs are in the archive; all original captures remain in .work with receipt file/hash mappings. Caches and reproducible successful-test temp trees are not copied or deleted.",
+  "cleanup": "Only the verified duplicate ZIP inside docs was migrated; its exact original bytes remain in dist/pf1117-evidence/gui-evidence.zip. Inputs and all original .work evidence remain.",
+  "repository_evidence": {
+    "inventory": "inventory.json",
+    "selected_files": 55,
+    "total_bytes": 1019958,
+    "scope": "Selected original full text logs/JUnit/receipts and representative PNGs, not the complete archive.",
+    "text_encoding": "Each .gz is an actual gzip stream of the named UTF-8 log/XML/JSON; raw SHA survives Git EOL normalization."
+  },
+  "package_smoke": {
+    "receipt": "package-smoke/receipt.json",
+    "code_commit": "6fed5b639d0835de7874a74db25a63ab0da814ad",
+    "flp_cli": "0.1.3 / exit 0",
+    "gshc": "40-second offscreen liveness; deliberately terminated, not normal exit",
+    "native_gui_accepted": false
+  }
+}

@@ -1,0 +1,20 @@
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5582:17: F841 Local variable `nm` is assigned to but never used
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:39:5: SIM103 Return the condition directly
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:90:5: SIM102 Use a single `if` statement instead of nested `if` statements
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:403:95: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:454:70: FURB192 Prefer `min` over `sorted()` to compute the minimum value in a sequence
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:467:28: FURB192 Prefer `min` over `sorted()` to compute the minimum value in a sequence
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:479:34: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+apps\SCG\src\silverstar_fccg\generator\source_graph.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\src\silverstar_fccg\generator\source_graph.py:76:9: PIE810 Call `startswith` once with a `tuple`
+apps\SCG\src\silverstar_fccg\generator\source_graph.py:109:5: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\src\silverstar_fccg\generator\source_graph.py:112:5: SIM102 Use a single `if` statement instead of nested `if` statements
+apps\SCG\src\silverstar_fccg\generator\source_graph.py:406:55: UP034 [*] Avoid extraneous parentheses
+apps\SCG\src\silverstar_fccg\project\logging.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\src\silverstar_fccg\project\validation.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\src\silverstar_fccg\project\validation.py:839:9: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\src\silverstar_fccg\project\validation.py:1036:9: I001 [*] Import block is un-sorted or un-formatted
+apps\SCG\src\silverstar_fccg\project\validation.py:1203:9: F401 [*] `silverstar_fccg.project.air_link.GroundTargetIssues_Get` imported but unused
+Found 18 errors.
+[*] 9 fixable with the `--fix` option (7 hidden fixes can be enabled with the `--unsafe-fixes` option).

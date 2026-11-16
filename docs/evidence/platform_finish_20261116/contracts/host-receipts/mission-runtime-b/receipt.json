@@ -1,0 +1,21 @@
+{
+  "scope": "Run the ten unchanged mission-runtime fault cases using a frozen project.\n\nThis deliberately avoids a second catalog/generation epoch: includes, defines\nand runtime C come from the independently generated F407 B output. It is a\nseparate ten-scenario execution, not an executed full pytest file/suite.\n",
+  "passed": [
+    "normal",
+    "no-events",
+    "events-invalid",
+    "action-error",
+    "log-events-invalid",
+    "log-bad-param",
+    "log-full",
+    "log-busy",
+    "log-not-ready",
+    "step-invalid"
+  ],
+  "project": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\post-generated-b\\f4\\Flight_Controller",
+  "source_hashes": {
+    "apps\\SCG\\tests\\test_mission_process_native.py": "7a21a91e8bf682adb3d19c600c8b297fc5747b42d26f294b5c6e798107263721",
+    ".work\\platform-finish-20261116\\contracts\\post-generated-b\\f4\\Flight_Controller\\Generated\\project_sources.mk": "1ffa60b5fe2c61ad46f17149df84391461ff02ba9e48de0ac7ec845c3a3c62fc",
+    ".work\\platform-finish-20261116\\contracts\\post-generated-b\\f4\\Flight_Controller\\System\\Src\\system_mission_process_runtime.c": "9cd2d26431be702f62a19ea707c1815c3467164fa18ff86ea2106d28fe4970cd"
+  }
+}

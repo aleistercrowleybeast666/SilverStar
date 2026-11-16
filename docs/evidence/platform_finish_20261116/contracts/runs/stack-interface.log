@@ -1,0 +1,538 @@
+................................FFF.FFFFFFFFFF......................F... [ 61%]
+..............................................                           [100%]
+================================== FAILURES ===================================
+________ test_stack_budget_includes_library_preindexed_sp_and_context _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_includes_lib0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F13D9B0>
+
+    def test_stack_budget_includes_library_preindexed_sp_and_context(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+>       report = stacks.StackReport_Build(root, "Release", "unused-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_includes_lib0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_stack_budget_includes_lib0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+______ test_machine_report_marker_only_names_written_budget[False-64-2] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_machine_report_marker_onl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F13EEB0>
+capsys = <_pytest.capture.CaptureFixture object at 0x000002870DFE57F0>
+diagnostic = False, frame = 64, expected = 2
+
+    @pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,2),(False,2000,1),(True,64,2)])
+    def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
+        root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
+        monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
+            (['--diagnostic'] if diagnostic else []))
+>       assert stacks.main()==expected
+               ^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5712: in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_machine_report_marker_onl0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_machine_report_marker_onl0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+---------------------------- Captured stdout call -----------------------------
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+_____ test_machine_report_marker_only_names_written_budget[False-2000-1] ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_machine_report_marker_onl1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F19E9C0>
+capsys = <_pytest.capture.CaptureFixture object at 0x000002870F276710>
+diagnostic = False, frame = 2000, expected = 1
+
+    @pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,2),(False,2000,1),(True,64,2)])
+    def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
+        root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
+        monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
+            (['--diagnostic'] if diagnostic else []))
+>       assert stacks.main()==expected
+               ^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5712: in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_machine_report_marker_onl1')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_machine_report_marker_onl1'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+---------------------------- Captured stdout call -----------------------------
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+_________________ test_stack_budget_fails_insufficient_margin _________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_fails_insuff0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870DB071D0>
+
+    def test_stack_budget_fails_insufficient_margin(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, frame=4000)
+>       report = stacks.StackReport_Build(root, "Release", "unused-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_fails_insuff0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_stack_budget_fails_insuff0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+________ test_stack_budget_reads_selected_layout_elf_and_frames[auto] _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_reads_select0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F81B3E0>
+layout = 'auto'
+
+    @pytest.mark.parametrize("layout", ["auto", "eskf_window_sram"])
+    def test_stack_budget_reads_selected_layout_elf_and_frames(tmp_path, monkeypatch, layout):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        build = root / "build/FCCG/SilverStar_F407/Release"
+        selected = build / layout
+        selected.mkdir()
+        (build / "test.elf").rename(selected / "test.elf")
+        (build / "test.su").rename(selected / "test.su")
+        (build / "test.d").rename(selected / "test.d")
+        (build / "test.elf").write_bytes(b"different legacy ELF")
+        with pytest.raises(ValueError, match="Missing source stack report"):
+            stacks.StackReport_Build(root, "Release", "unused-")
+>       report = stacks.StackReport_Build(root, "Release", "unused-", layout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_reads_select0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_stack_budget_reads_select0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+__ test_stack_budget_reads_selected_layout_elf_and_frames[eskf_window_sram] ___
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_reads_select1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F81B490>
+layout = 'eskf_window_sram'
+
+    @pytest.mark.parametrize("layout", ["auto", "eskf_window_sram"])
+    def test_stack_budget_reads_selected_layout_elf_and_frames(tmp_path, monkeypatch, layout):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        build = root / "build/FCCG/SilverStar_F407/Release"
+        selected = build / layout
+        selected.mkdir()
+        (build / "test.elf").rename(selected / "test.elf")
+        (build / "test.su").rename(selected / "test.su")
+        (build / "test.d").rename(selected / "test.d")
+        (build / "test.elf").write_bytes(b"different legacy ELF")
+        with pytest.raises(ValueError, match="Missing source stack report"):
+            stacks.StackReport_Build(root, "Release", "unused-")
+>       report = stacks.StackReport_Build(root, "Release", "unused-", layout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_reads_select1')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_stack_budget_reads_select1'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+____________ test_stack_budget_rejects_missing_source_frame_report ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_rejects_miss0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F94E710>
+
+    def test_stack_budget_rejects_missing_source_frame_report(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        (root / "Generated/project_sources.mk").write_text(
+            "C_SOURCES += \\\n  test.c \\\n  missing.c\n\n", encoding="utf-8")
+>       with pytest.raises(ValueError, match="Missing source stack report; rebuild: missing.c"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Missing source stack report; rebuild: missing.c'
+E         Actual message: 'Unsafe or missing software stack proof input: missing.c'
+
+apps\SCG\tests\test_stack_budget.py:175: AssertionError
+_ test_stack_budget_rejects_unknown_indirect_and_recursion[ 8000004: 4798 blx r3\n-Unresolved stack usage] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_rejects_unkn0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F94E0D0>
+instruction = ' 8000004: 4798 blx r3\n', error = 'Unresolved stack usage'
+
+    @pytest.mark.parametrize("instruction, error", (
+        (" 8000004: 4798 blx r3\n", "Unresolved stack usage"),
+        (" 8000004: f000 f000 bl 8000000 <AppTask_Serial>\n", "Recursive stack path"),
+    ))
+    def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypatch, instruction, error):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match=error):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\apps\\\\SCG\\\\plugins\\\\builtin\\\\silverstar_core_0_1_0\\\\payload\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-interface\\\\test_stack_budget_rejects_unkn0'"
+
+apps\SCG\tests\test_stack_budget.py:185: AssertionError
+_ test_stack_budget_rejects_unknown_indirect_and_recursion[ 8000004: f000 f000 bl 8000000 <AppTask_Serial>\n-Recursive stack path] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_rejects_unkn1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F81D6D0>
+instruction = ' 8000004: f000 f000 bl 8000000 <AppTask_Serial>\n'
+error = 'Recursive stack path'
+
+    @pytest.mark.parametrize("instruction, error", (
+        (" 8000004: 4798 blx r3\n", "Unresolved stack usage"),
+        (" 8000004: f000 f000 bl 8000000 <AppTask_Serial>\n", "Recursive stack path"),
+    ))
+    def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypatch, instruction, error):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match=error):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Recursive stack path'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\apps\\\\SCG\\\\plugins\\\\builtin\\\\silverstar_core_0_1_0\\\\payload\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-interface\\\\test_stack_budget_rejects_unkn1'"
+
+apps\SCG\tests\test_stack_budget.py:185: AssertionError
+_ test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 4798 blxne r3\n] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_rejects_all_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002871005C350>
+instruction = ' 8000004: 4798 blxne r3\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\apps\\\\SCG\\\\plugins\\\\builtin\\\\silverstar_core_0_1_0\\\\payload\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-interface\\\\test_stack_budget_rejects_all_0'"
+
+apps\SCG\tests\test_stack_budget.py:196: AssertionError
+_ test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 469f mov pc, r3\n] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_rejects_all_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870E103650>
+instruction = ' 8000004: 469f mov pc, r3\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\apps\\\\SCG\\\\plugins\\\\builtin\\\\silverstar_core_0_1_0\\\\payload\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-interface\\\\test_stack_budget_rejects_all_1'"
+
+apps\SCG\tests\test_stack_budget.py:196: AssertionError
+_ test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: f8d3 f000 ldr.w pc, [r3]\n] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_stack_budget_rejects_all_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F160280>
+instruction = ' 8000004: f8d3 f000 ldr.w pc, [r3]\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\apps\\\\SCG\\\\plugins\\\\builtin\\\\silverstar_core_0_1_0\\\\payload\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-interface\\\\test_stack_budget_rejects_all_2'"
+
+apps\SCG\tests\test_stack_budget.py:196: AssertionError
+__ test_returning_tail_call_in_initializer_does_not_hide_task_business_loop ___
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_returning_tail_call_in_in0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002870F160D70>
+
+    def test_returning_tail_call_in_initializer_does_not_hide_task_business_loop(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        original = stacks.Command_Read
+        base = original(["objdump", "-d"], root)
+        base = re.sub(r"(<AppTask_Ins>:\n)", r"\1 8000000: f000 f000 bl 0 <LoopWork>\n", base)
+        extra = ("08000000 <Initialize>:\n 8000000: f000 b800 b.w 0 <library>\n"
+                 "08000000 <LoopWork>:\n 8000000: 4770 bx lr\n")
+        assembly, symbols, _ = _AssemblyFixture_Extend(base, extra, {"AppTask_Ins": "Initialize"})
+        su = root / "build/FCCG/SilverStar_F407/Release/test.su"
+        with su.open("a", encoding="utf8") as stream:
+            stream.write("fixture.c:1:1:Initialize\t16\tstatic\nfixture.c:1:1:LoopWork\t512\tstatic\n")
+        def Read(command, cwd):
+            if "objdump" in command[0]:
+                return symbols if "-t" in command else assembly
+            return original(command, cwd)
+        monkeypatch.setattr(stacks, "Command_Read", Read)
+>       report = stacks.StackReport_Build(root, "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5577: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_returning_tail_call_in_in0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-interface\\test_returning_tail_call_in_in0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+_ test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Src/logger_task.c] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-interface/test_uart_review_accepts_exact2')
+relative = 'APP/Src/logger_task.c'
+
+    @pytest.mark.parametrize('relative', [
+        'APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c', 'APP/Src/logger_task.c',
+        'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c',
+        'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+        'Generated/Src/project_log_decoder_profile.c', 'Generated/Src/project_metadata.c',
+        'System/Inc/system_lifecycle.h', 'System/Inc/system_log_file.h',
+        'System/Src/system_console.c', 'System/Src/system_log_file.c'])
+    def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_path, relative):
+        base = Path(__file__).resolve().parents[1]
+        if relative.startswith('Generated/'):
+            owner = base / 'tests/fixtures/stack_uart_identity_20261013'
+        elif relative.startswith('Devices/'):
+            owner = base / 'plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload'
+        elif relative.startswith('FlightLogic/'):
+            owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
+        else:
+            owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
+        if relative in ('APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c'):
+            text = (base / 'tests/fixtures/stack_logger_review_20261101' / relative).read_text(encoding='utf8')
+        elif relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+                        'System/Src/system_console.c'):
+            with zipfile.ZipFile(base / 'tests/fixtures/stack_review_20261025.zip') as archive:
+                text = archive.read(relative).decode('utf8')
+        else:
+            text = (owner / relative).read_text(encoding='utf8')
+>       assert stacks.BindingSourceHash_Get(text) in stacks.BindingSourceVersions_Get(relative)
+E       assert '43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d' in ['e7067b8a1e3d5bc58667107a928fd78138462b10391faa65c9d5f1fd186e5a32', '7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520...a0261bed6ccbfe3d816edad303f73f5cbd4c1d3f0321', '3489b096e97c985fe978cf895326ea815c29c4b015437942d8fd9210a69e2e57', ...]
+E        +  where '43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d' = <function BindingSourceHash_Get at 0x000002870DC675E0>('#include "app_tasks.h"\n\n#include <stddef.h>\n#include <string.h>\n\n#include "FreeRTOS.h"\n#include "task.h"\n#incl...ical_Enter();\n    *diagnostics = s_diagnostics;\n    PlatformCritical_Exit(state);\n    return SYSTEM_DEVICE_OK;\n}\n')
+E        +    where <function BindingSourceHash_Get at 0x000002870DC675E0> = stacks.BindingSourceHash_Get
+E        +  and   ['e7067b8a1e3d5bc58667107a928fd78138462b10391faa65c9d5f1fd186e5a32', '7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520...a0261bed6ccbfe3d816edad303f73f5cbd4c1d3f0321', '3489b096e97c985fe978cf895326ea815c29c4b015437942d8fd9210a69e2e57', ...] = <function BindingSourceVersions_Get at 0x000002870DC67530>('APP/Src/logger_task.c')
+E        +    where <function BindingSourceVersions_Get at 0x000002870DC67530> = stacks.BindingSourceVersions_Get
+
+apps\SCG\tests\test_stack_budget.py:437: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_includes_library_preindexed_sp_and_context
+FAILED apps\SCG\tests\test_stack_budget.py::test_machine_report_marker_only_names_written_budget[False-64-2]
+FAILED apps\SCG\tests\test_stack_budget.py::test_machine_report_marker_only_names_written_budget[False-2000-1]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_fails_insufficient_margin
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_reads_selected_layout_elf_and_frames[auto]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_reads_selected_layout_elf_and_frames[eskf_window_sram]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_missing_source_frame_report
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_unknown_indirect_and_recursion[ 8000004: 4798 blx r3\n-Unresolved stack usage]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_unknown_indirect_and_recursion[ 8000004: f000 f000 bl 8000000 <AppTask_Serial>\n-Recursive stack path]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 4798 blxne r3\n]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 469f mov pc, r3\n]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: f8d3 f000 ldr.w pc, [r3]\n]
+FAILED apps\SCG\tests\test_stack_budget.py::test_returning_tail_call_in_initializer_does_not_hide_task_business_loop
+FAILED apps\SCG\tests\test_stack_budget.py::test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Src/logger_task.c]
+14 failed, 104 passed in 24.91s

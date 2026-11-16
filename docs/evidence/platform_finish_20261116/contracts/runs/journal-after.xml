@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="16" time="12.712" timestamp="2026-11-16T23:44:56.358579+08:00" hostname="CHD"><testcase classname="tests.test_augmented_logging_contract" name="test_augmented_without_logging_rejects_before_plan_or_source_graph[eskf20]" time="2.446"><failure message="AttributeError: 'WorkspacePolicy' object has no attribute 'ProjectView_Get'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_augmented_without_logging0')
+builtin_catalog = &lt;silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001CEF19C1010&gt;
+algorithm = 'eskf20'
+
+    @pytest.mark.parametrize("algorithm", ["eskf20", "inekf15", "inekf20"])
+    def test_augmented_without_logging_rejects_before_plan_or_source_graph(tmp_path, builtin_catalog, algorithm):
+        model = ReferenceProject_Create("JournalDependency", catalog=builtin_catalog)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
+        model = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+        assert Project_Validate(model, builtin_catalog).valid
+        model.protocols["logging"] = None
+        before = model.Dictionary_Get()
+        validation = Project_Validate(model, builtin_catalog)
+        assert any(row.level == "error" and row.code == CODE for row in validation.issues)
+        with pytest.raises(SourceGraphError, match=CODE):
+            SourceGraph_Resolve(model, builtin_catalog)
+        output = tmp_path / "not-generated"
+&gt;       plan = ProjectAssembler(builtin_catalog, WorkspacePolicy(tmp_path)).Plan(model, output)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_augmented_logging_contract.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;silverstar_fccg.generator.assembler.ProjectAssembler object at 0x000001CEF19C1D30&gt;
+model = ProjectModel(identity=ProjectIdentity(name='JournalDependency', firmware_version='0.1.3', build_target='SilverStar_0_1...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+project_root = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_augmented_without_logging0/not-generated')
+
+    def Plan(self, model: ProjectModel, project_root: Path) -&gt; GenerationPlan:
+&gt;       resolved_catalog = self.catalog.ProjectView_Get(model)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'WorkspacePolicy' object has no attribute 'ProjectView_Get'
+
+apps\SCG\src\silverstar_fccg\generator\assembler.py:96: AttributeError</failure></testcase><testcase classname="tests.test_augmented_logging_contract" name="test_augmented_without_logging_rejects_before_plan_or_source_graph[inekf15]" time="1.329"><failure message="AttributeError: 'WorkspacePolicy' object has no attribute 'ProjectView_Get'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_augmented_without_logging1')
+builtin_catalog = &lt;silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001CEF19C1010&gt;
+algorithm = 'inekf15'
+
+    @pytest.mark.parametrize("algorithm", ["eskf20", "inekf15", "inekf20"])
+    def test_augmented_without_logging_rejects_before_plan_or_source_graph(tmp_path, builtin_catalog, algorithm):
+        model = ReferenceProject_Create("JournalDependency", catalog=builtin_catalog)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
+        model = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+        assert Project_Validate(model, builtin_catalog).valid
+        model.protocols["logging"] = None
+        before = model.Dictionary_Get()
+        validation = Project_Validate(model, builtin_catalog)
+        assert any(row.level == "error" and row.code == CODE for row in validation.issues)
+        with pytest.raises(SourceGraphError, match=CODE):
+            SourceGraph_Resolve(model, builtin_catalog)
+        output = tmp_path / "not-generated"
+&gt;       plan = ProjectAssembler(builtin_catalog, WorkspacePolicy(tmp_path)).Plan(model, output)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_augmented_logging_contract.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;silverstar_fccg.generator.assembler.ProjectAssembler object at 0x000001CEF1DD2E90&gt;
+model = ProjectModel(identity=ProjectIdentity(name='JournalDependency', firmware_version='0.1.3', build_target='SilverStar_0_1...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+project_root = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_augmented_without_logging1/not-generated')
+
+    def Plan(self, model: ProjectModel, project_root: Path) -&gt; GenerationPlan:
+&gt;       resolved_catalog = self.catalog.ProjectView_Get(model)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'WorkspacePolicy' object has no attribute 'ProjectView_Get'
+
+apps\SCG\src\silverstar_fccg\generator\assembler.py:96: AttributeError</failure></testcase><testcase classname="tests.test_augmented_logging_contract" name="test_augmented_without_logging_rejects_before_plan_or_source_graph[inekf20]" time="1.388"><failure message="AttributeError: 'WorkspacePolicy' object has no attribute 'ProjectView_Get'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_augmented_without_logging2')
+builtin_catalog = &lt;silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001CEF19C1010&gt;
+algorithm = 'inekf20'
+
+    @pytest.mark.parametrize("algorithm", ["eskf20", "inekf15", "inekf20"])
+    def test_augmented_without_logging_rejects_before_plan_or_source_graph(tmp_path, builtin_catalog, algorithm):
+        model = ReferenceProject_Create("JournalDependency", catalog=builtin_catalog)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
+        model = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+        assert Project_Validate(model, builtin_catalog).valid
+        model.protocols["logging"] = None
+        before = model.Dictionary_Get()
+        validation = Project_Validate(model, builtin_catalog)
+        assert any(row.level == "error" and row.code == CODE for row in validation.issues)
+        with pytest.raises(SourceGraphError, match=CODE):
+            SourceGraph_Resolve(model, builtin_catalog)
+        output = tmp_path / "not-generated"
+&gt;       plan = ProjectAssembler(builtin_catalog, WorkspacePolicy(tmp_path)).Plan(model, output)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_augmented_logging_contract.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;silverstar_fccg.generator.assembler.ProjectAssembler object at 0x000001CEF1DD3890&gt;
+model = ProjectModel(identity=ProjectIdentity(name='JournalDependency', firmware_version='0.1.3', build_target='SilverStar_0_1...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+project_root = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_augmented_without_logging2/not-generated')
+
+    def Plan(self, model: ProjectModel, project_root: Path) -&gt; GenerationPlan:
+&gt;       resolved_catalog = self.catalog.ProjectView_Get(model)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'WorkspacePolicy' object has no attribute 'ProjectView_Get'
+
+apps\SCG\src\silverstar_fccg\generator\assembler.py:96: AttributeError</failure></testcase><testcase classname="tests.test_augmented_logging_contract" name="test_supported_selection_retains_actual_logging_sources[eskf20]" time="1.307" /><testcase classname="tests.test_augmented_logging_contract" name="test_supported_selection_retains_actual_logging_sources[inekf15]" time="1.273" /><testcase classname="tests.test_augmented_logging_contract" name="test_supported_selection_retains_actual_logging_sources[inekf20]" time="1.561" /><testcase classname="tests.test_augmented_logging_contract" name="test_supported_selection_retains_actual_logging_sources[kf6]" time="1.766" /><testcase classname="tests.test_stack_graph_inputs" name="test_flight_keeps_complete_manifest_and_selected_configuration" time="0.016" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[outside-build]" time="0.009" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[missing-su]" time="0.012" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[missing-source]" time="0.012" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[duplicate]" time="0.010" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[traversal]" time="0.010" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[absolute]" time="0.010" /><testcase classname="tests.test_stack_graph_inputs" name="test_graph_input_boundary_rejects_invalid_inputs_before_tools[empty]" time="0.011" /><testcase classname="tests.test_stack_graph_inputs" name="test_bare_metal_build_root_is_valid_graph_input_not_proof" time="0.022"><failure message="ValueError: Missing ELF FUNC symbol extents">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-after/test_bare_metal_build_root_is_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001CEF1EA1C70&gt;
+
+    def test_bare_metal_build_root_is_valid_graph_input_not_proof(tmp_path, monkeypatch):
+        build = tmp_path / "build"
+        build.mkdir()
+        (build / "firmware.elf").write_bytes(b"synthetic tool input")
+        (tmp_path / "first.c").write_text("void First(void) {}\n")
+        (build / "first.su").write_text("first.c:1:1:First\t8\tstatic\n")
+        monkeypatch.setattr(stacks, "Command_Read", lambda *args: "")
+&gt;       graph = stacks.StackGraph_LoadInputs(tmp_path, build, "arm-", ["first.c"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_graph_inputs.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5267: in StackGraph_LoadInputs
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = '', symbols = ''
+
+    def Assembly_Parse(disassembly, symbols):
+        declarations = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                versions = declarations.setdefault(name, {})
+                if address in versions and versions[address] != (address, size, section):
+                    raise ValueError("Conflicting ELF function extents: " + name)
+                versions[address] = (address, size, section)
+        functions = {}
+        symbol_names = {}
+        for name, versions in declarations.items():
+            for address, value in versions.items():
+                key = name if len(versions) == 1 else name + "@" + format(address, "08x")
+                functions[key] = value
+                symbol_names[key] = name
+        if not functions:
+&gt;           raise ValueError("Missing ELF FUNC symbol extents")
+E           ValueError: Missing ELF FUNC symbol extents
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:118: ValueError</failure></testcase></testsuite></testsuites>

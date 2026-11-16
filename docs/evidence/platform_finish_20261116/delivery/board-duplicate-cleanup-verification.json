@@ -1,0 +1,7 @@
+{
+  "deleted_files": 13872,
+  "deleted_bytes": 2375668814,
+  "retained_files": 2360,
+  "retained_bytes": 726476848,
+  "result": "PASS: all eligible files absent; all retained file and protected ZIP/manifest hashes unchanged"
+}

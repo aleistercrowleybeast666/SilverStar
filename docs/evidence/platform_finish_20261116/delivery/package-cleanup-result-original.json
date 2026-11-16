@@ -1,0 +1,22 @@
+{
+  "scope": "Only fresh task failed package output and two reproducible PyInstaller build directories",
+  "directories": [
+    {
+      "target": "D:\\python_software\\SilverStar\\dist\\pf1117",
+      "deleted_files": 3269,
+      "deleted_bytes": null
+    },
+    {
+      "target": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\build",
+      "deleted_files": 30,
+      "deleted_bytes": null
+    },
+    {
+      "target": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\build",
+      "deleted_files": 30,
+      "deleted_bytes": null
+    }
+  ],
+  "protected": "Final bundle and archive, original witness archives, all packaging logs/receipts and all user inputs",
+  "utc": "2026-11-16T18:19:11.4306814Z"
+}

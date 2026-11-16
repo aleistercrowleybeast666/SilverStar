@@ -1,0 +1,73 @@
+{
+  "recorded_utc": "2026-11-16T17:44:21.324175+00:00",
+  "owner": "/root/silverstar_finish",
+  "head": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+  "generated_source_identity": "Auditable frozen generated projects; original contracts receipts, not assumed clean HEAD",
+  "python": "3.14.0",
+  "ruff": "ruff 0.16.9",
+  "commands": [
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs\\evidence\\platform_finish_20261116\\contracts_archive\\archive_projects.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs\\evidence\\platform_finish_20261116\\contracts_archive\\inventory_repeated_builds.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "docs\\evidence\\platform_finish_20261116\\contracts_archive\\classify_cleanup_duplicates.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "docs\\evidence\\platform_finish_20261116\\contracts_archive",
+        "--output-format",
+        "concise"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n"
+    }
+  ],
+  "script_sha256": {
+    "archive_projects.py": "a59b30d1d38a7654c6a3504cf75f542f795d390d73468b45d5a6921b94100a73",
+    "classify_cleanup_duplicates.py": "02ce4d94a2fa3cb892b3cf9a2b6a6b6f7e63d9874ddd8220f64b795b9f875655",
+    "inventory_repeated_builds.py": "cfaeb450dd85dbf9cbcd2171909fe7cdbd79688ab1d6ca1d097f2124223eeed6"
+  },
+  "archive_log_sha256": "44a0110ccf62efb6f4aa42187ea964627a50991346b04d6b404ece2b2702b16b",
+  "root_independent_acceptance": "../delivery/archive-verification.json",
+  "root_acceptance_sha256": "cea48388c57722a96e69162eedb742bf5a7c2e3b72e41b98d673da6e25c910c0",
+  "pre_m3_helper_source": "docs\\evidence\\platform_finish_20261116\\m3_helper\\stack_runtime_before.py.txt",
+  "pre_m3_helper_sha256": "eb9d7a9d51c2855dd0b256a3f76908aea75de8656eb743ec8a6be98eed7497dd",
+  "both_archives_preserve_pre_m3_helper": true,
+  "cleanup_totals": {
+    "eligible_duplicate": {
+      "files": 9145,
+      "bytes": 831475551
+    },
+    "preserved_unique": {
+      "files": 565,
+      "bytes": 71575085
+    },
+    "preserved_report": {
+      "files": 8,
+      "bytes": 1114037
+    }
+  },
+  "deletions": 0,
+  "production_changes": 0,
+  "staging_or_commits": false,
+  "hardware_actions": false
+}

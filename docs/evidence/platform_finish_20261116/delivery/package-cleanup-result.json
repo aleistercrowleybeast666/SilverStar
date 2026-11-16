@@ -1,0 +1,27 @@
+{
+  "scope": "Only fresh task failed package output and two reproducible PyInstaller build directories",
+  "directories": [
+    {
+      "target": "D:\\python_software\\SilverStar\\dist\\pf1117",
+      "deleted_files": 3269,
+      "deleted_bytes": 526012355
+    },
+    {
+      "target": "D:\\python_software\\SilverStar\\.work\\pf1117-package\\build",
+      "deleted_files": 30,
+      "deleted_bytes": 230398080
+    },
+    {
+      "target": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\build",
+      "deleted_files": 30,
+      "deleted_bytes": 230398190
+    }
+  ],
+  "protected": "Final bundle and archive, original witness archives, all packaging logs/receipts and all user inputs",
+  "utc": "2026-11-16T18:19:11.4306814Z",
+  "byte_totals_note": "Post-verification corrected only byte totals from the sealed pre-delete inventory; original PowerShell Measure-Object over ordered dictionaries produced null. Original execution receipt is retained unchanged.",
+  "original_receipt_sha256": "4aef5c6bae41043271270fd26299acfa4f2f0028d6ff9e5e6eefa16d429ed386",
+  "inventory_sha256": "a1f9c1ad9e1077547648e7f4d76acddaf6492aa5defa8a93bf4aab0e1e3b4ecf",
+  "all_owned_targets_absent": true,
+  "final_archive_sha256_unchanged": "21f8407e22151bcca13ea6217907c2f1d50a73a731c96763d0a5a392eb9f2b6b"
+}

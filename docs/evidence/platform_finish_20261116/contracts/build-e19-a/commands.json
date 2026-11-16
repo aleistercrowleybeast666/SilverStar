@@ -1,0 +1,182 @@
+[
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794847927.7807267,
+    "seconds": 63.137,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "all",
+    "log": "Release-all.log",
+    "log_sha256": "773fa6723c6f560f0329b88c3b9522047e945bbb046d8ad2056b6ca17e449409"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794847990.9302819,
+    "seconds": 5.905,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "artifact-check",
+    "log": "Release-artifact-check.log",
+    "log_sha256": "d67d8ae783d6e01ed54ebcd7cd51fc485cf44cbb19355a9b1bfc41e549f54354"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794847996.846042,
+    "seconds": 12.191,
+    "exit": 2,
+    "configuration": "Release",
+    "gate": "stack-report",
+    "log": "Release-stack-report.log",
+    "log_sha256": "9387247ec16ad44956604ee85d514b867398f21a7339534fd9cbaab4fe6783fe"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794848009.1330805,
+    "seconds": 19.261,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "architecture-check",
+    "log": "Release-architecture-check.log",
+    "log_sha256": "523e5d0babb9de48456d8853569e86744e24a019b6c388ba6725fb17dae0f6d5"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794848028.4057946,
+    "seconds": 25.951,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "power10-check",
+    "log": "Release-power10-check.log",
+    "log_sha256": "1524cc3e2d45e0fc1adcab0eca0b6dedb066969facbe0a46ae89e7d8f74e30cd"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794848054.372273,
+    "seconds": 107.215,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "static-analysis",
+    "log": "Release-static-analysis.log",
+    "log_sha256": "abf9cca46dc150c2bcad11fd2ed3d65eaabd483f37d3c0956689e15fc2c79ab8"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794848161.603665,
+    "seconds": 107.797,
+    "exit": 0,
+    "configuration": "Debug",
+    "gate": "all",
+    "log": "Debug-all.log",
+    "log_sha256": "f2d9bf33eea3a91ff4fe350f524d7c18b79f598c563ca2b113ec021dfd5e9d2a"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794848269.4176815,
+    "seconds": 11.18,
+    "exit": 0,
+    "configuration": "Debug",
+    "gate": "artifact-check",
+    "log": "Debug-artifact-check.log",
+    "log_sha256": "de035c07d72c09e74146105a8b1cf09f9edb98c52d36c935db1c54c5d368df55"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794848280.6193702,
+    "seconds": 33.605,
+    "exit": 2,
+    "configuration": "Debug",
+    "gate": "stack-report",
+    "log": "Debug-stack-report.log",
+    "log_sha256": "623715b78ca64d3ee0f8c4562021db0fd07395a4e8a11f10c1196875071dcb7d"
+  }
+]

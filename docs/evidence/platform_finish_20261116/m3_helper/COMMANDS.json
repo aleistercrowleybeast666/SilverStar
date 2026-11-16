@@ -1,0 +1,68 @@
+{
+  "note": "Transcribed exact executed tool invocations; stdout and exits saved independently. No unexecuted full suite is claimed.",
+  "cwd": "D:\\python_software\\SilverStar",
+  "environment": {
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+    "SCG_CRITICAL_PROJECT": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller",
+    "PATH_prefix_for_logger": "D:/msys64/ucrt64/bin"
+  },
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "pytest": "9.1.1",
+  "commands": [
+    {
+      "label": "m4-before",
+      "argv": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_stack_crt_weak.py",
+        "-q",
+        "-k",
+        "not helper_only",
+        "--junitxml",
+        ".work/platform-finish-20261116/contracts/m3-helper/m4-before.xml"
+      ],
+      "source": "original runtime bytes saved in stack_runtime_before.py.txt",
+      "exit": 0
+    },
+    {
+      "label": "runtime-after",
+      "argv": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_stack_crt_weak.py",
+        "apps/SCG/tests/test_stack_runtime.py",
+        "apps/SCG/tests/test_ground_stack_runtime.py",
+        "-q",
+        "--junitxml",
+        ".work/platform-finish-20261116/contracts/m3-helper/runtime-after.xml"
+      ],
+      "source": "helper extracted; no further production edits",
+      "exit": 0
+    },
+    {
+      "label": "contract-regression",
+      "argv": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_augmented_logging_contract.py",
+        "apps/SCG/tests/test_stack_arm.py",
+        "apps/SCG/tests/test_stack_budget.py",
+        "apps/SCG/tests/test_stack_graph_inputs.py",
+        "apps/SCG/tests/test_stack_manifest.py",
+        "apps/SCG/tests/test_stack_review.py",
+        "apps/SCG/tests/test_stack_thumb1.py",
+        "apps/SCG/tests/test_logger_startup_contract.py",
+        "-q",
+        "--basetemp",
+        ".work/platform-finish-20261116/contracts/m3-helper/contract-regression",
+        "--junitxml",
+        ".work/platform-finish-20261116/contracts/m3-helper/contract-regression.xml"
+      ],
+      "source": "same helper version; index30 unchanged",
+      "exit": 0
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+--- D/Core/Inc/main.h
+
++++ E19/Core/Inc/main.h
+
+@@ -107,3 +107,9 @@
+
+ #endif
+ 
+ #endif /* __MAIN_H */
++
++#define RF_RX_EN_Pin GPIO_PIN_1
++#define RF_RX_EN_GPIO_Port GPIOC
++
++#define RF_TX_EN_Pin GPIO_PIN_2
++#define RF_TX_EN_GPIO_Port GPIOC
+--- D/Core/Src/gpio.c
+
++++ E19/Core/Src/gpio.c
+
+@@ -103,6 +103,23 @@
+
+   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 
++  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
++  GPIO_InitStruct.Pin = GPIO_PIN_1;
++  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
++  GPIO_InitStruct.Pull = GPIO_NOPULL;
++  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
++  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
++  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
++  GPIO_InitStruct.Pin = GPIO_PIN_2;
++  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
++  GPIO_InitStruct.Pull = GPIO_NOPULL;
++  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
++  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
++  GPIO_InitStruct.Pin = RADIO_RST_Pin;
++  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
++  GPIO_InitStruct.Pull = GPIO_PULLUP;
++  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
++  HAL_GPIO_Init(RADIO_RST_GPIO_Port, &GPIO_InitStruct);
+   /* EXTI interrupt init*/
+   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+--- D/Core/Src/spi.c
+
++++ E19/Core/Src/spi.c
+
+@@ -44,7 +44,7 @@
+
+   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+   hspi1.Init.NSS = SPI_NSS_SOFT;
+-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
++  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

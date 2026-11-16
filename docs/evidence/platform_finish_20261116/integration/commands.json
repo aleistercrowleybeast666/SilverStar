@@ -1,0 +1,407 @@
+[
+  {
+    "label": "compile",
+    "argv": [
+      "D:/msys64/ucrt64/bin/gcc.exe",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-fanalyzer",
+      "-DCONTROL_RESEARCH_HOST_TRAP_CAPTURE=1",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Tests\\Host",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\APP\\Src",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Common\\Src",
+      "-include",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Generated\\Inc\\project_flight_config.h",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\APP\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Common\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Modules\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Interfaces\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Alignment\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Calibration\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Indicator\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Inertial\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\User",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Platform\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Platform\\STM32F4\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Drivers\\STM32F4xx_HAL_Driver\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\Legacy",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Drivers\\CMSIS\\Include",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Targets\\SilverStar_F407\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Core\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\FATFS\\Target",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\FATFS\\App",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\OS\\FreeRTOS",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\ThirdParty\\FreeRTOS-Kernel\\include",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\ThirdParty\\FreeRTOS-Kernel\\portable\\GCC\\ARM_CM4F",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\IMU\\JY901B\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\IMU\\JY901B\\Adapter\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Middlewares\\Third_Party\\SX1280lib",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Adapter\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\Console\\UART\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices\\Power\\InputVoltage\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Common\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Alignment\\Common\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Calibration\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\FlightLogic\\Deployment\\MultiTrigger\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\FlightLogic\\Landing\\BarometerImuWindow\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\FlightLogic\\MissionAction\\GpioOutput\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Alignment\\VectorConstraints\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Estimator\\KF6\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\INS\\Coning2Sculling2\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Protocol\\SSLOG\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Protocol\\SS_TM\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Protocol\\SS_TM\\Legacy",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Generated\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Devices",
+      "-DUSE_HAL_DRIVER",
+      "-DSTM32F407xx",
+      "-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS",
+      "-DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS",
+      "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U",
+      "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT",
+      "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U",
+      "-DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U",
+      "-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_KF6",
+      "-DSYSTEM_BUILD_ESTIMATOR_ENABLED=1U",
+      "-DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2",
+      "-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW",
+      "-DSYSTEM_TELEMETRY_TM_ENABLED=1U",
+      "-DSYSTEM_TELEMETRY_TM_PROFILE=0U",
+      "-DSILVERSTAR_AIR_LINK_ENABLED=1",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\APP\\Src\\control_research_runtime.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Src\\system_mission_process.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Generated\\Src\\project_mission_process.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Generated\\Src\\project_control_research.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\System\\Calibration\\Src\\system_calibration_correction.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\generated\\Flight_Controller\\Tests\\Host\\test_control_research.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe"
+    ],
+    "exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "normal",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "normal"
+    ],
+    "exit": 0,
+    "log_sha256": "79bdcb009c8012bd2906618fdd860192b7a43d73ff89d6741d4eaaed36a1cdac"
+  },
+  {
+    "label": "late_ok",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "late_ok"
+    ],
+    "exit": 0,
+    "log_sha256": "900f79df30321c58d9f3878167416d8b268ccd0b6e500dabcdfb07a23a903c57"
+  },
+  {
+    "label": "overrun",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "overrun"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "stale",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "stale"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "future",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "future"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "duplicate",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "duplicate"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "source",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "source"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "generation",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "generation"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "epoch",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "epoch"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "unknown",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "unknown"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "nan",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "nan"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "nonplanar",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "nonplanar"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "health",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "health"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "calibration_race",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "calibration_race"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "stop",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "stop"
+    ],
+    "exit": 0,
+    "log_sha256": "79bdcb009c8012bd2906618fdd860192b7a43d73ff89d6741d4eaaed36a1cdac"
+  },
+  {
+    "label": "clock",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "clock"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "startup_timeout",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "startup_timeout"
+    ],
+    "exit": 0,
+    "log_sha256": "bd64f0ab29d68227221b8280c5524cc7a78ac29f345d6d472432a3dc80e67890"
+  },
+  {
+    "label": "cached_expiry",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "cached_expiry"
+    ],
+    "exit": 0,
+    "log_sha256": "3633ab058ed8b703840b08e984e54af2e8c1aa3c8ba0aeb427493b5dc4505bef"
+  },
+  {
+    "label": "corrupt_state",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "corrupt_state"
+    ],
+    "exit": 0,
+    "log_sha256": "715bdb5ad0cf5bdca94afad67946d746278c4e756ddea60e92382c101c562a5f"
+  },
+  {
+    "label": "corrupt_backend",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "corrupt_backend"
+    ],
+    "exit": 0,
+    "log_sha256": "715bdb5ad0cf5bdca94afad67946d746278c4e756ddea60e92382c101c562a5f"
+  },
+  {
+    "label": "sequence_exhausted",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "sequence_exhausted"
+    ],
+    "exit": 0,
+    "log_sha256": "715bdb5ad0cf5bdca94afad67946d746278c4e756ddea60e92382c101c562a5f"
+  },
+  {
+    "label": "corrupt_sink",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "corrupt_sink"
+    ],
+    "exit": 0,
+    "log_sha256": "715bdb5ad0cf5bdca94afad67946d746278c4e756ddea60e92382c101c562a5f"
+  },
+  {
+    "label": "read_fault",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "read_fault"
+    ],
+    "exit": 0,
+    "log_sha256": "0829b3852b8a5a3612bf9f661646ad928c1e6f1ea905b6a9b1fa028ac0d510f7"
+  },
+  {
+    "label": "compute_overrun",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "compute_overrun"
+    ],
+    "exit": 0,
+    "log_sha256": "6defe42a0ef3dc61ed2bb66da7c4ea636e9b76f130bbbdddadd5b374842e2f67"
+  },
+  {
+    "label": "cached_source_revoked",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "cached_source_revoked"
+    ],
+    "exit": 0,
+    "log_sha256": "4ec2a1562f3836965136bbc5a2db0f4aad29931af2ebbb25d5350d846dc32993"
+  },
+  {
+    "label": "stop_interleave",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "stop_interleave"
+    ],
+    "exit": 0,
+    "log_sha256": "79bdcb009c8012bd2906618fdd860192b7a43d73ff89d6741d4eaaed36a1cdac"
+  },
+  {
+    "label": "schedule_interleave",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "schedule_interleave"
+    ],
+    "exit": 0,
+    "log_sha256": "a32996b15ba8fe29328799b4f5ae13ac3c0007730f8ecd8c98695726240921ee"
+  },
+  {
+    "label": "torque_units",
+    "argv": [
+      "D:\\python_software\\SilverStar\\.work\\pf1117\\integration-b\\consumer.exe",
+      "torque_units"
+    ],
+    "exit": 0,
+    "log_sha256": "91cb5015e011e1891c044d63741d53ad8c2255fd62a52c7a1516d697e7a43453"
+  }
+]

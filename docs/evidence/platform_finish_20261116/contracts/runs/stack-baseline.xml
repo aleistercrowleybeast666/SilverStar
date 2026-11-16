@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="59" time="3.458" timestamp="2026-11-16T23:39:28.678574+08:00" hostname="CHD"><testcase classname="tests.test_stack_budget" name="test_stack_budget_includes_library_preindexed_sp_and_context" time="0.053"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_includes_lib0'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_includes_lib0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E6842129E0&gt;
+
+    def test_stack_budget_includes_library_preindexed_sp_and_context(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+&gt;       report = stacks.StackReport_Build(root, "Release", "unused-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_includes_lib0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_includes_lib0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_machine_report_marker_only_names_written_budget[False-64-2]" time="0.025"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_machine_report_marker_onl0'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_machine_report_marker_onl0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E6842122C0&gt;
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x000002E684073230&gt;
+diagnostic = False, frame = 64, expected = 2
+
+    @pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,2),(False,2000,1),(True,64,2)])
+    def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
+        root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
+        monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
+            (['--diagnostic'] if diagnostic else []))
+&gt;       assert stacks.main()==expected
+               ^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5690: in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_machine_report_marker_onl0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_machine_report_marker_onl0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_machine_report_marker_only_names_written_budget[False-2000-1]" time="0.023"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_machine_report_marker_onl1'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_machine_report_marker_onl1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E68420AD50&gt;
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x000002E684491F90&gt;
+diagnostic = False, frame = 2000, expected = 1
+
+    @pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,2),(False,2000,1),(True,64,2)])
+    def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
+        root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
+        monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
+            (['--diagnostic'] if diagnostic else []))
+&gt;       assert stacks.main()==expected
+               ^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5690: in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_machine_report_marker_onl1')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_machine_report_marker_onl1'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_machine_report_marker_only_names_written_budget[True-64-2]" time="0.033" /><testcase classname="tests.test_stack_budget" name="test_stack_budget_fails_insufficient_margin" time="0.018"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_fails_insuff0'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_fails_insuff0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E6841DB460&gt;
+
+    def test_stack_budget_fails_insufficient_margin(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, frame=4000)
+&gt;       report = stacks.StackReport_Build(root, "Release", "unused-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_fails_insuff0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_fails_insuff0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_reads_selected_layout_elf_and_frames[auto]" time="0.028"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_reads_select0'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_reads_select0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E6843E1D50&gt;
+layout = 'auto'
+
+    @pytest.mark.parametrize("layout", ["auto", "eskf_window_sram"])
+    def test_stack_budget_reads_selected_layout_elf_and_frames(tmp_path, monkeypatch, layout):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        build = root / "build/FCCG/SilverStar_F407/Release"
+        selected = build / layout
+        selected.mkdir()
+        (build / "test.elf").rename(selected / "test.elf")
+        (build / "test.su").rename(selected / "test.su")
+        (build / "test.d").rename(selected / "test.d")
+        (build / "test.elf").write_bytes(b"different legacy ELF")
+        with pytest.raises(ValueError, match="Missing source stack report"):
+            stacks.StackReport_Build(root, "Release", "unused-")
+&gt;       report = stacks.StackReport_Build(root, "Release", "unused-", layout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_reads_select0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_reads_select0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_reads_selected_layout_elf_and_frames[eskf_window_sram]" time="0.023"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_reads_select1'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_reads_select1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E6843E2850&gt;
+layout = 'eskf_window_sram'
+
+    @pytest.mark.parametrize("layout", ["auto", "eskf_window_sram"])
+    def test_stack_budget_reads_selected_layout_elf_and_frames(tmp_path, monkeypatch, layout):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        build = root / "build/FCCG/SilverStar_F407/Release"
+        selected = build / layout
+        selected.mkdir()
+        (build / "test.elf").rename(selected / "test.elf")
+        (build / "test.su").rename(selected / "test.su")
+        (build / "test.d").rename(selected / "test.d")
+        (build / "test.elf").write_bytes(b"different legacy ELF")
+        with pytest.raises(ValueError, match="Missing source stack report"):
+            stacks.StackReport_Build(root, "Release", "unused-")
+&gt;       report = stacks.StackReport_Build(root, "Release", "unused-", layout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_reads_select1')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_stack_budget_reads_select1'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_rejects_missing_source_frame_report" time="0.027" /><testcase classname="tests.test_stack_budget" name="test_stack_budget_rejects_unknown_indirect_and_recursion[ 8000004: 4798 blx r3\n-Unresolved stack usage]" time="0.019"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Unresolved stack usage'&#10;  Actual message: &quot;'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_unkn0'&quot;">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_rejects_unkn0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E685552990&gt;
+instruction = ' 8000004: 4798 blx r3\n', error = 'Unresolved stack usage'
+
+    @pytest.mark.parametrize("instruction, error", (
+        (" 8000004: 4798 blx r3\n", "Unresolved stack usage"),
+        (" 8000004: f000 f000 bl 8000000 &lt;AppTask_Serial&gt;\n", "Recursive stack path"),
+    ))
+    def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypatch, instruction, error):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+&gt;       with pytest.raises(ValueError, match=error):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_unkn0'"
+
+apps\SCG\tests\test_stack_budget.py:185: AssertionError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_rejects_unknown_indirect_and_recursion[ 8000004: f000 f000 bl 8000000 &lt;AppTask_Serial&gt;\n-Recursive stack path]" time="0.018"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Recursive stack path'&#10;  Actual message: &quot;'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_unkn1'&quot;">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_rejects_unkn1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E685573690&gt;
+instruction = ' 8000004: f000 f000 bl 8000000 &lt;AppTask_Serial&gt;\n'
+error = 'Recursive stack path'
+
+    @pytest.mark.parametrize("instruction, error", (
+        (" 8000004: 4798 blx r3\n", "Unresolved stack usage"),
+        (" 8000004: f000 f000 bl 8000000 &lt;AppTask_Serial&gt;\n", "Recursive stack path"),
+    ))
+    def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypatch, instruction, error):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+&gt;       with pytest.raises(ValueError, match=error):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Recursive stack path'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_unkn1'"
+
+apps\SCG\tests\test_stack_budget.py:185: AssertionError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 4798 blxne r3\n]" time="0.018"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Unresolved stack usage'&#10;  Actual message: &quot;'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_all_0'&quot;">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_rejects_all_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E68558C9F0&gt;
+instruction = ' 8000004: 4798 blxne r3\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+&gt;       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_all_0'"
+
+apps\SCG\tests\test_stack_budget.py:196: AssertionError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 469f mov pc, r3\n]" time="0.019"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Unresolved stack usage'&#10;  Actual message: &quot;'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_all_1'&quot;">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_rejects_all_1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E685BD0390&gt;
+instruction = ' 8000004: 469f mov pc, r3\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+&gt;       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_all_1'"
+
+apps\SCG\tests\test_stack_budget.py:196: AssertionError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: f8d3 f000 ldr.w pc, [r3]\n]" time="0.018"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Unresolved stack usage'&#10;  Actual message: &quot;'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_all_2'&quot;">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_stack_budget_rejects_all_2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E685594A10&gt;
+instruction = ' 8000004: f8d3 f000 ldr.w pc, [r3]\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+&gt;       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: "'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\pre-generated\\\\f4\\\\Flight_Controller\\\\Tools\\\\software_stack_inputs.json' is not in the subpath of 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\platform-finish-20261116\\\\contracts\\\\stack-baseline\\\\test_stack_budget_rejects_all_2'"
+
+apps\SCG\tests\test_stack_budget.py:196: AssertionError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_returning_tail_call_in_initializer_does_not_hide_task_business_loop" time="0.019"><failure message="ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_returning_tail_call_in_in0'">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_returning_tail_call_in_in0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002E685594DD0&gt;
+
+    def test_returning_tail_call_in_initializer_does_not_hide_task_business_loop(tmp_path, monkeypatch):
+        root = _ElfFixture_Create(tmp_path, monkeypatch)
+        original = stacks.Command_Read
+        base = original(["objdump", "-d"], root)
+        base = re.sub(r"(&lt;AppTask_Ins&gt;:\n)", r"\1 8000000: f000 f000 bl 0 &lt;LoopWork&gt;\n", base)
+        extra = ("08000000 &lt;Initialize&gt;:\n 8000000: f000 b800 b.w 0 &lt;library&gt;\n"
+                 "08000000 &lt;LoopWork&gt;:\n 8000000: 4770 bx lr\n")
+        assembly, symbols, _ = _AssemblyFixture_Extend(base, extra, {"AppTask_Ins": "Initialize"})
+        su = root / "build/FCCG/SilverStar_F407/Release/test.su"
+        with su.open("a", encoding="utf8") as stream:
+            stream.write("fixture.c:1:1:Initialize\t16\tstatic\nfixture.c:1:1:LoopWork\t512\tstatic\n")
+        def Read(command, cwd):
+            if "objdump" in command[0]:
+                return symbols if "-t" in command else assembly
+            return original(command, cwd)
+        monkeypatch.setattr(stacks, "Command_Read", Read)
+&gt;       report = stacks.StackReport_Build(root, "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\check_task_stacks.py:5555: in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_review.py:111: in Inputs_Verify
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.work\platform-finish-20261116\contracts\pre-generated\f4\Flight_Controller\Tools\stack_manifest.py:45: in Manifest_Load
+    relative = Path(manifest_path).absolute().relative_to(root_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/pre-generated/f4/Flight_Controller/Tools/software_stack_inputs.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_returning_tail_call_in_in0')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\pre-generated\\f4\\Flight_Controller\\Tools\\software_stack_inputs.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\stack-baseline\\test_returning_tail_call_in_in0'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_diagnostic_never_grants_acceptance_even_with_closed_direct_paths" time="0.028" /><testcase classname="tests.test_stack_budget" name="test_diagnostic_reports_unknown_boundary_without_synthesizing_a_margin[ 8000004: 4798 blx r3\n-AppTask_Serial]" time="0.021" /><testcase classname="tests.test_stack_budget" name="test_diagnostic_reports_unknown_boundary_without_synthesizing_a_margin[ 8000004: f000 f000 bl 8000000 &lt;AppTask_Serial&gt;\n-recursion:AppTask_Serial]" time="0.019" /><testcase classname="tests.test_stack_budget" name="test_complete_compilation_input_contract_fails_closed[unknown_source]" time="0.019" /><testcase classname="tests.test_stack_budget" name="test_complete_compilation_input_contract_fails_closed[missing_dependency]" time="0.020" /><testcase classname="tests.test_stack_budget" name="test_complete_compilation_input_contract_fails_closed[changed_dependencies]" time="0.019" /><testcase classname="tests.test_stack_budget" name="test_reviewed_compilation_inputs_reject_non_header_and_empty_mutations[changed_inc]" time="0.052" /><testcase classname="tests.test_stack_budget" name="test_reviewed_compilation_inputs_reject_non_header_and_empty_mutations[missing_inc]" time="0.042" /><testcase classname="tests.test_stack_budget" name="test_reviewed_compilation_inputs_reject_non_header_and_empty_mutations[emptied_source]" time="0.032" /><testcase classname="tests.test_stack_budget" name="test_unknown_empty_source_is_not_reviewed" time="0.006" /><testcase classname="tests.test_stack_budget" name="test_product_patch_binding_accepts_only_authorized_complete_header[patch]" time="0.028" /><testcase classname="tests.test_stack_budget" name="test_product_patch_binding_accepts_only_authorized_complete_header[runtime]" time="0.026" /><testcase classname="tests.test_stack_budget" name="test_source_only_review_cannot_grant_a_compiled_dependency_closure" time="0.020" /><testcase classname="tests.test_stack_budget" name="test_navigation_review_still_binds_real_complete_compiler_inputs[placement]" time="0.105" /><testcase classname="tests.test_stack_budget" name="test_navigation_review_still_binds_real_complete_compiler_inputs[missing_header]" time="0.091" /><testcase classname="tests.test_stack_budget" name="test_navigation_review_still_binds_real_complete_compiler_inputs[compiled_graph]" time="0.100" /><testcase classname="tests.test_stack_budget" name="test_product_metadata_binding_accepts_only_authorized_complete_source[digest]" time="0.002" /><testcase classname="tests.test_stack_budget" name="test_product_metadata_binding_accepts_only_authorized_complete_source[function]" time="0.002" /><testcase classname="tests.test_stack_budget" name="test_product_decoder_binding_accepts_only_authorized_complete_source[digest]" time="0.002" /><testcase classname="tests.test_stack_budget" name="test_product_decoder_binding_accepts_only_authorized_complete_source[function]" time="0.002" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Inc/logger_bus.h]" time="0.029" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Src/logger_bus.c]" time="0.028" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Src/logger_task.c]" time="0.005"><failure message="assert '43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d' in ['e7067b8a1e3d5bc58667107a928fd78138462b10391faa65c9d5f1fd186e5a32', '7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520...a0261bed6ccbfe3d816edad303f73f5cbd4c1d3f0321', '3489b096e97c985fe978cf895326ea815c29c4b015437942d8fd9210a69e2e57', ...]&#10; +  where '43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d' = &lt;function BindingSourceHash_Get at 0x000002E6841FF7F0&gt;('#include &quot;app_tasks.h&quot;\n\n#include &lt;stddef.h&gt;\n#include &lt;string.h&gt;\n\n#include &quot;FreeRTOS.h&quot;\n#include &quot;task.h&quot;\n#incl...ical_Enter();\n    *diagnostics = s_diagnostics;\n    PlatformCritical_Exit(state);\n    return SYSTEM_DEVICE_OK;\n}\n')&#10; +    where &lt;function BindingSourceHash_Get at 0x000002E6841FF7F0&gt; = stacks.BindingSourceHash_Get&#10; +  and   ['e7067b8a1e3d5bc58667107a928fd78138462b10391faa65c9d5f1fd186e5a32', '7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520...a0261bed6ccbfe3d816edad303f73f5cbd4c1d3f0321', '3489b096e97c985fe978cf895326ea815c29c4b015437942d8fd9210a69e2e57', ...] = &lt;function BindingSourceVersions_Get at 0x000002E6841FF740&gt;('APP/Src/logger_task.c')&#10; +    where &lt;function BindingSourceVersions_Get at 0x000002E6841FF740&gt; = stacks.BindingSourceVersions_Get">tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/stack-baseline/test_uart_review_accepts_exact2')
+relative = 'APP/Src/logger_task.c'
+
+    @pytest.mark.parametrize('relative', [
+        'APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c', 'APP/Src/logger_task.c',
+        'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c',
+        'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+        'Generated/Src/project_log_decoder_profile.c', 'Generated/Src/project_metadata.c',
+        'System/Inc/system_lifecycle.h', 'System/Inc/system_log_file.h',
+        'System/Src/system_console.c', 'System/Src/system_log_file.c'])
+    def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_path, relative):
+        base = Path(__file__).resolve().parents[1]
+        if relative.startswith('Generated/'):
+            owner = base / 'tests/fixtures/stack_uart_identity_20261013'
+        elif relative.startswith('Devices/'):
+            owner = base / 'plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload'
+        elif relative.startswith('FlightLogic/'):
+            owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
+        else:
+            owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
+        if relative in ('APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c'):
+            text = (base / 'tests/fixtures/stack_logger_review_20261101' / relative).read_text(encoding='utf8')
+        elif relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+                        'System/Src/system_console.c'):
+            with zipfile.ZipFile(base / 'tests/fixtures/stack_review_20261025.zip') as archive:
+                text = archive.read(relative).decode('utf8')
+        else:
+            text = (owner / relative).read_text(encoding='utf8')
+&gt;       assert stacks.BindingSourceHash_Get(text) in stacks.BindingSourceVersions_Get(relative)
+E       assert '43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d' in ['e7067b8a1e3d5bc58667107a928fd78138462b10391faa65c9d5f1fd186e5a32', '7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520...a0261bed6ccbfe3d816edad303f73f5cbd4c1d3f0321', '3489b096e97c985fe978cf895326ea815c29c4b015437942d8fd9210a69e2e57', ...]
+E        +  where '43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d' = &lt;function BindingSourceHash_Get at 0x000002E6841FF7F0&gt;('#include "app_tasks.h"\n\n#include &lt;stddef.h&gt;\n#include &lt;string.h&gt;\n\n#include "FreeRTOS.h"\n#include "task.h"\n#incl...ical_Enter();\n    *diagnostics = s_diagnostics;\n    PlatformCritical_Exit(state);\n    return SYSTEM_DEVICE_OK;\n}\n')
+E        +    where &lt;function BindingSourceHash_Get at 0x000002E6841FF7F0&gt; = stacks.BindingSourceHash_Get
+E        +  and   ['e7067b8a1e3d5bc58667107a928fd78138462b10391faa65c9d5f1fd186e5a32', '7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520...a0261bed6ccbfe3d816edad303f73f5cbd4c1d3f0321', '3489b096e97c985fe978cf895326ea815c29c4b015437942d8fd9210a69e2e57', ...] = &lt;function BindingSourceVersions_Get at 0x000002E6841FF740&gt;('APP/Src/logger_task.c')
+E        +    where &lt;function BindingSourceVersions_Get at 0x000002E6841FF740&gt; = stacks.BindingSourceVersions_Get
+
+apps\SCG\tests\test_stack_budget.py:437: AssertionError</failure></testcase><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c]" time="0.035" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c]" time="0.036" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[Generated/Src/project_log_decoder_profile.c]" time="0.013" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[Generated/Src/project_metadata.c]" time="0.031" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[System/Inc/system_lifecycle.h]" time="0.014" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[System/Inc/system_log_file.h]" time="0.013" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[System/Src/system_console.c]" time="0.042" /><testcase classname="tests.test_stack_budget" name="test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[System/Src/system_log_file.c]" time="0.039" /><testcase classname="tests.test_stack_budget" name="test_integration_registration_is_exactly_two_complete_sources" time="0.001" /><testcase classname="tests.test_stack_budget" name="test_integration_identity_binding_accepts_exact_sources_and_rejects_changes[identity-Generated/Src/project_metadata.c]" time="0.043" /><testcase classname="tests.test_stack_budget" name="test_integration_identity_binding_accepts_exact_sources_and_rejects_changes[identity-Generated/Src/project_log_decoder_profile.c]" time="0.036" /><testcase classname="tests.test_stack_budget" name="test_integration_identity_binding_accepts_exact_sources_and_rejects_changes[function-Generated/Src/project_metadata.c]" time="0.053" /><testcase classname="tests.test_stack_budget" name="test_integration_identity_binding_accepts_exact_sources_and_rejects_changes[function-Generated/Src/project_log_decoder_profile.c]" time="0.021" /><testcase classname="tests.test_stack_budget" name="test_integration_identity_binding_accepts_exact_sources_and_rejects_changes[unknown_path-Generated/Src/project_metadata.c]" time="0.040" /><testcase classname="tests.test_stack_budget" name="test_integration_identity_binding_accepts_exact_sources_and_rejects_changes[unknown_path-Generated/Src/project_log_decoder_profile.c]" time="0.018" /><testcase classname="tests.test_stack_budget" name="test_logfile_review_rejects_mixing_individually_known_compiler_inputs[24-source]" time="0.031" /><testcase classname="tests.test_stack_budget" name="test_logfile_review_rejects_mixing_individually_known_compiler_inputs[24-included_input]" time="0.024" /><testcase classname="tests.test_stack_budget" name="test_logfile_review_rejects_mixing_individually_known_compiler_inputs[25-source]" time="0.023" /><testcase classname="tests.test_stack_budget" name="test_logfile_review_rejects_mixing_individually_known_compiler_inputs[25-included_input]" time="0.020" /><testcase classname="tests.test_stack_budget" name="test_logfile_review_rejects_mixing_individually_known_compiler_inputs[26-source]" time="0.020" /><testcase classname="tests.test_stack_budget" name="test_logfile_review_rejects_mixing_individually_known_compiler_inputs[26-included_input]" time="0.022" /><testcase classname="tests.test_stack_budget" name="test_strict_cli_refuses_task_only_pass_without_whole_program_proof" time="0.065" /></testsuite></testsuites>

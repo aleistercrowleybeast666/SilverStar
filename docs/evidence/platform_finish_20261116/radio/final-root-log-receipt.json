@@ -1,0 +1,38 @@
+{
+  "ux-final2.log": {
+    "sha256": "57f14c46cf55248fa2cdc0700e17b4ab6f7ba469c7952478e7878654a9a74159",
+    "bytes": 674
+  },
+  "e19-identity-prefail.log": {
+    "sha256": "4af67085f0e90862baeb98e2cbc1a65fe1b8bf024f45e2b4b58f5644f8a872c7",
+    "bytes": 2630
+  },
+  "e19-final-host.log": {
+    "sha256": "3ff6c21995203b94bfc35ffd26edd9131f0fc85fffe98b2e580bceb4134156a7",
+    "bytes": 356
+  },
+  "radio-test.log": {
+    "sha256": "02219dcfd4d0954a281fd708f5c02361a8a0a87891c643987526a3f2bbf66a8d",
+    "bytes": 113
+  },
+  "cache-test3.log": {
+    "sha256": "aacf29fbde78b8839acfe9bd6396d8d84bc6f4eb62135457947d386376a7895a",
+    "bytes": 4409
+  },
+  "ux-test.log": {
+    "sha256": "e25354248cd6494dd8714425999643ba1dc5d59b165b8280c98ca09993d46e55",
+    "bytes": 19089
+  },
+  "ux-test2.log": {
+    "sha256": "1b969a22e688ae9d4590076b01559a8242d675c1617fe45655d944a0b2aaf7f3",
+    "bytes": 10457
+  },
+  "startup-before.txt": {
+    "sha256": "898b7de2b0141539b2377db50674daca83cf949cde87bb316a588186a5c631d8",
+    "bytes": 6454
+  },
+  "startup-after.txt": {
+    "sha256": "3ffae3852767d4de352eff265f45108341ddd42996c29419432002741740b67a",
+    "bytes": 6621
+  }
+}

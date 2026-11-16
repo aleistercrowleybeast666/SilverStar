@@ -1,0 +1,67 @@
+FFF....                                                                  [100%]
+================================== FAILURES ===================================
+_ test_augmented_without_logging_rejects_before_plan_or_source_graph[eskf20] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-before/test_augmented_without_logging0')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024172F9FE00>
+algorithm = 'eskf20'
+
+    @pytest.mark.parametrize("algorithm", ["eskf20", "inekf15", "inekf20"])
+    def test_augmented_without_logging_rejects_before_plan_or_source_graph(tmp_path, builtin_catalog, algorithm):
+        model = ReferenceProject_Create("JournalDependency", catalog=builtin_catalog)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
+        model = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+        assert Project_Validate(model, builtin_catalog).valid
+        model.protocols["logging"] = None
+        before = model.Dictionary_Get()
+        validation = Project_Validate(model, builtin_catalog)
+>       assert any(row.level == "error" and row.code == CODE for row in validation.issues)
+E       assert False
+E        +  where False = any(<generator object test_augmented_without_logging_rejects_before_plan_or_source_graph.<locals>.<genexpr> at 0x00000241736B0EE0>)
+
+apps\SCG\tests\test_augmented_logging_contract.py:23: AssertionError
+_ test_augmented_without_logging_rejects_before_plan_or_source_graph[inekf15] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-before/test_augmented_without_logging1')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024172F9FE00>
+algorithm = 'inekf15'
+
+    @pytest.mark.parametrize("algorithm", ["eskf20", "inekf15", "inekf20"])
+    def test_augmented_without_logging_rejects_before_plan_or_source_graph(tmp_path, builtin_catalog, algorithm):
+        model = ReferenceProject_Create("JournalDependency", catalog=builtin_catalog)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
+        model = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+        assert Project_Validate(model, builtin_catalog).valid
+        model.protocols["logging"] = None
+        before = model.Dictionary_Get()
+        validation = Project_Validate(model, builtin_catalog)
+>       assert any(row.level == "error" and row.code == CODE for row in validation.issues)
+E       assert False
+E        +  where False = any(<generator object test_augmented_without_logging_rejects_before_plan_or_source_graph.<locals>.<genexpr> at 0x00000241736B3C60>)
+
+apps\SCG\tests\test_augmented_logging_contract.py:23: AssertionError
+_ test_augmented_without_logging_rejects_before_plan_or_source_graph[inekf20] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/journal-before/test_augmented_without_logging2')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024172F9FE00>
+algorithm = 'inekf20'
+
+    @pytest.mark.parametrize("algorithm", ["eskf20", "inekf15", "inekf20"])
+    def test_augmented_without_logging_rejects_before_plan_or_source_graph(tmp_path, builtin_catalog, algorithm):
+        model = ReferenceProject_Create("JournalDependency", catalog=builtin_catalog)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
+        model = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+        assert Project_Validate(model, builtin_catalog).valid
+        model.protocols["logging"] = None
+        before = model.Dictionary_Get()
+        validation = Project_Validate(model, builtin_catalog)
+>       assert any(row.level == "error" and row.code == CODE for row in validation.issues)
+E       assert False
+E        +  where False = any(<generator object test_augmented_without_logging_rejects_before_plan_or_source_graph.<locals>.<genexpr> at 0x00000241736B18A0>)
+
+apps\SCG\tests\test_augmented_logging_contract.py:23: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_augmented_logging_contract.py::test_augmented_without_logging_rejects_before_plan_or_source_graph[eskf20]
+FAILED apps\SCG\tests\test_augmented_logging_contract.py::test_augmented_without_logging_rejects_before_plan_or_source_graph[inekf15]
+FAILED apps\SCG\tests\test_augmented_logging_contract.py::test_augmented_without_logging_rejects_before_plan_or_source_graph[inekf20]
+3 failed, 4 passed in 11.06s

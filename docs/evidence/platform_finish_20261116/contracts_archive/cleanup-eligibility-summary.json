@@ -1,0 +1,155 @@
+{
+  "deletion_executed": false,
+  "directories": [
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\post-generated-a\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1515,
+          "bytes": 109708190
+        },
+        "preserved_unique": {
+          "files": 23,
+          "bytes": 23717332
+        },
+        "preserved_report": {
+          "files": 0,
+          "bytes": 0
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/default-a.json",
+      "sha256": "bd732d2dde5bc2e13be96b60d10331c33affb18e01852a45d152d499021d0eb2"
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\post-generated-b\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1010,
+          "bytes": 102259710
+        },
+        "preserved_unique": {
+          "files": 18,
+          "bytes": 17491401
+        },
+        "preserved_report": {
+          "files": 0,
+          "bytes": 0
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/default-b.json",
+      "sha256": "12ce2a5fc296742a76974d7fd7c8351b818f3dde3c660abc3c3f29023b1db5d9"
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-c\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1524,
+          "bytes": 116786349
+        },
+        "preserved_unique": {
+          "files": 14,
+          "bytes": 16639229
+        },
+        "preserved_report": {
+          "files": 0,
+          "bytes": 0
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/default-c.json",
+      "sha256": "364e223e5c36553bf074fa4421645063ec2217bfa308c3f8434e2a1b0794eaad"
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-d\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1536,
+          "bytes": 133414798
+        },
+        "preserved_unique": {
+          "files": 2,
+          "bytes": 10780
+        },
+        "preserved_report": {
+          "files": 0,
+          "bytes": 0
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/default-d.json",
+      "sha256": "dcd16d4882c050a2c51d4790de5ce6b67048ee662e7a5e1ba57b0815b42699a5"
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1536,
+          "bytes": 133414798
+        },
+        "preserved_unique": {
+          "files": 0,
+          "bytes": 0
+        },
+        "preserved_report": {
+          "files": 4,
+          "bytes": 559892
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/default-e.json",
+      "sha256": "8b21cf133abd0b20d14c7a16c7e48e1f0ff72a15391007852b9fc294a93fd859"
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-a\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1012,
+          "bytes": 117945853
+        },
+        "preserved_unique": {
+          "files": 508,
+          "bytes": 13716343
+        },
+        "preserved_report": {
+          "files": 0,
+          "bytes": 0
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/e19-a.json",
+      "sha256": "2ebf377801c488ce3fac658d320400a795eccfb59764ed39086d2834b0f185ee"
+    },
+    {
+      "build_root": "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-b\\Flight_Controller\\build\\FCCG\\SilverStar_F407",
+      "counts": {
+        "eligible_duplicate": {
+          "files": 1012,
+          "bytes": 117945853
+        },
+        "preserved_unique": {
+          "files": 0,
+          "bytes": 0
+        },
+        "preserved_report": {
+          "files": 4,
+          "bytes": 554145
+        }
+      },
+      "eligibility_inventory": "cleanup-eligibility/e19-b.json",
+      "sha256": "a3e411d417b479cd8fab18eb7491fdb0d6be5d66a5020b331e3be06e12087d9f"
+    }
+  ],
+  "totals": {
+    "eligible_duplicate": {
+      "files": 9145,
+      "bytes": 831475551
+    },
+    "preserved_unique": {
+      "files": 565,
+      "bytes": 71575085
+    },
+    "preserved_report": {
+      "files": 8,
+      "bytes": 1114037
+    }
+  },
+  "repeated_inventory_sha256": "7031a42f6c5b79b41c437231cc8bf545c1937791f2b8848a8a44b32d0950746d",
+  "archive_acceptance_sha256": "cea48388c57722a96e69162eedb742bf5a7c2e3b72e41b98d673da6e25c910c0",
+  "scope": "Seven current-task owned ARM build subtrees only; root-controlled later cleanup, no directory deletion authorization"
+}

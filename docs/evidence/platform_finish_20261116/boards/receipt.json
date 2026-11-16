@@ -1,0 +1,1084 @@
+{
+  "source_commit": "6fed5b639d0835de7874a74db25a63ab0da814ad",
+  "hardware_tested": false,
+  "normal_fresh_generation": {
+    "changed_source": [],
+    "compile_input_comparison_to_o": {
+      "Flight_Controller": {
+        "count": 644,
+        "changed": []
+      },
+      "Ground_Station": {
+        "count": 175,
+        "changed": []
+      }
+    },
+    "current_generation": {
+      "flight": true,
+      "ground": true
+    }
+  },
+  "actual_gates": [
+    {
+      "target": "SSFC H743 fresh P",
+      "receipt": "candidate-p-Flight_Controller-final-validation/receipt.json",
+      "gate_count": 12,
+      "inputs_unchanged": true,
+      "commands": [
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Release",
+            "all",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Release",
+          "gate": "all",
+          "exit_code": 0,
+          "seconds": 123.33586850000574,
+          "log_sha256": "90ef6865a5d2538623e9bfef0b54885a8323194093d897b16ba06a91eb99253b"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Release",
+            "artifact-check",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Release",
+          "gate": "artifact-check",
+          "exit_code": 0,
+          "seconds": 6.857318399997894,
+          "log_sha256": "40ff5bc780d1bf2d0167a22ff33f7c976660fd941c1ee8f62604c5e5919ff1b8"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Release",
+            "architecture-check",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Release",
+          "gate": "architecture-check",
+          "exit_code": 0,
+          "seconds": 22.745329900004435,
+          "log_sha256": "cf6f2fd7c2f1b5d3c3f4287252b681ceb455faa58fd694557cc67ae143dc509d"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Release",
+            "power10-check",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Release",
+          "gate": "power10-check",
+          "exit_code": 0,
+          "seconds": 31.83601490000001,
+          "log_sha256": "7e7bd500e0bbb8c8bad267f7fd0b82d9ca5f7edc3be14fec3064243def78edee"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Release",
+            "static-analysis",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Release",
+          "gate": "static-analysis",
+          "exit_code": 0,
+          "seconds": 147.822224800002,
+          "log_sha256": "82989ab8eca8dab5ce0d7aa38343e68ca76f912a87a5b354dc8a55b789acba39"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Release",
+            "stack-report",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Release",
+          "gate": "stack-report",
+          "exit_code": 0,
+          "seconds": 17.331130500002473,
+          "log_sha256": "ca98d20855688cd7b43df0e50e3809b8fa5360c8cf66bcda4c2545ceb25b889d"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Debug",
+            "all",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Debug",
+          "gate": "all",
+          "exit_code": 0,
+          "seconds": 116.58962179999799,
+          "log_sha256": "b55040c1f496425d1e0ea90361242234f6be4705eb977c79d8ad50d94271ed68"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Debug",
+            "artifact-check",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Debug",
+          "gate": "artifact-check",
+          "exit_code": 0,
+          "seconds": 7.918274800002109,
+          "log_sha256": "0c4c7286b737b8fe8383525765e583ac3c8fe2c6d7ba32840bfdd308631ab9a7"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Debug",
+            "architecture-check",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Debug",
+          "gate": "architecture-check",
+          "exit_code": 0,
+          "seconds": 20.847223899996607,
+          "log_sha256": "829982b2dd0d46eda1c414d84b949e716e3c9b225583366da865118b52281727"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Debug",
+            "power10-check",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Debug",
+          "gate": "power10-check",
+          "exit_code": 0,
+          "seconds": 23.77867189999961,
+          "log_sha256": "baec7c4383ce00540cff6788c7abd8eebad20fecd09a409a0e148fe155ded302"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Debug",
+            "static-analysis",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Debug",
+          "gate": "static-analysis",
+          "exit_code": 0,
+          "seconds": 123.0753829000023,
+          "log_sha256": "15667d76fa311ea79eee1d9567e07c34762db7d829c7424fa60baed4b8a04854"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Flight_Controller",
+            "-j2",
+            "CONFIG=Debug",
+            "stack-report",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+          ],
+          "config": "Debug",
+          "gate": "stack-report",
+          "exit_code": 0,
+          "seconds": 18.8443952000016,
+          "log_sha256": "f14122a0b65a1d77445643af58fd1a8cf27cbbe5e4a85f54b698183100b77681"
+        }
+      ]
+    },
+    {
+      "target": "SSGS C071 fresh P",
+      "receipt": "ssgs-current-validation/receipt.json",
+      "gate_count": 14,
+      "inputs_unchanged": true,
+      "commands": [
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "all"
+          ],
+          "config": "Release",
+          "gate": "all",
+          "exit_code": 0,
+          "seconds": 33.98949100000027,
+          "log_sha256": "5450ea6a14f94213b1ad47a06c5d0e9b33d41374eacc0e9fd7ccbd269d7fcb2f"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "artifact-check"
+          ],
+          "config": "Release",
+          "gate": "artifact-check",
+          "exit_code": 0,
+          "seconds": 6.3454762999972445,
+          "log_sha256": "1d60513e2988645de213641b4bf842cfa1c9bdfd1ed8a6bb240761a1e7af91f2"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "architecture-check"
+          ],
+          "config": "Release",
+          "gate": "architecture-check",
+          "exit_code": 0,
+          "seconds": 1.0204898999945726,
+          "log_sha256": "73706d0f3943540c85d30c7bde526b5f69d04eb79ac40341f4a5d545a4586af8"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "power10-check"
+          ],
+          "config": "Release",
+          "gate": "power10-check",
+          "exit_code": 0,
+          "seconds": 3.5685999000052107,
+          "log_sha256": "d03f2979e69e7516fa96df831767e9558a1dbb0a61d0fb24afedb439907bdec9"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "static-analysis"
+          ],
+          "config": "Release",
+          "gate": "static-analysis",
+          "exit_code": 0,
+          "seconds": 36.391558299997996,
+          "log_sha256": "f77218ac931eddf3c5b95a949a015e720d43396192558eac716bbf7d5cdf4ba1"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "host-tests"
+          ],
+          "config": "Release",
+          "gate": "host-tests",
+          "exit_code": 0,
+          "seconds": 6.816688599996269,
+          "log_sha256": "8ed6f53887bc257ea6e2098a14748c1433814a72480fe86fe185b6d7955f6cc4"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "stack-report"
+          ],
+          "config": "Release",
+          "gate": "stack-report",
+          "exit_code": 0,
+          "seconds": 15.544727300002705,
+          "log_sha256": "0ad81ad61b2d2bc983073cbe6f0bbdeb60ee04a33767983374f61dd2ef8d10ec"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "all"
+          ],
+          "config": "Debug",
+          "gate": "all",
+          "exit_code": 0,
+          "seconds": 29.419723400002113,
+          "log_sha256": "91b5ea54bc81b557ae65c8d6a14f3d7b1c9ad675bdfe405c1bd260f227810cf1"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "artifact-check"
+          ],
+          "config": "Debug",
+          "gate": "artifact-check",
+          "exit_code": 0,
+          "seconds": 5.190967300004559,
+          "log_sha256": "0fb994496ce5a6c98dbd6311c1aac8216be0232dc01bfa3650babb0f9b34f9a4"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "architecture-check"
+          ],
+          "config": "Debug",
+          "gate": "architecture-check",
+          "exit_code": 0,
+          "seconds": 0.831237999998848,
+          "log_sha256": "7ab7b574c0dc91aac6a9c598a46a389ba524ef2e686280f135aaa4d5f1d1769f"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "power10-check"
+          ],
+          "config": "Debug",
+          "gate": "power10-check",
+          "exit_code": 0,
+          "seconds": 2.875085700005002,
+          "log_sha256": "fb41373ddaba27aa6f9c57725d6edb26cbc6642fca6c8b837a0cece5a3678cb1"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "static-analysis"
+          ],
+          "config": "Debug",
+          "gate": "static-analysis",
+          "exit_code": 0,
+          "seconds": 33.943242300003476,
+          "log_sha256": "ef2e0be0efb64634f0aab5d70b66903a45e49a418c7443ce2382fcc7a2258edc"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "host-tests"
+          ],
+          "config": "Debug",
+          "gate": "host-tests",
+          "exit_code": 0,
+          "seconds": 5.30468679999467,
+          "log_sha256": "756f9356edce67083bb0eee2da1be06e7de8273e14f137e3dcee85aafd6db8e6"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\boards\\candidate-p\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "stack-report"
+          ],
+          "config": "Debug",
+          "gate": "stack-report",
+          "exit_code": 0,
+          "seconds": 10.560589000000618,
+          "log_sha256": "c6dd9ebf95e53cb8f8d483269e304302a43283b0cd3062f8aa848e22895e6f08"
+        }
+      ]
+    },
+    {
+      "target": "F103 E19 Ground D",
+      "receipt": "m3-d-validation/receipt.json",
+      "gate_count": 14,
+      "inputs_unchanged": true,
+      "commands": [
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "all"
+          ],
+          "config": "Release",
+          "gate": "all",
+          "exit_code": 0,
+          "seconds": 22.163417899995693,
+          "log_sha256": "40490d4fa642e335ab0d57adbb43c44f12f9459bfff6c41c7444fbb984dc58e6"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "artifact-check"
+          ],
+          "config": "Release",
+          "gate": "artifact-check",
+          "exit_code": 0,
+          "seconds": 3.950609899999108,
+          "log_sha256": "830d2e0e4bfb2ef68735b146d6d6bb2dd60ec6d1ccb824264faa573122f8f1c2"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "architecture-check"
+          ],
+          "config": "Release",
+          "gate": "architecture-check",
+          "exit_code": 0,
+          "seconds": 0.6932039000021177,
+          "log_sha256": "5ff5adc1649f9d5c0f6fe3ef53be878a893e4429e59f22d5e7984961bc3b780d"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "power10-check"
+          ],
+          "config": "Release",
+          "gate": "power10-check",
+          "exit_code": 0,
+          "seconds": 2.1140606999979354,
+          "log_sha256": "8b520aada66455336738739a95c382bd7b3aef747ec453bcf68035368faccbf4"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "static-analysis"
+          ],
+          "config": "Release",
+          "gate": "static-analysis",
+          "exit_code": 0,
+          "seconds": 25.53449360000377,
+          "log_sha256": "ea118e165a57c76f4f1638d7448a5d267b5a6048610ca23a036bce6a524b35d0"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "host-tests"
+          ],
+          "config": "Release",
+          "gate": "host-tests",
+          "exit_code": 0,
+          "seconds": 5.006781199997931,
+          "log_sha256": "ee4b2454a395c43ff45e580f8846331a95a36dac206013f292bd3d7cfae3677d"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Release",
+            "stack-report"
+          ],
+          "config": "Release",
+          "gate": "stack-report",
+          "exit_code": 0,
+          "seconds": 8.238361399999121,
+          "log_sha256": "75ce345a18273282f6c4b7630c08f23ad843744fe57f740453eb2fba2aa3f63b"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "all"
+          ],
+          "config": "Debug",
+          "gate": "all",
+          "exit_code": 0,
+          "seconds": 24.06612459999451,
+          "log_sha256": "f54d7d241ce7f6d7efcad658530b1c3646dfc0d16798395ecc57e9f7d2f901e9"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "artifact-check"
+          ],
+          "config": "Debug",
+          "gate": "artifact-check",
+          "exit_code": 0,
+          "seconds": 4.6328882000016165,
+          "log_sha256": "9a14d1fd5b3b42def54b61a97d6e67a8dd1d87ff6e5f78fa7a865a94b987e3db"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "architecture-check"
+          ],
+          "config": "Debug",
+          "gate": "architecture-check",
+          "exit_code": 0,
+          "seconds": 1.0770306999984314,
+          "log_sha256": "888d29c9910d2a2590f25815548f5228aeae1270e16260f05b13a4dfa2a13b27"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "power10-check"
+          ],
+          "config": "Debug",
+          "gate": "power10-check",
+          "exit_code": 0,
+          "seconds": 2.6295745999959763,
+          "log_sha256": "f5567d4f3d60d4dccb1ef962794ab62945b6785e0d2abc6a3ebf99df638feea9"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "static-analysis"
+          ],
+          "config": "Debug",
+          "gate": "static-analysis",
+          "exit_code": 0,
+          "seconds": 25.265305400003854,
+          "log_sha256": "3b39068fa080fe3889ecb75dad7885a4e2c1d7c32b858a6433e80d3475c6844b"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "host-tests"
+          ],
+          "config": "Debug",
+          "gate": "host-tests",
+          "exit_code": 0,
+          "seconds": 4.3510790999935125,
+          "log_sha256": "95d910d66ae3d6076b843a9563a4787e229de0bf52e33b10ec4a8e17e4530a2d"
+        },
+        {
+          "argv": [
+            "D:/msys64/ucrt64/bin/mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\pf1117\\ground-m3-d\\Ground_Station",
+            "-j2",
+            "CONFIG=Debug",
+            "stack-report"
+          ],
+          "config": "Debug",
+          "gate": "stack-report",
+          "exit_code": 0,
+          "seconds": 8.039449700001569,
+          "log_sha256": "5c9fbbdc1d73a91d64eff9bc962017ad36ba7d43c26ca38db05ec02efaab82e3"
+        }
+      ]
+    }
+  ],
+  "packages": [
+    {
+      "zip": "D:\\python_software\\SilverStar\\dist\\pf1117-boards-current\\SSFC1_0_SSGS1_0_Current.zip",
+      "zip_bytes": 183633025,
+      "zip_sha256": "740098e3be7fc6ccfac6f7487b75e10ff3f64d47eba8af073e50637950bfd8b1",
+      "manifest": "D:\\python_software\\SilverStar\\dist\\pf1117-boards-current\\SSFC_SSGS\\MANIFEST.json",
+      "manifest_sha256": "94a80a72803f335acbc178c2f064fc66c498631c9a88e5d0a9b197f8a99a515c",
+      "readback_files": 4173,
+      "readback_all_sha256_equal": true,
+      "recommended_pair": true,
+      "historical_pair": false
+    },
+    {
+      "zip": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\SSFC1_0_SSGS1_0.zip",
+      "zip_bytes": 183592479,
+      "zip_sha256": "c9d69305dbfbf1ed882e0d7ce2b10f157e973f2e7ffc4f33c7dbaa808b48c70c",
+      "manifest": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\SSFC_SSGS\\MANIFEST.json",
+      "manifest_sha256": "8897c14058c805d8df00ed90494552279ee239675ee0616bfe329cec8135df5b",
+      "readback_files": 4171,
+      "readback_all_sha256_equal": true,
+      "recommended_pair": false,
+      "historical_pair": true
+    },
+    {
+      "zip": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19_Ground.zip",
+      "zip_bytes": 63720439,
+      "zip_sha256": "e105dc8068549c68d38525ff358dd1b4e3260f06c9bab264b7a3f05e94ac6b48",
+      "manifest": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19\\MANIFEST.json",
+      "manifest_sha256": "bfa82e2ab4e0b11b7b783d3a4a5dafc84a4d78130dfffcb6aa391fb23d2b0068",
+      "readback_files": 1857,
+      "readback_all_sha256_equal": true,
+      "recommended_pair": false,
+      "historical_pair": false
+    }
+  ],
+  "fresh_pair_staged_readonly": {
+    "read_only": true,
+    "hardware_tested": false,
+    "scope": "Current source authority, not packaged EXE authority",
+    "staged": true,
+    "targets": [
+      {
+        "target": "flight",
+        "configuration": "Release",
+        "source_authority_current": true,
+        "exact_current_tools": {
+          "software_stack_inputs.json": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f",
+          "software_stack_review.md": "b00e56a9d129360b7d9a74c077f44baa606eccecdf27c41aeac1320655ef9b8d",
+          "software_stack_ssfc_review_20261116.md": "8305ccfcc80cc90a8ae20b6170290a22a64f5b69796adfd1b2c383bd63c3778b",
+          "stack_arm.py": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+          "stack_manifest.py": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712",
+          "stack_review.py": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7",
+          "stack_runtime.py": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9"
+        },
+        "compiled_artifacts_equal_to_o_and_case": 534,
+        "report_sha256": "91f9c791b962b9e095e7d02f03f6365b0ebab1a12f3d58f5df0573cf247e2a74",
+        "msp": {
+          "configured_bytes": 8192,
+          "main_reset_bytes": 596,
+          "priority_levels": 16,
+          "priority_bits": 4,
+          "exception_frame_bytes": 108,
+          "maximum_configurable_handler_bytes": 268,
+          "fixed_handler_bytes": 0,
+          "worst_known_bytes": 6828,
+          "margin_bytes": 1364,
+          "passes": true
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "margin_bytes": 380
+          },
+          {
+            "task": "INS",
+            "margin_bytes": 604
+          },
+          {
+            "task": "Estimator",
+            "margin_bytes": 1104
+          },
+          {
+            "task": "Flight",
+            "margin_bytes": 680
+          },
+          {
+            "task": "Logger",
+            "margin_bytes": 688
+          },
+          {
+            "task": "Serial",
+            "margin_bytes": 1572
+          },
+          {
+            "task": "Telemetry",
+            "margin_bytes": 1820
+          },
+          {
+            "task": "Idle",
+            "margin_bytes": 256
+          }
+        ]
+      },
+      {
+        "target": "flight",
+        "configuration": "Debug",
+        "source_authority_current": true,
+        "exact_current_tools": {
+          "software_stack_inputs.json": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f",
+          "software_stack_review.md": "b00e56a9d129360b7d9a74c077f44baa606eccecdf27c41aeac1320655ef9b8d",
+          "software_stack_ssfc_review_20261116.md": "8305ccfcc80cc90a8ae20b6170290a22a64f5b69796adfd1b2c383bd63c3778b",
+          "stack_arm.py": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+          "stack_manifest.py": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712",
+          "stack_review.py": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7",
+          "stack_runtime.py": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9"
+        },
+        "compiled_artifacts_equal_to_o_and_case": 534,
+        "report_sha256": "bf2b133e8b714ad8071b2a05d224f020b27efad9f66ffdc525d2f6ec5ea85647",
+        "msp": {
+          "configured_bytes": 8192,
+          "main_reset_bytes": 596,
+          "priority_levels": 16,
+          "priority_bits": 4,
+          "exception_frame_bytes": 108,
+          "maximum_configurable_handler_bytes": 172,
+          "fixed_handler_bytes": 0,
+          "worst_known_bytes": 5292,
+          "margin_bytes": 2900,
+          "passes": true
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "margin_bytes": 904
+          },
+          {
+            "task": "INS",
+            "margin_bytes": 804
+          },
+          {
+            "task": "Estimator",
+            "margin_bytes": 1648
+          },
+          {
+            "task": "Flight",
+            "margin_bytes": 1932
+          },
+          {
+            "task": "Logger",
+            "margin_bytes": 1056
+          },
+          {
+            "task": "Serial",
+            "margin_bytes": 3028
+          },
+          {
+            "task": "Telemetry",
+            "margin_bytes": 2084
+          },
+          {
+            "task": "Idle",
+            "margin_bytes": 256
+          }
+        ]
+      },
+      {
+        "target": "ground",
+        "configuration": "Release",
+        "source_authority_current": true,
+        "exact_current_tools": {
+          "check_ground_stacks.py": "a479f90ad49b8e62fae86a11f6fb91b73bdb174e6b4af1d6e5df4ac138d7de43",
+          "ground_stack_runtime.py": "8c401cce0d24b299131bf68e5ed9d124d3cc9404048b337473de980986a508ef",
+          "ground_stack_runtime_m3.py": "5a9c821dbf9ab73958079cba880c06b0f4da4054677081cbf0cc5bb3e2f771c4",
+          "check_task_stacks.py": "e9161bcf0956a673ffd9210765f17dbc5db386dd8de096373f79cb4e992e2010",
+          "stack_arm.py": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+          "stack_runtime.py": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9",
+          "stack_review.py": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7",
+          "stack_manifest.py": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712",
+          "ground_stack_inputs.json": "8fad07a2e2387645c3d941ef867623b42270bcc420a8f7927bcc6353e7d78543",
+          "check_ground.py": "b6f4e878c6539f31e0871598b4c9b087293b722d4ce337b7c43d1592a7c5898f",
+          "ground_artifact_contract.py": "b275da30f0c715ac0e374162b8cf7e131e77c9ed3193ee8e37cfa641dd0f5630",
+          "software_stack_ssgs_review_20261117.md": "c08c1d7743f84e5c403a6b1ffef2f7df2174eb44ebf5654bdbb730ebdb11fd37"
+        },
+        "compiled_artifacts_equal_to_o_and_case": 259,
+        "report_sha256": "68ec91ebcac14396795253559c61fcc0e8d3e667a96734bca725ba6cfcc6690d",
+        "msp": {
+          "configured_bytes": 4096,
+          "main_reset_bytes": 888,
+          "priority_levels": 4,
+          "priority_bits": 2,
+          "exception_frame_bytes": 36,
+          "maximum_configurable_handler_bytes": 204,
+          "fixed_handler_bytes": 0,
+          "worst_known_bytes": 1920,
+          "margin_bytes": 2176,
+          "passes": true
+        },
+        "tasks": []
+      },
+      {
+        "target": "ground",
+        "configuration": "Debug",
+        "source_authority_current": true,
+        "exact_current_tools": {
+          "check_ground_stacks.py": "a479f90ad49b8e62fae86a11f6fb91b73bdb174e6b4af1d6e5df4ac138d7de43",
+          "ground_stack_runtime.py": "8c401cce0d24b299131bf68e5ed9d124d3cc9404048b337473de980986a508ef",
+          "ground_stack_runtime_m3.py": "5a9c821dbf9ab73958079cba880c06b0f4da4054677081cbf0cc5bb3e2f771c4",
+          "check_task_stacks.py": "e9161bcf0956a673ffd9210765f17dbc5db386dd8de096373f79cb4e992e2010",
+          "stack_arm.py": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+          "stack_runtime.py": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9",
+          "stack_review.py": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7",
+          "stack_manifest.py": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712",
+          "ground_stack_inputs.json": "8fad07a2e2387645c3d941ef867623b42270bcc420a8f7927bcc6353e7d78543",
+          "check_ground.py": "b6f4e878c6539f31e0871598b4c9b087293b722d4ce337b7c43d1592a7c5898f",
+          "ground_artifact_contract.py": "b275da30f0c715ac0e374162b8cf7e131e77c9ed3193ee8e37cfa641dd0f5630",
+          "software_stack_ssgs_review_20261117.md": "c08c1d7743f84e5c403a6b1ffef2f7df2174eb44ebf5654bdbb730ebdb11fd37"
+        },
+        "compiled_artifacts_equal_to_o_and_case": 259,
+        "report_sha256": "5f90a5d75724020b63f347c32c07bfd86e88801fde7c6d382b269fffac81a307",
+        "msp": {
+          "configured_bytes": 4096,
+          "main_reset_bytes": 632,
+          "priority_levels": 4,
+          "priority_bits": 2,
+          "exception_frame_bytes": 36,
+          "maximum_configurable_handler_bytes": 128,
+          "fixed_handler_bytes": 0,
+          "worst_known_bytes": 1360,
+          "margin_bytes": 2736,
+          "passes": true
+        },
+        "tasks": []
+      }
+    ],
+    "manifest_all_sha256_equal": true
+  },
+  "f103_staged_readonly": {
+    "target": "F103 E19 reference",
+    "source_authority_current": true,
+    "reports": [
+      {
+        "configuration": "Release",
+        "report": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19\\Ground_Station\\build\\ground-stack-budget.json",
+        "report_sha256": "18435b96d921378b86585553f1a7ec603ab7396e983728b2ce0eebcbef485bff",
+        "msp": {
+          "configured_bytes": 8192,
+          "main_reset_bytes": 768,
+          "priority_levels": 16,
+          "priority_bits": 4,
+          "exception_frame_bytes": 36,
+          "maximum_configurable_handler_bytes": 156,
+          "fixed_handler_bytes": 0,
+          "worst_known_bytes": 3912,
+          "margin_bytes": 4280,
+          "passes": true
+        },
+        "tasks": [],
+        "review": {
+          "case": "f103-e19-Release",
+          "revision": "ground-c071-f103-20261117",
+          "document": "software_stack_f103_ground_review_20261117.md",
+          "document_sha256": "0fc83ce549645feba2613fd03e47bab4463223e5db424ce2ba6f3907c947561e",
+          "case_file": {
+            "path": "Tools/software_stack_cases/f103-e19-Release.json",
+            "sha256": "d6608586f4ebabe5adf39540b22b2404224fe419a4b52add7986bcc51a62b41d"
+          }
+        },
+        "analysis_tools_sha256": {
+          "check_ground_stacks.py": "a479f90ad49b8e62fae86a11f6fb91b73bdb174e6b4af1d6e5df4ac138d7de43",
+          "ground_stack_runtime.py": "8c401cce0d24b299131bf68e5ed9d124d3cc9404048b337473de980986a508ef",
+          "ground_stack_runtime_m3.py": "5a9c821dbf9ab73958079cba880c06b0f4da4054677081cbf0cc5bb3e2f771c4",
+          "check_task_stacks.py": "e9161bcf0956a673ffd9210765f17dbc5db386dd8de096373f79cb4e992e2010",
+          "stack_arm.py": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+          "stack_runtime.py": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9",
+          "stack_review.py": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7",
+          "stack_manifest.py": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712",
+          "ground_stack_inputs.json": "8fad07a2e2387645c3d941ef867623b42270bcc420a8f7927bcc6353e7d78543",
+          "check_ground.py": "b6f4e878c6539f31e0871598b4c9b087293b722d4ce337b7c43d1592a7c5898f",
+          "ground_artifact_contract.py": "b275da30f0c715ac0e374162b8cf7e131e77c9ed3193ee8e37cfa641dd0f5630",
+          "software_stack_f103_ground_review_20261117.md": "0fc83ce549645feba2613fd03e47bab4463223e5db424ce2ba6f3907c947561e"
+        }
+      },
+      {
+        "configuration": "Debug",
+        "report": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19\\Ground_Station\\build\\Debug\\ground-stack-budget.json",
+        "report_sha256": "23141fe1623cd101f6971c55137db1656e5407f99174b0bd546405fa59c9ef81",
+        "msp": {
+          "configured_bytes": 8192,
+          "main_reset_bytes": 600,
+          "priority_levels": 16,
+          "priority_bits": 4,
+          "exception_frame_bytes": 36,
+          "maximum_configurable_handler_bytes": 136,
+          "fixed_handler_bytes": 0,
+          "worst_known_bytes": 3424,
+          "margin_bytes": 4768,
+          "passes": true
+        },
+        "tasks": [],
+        "review": {
+          "case": "f103-e19-Debug",
+          "revision": "ground-c071-f103-20261117",
+          "document": "software_stack_f103_ground_review_20261117.md",
+          "document_sha256": "0fc83ce549645feba2613fd03e47bab4463223e5db424ce2ba6f3907c947561e",
+          "case_file": {
+            "path": "Tools/software_stack_cases/f103-e19-Debug.json",
+            "sha256": "12f0a006190958569a8b48058306935b1f51236b7422d9c8ebd52761dd4bae83"
+          }
+        },
+        "analysis_tools_sha256": {
+          "check_ground_stacks.py": "a479f90ad49b8e62fae86a11f6fb91b73bdb174e6b4af1d6e5df4ac138d7de43",
+          "ground_stack_runtime.py": "8c401cce0d24b299131bf68e5ed9d124d3cc9404048b337473de980986a508ef",
+          "ground_stack_runtime_m3.py": "5a9c821dbf9ab73958079cba880c06b0f4da4054677081cbf0cc5bb3e2f771c4",
+          "check_task_stacks.py": "e9161bcf0956a673ffd9210765f17dbc5db386dd8de096373f79cb4e992e2010",
+          "stack_arm.py": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+          "stack_runtime.py": "39639ae4870723935b7d359b0034b08ea2375979da7f3b0833b5681a4436fce9",
+          "stack_review.py": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7",
+          "stack_manifest.py": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712",
+          "ground_stack_inputs.json": "8fad07a2e2387645c3d941ef867623b42270bcc420a8f7927bcc6353e7d78543",
+          "check_ground.py": "b6f4e878c6539f31e0871598b4c9b087293b722d4ce337b7c43d1592a7c5898f",
+          "ground_artifact_contract.py": "b275da30f0c715ac0e374162b8cf7e131e77c9ed3193ee8e37cfa641dd0f5630",
+          "software_stack_f103_ground_review_20261117.md": "0fc83ce549645feba2613fd03e47bab4463223e5db424ce2ba6f3907c947561e"
+        }
+      }
+    ]
+  },
+  "quality_consumers": {
+    "SSGS P": {
+      "hardware_tested": false,
+      "gui_backend": "Qt offscreen; no native mouse test",
+      "batch_succeeded": true,
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "TARGET_PROFILE=STM32C071FBP6",
+        "CONFIG=Release",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+        "stack-report"
+      ],
+      "exit_code": 0,
+      "input_sha256": "516d6e8d4516d56327865903cc5bd0b01e4c50c2a913a65da142928652fb481c",
+      "report_sha256": "68ec91ebcac14396795253559c61fcc0e8d3e667a96734bca725ba6cfcc6690d",
+      "main_msp_exceptions": {
+        "configured_bytes": 4096,
+        "main_reset_bytes": 888,
+        "priority_levels": 4,
+        "priority_bits": 2,
+        "exception_frame_bytes": 36,
+        "maximum_configurable_handler_bytes": 204,
+        "fixed_handler_bytes": 0,
+        "worst_known_bytes": 1920,
+        "margin_bytes": 2176,
+        "passes": true
+      },
+      "display": "MSP 静态软件上界通过 · 无 RTOS · 硬件高水位未实测",
+      "current_generation": true,
+      "persistence_roundtrip": true,
+      "stale_hides_budget": true,
+      "logs": {
+        "ground-stack-page.png": "de8cdabbc63452ae7ea5aef486a9733085a2b1fdd0dc39e9cb71e5c8e551c73a",
+        "quality-events.log": "1f182886383a301887676e377731cc3dd2b2d4c1c10110031bf76f4ee2cc0292"
+      }
+    },
+    "F103 D": {
+      "hardware_tested": false,
+      "gui_backend": "Qt offscreen; no native mouse test",
+      "batch_succeeded": true,
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "TARGET_PROFILE=",
+        "CONFIG=Release",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+        "stack-report"
+      ],
+      "exit_code": 0,
+      "input_sha256": "0caef70a9ac4bcae1222d3b5f730bea8d35404a69b86999dd266f0090140116a",
+      "report_sha256": "18435b96d921378b86585553f1a7ec603ab7396e983728b2ce0eebcbef485bff",
+      "main_msp_exceptions": {
+        "configured_bytes": 8192,
+        "main_reset_bytes": 768,
+        "priority_levels": 16,
+        "priority_bits": 4,
+        "exception_frame_bytes": 36,
+        "maximum_configurable_handler_bytes": 156,
+        "fixed_handler_bytes": 0,
+        "worst_known_bytes": 3912,
+        "margin_bytes": 4280,
+        "passes": true
+      },
+      "display": "MSP 静态软件上界通过 · 无 RTOS · 硬件高水位未实测",
+      "current_generation": true,
+      "persistence_roundtrip": true,
+      "stale_hides_budget": true,
+      "logs": {
+        "ground-stack-page.png": "619c66cffcbb90a053699a3de6568f430a5ac386d289271a52ee6e90cf412d56",
+        "quality-events.log": "01185d7d1915e6548d1f1d88a67716c5b397d6b70503e5f4c3b2371e4aeb84d6"
+      }
+    }
+  },
+  "regression": {
+    "m3_ground_flight_presentation_reference_selection": "100 passed in 23.66s; m3-tests-final-a.log",
+    "new_h7_tick_irq_host_selection": "2 passed; tick-host.log; prior text/route failure retained",
+    "git_clean_blob_smudge": "148 paths exact; git-bytes-final.json",
+    "c0_vendor_provenance": "84 selected SDK source files SHA equal; vendor-provenance-check.json"
+  },
+  "formal_text_evidence": {
+    "index": "runs/index.json",
+    "sha256": "123a2be5727d857b8f485dae96cb50aa0083c180f85788b13021981c24de1b1f",
+    "format": "gzip JSON preserves each original text record and raw SHA; products remain in dist"
+  },
+  "cleanup": {
+    "candidate_inventory_files": 13872,
+    "candidate_inventory_bytes": 2375668814,
+    "retained_files": 2360,
+    "retained_bytes": 726476848,
+    "deleted_files": 13872,
+    "deleted_bytes": 2375668814,
+    "skipped": [],
+    "execution_owner": "root; see ../delivery/board-duplicate-cleanup.json and board-duplicate-cleanup-verification.json"
+  },
+  "limitations": [
+    "Source-authority verification is not verification of the separately packaged EXE authority.",
+    "Whole-firmware critical-contract audit remains NOT PROVEN; exact stack acceptance is limited to sealed cases.",
+    "Qt screenshots and BuildPage tests are offscreen; native application display acceptance is reported separately.",
+    "PCB, wiring, clock, power, RF, sensor calibration, WCET, high-water stack and flight performance require hardware evidence."
+  ]
+}

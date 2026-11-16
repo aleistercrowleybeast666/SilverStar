@@ -1,0 +1,7 @@
+[
+  {
+    "path": "APP/Src/logger_task.c",
+    "before": "c20d0b12b355abd3a8a95ec6fe319feffee95d59044ee1125c1b8f59b5a63009",
+    "after": "43a2100758afd73ad2c40bc1ddfafb61bb8af47ffa7bf21e70987ba2f988067d"
+  }
+]

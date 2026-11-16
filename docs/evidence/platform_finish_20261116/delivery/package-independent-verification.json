@@ -1,0 +1,32 @@
+{
+  "code_commit": "6fed5b639d0835de7874a74db25a63ab0da814ad",
+  "candidate": {
+    "code_commit": "6fed5b639d0835de7874a74db25a63ab0da814ad",
+    "archive": "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar_0_1_3_platform-finish-20261117_Windows_x64.zip",
+    "sha256": "21f8407e22151bcca13ea6217907c2f1d50a73a731c96763d0a5a392eb9f2b6b",
+    "bytes": 243811792,
+    "bundle": "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar",
+    "runtime_input_count": 7749,
+    "verified_first_party_resources": 2471,
+    "executable_sha256": {
+      "SCG.exe": "31e689f67103c273ea4bee479ff83276d4823dcb973853bf96d4aeff8a6354f3",
+      "GSHC.exe": "8f35adf1acb79bb1fbdef79f8163372ad7fd5abf906fbbb05fea51cf61f9ea80",
+      "FLP.exe": "bdc54b71d51656ff3fb60c217633f5e5e85035621fa95af1e58d67931acbb6c8"
+    },
+    "unmatched_site_inputs": 1
+  },
+  "manifest_entries_verified": 3619,
+  "all_extracted_files_and_zip_member_hashes_match": true,
+  "source_changed_since_package": false,
+  "scg_actual_exe_smoke": {
+    "command": [
+      "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar\\SCG.exe",
+      "--version"
+    ],
+    "exit": 0,
+    "seconds": 2.752929899994342,
+    "scope": "Actual frozen entry --version only, before QApplication; windowed stdout may be absent; not GUI acceptance"
+  },
+  "native_visual_acceptance": false,
+  "hardware_tested": false
+}

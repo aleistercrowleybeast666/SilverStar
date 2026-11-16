@@ -1,0 +1,40 @@
+{
+  "method": "git hash-object --path clean and git cat-file --filters smudge; no index/stage or checkout performed",
+  "documents": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_catalog_review_20261116.md",
+      "raw_sha256": "c1a64c73069a595da1ed45348ded40f5c084822d817a3ff81ccedf67c751ca16",
+      "git_blob": "d7c092cb953cd0f4e06095848ee1e74a7cc57116",
+      "clean_equals_raw": true,
+      "smudge_equals_raw": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_e19_review_20261116.md",
+      "raw_sha256": "ba90f58a0e1cad4960fa46d7e412056fb94cbe262a3326ce53bb6d9ba3448423",
+      "git_blob": "77a4ec0cd1033fe79e4de0e1477e4c5a00f5bed5",
+      "clean_equals_raw": true,
+      "smudge_equals_raw": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_logger_review_20261116.md",
+      "raw_sha256": "01eb605c4d491af9c96055ab08ac6adee40fd7e66d2790bb3cd04fc4f34adda1",
+      "git_blob": "0680e838cb5160642eb2d41313a32545df430722",
+      "clean_equals_raw": true,
+      "smudge_equals_raw": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_platform_review_20261116.md",
+      "raw_sha256": "c1b5dbcf1b6723070233ebf16209c3736b40a63f00da50feb55f34f3601ac13d",
+      "git_blob": "c2443ee3f222c291dccdaa946ba54e18223d5901",
+      "clean_equals_raw": true,
+      "smudge_equals_raw": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_ssfc_review_20261116.md",
+      "raw_sha256": "8305ccfcc80cc90a8ae20b6170290a22a64f5b69796adfd1b2c383bd63c3778b",
+      "git_blob": "6c18b0db068bbff165a9a3c458de283c1e48498a",
+      "clean_equals_raw": true,
+      "smudge_equals_raw": true
+    }
+  ]
+}

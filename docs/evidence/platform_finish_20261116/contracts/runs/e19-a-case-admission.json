@@ -1,0 +1,52 @@
+{
+  "old_cases_unchanged": {
+    "Tools/software_stack_cases/f407-Release.json": "4e0e30f2cd7200cac3f2142bb2e04c9bc0a5c26b8365c79af408098a6702421f",
+    "Tools/software_stack_cases/f407-Debug.json": "cb3cd809617b385812da2f2f06f7f59f68335c7b25e7eda88a978ebb50d8ecfb",
+    "Tools/software_stack_cases/installation-Release.json": "1421ebd39397306aeea96f0b6555ed2ef6f2bd3f38150b135b180dd9e1535213",
+    "Tools/software_stack_cases/installation-Debug.json": "04dfb473e85f0fc5b5f5c98ed399d07c97fa5e8473dbed916554c36dd8ff672d",
+    "Tools/software_stack_cases/h743-Release.json": "62f71e2d23f2f1b6afc29b0e869bae0666472f23df1f8ce6790982b10b893b5f",
+    "Tools/software_stack_cases/h743-Debug.json": "a71844bb7e3317c7f398427914894a63d371bfa809e56c4d25f76d188cbdefb6",
+    "Tools/software_stack_cases/pid-Release.json": "8c177e28590cb89b87417d5c1c76fafb13d24104bc01508360700fae0b5e2fad",
+    "Tools/software_stack_cases/pid-Debug.json": "17693e77fa6a326a2793cfb0c90f28c3f4d134934e002208dfedcb514e48a2ab",
+    "Tools/software_stack_cases/lqr-Release.json": "c703aa23689d77224eabe5fb2a576a0661404f6ea3183f5b50fa8ebcc4e8e13e",
+    "Tools/software_stack_cases/lqr-Debug.json": "ac7fdc4713b6ef985004edbe03cfb2d206561ab034db76c7cce848de7cfe7159",
+    "Tools/software_stack_cases/convergence-20261110-f4-Release.json": "2a791036f48184f31fe655bffe8c94d7695cca45185a68589145ee26e7feeabe",
+    "Tools/software_stack_cases/convergence-20261110-f4-Debug.json": "6f883f1080a839f29618a6f33cfe8e7627266a4fdd6759e2d3f90c6477c49748",
+    "Tools/software_stack_cases/convergence-20261110-capture-Release.json": "a80817288e5406fb7c057132c049e6bd3a60d0feae90172cced1f0dc974b38f0",
+    "Tools/software_stack_cases/convergence-20261110-capture-Debug.json": "c11016e591cb71e23fbd248431d92cd11de467eda46688ed73ec236a41ce976f",
+    "Tools/software_stack_cases/convergence-20261110-h7-Release.json": "50eeb4ce3f748084959eb50e34c3010abe58e7bdbdd8f35c4c2cf95d77638378",
+    "Tools/software_stack_cases/convergence-20261110-h7-Debug.json": "d65fdaba1d31eac6f3fa004588d193c84341da4934bb6436b25d82e5886f35da",
+    "Tools/software_stack_cases/convergence-current-20261110-h7-Release.json": "67497ee561caf59eb7f305b39536b1a6ad8afdcfb934ad6bfe549ad4959d3d93",
+    "Tools/software_stack_cases/convergence-current-20261110-h7-Debug.json": "f02cae60024b73fc53b17753ad2605fc03cbc8fadac47dd6208ab6330f5551e0",
+    "Tools/software_stack_cases/convergence-current-20261110-research-Release.json": "56302022015568c28fc3618bae900c91e58ac4b22fe2060d8294c99db60fae92",
+    "Tools/software_stack_cases/convergence-current-20261110-research-Debug.json": "5fd9a5db91fc80eb065debdd04a35d3b58a5b2e843ce308f390467db209616f9",
+    "Tools/software_stack_cases/logger-20261116-f4-Release.json": "e48821c5359001ccf23799a5954e3173dde65b97a5cb58eab21ded5884761811",
+    "Tools/software_stack_cases/logger-20261116-f4-Debug.json": "75940ad718568e2c486058154b446fa092d60a30af5d9b22b580cd61c99bfd12",
+    "Tools/software_stack_cases/platform-20261116-f4-Release.json": "7753e854f0b7de7a13b1efda6be404b725cb5e79cd41b4a8012efe6f617d5b3e",
+    "Tools/software_stack_cases/platform-20261116-f4-Debug.json": "6a6ea91596bd7fb6504185748958984ca301c7eb9a06b851ff7fd96e44160d6b",
+    "Tools/software_stack_cases/platform-catalog-20261116-f4-Release.json": "1934dfb8147973ed03a7e8c2847560e286420fcc3c479c739fd59d07029c064d",
+    "Tools/software_stack_cases/platform-catalog-20261116-f4-Debug.json": "9aad259b76e1b0c2e2105a35a54bb28b7a2af1bb898030fe18908d2a97aa1a89",
+    "Tools/software_stack_cases/platform-ssfc1-20261116-Release.json": "3f8e35dddf01fb1fa20a63e653ff69f619ad79eafb2f609cb62b225e948c0600",
+    "Tools/software_stack_cases/platform-ssfc1-20261116-Debug.json": "ebc36f09aa4054cb7359d083381193c6e3cb72a1fedd3e8ebbc6c7621ac2f57b"
+  },
+  "new_cases": [
+    {
+      "name": "platform-e19-20261116-f4-Release",
+      "path": "Tools/software_stack_cases/platform-e19-20261116-f4-Release.json",
+      "sha256": "090d6716ea6586fc3c2b47cc93ecde62b68caad1609dab95d209f1efcf8a96be",
+      "diagnostic_source": ".work/platform-finish-20261116/contracts/inspect-e19-a-Release.json",
+      "diagnostic_sha256": "2830a632c6943a498fd5c2a34bf5d65325e6eb8a696aeb49e70070531c21ebd5",
+      "msp_margin": 372
+    },
+    {
+      "name": "platform-e19-20261116-f4-Debug",
+      "path": "Tools/software_stack_cases/platform-e19-20261116-f4-Debug.json",
+      "sha256": "5d8be21e419c85d52cfd00b5610b55c6fe4af31aecc908089f871486321769f8",
+      "diagnostic_source": ".work/platform-finish-20261116/contracts/inspect-e19-a-Debug.json",
+      "diagnostic_sha256": "ab8a67f591e243916fd576455523d88fbd8146116a542538e5722a1ae7efae4c",
+      "msp_margin": 372
+    }
+  ],
+  "new_manifest_sha256": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f",
+  "manual_review": "Exact synthetic imported F407 Core/FATFS mapped delta plus complete source graph; all eleven actual BSS UART/SD DMA owners, callbacks and NVIC reviewed; no prior E28 case granted. Final E19 Name/Info correction included; independent B build required."
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-boards-current\\SSFC1_0_SSGS1_0_Current.zip",
+    "sha256": "740098e3be7fc6ccfac6f7487b75e10ff3f64d47eba8af073e50637950bfd8b1",
+    "bytes": 183633025,
+    "files": 4173,
+    "all_zip_and_staged_file_hashes_match": true,
+    "hardware_tested": false,
+    "recommended_pair": true
+  },
+  {
+    "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\SSFC1_0_SSGS1_0.zip",
+    "sha256": "c9d69305dbfbf1ed882e0d7ce2b10f157e973f2e7ffc4f33c7dbaa808b48c70c",
+    "bytes": 183592479,
+    "files": 4171,
+    "all_zip_and_staged_file_hashes_match": true,
+    "hardware_tested": false,
+    "recommended_pair": false
+  },
+  {
+    "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19_Ground.zip",
+    "sha256": "e105dc8068549c68d38525ff358dd1b4e3260f06c9bab264b7a3f05e94ac6b48",
+    "bytes": 63720439,
+    "files": 1857,
+    "all_zip_and_staged_file_hashes_match": true,
+    "hardware_tested": false,
+    "recommended_pair": false
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794847730.2719011,
+    "seconds": 40.11,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "architecture-check",
+    "log": "Release-architecture-check.log",
+    "log_sha256": "0ca2123d553825b2e0da6c893e1dadcfc8f534a57490aaeeec9f1cbd3b7c152f"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794847770.3962884,
+    "seconds": 38.684,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "power10-check",
+    "log": "Release-power10-check.log",
+    "log_sha256": "ac34d2811aa7e94fb8ce1b4767fec23689aca7932aa8da5e882e848e8a0deb09"
+  },
+  {
+    "argv": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "started_unix": 1794847809.0980172,
+    "seconds": 108.532,
+    "exit": 0,
+    "configuration": "Release",
+    "gate": "static-analysis",
+    "log": "Release-static-analysis.log",
+    "log_sha256": "fef7cb0aa749a5a55942f79ad37c36e11dafafa60cd9e1f55746dc7583a0a6a7"
+  }
+]

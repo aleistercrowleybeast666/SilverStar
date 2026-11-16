@@ -1,0 +1,126 @@
+{
+  "scope": "Diagnostic comparison, not a case seal or acceptance gate.",
+  "parser_sha256": "36e5265b67e353eb70f9c01c76fde547beda44cb57d06e5d9a1bc203eff71bf6",
+  "configurations": {
+    "Release": {
+      "function_count": 1597,
+      "changed_instruction_rows": [],
+      "elf_changed_byte_offsets": [
+        331324,
+        331325,
+        331326,
+        331327,
+        331328,
+        331329,
+        331330,
+        331331,
+        331332,
+        331333,
+        331334,
+        331335,
+        331336,
+        331337,
+        331338,
+        331339,
+        1673143,
+        1673144,
+        1673145,
+        1673146,
+        1673147,
+        1673148,
+        1673149,
+        1673150,
+        1673151,
+        1673152,
+        1673153,
+        1673154,
+        1673155,
+        1673156,
+        1673157,
+        1673158
+      ],
+      "inputs": [
+        {
+          "constant": "c245a922e96bb9adc2ce72c7ce003e5a",
+          "constant_offsets": [
+            331324,
+            1673143
+          ],
+          "elf_sha256": "b1d7f33ff87dd4e651107a907b136937179ff9dfd15ecee9ee380165aee55917",
+          "objdump_d_sha256": "102a4abbada631772536970a8596f4903c91289cec1a1e09903752197dc22a71",
+          "objdump_t_sha256": "ccbc121c682f37c1f5d7785bfd2e17b80c32147ef9aeef133380d4e11bb1cb37"
+        },
+        {
+          "constant": "2bdefa209f194d55ded230dc53140065",
+          "constant_offsets": [
+            331324,
+            1673143
+          ],
+          "elf_sha256": "0e1c45e3fb8ec70d4120066ad49cc963717d72a16adb8d837ad11472bbb2af60",
+          "objdump_d_sha256": "8af2d1aaad437052005fa481f45ce1b4f6a54fa230637299edda9a9f5cd7cbd8",
+          "objdump_t_sha256": "9024ce4b2bb42f247ccf1e867a5e979d13feafbdfc70c6a8bc5e8e2e13f85556"
+        }
+      ]
+    },
+    "Debug": {
+      "function_count": 2945,
+      "changed_instruction_rows": [],
+      "elf_changed_byte_offsets": [
+        352536,
+        352537,
+        352538,
+        352539,
+        352540,
+        352541,
+        352542,
+        352543,
+        352544,
+        352545,
+        352546,
+        352547,
+        352548,
+        352549,
+        352550,
+        352551,
+        1546051,
+        1546052,
+        1546053,
+        1546054,
+        1546055,
+        1546056,
+        1546057,
+        1546058,
+        1546059,
+        1546060,
+        1546061,
+        1546062,
+        1546063,
+        1546064,
+        1546065,
+        1546066
+      ],
+      "inputs": [
+        {
+          "constant": "c245a922e96bb9adc2ce72c7ce003e5a",
+          "constant_offsets": [
+            352536,
+            1546051
+          ],
+          "elf_sha256": "e01c4c833b8c49f99decae9f56e111bd7a8516c50bcc3309ebb294bf6ae6e190",
+          "objdump_d_sha256": "aa5c8ba4a1e2f0fda70c95ec48126d95cc2ef6827ca51c456280bbbb98ad809c",
+          "objdump_t_sha256": "4039094754dce3f3c4ab8fb61fe99afdbe2b5ea51cad401036573dd29c4b380e"
+        },
+        {
+          "constant": "2bdefa209f194d55ded230dc53140065",
+          "constant_offsets": [
+            352536,
+            1546051
+          ],
+          "elf_sha256": "3884722bb2b87cb1d21d88571df451d35d8ad36fd595878d6802260dd6979ea7",
+          "objdump_d_sha256": "ab33dd2063d8ca4275f71783d53e62719d34268965034a447917e09c3a1d687a",
+          "objdump_t_sha256": "2a088587292eba428ee6a00ce39d7c3a75685f98de6ed9b3f8a99321597c9976"
+        }
+      ]
+    }
+  }
+}

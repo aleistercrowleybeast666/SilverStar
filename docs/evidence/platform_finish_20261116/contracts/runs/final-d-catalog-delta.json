@@ -1,0 +1,34 @@
+{
+  "Release": {
+    "changes": {
+      "source_inputs": [
+        "Generated/Src/project_log_decoder_profile.c"
+      ],
+      "build_declarations": [],
+      "compiled_artifacts": [
+        "Generated/Src/project_log_decoder_profile.o",
+        "SilverStar_0_1_3.elf"
+      ],
+      "toolchain_files": []
+    },
+    "msp_margin_bytes": 372,
+    "remaining_indirect": [],
+    "remaining_unbounded": []
+  },
+  "Debug": {
+    "changes": {
+      "source_inputs": [
+        "Generated/Src/project_log_decoder_profile.c"
+      ],
+      "build_declarations": [],
+      "compiled_artifacts": [
+        "Generated/Src/project_log_decoder_profile.o",
+        "SilverStar_0_1_3.elf"
+      ],
+      "toolchain_files": []
+    },
+    "msp_margin_bytes": 372,
+    "remaining_indirect": [],
+    "remaining_unbounded": []
+  }
+}

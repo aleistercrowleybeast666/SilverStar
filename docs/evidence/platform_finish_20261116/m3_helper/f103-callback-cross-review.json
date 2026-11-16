@@ -1,0 +1,177 @@
+{
+  "scope": "Read-only cross-review of final-identity E19 B Ground F103 callback owner closure; not case admission/MSP acceptance",
+  "input_file_hashes": {
+    "HardwareGenerated/STM32CubeMX/Core/Src/usart.c": "c3963ae03d9139ad636694b3bc626a2469502f54785acbf7d6139edc1d4cd164",
+    "HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_it.c": "c8f56b7a14ee3250507ac7e47e5b7557a2c521b5da37945928ad71f70c44eebe",
+    "HardwareGenerated/STM32CubeMX/Core/Inc/stm32f1xx_hal_conf.h": "c05dae0be31ba96e53576408a5f0053d8a0d24c0d706151facb86f7153a7833c",
+    "Generated/Src/pc_byte_stream.c": "8c14f32c23143fea76dee353f123f94eaca30847270e9635d25ae55930c04393",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c": "12921c287574a4eb75aa2b71a2e590963b4f869a3b05e1532d495390412df3b8",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c": "0662e01264be0233a4f8f2206dadf1c223caa17fd54c3b0e2d4a1ae771bd9c2b",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h": "dcc6db49aeb887d662d15c1c32e4dca10b76b40c33a84a1059d547159ebeac4d"
+  },
+  "actual_Release_elf_sha256": "9213cf0c2614efa07a487c54b3ee42bb3d82ca73460f1be143fb8dd45c924c71",
+  "actual_Release_symbols": {
+    "HAL_DMA_RegisterCallback": false,
+    "HAL_DMA_UnRegisterCallback": false,
+    "HAL_UART_RegisterCallback": false,
+    "HAL_UART_UnRegisterCallback": false,
+    "HAL_UART_Abort": false,
+    "HAL_UART_AbortReceive": true,
+    "HAL_UART_Abort_IT": false,
+    "HAL_UART_AbortTransmit_IT": false,
+    "HAL_UART_AbortReceive_IT": false,
+    "UART_DMAAbortOnError": true,
+    "UART_DMATxAbortCallback": false,
+    "UART_DMARxAbortCallback": false,
+    "UART_DMATxOnlyAbortCallback": false,
+    "UART_DMARxOnlyAbortCallback": false
+  },
+  "diagnostics": [
+    {
+      "configuration": "Release",
+      "diagnostic_sha256": "cb26a9e3e4e76bd0d8f917c649b497fd07c5f4a8b1f0a5e0695bd2cd3ed78187",
+      "handles": {
+        "huart1": {
+          "type": "UART_HandleTypeDef",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+          "address": "0x20000d98",
+          "bytes": 72
+        },
+        "hdma_usart1_rx": {
+          "type": "DMA_HandleTypeDef",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+          "address": "0x20000d54",
+          "bytes": 68
+        },
+        "hdma_usart1_tx": {
+          "type": "DMA_HandleTypeDef",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+          "address": "0x20000d10",
+          "bytes": 68
+        }
+      },
+      "sites": [
+        {
+          "caller": "HAL_DMA_Abort_IT",
+          "abi_slot": 52,
+          "field": "XferAbortCallback",
+          "targets": [
+            "UART_DMAAbortOnError"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_DMA_IRQHandler",
+          "abi_slot": 40,
+          "field": "XferCpltCallback",
+          "targets": [
+            "UART_DMAReceiveCplt",
+            "UART_DMATransmitCplt"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_DMA_IRQHandler",
+          "abi_slot": 44,
+          "field": "XferHalfCpltCallback",
+          "targets": [
+            "UART_DMARxHalfCplt",
+            "UART_DMATxHalfCplt"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_DMA_IRQHandler",
+          "abi_slot": 48,
+          "field": "XferErrorCallback",
+          "targets": [
+            "UART_DMAError"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_UART_IRQHandler",
+          "abi_slot": 52,
+          "field": "XferAbortCallback",
+          "targets": [
+            "UART_DMAAbortOnError"
+          ],
+          "null_only": false
+        }
+      ]
+    },
+    {
+      "configuration": "Debug",
+      "diagnostic_sha256": "12d5f95c758c2e285d548ac4e9d349190627c1d86b03bd19069b657286e51ae7",
+      "handles": {
+        "huart1": {
+          "type": "UART_HandleTypeDef",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+          "address": "0x20000d98",
+          "bytes": 72
+        },
+        "hdma_usart1_rx": {
+          "type": "DMA_HandleTypeDef",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+          "address": "0x20000d54",
+          "bytes": 68
+        },
+        "hdma_usart1_tx": {
+          "type": "DMA_HandleTypeDef",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+          "address": "0x20000d10",
+          "bytes": 68
+        }
+      },
+      "sites": [
+        {
+          "caller": "HAL_DMA_Abort_IT",
+          "abi_slot": 52,
+          "field": "XferAbortCallback",
+          "targets": [
+            "UART_DMAAbortOnError"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_DMA_IRQHandler",
+          "abi_slot": 44,
+          "field": "XferHalfCpltCallback",
+          "targets": [
+            "UART_DMARxHalfCplt",
+            "UART_DMATxHalfCplt"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_DMA_IRQHandler",
+          "abi_slot": 40,
+          "field": "XferCpltCallback",
+          "targets": [
+            "UART_DMAReceiveCplt",
+            "UART_DMATransmitCplt"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_DMA_IRQHandler",
+          "abi_slot": 48,
+          "field": "XferErrorCallback",
+          "targets": [
+            "UART_DMAError"
+          ],
+          "null_only": false
+        },
+        {
+          "caller": "HAL_UART_IRQHandler",
+          "abi_slot": 52,
+          "field": "XferAbortCallback",
+          "targets": [
+            "UART_DMAAbortOnError"
+          ],
+          "null_only": false
+        }
+      ]
+    }
+  ]
+}

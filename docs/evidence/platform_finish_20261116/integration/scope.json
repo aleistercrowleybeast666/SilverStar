@@ -1,0 +1,12 @@
+{
+  "scope": "Synthetic new motor through Underline CLI, installed TD wheel CLI+GUI, SCG true GUI Cancel/Apply, generated owning PID research task Host. No physical actuator or hardware evidence.",
+  "run_id": "b0797d0e-9229-4212-901d-3048ad8b53de",
+  "first_fixture_failure": "Host requires synthetic coast/done stages and explicit stop; first integration fixture omitted them. Corrected model only; all original expected outcomes retained.",
+  "source_snapshot": {
+    "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\control_research_runtime.c": "b06a48929c0401217ce7aa7496c4c5752944a5b3138195e1d5c5b9a61535901b",
+    "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_control_pid\\payload\\Algorithm\\Control\\PID\\Src\\control_pid.c": "a4f98b5c938022acca859567e72cd9d9e5f13b128f96aec2e43b8ff95156c37c"
+  },
+  "owner": "root/platform-finish-20261116",
+  "commands": 29,
+  "normal_fault_scenarios": 28
+}

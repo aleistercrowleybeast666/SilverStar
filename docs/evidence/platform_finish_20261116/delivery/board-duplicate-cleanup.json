@@ -1,0 +1,29 @@
+{
+  "scope": "Exact current-task board compiled duplicates only; no O/P, user sources or inputs",
+  "inventory_sha256": "7b861268829a792fe23024daffcecab897e44114de3d8b92f5807b11c8bce6af",
+  "complete": true,
+  "deleted_files": 13872,
+  "deleted_bytes": 2375668814,
+  "skipped": [],
+  "protected_packages": [
+    {
+      "zip": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\SSFC1_0_SSGS1_0.zip",
+      "zip_bytes": 183592479,
+      "zip_sha256": "c9d69305dbfbf1ed882e0d7ce2b10f157e973f2e7ffc4f33c7dbaa808b48c70c",
+      "manifest": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\SSFC_SSGS\\MANIFEST.json",
+      "manifest_sha256": "8897c14058c805d8df00ed90494552279ee239675ee0616bfe329cec8135df5b",
+      "readback_files": 4171,
+      "readback_all_sha256_equal": true
+    },
+    {
+      "zip": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19_Ground.zip",
+      "zip_bytes": 63720439,
+      "zip_sha256": "e105dc8068549c68d38525ff358dd1b4e3260f06c9bab264b7a3f05e94ac6b48",
+      "manifest": "D:\\python_software\\SilverStar\\dist\\pf1117-boards\\F103_E19\\MANIFEST.json",
+      "manifest_sha256": "bfa82e2ab4e0b11b7b783d3a4a5dafc84a4d78130dfffcb6aa391fb23d2b0068",
+      "readback_files": 1857,
+      "readback_all_sha256_equal": true
+    }
+  ],
+  "utc": "2026-11-16T18:18:37.0646061Z"
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="8" time="7.864" timestamp="2026-11-16T23:24:03.529632+08:00" hostname="CHD"><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[normal]" time="6.516" /><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[device-failure]" time="0.015" /><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[incomplete]" time="0.014" /><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[null]" time="0.015" /><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[io-failure]" time="0.017" /><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[oversized]" time="0.023"><failure message="AssertionError: oversized: result=0 serialized=1 writes=1 flushes=0 fault=0&#10;  D:\python_software\SilverStar\apps\SCG\tests\fixtures\logger_startup_contract.c:93: expects_trap == 0U&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\logger-before-v2\...derr='D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\logger_startup_contract.c:93: expects_trap == 0U\n').returncode">logger_startup_executable = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/logger-before-v2/logger-startup0/startup.exe')
+scenario = 'oversized'
+
+    @pytest.mark.parametrize("scenario", ["normal", "device-failure", "incomplete", "null",
+                                          "io-failure", "oversized", "completed-domain", "passed-domain"])
+    def test_logger_startup_publication_contract(logger_startup_executable, scenario):
+        result = subprocess.run([str(logger_startup_executable), scenario], capture_output=True,
+                                text=True, timeout=10)
+        print(result.stdout, end="")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: oversized: result=0 serialized=1 writes=1 flushes=0 fault=0
+E         D:\python_software\SilverStar\apps\SCG\tests\fixtures\logger_startup_contract.c:93: expects_trap == 0U
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\logger-before-v2\...derr='D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\logger_startup_contract.c:93: expects_trap == 0U\n').returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:66: AssertionError</failure></testcase><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[completed-domain]" time="0.017"><failure message="AssertionError: completed-domain: result=1 serialized=52 writes=1 flushes=1 fault=0&#10;  D:\python_software\SilverStar\apps\SCG\tests\fixtures\logger_startup_contract.c:93: expects_trap == 0U&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\logger-before-v2\...derr='D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\logger_startup_contract.c:93: expects_trap == 0U\n').returncode">logger_startup_executable = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/logger-before-v2/logger-startup0/startup.exe')
+scenario = 'completed-domain'
+
+    @pytest.mark.parametrize("scenario", ["normal", "device-failure", "incomplete", "null",
+                                          "io-failure", "oversized", "completed-domain", "passed-domain"])
+    def test_logger_startup_publication_contract(logger_startup_executable, scenario):
+        result = subprocess.run([str(logger_startup_executable), scenario], capture_output=True,
+                                text=True, timeout=10)
+        print(result.stdout, end="")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: completed-domain: result=1 serialized=52 writes=1 flushes=1 fault=0
+E         D:\python_software\SilverStar\apps\SCG\tests\fixtures\logger_startup_contract.c:93: expects_trap == 0U
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\logger-before-v2\...derr='D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\logger_startup_contract.c:93: expects_trap == 0U\n').returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:66: AssertionError</failure></testcase><testcase classname="tests.test_logger_startup_contract" name="test_logger_startup_publication_contract[passed-domain]" time="0.018"><failure message="AssertionError: passed-domain: result=1 serialized=52 writes=1 flushes=1 fault=0&#10;  D:\python_software\SilverStar\apps\SCG\tests\fixtures\logger_startup_contract.c:93: expects_trap == 0U&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\logger-before-v2\...derr='D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\logger_startup_contract.c:93: expects_trap == 0U\n').returncode">logger_startup_executable = WindowsPath('D:/python_software/SilverStar/.work/platform-finish-20261116/contracts/logger-before-v2/logger-startup0/startup.exe')
+scenario = 'passed-domain'
+
+    @pytest.mark.parametrize("scenario", ["normal", "device-failure", "incomplete", "null",
+                                          "io-failure", "oversized", "completed-domain", "passed-domain"])
+    def test_logger_startup_publication_contract(logger_startup_executable, scenario):
+        result = subprocess.run([str(logger_startup_executable), scenario], capture_output=True,
+                                text=True, timeout=10)
+        print(result.stdout, end="")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: passed-domain: result=1 serialized=52 writes=1 flushes=1 fault=0
+E         D:\python_software\SilverStar\apps\SCG\tests\fixtures\logger_startup_contract.c:93: expects_trap == 0U
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\logger-before-v2\...derr='D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\logger_startup_contract.c:93: expects_trap == 0U\n').returncode
+
+apps\SCG\tests\test_logger_startup_contract.py:66: AssertionError</failure></testcase></testsuite></testsuites>

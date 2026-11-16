@@ -1,0 +1,62 @@
+{
+  "Release": {
+    "changes_from_logger_only_A": {
+      "source_inputs": [
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c"
+      ],
+      "build_declarations": [],
+      "compiled_artifacts": [
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.o",
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.su",
+        "SilverStar_0_1_3.map"
+      ],
+      "toolchain_files": []
+    },
+    "task_margin_bytes": {
+      "Device": 392,
+      "INS": 628,
+      "Estimator": 1348,
+      "Flight": 392,
+      "Logger": 1208,
+      "Serial": 1092,
+      "Telemetry": 1828,
+      "Idle": 256
+    },
+    "msp_margin_bytes": 372,
+    "remaining_indirect": [],
+    "remaining_unbounded": [],
+    "source_count": 169,
+    "source_header_count": 506,
+    "artifact_count": 510
+  },
+  "Debug": {
+    "changes_from_logger_only_A": {
+      "source_inputs": [
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c"
+      ],
+      "build_declarations": [],
+      "compiled_artifacts": [
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.o",
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.su",
+        "SilverStar_0_1_3.map"
+      ],
+      "toolchain_files": []
+    },
+    "task_margin_bytes": {
+      "Device": 760,
+      "INS": 812,
+      "Estimator": 1156,
+      "Flight": 1720,
+      "Logger": 1712,
+      "Serial": 3028,
+      "Telemetry": 2092,
+      "Idle": 256
+    },
+    "msp_margin_bytes": 372,
+    "remaining_indirect": [],
+    "remaining_unbounded": [],
+    "source_count": 169,
+    "source_header_count": 506,
+    "artifact_count": 510
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "archives": [
+    {
+      "kind": "formal_software_evidence_do_not_cleanup",
+      "owner": "/root/silverstar_finish",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\contracts\\final-generated-e\\f4\\Flight_Controller",
+      "source_must_be_retained_until_root_acceptance": true,
+      "hardware_tested": false,
+      "zip_is_not_a_git_product": true,
+      "note": "Preserve this entire directory. No permission to delete original sources or other work.",
+      "created_utc": "2026-11-16T17:34:39.997947+00:00",
+      "current_head": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+      "epoch": "Actual immutable generated project, not rebuilt or refreshed to current M3 helper",
+      "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-evidence\\f407-default-e-20261117\\Flight_Controller.zip",
+      "archive_sha256": "1f133705a4a3877b9093911a8190dd25248246e9c2f57518842a1c0ee0316acf",
+      "archive_bytes": 49478485,
+      "file_inventory_sha256": "5f9224f56aea8e0fa43bd53c9389c7434106f3e62bbc4a1dd7e9ec6e1d7e958e",
+      "file_count": 2283,
+      "directory_count": 529,
+      "uncompressed_bytes": 165233344,
+      "every_zip_file_readback_sha256_verified": true,
+      "original_sources_unchanged": true,
+      "exact_compiled_artifacts_verified": {
+        "Release": 510,
+        "Debug": 510
+      },
+      "tool_epoch_sha256": {
+        "Tools/stack_runtime.py": "eb9d7a9d51c2855dd0b256a3f76908aea75de8656eb743ec8a6be98eed7497dd",
+        "Tools/check_task_stacks.py": "f92cf03129fd0f3c72937d999c28ca5fe8243c2d6d73c5f407dfc873ef02ceaa",
+        "Tools/software_stack_inputs.json": "6b4b4c098f1ff91acf73ae39211fa2114c5aa6457b6868ad6a73aa2de2942f4b"
+      },
+      "reopen_validation": "ZIP full CRC/SHA readback plus archived model parsing; no GUI launch or recompilation"
+    },
+    {
+      "kind": "formal_software_evidence_do_not_cleanup",
+      "owner": "/root/silverstar_finish",
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117\\contract-e19-b\\Flight_Controller",
+      "source_must_be_retained_until_root_acceptance": true,
+      "hardware_tested": false,
+      "zip_is_not_a_git_product": true,
+      "note": "Preserve this entire directory. No permission to delete original sources or other work.",
+      "created_utc": "2026-11-16T17:34:59.012392+00:00",
+      "current_head": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+      "epoch": "Actual immutable generated project, not rebuilt or refreshed to current M3 helper",
+      "archive": "D:\\python_software\\SilverStar\\dist\\pf1117-evidence\\f407-e19-b-20261117\\Flight_Controller.zip",
+      "archive_sha256": "f936e157bf51a137320099e8b407ed945bfbbb621dfeecc24bcf2ff08df46d7b",
+      "archive_bytes": 45145077,
+      "file_inventory_sha256": "e8f9fbb1d39fd37c0c825a6f7b3c717dd5b46006eecb70f611f31617b75444ef",
+      "file_count": 1843,
+      "directory_count": 429,
+      "uncompressed_bytes": 160234177,
+      "every_zip_file_readback_sha256_verified": true,
+      "original_sources_unchanged": true,
+      "exact_compiled_artifacts_verified": {
+        "Release": 504,
+        "Debug": 504
+      },
+      "tool_epoch_sha256": {
+        "Tools/stack_runtime.py": "eb9d7a9d51c2855dd0b256a3f76908aea75de8656eb743ec8a6be98eed7497dd",
+        "Tools/check_task_stacks.py": "e9161bcf0956a673ffd9210765f17dbc5db386dd8de096373f79cb4e992e2010",
+        "Tools/software_stack_inputs.json": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f"
+      },
+      "reopen_validation": "ZIP full CRC/SHA readback plus archived model parsing; no GUI launch or recompilation"
+    }
+  ],
+  "no_deletions": true
+}

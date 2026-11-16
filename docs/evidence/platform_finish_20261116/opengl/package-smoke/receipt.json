@@ -1,0 +1,166 @@
+{
+  "code_commit": "6fed5b639d0835de7874a74db25a63ab0da814ad",
+  "bundle": "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar",
+  "archive_as_recorded_by_normal_packager": {
+    "path": "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar_0_1_3_platform-finish-20261117_Windows_x64.zip",
+    "bytes": 243811792,
+    "sha256": "21f8407e22151bcca13ea6217907c2f1d50a73a731c96763d0a5a392eb9f2b6b",
+    "scope": "Package archive identity copied from the hashed candidate receipt; whole ZIP readback belongs to root packaging evidence, not this limited process smoke."
+  },
+  "candidate_receipt_sha256": "d7ab989c1c4b174df0e350ff397096293cab5138551491d407152e2dff5634cb",
+  "manifest_sha256": "45f74da40d1219366b3ae67025e6746c4878d595c5d2f0fd0cc069263e5a6bf5",
+  "exe_sha256": {
+    "FLP": "bdc54b71d51656ff3fb60c217633f5e5e85035621fa95af1e58d67931acbb6c8",
+    "GSHC": "8f35adf1acb79bb1fbdef79f8163372ad7fd5abf906fbbb05fea51cf61f9ea80"
+  },
+  "scope": "Actual windowed EXE version/idle-process smoke and static packaged application-source hashes; no native GUI, 3D, physical display, hardware, or cold/warm startup acceptance.",
+  "checks": {
+    "FLP": {
+      "command": [
+        "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar\\FLP.exe",
+        "--version"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\FLP",
+      "observation_limit_s": 20,
+      "started_utc": "2026-11-16T18:18:14.185292+00:00",
+      "stdout_note": "Windowed PyInstaller Python streams may be unavailable; empty logs do not prove absence of internal errors.",
+      "pid": 11468,
+      "process_ownership": "The exact subprocess.Popen process handle created by this runner; no process-name/window matching.",
+      "exit_reason": "process exited without runner termination",
+      "alive_at_observation_limit": false,
+      "exit_code": 0,
+      "seconds": 3.0615106000041123,
+      "logs": {
+        "stdout.log": {
+          "bytes": 7,
+          "sha256": "4f4196a7983271c66d1e9423a5f61df18839c12ddbe18680e4f59fb4f677bbbf"
+        },
+        "stderr.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "error_signals": [],
+      "limited_check_satisfied": true
+    },
+    "GSHC": {
+      "command": [
+        "D:\\python_software\\SilverStar\\dist\\pf1117b\\SilverStar\\GSHC.exe"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\GSHC",
+      "observation_limit_s": 40,
+      "started_utc": "2026-11-16T18:18:17.261254+00:00",
+      "stdout_note": "Windowed PyInstaller Python streams may be unavailable; empty logs do not prove absence of internal errors.",
+      "pid": 728,
+      "process_ownership": "The exact subprocess.Popen process handle created by this runner; no process-name/window matching.",
+      "alive_at_observation_limit": true,
+      "exit_reason": "runner deliberately terminated its own process after bounded observation; not normal close acceptance",
+      "exit_code": 1,
+      "seconds": 40.38241990000097,
+      "logs": {
+        "stdout.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "error_signals": [],
+      "limited_check_satisfied": true
+    }
+  },
+  "flp_version_stdout": "0.1.3",
+  "static_verified_application_file_count": 272,
+  "registry_values_unchanged": true,
+  "package_scoped_hashes_unchanged": true,
+  "gshc_idle_data_files": [],
+  "gshc_idle_data_directories": [
+    "data",
+    "logs"
+  ],
+  "owned_processes_and_direct_children_remaining": [],
+  "finished_utc": "2026-11-16T18:18:57.965987+00:00",
+  "issues": [],
+  "remaining": [
+    "No native GUI, physical-screen/WGC, 3D interaction, normal GSHC close, 125%/150% package layout or comparable cold/warm startup acceptance.",
+    "The prior native white/stale display-versus-capture root cause remains NOT PROVEN; no renderer change is claimed.",
+    "No serial/USB/debug target was connected. Normal idle PnP/COM metadata discovery remained enabled.",
+    "Windowed executable empty stdout/stderr does not prove no hidden diagnostic. GSHC observation proves bounded process liveness and private-directory creation, not GUI readiness."
+  ],
+  "files": [
+    {
+      "path": "package-smoke/raw-receipt.json.gz",
+      "bytes": 15512,
+      "sha256": "c3c20574610965e56900f1021018670388d8df170381c216bcdde83beba2a86c",
+      "raw_bytes": 42195,
+      "raw_sha256": "29d4e0f89c0b1333d077c929f0ae98008a74aac3f156930c07e7149ba1096a60",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\receipt.json",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/candidate.json.gz",
+      "bytes": 475,
+      "sha256": "3b5293b3663cd450e9fd874fe20eeee5d6dd71acd34a88605f881a094f6beccd",
+      "raw_bytes": 759,
+      "raw_sha256": "d7ab989c1c4b174df0e350ff397096293cab5138551491d407152e2dff5634cb",
+      "source": "D:\\python_software\\SilverStar\\.work\\pf1117-package-b\\evidence\\candidate.json",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/process-after.json.gz",
+      "bytes": 167,
+      "sha256": "94f5e48b78d756d99ec4c9c47f5016ec00f57340d20ff17281b26bc845a93614",
+      "raw_bytes": 190,
+      "raw_sha256": "50e10977698a8af1ba102591a0e014de5a2c0ebf643709b50e25776ae7bba424",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\process-after.json",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/runner.py.gz",
+      "bytes": 3896,
+      "sha256": "dbb299423a9c9f94ac3dc7578fb2310209deae21f4a5d5edd644d3ab33fc7741",
+      "raw_bytes": 11047,
+      "raw_sha256": "079eb9e5d685d082d0346994d0cb50d2966227fc0990fe23ca3f564e172f38a3",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package_smoke.py",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/FLP.stdout.log.gz",
+      "bytes": 27,
+      "sha256": "fe4655a4b00608654dff5469dec6736cf2dfc6fb05bdc1f858fda9a26a4fa437",
+      "raw_bytes": 7,
+      "raw_sha256": "4f4196a7983271c66d1e9423a5f61df18839c12ddbe18680e4f59fb4f677bbbf",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\FLP\\stdout.log",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/FLP.stderr.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\FLP\\stderr.log",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/GSHC.stdout.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\GSHC\\stdout.log",
+      "encoding": "gzip of original text bytes"
+    },
+    {
+      "path": "package-smoke/GSHC.stderr.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "D:\\python_software\\SilverStar\\.work\\platform-finish-20261116\\opengl\\package-smoke-6fed\\GSHC\\stderr.log",
+      "encoding": "gzip of original text bytes"
+    }
+  ]
+}

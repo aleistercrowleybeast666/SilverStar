@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objdump.exe",
+    "-d",
+    "--disassemble=SystemStartup_ReportFinalize",
+    ".work\\platform-finish-20261116\\contracts\\final-generated-d\\f4\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf"
+  ],
+  "exit": 0,
+  "elf_sha256": "0e1c45e3fb8ec70d4120066ad49cc963717d72a16adb8d837ad11472bbb2af60",
+  "log_sha256": "e52cb2befddd63dbb05dc9b6d2fcff7a34be0507045591f54fc232d131a45068"
+}

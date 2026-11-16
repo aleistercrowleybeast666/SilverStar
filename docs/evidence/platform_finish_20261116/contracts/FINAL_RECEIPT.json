@@ -1,0 +1,53 @@
+{
+  "baseline_head": "d52854c4a7b12c79dbb06cf967006e599103d24e",
+  "source_status": "Auditable dirty working tree; source snapshots and owner SHA list are authoritative. This is not an unmodified baseline run.",
+  "owned_files_sha256": "c8559c4de663dbe25f92c9a8d78e2e1ebb5bf5243195e4433a67d46a22b81c19",
+  "final_stack_manifest_sha256": "243fd3935a0365dc8d2a8a10359afbbca1dc04bbf1594267738e6de65266957f",
+  "exact_cases_total": 30,
+  "historical_twenty_raw_bytes_unchanged": true,
+  "scope": "Finite contracts, logger publication safety, augmented logging admission, actual Thumb1 CFG/ABI parsing and exact F407 E28/E19 stack cases. SSFC cases jointly reviewed; board results remain in their own evidence.",
+  "tests": {
+    "final_contract_tests": {
+      "passed": 167,
+      "seconds": 40.17,
+      "log_sha256": "7e80c237d3ca735c504ae0833ea65b01ab483671adc27fd7e4d8ecf08aa347a4"
+    },
+    "journal_after_c0_style_only": {
+      "passed": 7,
+      "seconds": 12.83,
+      "log_sha256": "1534882aaa407ead7b72d5979004c82d8152e36b6093d7478ac1ded0dcde59ca"
+    },
+    "new_tests_and_formal_replay_ruff": 0,
+    "whole_touched_production_python_ruff": {
+      "exit": 1,
+      "diagnostics": 15,
+      "note": "Historical diagnostics remain; not a full-repository lint pass."
+    }
+  },
+  "final_f407_default": {
+    "emitted_gates": 9,
+    "all_exit_zero": true,
+    "D_E_identical_artifacts_per_configuration": 510,
+    "summary_sha256": "89ff72eae5adcd0c0d7e2263c968b460e000ce89a22febcc53b0eacecc04cbba"
+  },
+  "final_f407_e19": {
+    "A_emitted_gates": 9,
+    "A_strict_pre_admission_exit": 2,
+    "other_A_gates_exit": 0,
+    "B_emitted_gates": 6,
+    "B_all_exit_zero": true,
+    "A_B_identical_artifacts_per_configuration": 504,
+    "summary_sha256": "b80962bde5c6922ddea23f3019871e41161940a47a113d1996dc058f0cbc29f4",
+    "full_host_owner": "root",
+    "full_host_executables": 74,
+    "full_host_checks": 5508837,
+    "full_host_failures": 0,
+    "full_host_log_sha256": "f207569d1a1948c0c458297f1a193dd711654c170580bf7150f3d98f6d92edb8"
+  },
+  "unproven": [
+    "Whole-firmware semantic critical-contract audit across all first/third-party functions and supported configurations",
+    "MCU WCET and measured task/ISR high-water marks",
+    "Physical RF/UART, DMA/cache and power-loss evidence, actual board wiring, navigation/flight qualification"
+  ],
+  "no_stage_commit_push_or_hardware_operation": true
+}

@@ -1,0 +1,2 @@
+# Formal receipts and raw logs retain the exact bytes referenced by their hashes.
+* -text whitespace=cr-at-eol
